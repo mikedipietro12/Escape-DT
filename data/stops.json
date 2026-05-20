@@ -1,0 +1,694 @@
+{
+    "station": {
+        "lng": -123.0694,
+        "name": "Commercial–Broadway Station",
+        "lat": 49.2634
+    },
+    "version": 1,
+    "stops": [
+        {
+            "crossStreet": "Commercial & 6th",
+            "id": "s1",
+            "lat": 49.2649446,
+            "cost": "$",
+            "tags": [
+                "coffee",
+                "food",
+                "sit down",
+                "grab and go"
+            ],
+            "name": "JJ Bean",
+            "coords": {
+                "y": 514,
+                "x": 145
+            },
+            "description": "Local legend cafe. Home of my favorite chocolate chip cookie. Local meet up spot with decent little patio in the back, great drinks and an excellent roast of espresso.",
+            "walkFromStation": 3,
+            "placeholderColor": "6f4e37",
+            "slug": "jj-bean",
+            "lng": -123.069428,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "6th & Commercial",
+            "id": "s2",
+            "lat": 49.2644127,
+            "cost": "$",
+            "tags": [
+                "food",
+                "grab and go"
+            ],
+            "name": "Rollzzy",
+            "coords": {
+                "y": 526,
+                "x": 155
+            },
+            "description": "Your favorite Indian dishes, wrapped up in a delicious package to go. Both meat and veggie options.",
+            "walkFromStation": 3,
+            "placeholderColor": "e07a5f",
+            "slug": "rollzzy",
+            "lng": -123.0699587,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "E 4th Ave",
+            "id": "s3",
+            "lat": 49.2671946,
+            "googlePlaceId": "ChIJXUNrtUdxhlQRMWfiCLV27a0",
+            "cost": "$$",
+            "tags": [
+                "coffee",
+                "food",
+                "sit down",
+                "grab and go"
+            ],
+            "name": "Prado Cafe",
+            "coords": {
+                "y": 461,
+                "x": 148
+            },
+            "description": "Locally owned coffee shop with great coffee and some unique, hearty baked goods. Great spot to sit on the corner and people watch.",
+            "walkFromStation": 7,
+            "placeholderColor": "c9a66b",
+            "slug": "prado-cafe",
+            "lng": -123.0694273,
+            "timeOfDay": [
+                "morning",
+                "afternoon"
+            ]
+        },
+        {
+            "crossStreet": "E 2nd Ave",
+            "id": "s4",
+            "lat": 49.2681917,
+            "googlePlaceId": "ChIJMT-DoxBxhlQRBg0F_c9gG68",
+            "cost": "$$",
+            "tags": [
+                "food",
+                "sit down",
+                "grab and go"
+            ],
+            "name": "Skewers Souvlaki Pita Bar",
+            "coords": {
+                "y": 437,
+                "x": 142
+            },
+            "description": "Newer locally owned spot with super authentic Souvlaki. Big share plates or personal portions.",
+            "walkFromStation": 10,
+            "placeholderColor": "e9c46a",
+            "slug": "skewers-souvlaki-pita-bar",
+            "lng": -123.0698791,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "E 2nd Ave",
+            "id": "s5",
+            "lat": 49.2688345,
+            "googlePlaceId": "ChIJnQBdDEdxhlQRDLbQZmhbIOU",
+            "cost": "$$",
+            "tags": [
+                "groceries",
+                "food",
+                "grab and go"
+            ],
+            "name": "La Grotta del Formaggio",
+            "coords": {
+                "y": 422,
+                "x": 158
+            },
+            "description": "Classic Italian Deli with a delicious sandwich counter and quick stop for European groceries.",
+            "walkFromStation": 10,
+            "placeholderColor": "cad2c5",
+            "slug": "la-grotta-del-formaggio",
+            "lng": -123.0700285,
+            "timeOfDay": [
+                "morning",
+                "afternoon"
+            ]
+        },
+        {
+            "crossStreet": "E 2nd",
+            "id": "s6",
+            "lat": 49.26905,
+            "googlePlaceId": "ChIJL4-dMwBxhlQRx_HBHWoYlDE",
+            "cost": "$$$",
+            "tags": [
+                "food",
+                "sit down",
+                "grab and go"
+            ],
+            "name": "Belli Pizza",
+            "coords": {
+                "y": 416,
+                "x": 150
+            },
+            "description": "Newest pizza place to hit Commercial. Their dough is super high quality with a unique flavor, they cook it to perfection with a simple menu that has me coming back for more. The late night vibe is worth checking out as their playlists are always on point and the drinks somehow always keep on flowing.",
+            "walkFromStation": 12,
+            "placeholderColor": "d62828",
+            "slug": "belli-pizza",
+            "lng": -123.06943,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "E 1st",
+            "id": "s7",
+            "lat": 49.2693101,
+            "googlePlaceId": "ChIJZw7gbUdxhlQR1inpfufueaE",
+            "cost": {
+                "min": "$",
+                "max": "$$$$"
+            },
+            "tags": [
+                "shopping"
+            ],
+            "name": "Mintage",
+            "coords": {
+                "y": 406,
+                "x": 145
+            },
+            "description": "One of the oldest vintage sellers in the city. Amazing selection of all types of vintage, from one of a kind dresses, to ratty band tees, beloved sports jackets, rocks and gems, reworks, and so much more. Worth a look even if you're not shopping for anything.",
+            "walkFromStation": 15,
+            "placeholderColor": "bc6c25",
+            "slug": "mintage",
+            "lng": -123.0694185,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "Graveley",
+            "id": "s8",
+            "lat": 49.2702991,
+            "googlePlaceId": "ChIJARfKW7txhlQRgm1BxguLamU",
+            "cost": "$$$",
+            "tags": [
+                "food",
+                "drinks",
+                "sit down"
+            ],
+            "name": "Loula's",
+            "coords": {
+                "y": 383,
+                "x": 155
+            },
+            "description": "Upscale Greek dishes with authentic flavors. Great cocktails and a fun evening vibe if you're into staying late. Check out the backroom for more cocktails.",
+            "walkFromStation": 15,
+            "placeholderColor": "7209b7",
+            "slug": "loulas",
+            "lng": -123.069427,
+            "timeOfDay": [
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "Grant",
+            "id": "s9",
+            "lat": 49.2707499,
+            "googlePlaceId": "ChIJNWm91udxhlQRv_cFcXKSgDk",
+            "cost": "$$$",
+            "tags": [
+                "drinks",
+                "food",
+                "sit down"
+            ],
+            "name": "Bar Corso",
+            "coords": {
+                "y": 372,
+                "x": 148
+            },
+            "description": "Good late afternoon - late night Italian snacks and cocktails. Cute little patio on the sidewalk with a good mix of wine and cocktails on the menu.",
+            "walkFromStation": 17,
+            "placeholderColor": "8d99ae",
+            "slug": "bar-corso",
+            "lng": -123.0694252,
+            "timeOfDay": [
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "Grant",
+            "id": "s10",
+            "lat": 49.2715525,
+            "googlePlaceId": "ChIJ0z_tUz9xhlQRX7t01nVfqL4",
+            "cost": "$$",
+            "tags": [
+                "drinks",
+                "food",
+                "hangout",
+                "sit down"
+            ],
+            "name": "The Charlatan",
+            "coords": {
+                "y": 353,
+                "x": 152
+            },
+            "description": "A neighborhood staple that takes in all walks of life. A big sidewalk facing patio where you can catch some evening sun, a cold beer, some wings, and potentially some live jazz. Inside has screens for all your sport-viewing needs and often has a good crew of locals kicking around.",
+            "walkFromStation": 20,
+            "placeholderColor": "2a9d8f",
+            "slug": "the-charlatan",
+            "lng": -123.0698037,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "Grant",
+            "id": "s11",
+            "lat": 49.2716414,
+            "googlePlaceId": "ChIJMWyr8N9xhlQRhsd_Hpa8sq0",
+            "cost": "$$",
+            "tags": [
+                "food",
+                "sit down",
+                "grab and go"
+            ],
+            "name": "Cozen Japanese Cuisine",
+            "coords": {
+                "y": 351,
+                "x": 158
+            },
+            "description": "My goto sushi spot on Commercial. A bit more expensive compared to some of the other options, but I've never been disappointed in the quality of their fish and their Japanese dishes.",
+            "walkFromStation": 20,
+            "placeholderColor": "457b9d",
+            "slug": "cozen-japanese-cuisine",
+            "lng": -123.0697951,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "Venables St",
+            "id": "s12",
+            "lat": 49.27701,
+            "cost": {
+                "min": "$",
+                "max": "$$$"
+            },
+            "tags": [
+                "shopping",
+                "hangout"
+            ],
+            "name": "Alterior",
+            "coords": {
+                "y": 230,
+                "x": 150
+            },
+            "description": "Alterior is a local clothing manufacturer specializing in denim goods. They carry a bunch of specially curated brands, have tonnes of pop-ups, and hidden corners of the shop include Book Section upstairs. This space is part clothing store, part manufacturing studio, part art space. A great place to meet locals and learn about the neighborhood.",
+            "walkFromStation": 28,
+            "slug": "alterior",
+            "images": [
+                "assets/stops/alterior.jpg"
+            ],
+            "lng": -123.0703,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "Venables & Commercial",
+            "id": "s13",
+            "lat": 49.27701,
+            "cost": {
+                "min": "$",
+                "max": "$$$"
+            },
+            "tags": [
+                "shopping",
+                "hangout"
+            ],
+            "name": "Vintage Sponsor",
+            "coords": {
+                "y": 225,
+                "x": 155
+            },
+            "description": "Hidden inside Alterior, Vintage Sponsor is the legendary vintage dealer whose collection is always growing and changing. I buy something almost every time I am in this shop. He has a wide range of styles from different eras and his eye for quality pieces is unlike any other shop in the city. With occasional pop-up events, and a wealth of knowledge, it's always worth popping in to see what's new.",
+            "walkFromStation": 28,
+            "slug": "vintage-sponsor",
+            "images": [
+                "assets/stops/vintage-sponsor.jpg"
+            ],
+            "lng": -123.0703,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "Kitchener",
+            "id": "s14",
+            "lat": 49.2722682,
+            "googlePlaceId": "ChIJD7OS67pxhlQR99jnRuImeFo",
+            "cost": "$$",
+            "tags": [
+                "coffee",
+                "food",
+                "drinks",
+                "sit down",
+                "grab and go"
+            ],
+            "name": "LIVIA Forno e Vino",
+            "coords": {
+                "y": 329,
+                "x": 148
+            },
+            "description": "One of the cutest coffee shops in the neighborhood. Great patio with an amazing piazza next door where you can sit with your take out if the restaurant is too busy (it usually is!). Amazing baked goods made in house every day, a great place for a coffee, a treat, lunch, or to take home some bread.",
+            "walkFromStation": 15,
+            "placeholderColor": "f4a261",
+            "slug": "livia-forno-e-vino",
+            "lng": -123.0697856,
+            "timeOfDay": [
+                "morning",
+                "afternoon",
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "E 2nd",
+            "id": "s15",
+            "lat": 49.2682595,
+            "googlePlaceId": "ChIJNwjdpkdxhlQRlKAwiWMe-5U",
+            "cost": {
+                "min": "$",
+                "max": "$$$"
+            },
+            "tags": [
+                "groceries",
+                "food",
+                "grab and go"
+            ],
+            "name": "Mediterranean Specialty Foods - Turkish Market",
+            "coords": {
+                "y": 422,
+                "x": 150
+            },
+            "description": "A great place to stop to get some Mediterranean groceries or a quick snack.",
+            "walkFromStation": 10,
+            "placeholderColor": "264653",
+            "slug": "mediterranean-specialty-foods-turkish-market",
+            "lng": -123.0694339,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "William St",
+            "id": "s16",
+            "lat": 49.2744307,
+            "googlePlaceId": "ChIJi_5Fqz9xhlQRctWWsZ8SyR8",
+            "cost": "$$",
+            "tags": [
+                "food",
+                "drinks",
+                "sit down",
+                "grab and go"
+            ],
+            "name": "Sula Indian Restaurant",
+            "coords": {
+                "y": 278,
+                "x": 152
+            },
+            "description": "With multiple locations in the city, it's no secret that this is some of the best Indian food you can get. I've tried many of the dishes and always find myself coming back for more!",
+            "walkFromStation": 20,
+            "placeholderColor": "e76f51",
+            "slug": "sula-indian-restaurant",
+            "lng": -123.0693531,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "Commercial Dr",
+            "id": "s17",
+            "lat": 49.273343,
+            "googlePlaceId": "ChIJacVfweBxhlQRJSijA6JfJSI",
+            "cost": {
+                "min": "$$$",
+                "max": "$$$$"
+            },
+            "tags": [
+                "food",
+                "drinks",
+                "sit down"
+            ],
+            "name": "Nomo Nomo",
+            "coords": {
+                "y": 304,
+                "x": 150
+            },
+            "description": "A newer Izakaya on the block, this location has some of the best cocktails in the city. Some serious chemistry going on in here to get some wild cocktails. Their super sharable plates are awesome for dining with 2-6 people, make a reso, this place fills up fast!",
+            "walkFromStation": 17,
+            "placeholderColor": "6a4c93",
+            "slug": "nomo-nomo",
+            "lng": -123.0692966,
+            "timeOfDay": [
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "Kitchener",
+            "id": "s18",
+            "lat": 49.2733751,
+            "googlePlaceId": "ChIJG8_wk4dxhlQRM-VxydVoPp0",
+            "cost": {
+                "min": "$$$",
+                "max": "$$$$"
+            },
+            "tags": [
+                "food",
+                "drinks",
+                "sit down"
+            ],
+            "name": "Magari by Oca",
+            "coords": {
+                "y": 303,
+                "x": 150
+            },
+            "description": "One of the most in demand restaurants in the city. Unrivaled hand-made pasta that truly provides a unique tasting-menu experience. The team there is super knowledgeable and always a great time. Get in line by 4:30 if you want to be in the first round of seating!",
+            "walkFromStation": 17,
+            "placeholderColor": "118ab2",
+            "slug": "magari-by-oca",
+            "lng": -123.0693791,
+            "timeOfDay": [
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "Kitchener",
+            "id": "s19",
+            "lat": 49.2725875,
+            "googlePlaceId": "ChIJ37AAWSFxhlQRqdBHv9FgZuA",
+            "cost": "$$",
+            "tags": [
+                "food",
+                "grab and go"
+            ],
+            "name": "Don't Argue Pizza",
+            "coords": {
+                "y": 321,
+                "x": 148
+            },
+            "description": "A great local spot to grab a slice, a shot of espresso, and catch a game. One of the best slices in the city hands down and one of my go-tos for a quick bite. Authentic NY slice in the heart of little Italy.",
+            "walkFromStation": 15,
+            "placeholderColor": "4a7c59",
+            "slug": "dont-argue-pizza",
+            "lng": -123.069778,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "Napier",
+            "id": "s20",
+            "lat": 49.2746801,
+            "googlePlaceId": "ChIJS8M2rT9xhlQR8CnI5SU3p40",
+            "cost": "$$",
+            "tags": [
+                "coffee",
+                "food",
+                "groceries",
+                "sit down",
+                "grab and go"
+            ],
+            "name": "Sweet Cherubim",
+            "coords": {
+                "y": 272,
+                "x": 148
+            },
+            "description": "A long-standing Commercial drive staple. This is part restaurant part grocery shop. My go to here is a Potato Pea fried Samosa and Chocolate Macaroon cookie to go. Large selection of natural foods, drinks, vitamins, and much more. The other side of the shop is a sit-down restaurant with some super tasty traditional dishes.",
+            "walkFromStation": 20,
+            "placeholderColor": "9b5de5",
+            "slug": "sweet-cherubim",
+            "lng": -123.0698694,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "Parker",
+            "id": "s21",
+            "lat": 49.2754879,
+            "googlePlaceId": "ChIJm_zob_ZxhlQRZ80MTXXJJGU",
+            "cost": "$$",
+            "tags": [
+                "food",
+                "grab and go"
+            ],
+            "name": "Mogu Fried Chicken",
+            "coords": {
+                "y": 253,
+                "x": 150
+            },
+            "description": "Korean Fried chicken on a bowl of rice with pickles. Enough said.",
+            "walkFromStation": 22,
+            "placeholderColor": "00b4d8",
+            "slug": "mogu-fried-chicken",
+            "lng": -123.069294,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "Venables",
+            "id": "s22",
+            "lat": 49.2763128,
+            "googlePlaceId": "ChIJw-s4pFdxhlQRh2jK22eXlnU",
+            "cost": "$$",
+            "tags": [
+                "food",
+                "sit down",
+                "grab and go"
+            ],
+            "name": "Downlow Chicken Shack",
+            "coords": {
+                "y": 234,
+                "x": 152
+            },
+            "description": "A local favorite, Downlow always serves amazing southern style fried chicken. I usually go for the mild options, but if you're feeling spicy, there is a ton of options to get your sweat on.",
+            "walkFromStation": 30,
+            "placeholderColor": "ff6b6b",
+            "slug": "downlow-chicken-shack",
+            "lng": -123.0697102,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "Venables",
+            "id": "s23",
+            "lat": 49.2763976,
+            "googlePlaceId": "ChIJX8KXIj5xhlQR5BwjsZtGOgU",
+            "cost": "$$",
+            "tags": [
+                "food",
+                "drinks",
+                "sit down"
+            ],
+            "name": "Kin Kao",
+            "coords": {
+                "y": 232,
+                "x": 152
+            },
+            "description": "Wonderful, cozy, Thai restaurant with some amazing curries and pad-thai dishes. Menu changes frequently and I love checking in at least once a year to see whats new.",
+            "walkFromStation": 30,
+            "placeholderColor": "a8dadc",
+            "slug": "kin-kao",
+            "lng": -123.069698,
+            "timeOfDay": [
+                "evening"
+            ]
+        },
+        {
+            "crossStreet": "E Georgia",
+            "id": "s24",
+            "lat": 49.2788051,
+            "googlePlaceId": "ChIJn9FuS6pxhlQR39FNX2yee2o",
+            "cost": {
+                "min": "$$",
+                "max": "$$$"
+            },
+            "tags": [
+                "coffee",
+                "food",
+                "drinks",
+                "groceries",
+                "sit down"
+            ],
+            "name": "Caffè La Tana",
+            "coords": {
+                "y": 188,
+                "x": 155
+            },
+            "description": "One of my forever favorite Cafes in the city. Their lunch is always fantastic, stop for a coffee and a quick bite with rotating pastas, salads, and sandwiches to satisfy any taste for any time of day.",
+            "walkFromStation": 35,
+            "placeholderColor": "606c38",
+            "slug": "caffe-la-tana",
+            "lng": -123.070601,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "Venables",
+            "id": "s25",
+            "lat": 49.2767747,
+            "googlePlaceId": "ChIJ3-oFcgBxhlQRFhb6LF4JCLw",
+            "cost": "$$",
+            "tags": [
+                "shopping"
+            ],
+            "name": "FUN HÄUS",
+            "coords": {
+                "y": 227,
+                "x": 153
+            },
+            "description": "One of the newest Vintage shops in the neighborhood by two OG vintage pickers in the city. You can find anything your vintage heart desires from super accessible collectables and clothes all the way up to rare t-shirts that have back stories that will make your head spin.",
+            "walkFromStation": 30,
+            "placeholderColor": "2b2d42",
+            "slug": "fun-haus",
+            "lng": -123.0699425,
+            "timeOfDay": [
+                "allday"
+            ]
+        },
+        {
+            "crossStreet": "Venables",
+            "id": "s26",
+            "lat": 49.2765511,
+            "googlePlaceId": "ChIJDQNbJz5xhlQRu7LEZ0yEI_M",
+            "cost": {
+                "min": "$",
+                "max": "$$$"
+            },
+            "tags": [
+                "shopping",
+                "hangout"
+            ],
+            "name": "Slice of Life Art Gallery",
+            "coords": {
+                "y": 232,
+                "x": 154
+            },
+            "description": "Part art-gallery, part shop, part co-working space, photo booth, part vintage shop this place has it all. It is a must stop if you make it to Venables from the skytrain, there is truly something for everyone. Local gifts made by local artists of all shapes and sizes.",
+            "walkFromStation": 30,
+            "placeholderColor": "073b4c",
+            "slug": "slice-of-life-art-gallery",
+            "lng": -123.0704529,
+            "timeOfDay": [
+                "allday"
+            ]
+        }
+    ]
+}

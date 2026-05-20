@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="assets/favicon.png" type="image/png" sizes="64x64">
+  <title>Escape the Downtown | Commercial Drive</title>
+  <style>
+    :root {
+      --bg-top: #FFFFFF;
+      --bg-bottom: #FFFFFF;
+      --ink: #000000;
+      --ink-muted: #2A2A2A;
+      --accent: #000000;
+      --border: rgba(0, 0, 0, 0.15);
+      --tile-radius: 8px;
+      
+      --type-display: 2.5rem;
+      --type-heading: 1.25rem;
+      --type-body: 0.95rem;
+      --type-label: 0.75rem;
+      --tracking-wide: 0.08em;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Futura, "Futura PT", "Century Gothic", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
+      min-height: 100vh;
+      background-attachment: fixed;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 2rem;
+    }
+
+    /* Typography */
+    h1, h2 { font-weight: 600; text-transform: uppercase; }
+    h1 { font-size: var(--type-display); margin-bottom: 1.5rem; letter-spacing: -0.02em; line-height: 1.1; }
+    h2 { font-size: var(--type-heading); margin-bottom: 0.5rem; }
+    p { font-size: var(--type-body); margin-bottom: 1rem; }
+    .label { font-size: var(--type-label); letter-spacing: var(--tracking-wide); text-transform: uppercase; font-weight: 500; }
+
+    /* Layout */
+    .container {
+      width: 100%;
+      max-width: 800px;
+      padding: 2rem 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    section.step {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      flex-grow: 1;
+    }
+
+    section.step.active {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+    }
+
+    /* Progress Indicator */
+    nav.progress {
+      width: 100%;
+      max-width: 800px;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+    nav.progress span { opacity: 0.3; transition: opacity 0.3s; }
+    nav.progress span.active { opacity: 1; }
+
+    /* UI Elements */
+    button {
+      font-family: inherit;
+      background: transparent;
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      color: var(--ink);
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      transition: background 0.2s, color 0.2s;
+    }
+    button:hover { background: var(--ink); color: #fff; }
+    button.primary { background: var(--ink); color: #fff; }
+    button.primary:hover { background: transparent; color: var(--ink); }
+
+    .nav-buttons {
+      margin-top: auto;
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    
+    .nav-buttons.right-only {
+      justify-content: flex-end;
+    }
+
+    /* Step D: fixed Back / Next along the bottom edge */
+    #step-D {
+      padding-bottom: 5.5rem;
+    }
+    .step-d-action-fixed {
+      position: fixed;
+      bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+      z-index: 200;
+    }
+    .step-d-action-fixed--back {
+      left: max(1.25rem, env(safe-area-inset-left, 0px));
+    }
+    .step-d-action-fixed--next {
+      right: max(1.25rem, env(safe-area-inset-right, 0px));
+    }
+    .step-d-action-fixed--next[hidden] {
+      display: none;
+    }
+    .step-d-action-fixed button {
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Cards */
+    .card {
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
+      transition: background 0.35s ease;
+    }
+    .card:hover { background: linear-gradient(to bottom, #bafabf, #faecb5); }
+
+    /* Step B: Categories Grid */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    @media (min-width: 600px) {
+      .category-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .cat-tile {
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: center;
+      transition: background 0.35s ease;
+    }
+    .cat-tile:hover { background: linear-gradient(to bottom, #bafabf, #faecb5); }
+    .cat-tile.selected { background: var(--ink); color: #fff; }
+    .cat-tile.selected .desc { color: #ccc; }
+
+    .ranked-list {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .rank-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      margin-bottom: 0.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: grab;
+    }
+    .rank-item:active { cursor: grabbing; }
+    .rank-item .num { font-weight: bold; margin-right: 1rem; width: 1.5rem; }
+    .rank-item .name { flex-grow: 1; text-transform: uppercase; font-size: var(--type-label); letter-spacing: var(--tracking-wide); }
+    .rank-item .remove { cursor: pointer; padding: 0 0.5rem; font-size: 1.25rem; line-height: 1; }
+
+    .data-load-error {
+      position: fixed;
+      inset: 0 auto auto 0;
+      right: 0;
+      z-index: 9999;
+      padding: 1rem 1.25rem;
+      background: #fff3cd;
+      border-bottom: 1px solid #856404;
+      font-size: var(--type-body);
+      line-height: 1.5;
+    }
+    .data-load-error code { font-size: 0.85em; }
+
+    /* Step D: Photo Tiles */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (min-width: 600px) {
+      .photo-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .spot-tile {
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.35s ease;
+    }
+    .spot-tile:not(.selected):hover { background: linear-gradient(to bottom, #bafabf, #faecb5); }
+    .spot-tile .img-wrapper {
+      width: 100%;
+      padding-top: 60%;
+      position: relative;
+      border-bottom: 1px solid var(--ink);
+    }
+    .spot-tile img {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .photo-gallery {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .photo-gallery__track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.35s ease;
+    }
+    .photo-gallery__slide {
+      flex: 0 0 100%;
+      height: 100%;
+      position: relative;
+    }
+    .photo-gallery__slide img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .photo-gallery__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--ink);
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-gallery__arrow:hover { background: #fff; }
+    .photo-gallery__arrow--prev { left: 0.5rem; }
+    .photo-gallery__arrow--next { right: 0.5rem; }
+    .photo-gallery__dots {
+      position: absolute;
+      bottom: 0.5rem;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+    .photo-gallery__dot {
+      width: 0.45rem;
+      height: 0.45rem;
+      padding: 0;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+    }
+    .photo-gallery__dot.is-active {
+      background: var(--ink);
+    }
+    .spot-tile .content { padding: 1.5rem; flex-grow: 1; }
+    .spot-tile .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.5rem 0 1rem;
+    }
+    .spot-tile .tag {
+      font-size: 0.65rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--ink);
+    }
+    .spot-tile.selected {
+      background: var(--ink);
+      color: #fff;
+      border: 2px solid var(--ink);
+    }
+    .spot-tile.selected .tag { border-color: #fff; }
+
+    .dining-style-filters {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .dining-style-filters button {
+      flex: 1;
+      padding: 0.75rem 1rem;
+    }
+    .dining-style-filters button.active {
+      background: var(--ink);
+      color: #fff;
+    }
+    .spot-section-label {
+      grid-column: 1 / -1;
+      margin: 1.25rem 0 0;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--ink);
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+    }
+    .spot-tile--outside-radius:not(.selected) {
+      opacity: 0.92;
+    }
+    .spot-tile.selected .checkmark {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: #fff; color: var(--ink);
+      width: 2rem; height: 2rem;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; font-weight: bold;
+    }
+
+
+
+    /* Step E: Map Review */
+    .map-split {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    @media (min-width: 768px) {
+      .map-split { flex-direction: row; }
+      .map-container { width: 40%; flex-shrink: 0; }
+      .route-list { width: 60%; }
+    }
+    
+    .map-container svg {
+      width: 100%;
+      height: auto;
+      max-height: 70vh;
+      display: block;
+      overflow: visible;
+    }
+    .map-line { stroke: var(--ink); stroke-width: 2; }
+    .map-text { font-family: inherit; font-size: 10px; fill: var(--ink); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+    .map-path { 
+      stroke: var(--ink); 
+      stroke-width: 4; 
+      fill: none; 
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+    .map-stop { 
+      fill: var(--ink); 
+      stroke: var(--bg-top); 
+      stroke-width: 3; 
+      transition: r 0.2s;
+    }
+    .map-stop:hover { r: 8; cursor: pointer; }
+
+    .route-card {
+      display: flex;
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      margin-bottom: 1rem;
+      background: rgba(255,255,255,0.1);
+      align-items: center;
+      overflow: hidden;
+    }
+    .route-card img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-right: 1px solid var(--ink);
+    }
+    .route-card .content { padding: 1rem; flex-grow: 1; }
+    .route-card .meta { font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); opacity: 0.7; }
+    .route-card .walk-line { text-transform: none; letter-spacing: normal; opacity: 0.85; }
+
+    .route-leg {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.25rem 0 0.75rem 1.25rem;
+      padding-left: 0.75rem;
+      border-left: 2px dashed var(--ink);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      opacity: 0.85;
+    }
+    .route-leg-arrow {
+      font-size: 0.85rem;
+      line-height: 1;
+    }
+    
+    .totals {
+      border-top: 2px solid var(--ink);
+      padding-top: 1rem;
+      margin-top: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      font-size: var(--type-label);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .totals .walk-disclaimer {
+      font-weight: normal;
+      text-transform: none;
+      letter-spacing: normal;
+      font-size: 0.7rem;
+      opacity: 0.7;
+      margin-top: 0.5rem;
+      line-height: 1.4;
+    }
+
+    /* --- NEW CSS FOR RESTRUCTURE --- */
+    #top-nav {
+      display: none;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    #top-nav a {
+      color: var(--ink);
+      text-transform: uppercase;
+      text-decoration: none;
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #top-nav a:hover { opacity: 0.6; }
+
+    body.landing-active {
+      padding-bottom: 0;
+      --bg-top: #bafabf;
+      --bg-bottom: #faecb5;
+    }
+
+    #step-LANDING {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      min-height: 100vh;
+    }
+    #step-LANDING.active { display: flex; }
+    
+    .hero-section {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 1.25rem 1.5rem 4rem;
+      color: var(--ink);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero-logo {
+      display: block;
+      width: min(180px, 42vw);
+      height: auto;
+      margin: 0 auto 1.25rem;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-content h1 {
+      font-size: clamp(1.65rem, 4.5vw, 2.35rem);
+      margin-bottom: 1rem;
+      color: var(--ink);
+      text-transform: none;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    .hero-content h1 .footnote-link {
+      font-size: 0.5em;
+      text-decoration: none;
+      color: inherit;
+      font-weight: 600;
+      vertical-align: super;
+      line-height: 0;
+      margin-left: 0.05em;
+    }
+    .hero-content h1 .footnote-link:hover {
+      text-decoration: underline;
+    }
+    .hero-subtitle {
+      font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+      line-height: 1.55;
+      color: var(--ink-muted);
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+      max-width: 38rem;
+      margin-bottom: 0;
+    }
+
+    .landing-options {
+      width: 100%;
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .landing-options .card {
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--ink);
+      color: var(--ink);
+    }
+    .landing-options .card h2 {
+      color: var(--ink);
+      text-transform: none;
+      font-size: 1.35rem;
+    }
+    .landing-options .card .label {
+      color: var(--ink-muted);
+      display: block;
+      margin-top: 0.35rem;
+      text-transform: none;
+      letter-spacing: 0.02em;
+    }
+    .landing-options .card:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+    .landing-options .card:hover h2,
+    .landing-options .card:hover .label {
+      color: #fff;
+    }
+
+    #main-container {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      flex-grow: 1;
+    }
+    #main-container.visible { display: flex; }
+
+    nav.progress.hidden { display: none !important; }
+
+    .path-context {
+      width: 100%;
+      max-width: 800px;
+      padding: 0 1.5rem;
+      margin: 0 auto;
+    }
+    .path-context .label {
+      margin-bottom: 0;
+      opacity: 0.65;
+    }
+
+    /* Path 3: All Spots */
+    .spot-tile.expandable {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .spot-tile--test {
+      outline: 2px dashed var(--ink-muted);
+      outline-offset: 4px;
+    }
+
+    .spot-tile.expandable:not(.expanded):hover {
+      background: linear-gradient(to bottom, #bafabf, #faecb5);
+    }
+    .spot-tile.expandable .tile-summary p.desc {
+      display: none;
+    }
+    .spot-tile.expandable .expanded-content {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+      border-top: 1px solid var(--ink);
+    }
+    .spot-tile.expandable.expanded .expanded-content {
+      display: block;
+    }
+    .spot-tile.expandable.expanded {
+      background: #fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      grid-column: 1 / -1;
+    }
+    .spot-tile.expandable .btn-maps {
+      margin-top: 1rem;
+      padding: 0.65rem 1rem;
+      font-size: 0.65rem;
+    }
+
+    .route-card.placeholder {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    .route-card.placeholder .content h3 {
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body class="landing-active">
+
+  <div id="top-nav">
+    <a onclick="startOver()">← Start Over</a>
+  </div>
+
+  <!-- LANDING PAGE -->
+  <section id="step-LANDING" class="step active">
+    <div class="hero-section">
+      <div class="hero-content">
+        <img class="hero-logo" src="assets/logo.png" alt="Escape the Downtown logo" width="360" height="360">
+        <h1>Let's get you out of downtown and into &ldquo;East&nbsp;Vancouver&rdquo;<sup><a class="footnote-link" href="https://www.seasonsofeastvan.com/about" target="_blank" rel="noopener noreferrer" title="About East Vancouver">1</a></sup></h1>
+        <p class="hero-subtitle">Whether you're here visiting for the first time, or have found yourself stuck in your regular routine, I am here to get you out of Downtown and into some of our more eclectic east-end neighborhoods.</p>
+        <div class="landing-options">
+          <div class="card" onclick="startPath1()">
+            <h2>Choose Your Own Adventure</h2>
+            <span class="label">Build a path based on time and activity preferences</span>
+          </div>
+          <div class="card" onclick="startPath2()">
+            <h2>See Pre-Built Plans</h2>
+            <span class="label">My go-to spots, pre-built based on time</span>
+          </div>
+          <div class="card" onclick="startPath3()">
+            <h2>See All Spots</h2>
+            <span class="label">Browse every recommendation and add stops to Google Maps</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="main-container">
+    <div id="path-context" class="path-context" style="display: none;">
+      <p class="label" id="path-context-title"></p>
+    </div>
+    <nav class="progress" id="progress-bar">
+      <!-- Generated via JS -->
+    </nav>
+
+    <div class="container">
+
+    <!-- STEP A: TIME -->
+    <section id="step-A" class="step">
+      <h1>How much time do you have?</h1>
+      <p>We'll filter the spots based on how far you want to walk from the station.</p>
+      
+      <div class="card" onclick="selectTime('1hr')">
+        <h2>About an hour</h2>
+        <span class="label">≤ 15 min walk from station</span>
+      </div>
+      <div class="card" onclick="selectTime('halfday')">
+        <h2>Half a day</h2>
+        <span class="label">≤ 25 min walk from station</span>
+      </div>
+      <div class="card" onclick="selectTime('fullday')">
+        <h2>Full day</h2>
+        <span class="label">Explore it all</span>
+      </div>
+    </section>
+
+    <!-- STEP B: PRIORITY -->
+    <section id="step-B" class="step">
+      <h1>What would you like to do?</h1>
+      <p>Select what you're looking for. Then, rank them in order of priority by clicking and dragging.</p>
+
+      <div class="category-grid" id="cat-grid">
+        <!-- Rendered via JS -->
+      </div>
+
+      <div class="ranked-list" id="ranked-list-container" style="display: none;">
+        <p class="label">Your Priorities (Drag to reorder)</p>
+        <div id="ranked-list"></div>
+      </div>
+
+      <div class="nav-buttons">
+        <button onclick="goTo('A')">Back</button>
+        <button class="primary" id="btn-next-b" onclick="finishStepB()" disabled>Next</button>
+      </div>
+    </section>
+
+    <!-- STEP C: ROUTE ORDER -->
+    <section id="step-C" class="step">
+      <h1>How should we route this?</h1>
+      <p>You selected multiple vibes. We can follow your priority, or optimize for the least walking.</p>
+
+      <div class="card" onclick="selectRouteOrder('manual')">
+        <h2>Use my priority order</h2>
+        <span class="label">Visit spots in the exact order you ranked them</span>
+      </div>
+      <div class="card" onclick="selectRouteOrder('geographic')">
+        <h2>Optimize geographically</h2>
+        <span class="label">Minimize backtracking along the drive</span>
+      </div>
+
+      <div class="nav-buttons">
+        <button onclick="goTo('B')">Back</button>
+      </div>
+    </section>
+
+    <!-- STEP D: SPOT SELECTION -->
+    <section id="step-D" class="step">
+      <h1 id="step-d-title">Choose your spot</h1>
+      <p id="step-d-desc">Select one or two stops for this category, locations appear in geographic distance from the Skytrain</p>
+
+      <div id="step-d-filters" class="dining-style-filters" style="display: none;" aria-label="Filter by dining style"></div>
+
+      <div class="photo-grid" id="spot-grid">
+        <!-- Rendered via JS -->
+      </div>
+
+      <div class="step-d-action-fixed step-d-action-fixed--back">
+        <button type="button" onclick="backFromStepD()">Back</button>
+      </div>
+      <div class="step-d-action-fixed step-d-action-fixed--next" id="step-d-next-fixed" hidden>
+        <button type="button" class="primary" id="btn-next-d" onclick="nextCategory()" disabled>Next</button>
+      </div>
+    </section>
+
+    <!-- STEP E: MAP REVIEW -->
+    <section id="step-E" class="step">
+      <h1>Your Route</h1>
+      
+      <div class="map-split">
+        <div class="map-container">
+          <svg id="route-map" viewBox="0 0 300 600">
+            <!-- Rendered via JS -->
+          </svg>
+        </div>
+        <div class="route-list">
+          <div id="route-cards"></div>
+          <div class="totals" id="route-totals"></div>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button onclick="editSpots()">Edit Spots</button>
+        <button class="primary" onclick="goTo('F')">Finish</button>
+      </div>
+    </section>
+
+    <!-- STEP F: EXPORT -->
+    <section id="step-F" class="step">
+      <h1>Ready to go.</h1>
+      <p id="export-summary" class="label" style="margin-bottom: 2rem;">YOUR COMMERCIAL DRIVE ROUTE — N STOPS</p>
+
+      <div class="map-container" style="margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto; width: 100%;">
+        <svg id="route-map-final" viewBox="0 0 300 600">
+          <!-- Rendered via JS -->
+        </svg>
+      </div>
+
+      <button class="primary" style="width: 100%; margin-bottom: 1rem; font-size: 1.2rem;" onclick="openGoogleMaps()">Open in Google Maps</button>
+      <button style="width: 100%;" onclick="startOver()">Start Over</button>
+    </section>
+
+    <!-- PATH 2: TIME -->
+    <section id="step-P2-TIME" class="step">
+      <h1>How much time do you have?</h1>
+      <p>Select a time window to see a curated plan.</p>
+      
+      <div class="card" onclick="selectPlanTime('30min')"><h2>30 min</h2><span class="label">Quick Hit</span></div>
+      <div class="card" onclick="selectPlanTime('45min')"><h2>45 min</h2><span class="label">The Essentials</span></div>
+      <div class="card" onclick="selectPlanTime('1hr')"><h2>1 hour</h2><span class="label">The Classic</span></div>
+      <div class="card" onclick="selectPlanTime('1.5hr')"><h2>1.5 hours</h2><span class="label">The Full Loop</span></div>
+      <div class="card" onclick="selectPlanTime('allday')"><h2>All day</h2><span class="label">The Grand Tour</span></div>
+      <div class="nav-buttons">
+        <button onclick="showStep('LANDING')">Back</button>
+      </div>
+    </section>
+
+    <!-- PATH 2: PLAN -->
+    <section id="step-P2-PLAN" class="step">
+      <h1 id="p2-plan-title">Your Plan</h1>
+      <p id="p2-plan-desc" class="label" style="margin-bottom: 2rem;">...</p>
+      
+      <div class="map-split">
+        <div class="map-container">
+          <svg id="route-map-p2" viewBox="0 0 300 600"></svg>
+        </div>
+        <div class="route-list">
+          <div id="route-cards-p2"></div>
+          <div class="totals" id="route-totals-p2"></div>
+        </div>
+      </div>
+      <div class="nav-buttons">
+        <button onclick="showStep('P2-TIME')">Back</button>
+      </div>
+    </section>
+
+    <!-- PATH 3: ALL SPOTS -->
+    <section id="step-P3" class="step">
+      <h1>All Spots</h1>
+      <p>Browse every recommendation and add stops to Google Maps.</p>
+      <div class="photo-grid" id="p3-grid">
+        <!-- Rendered via JS -->
+      </div>
+      <div class="nav-buttons">
+        <button onclick="showStep('LANDING')">Back</button>
+      </div>
+    </section>
+
+    </div>
+  </div>
+
+  <!--
+    ADDING A LOCATION
+    Source of truth: data/stops.json (not this file).
+    Full checklist + copy-paste prompt: AGENTS.md
+    Blank object to copy: data/stop-template.json
+    Photos: assets/stops/<slug>.jpg, <slug>-2.jpg, … → images[] in data/stops.json
+
+    Tell Cursor: "Add a new stop" and paste the prompt block from AGENTS.md.
+    Preview: npx serve .  →  open commercial-drive.html  →  Path 3 (browse all spots).
+  -->
+
+  <div id="data-load-error" class="data-load-error" hidden>
+    <strong>Could not load locations.</strong>
+    Open this site through a local server (not as a file:// URL).
+    From the project folder run: <code>npx --yes serve .</code>
+    Then open <code>/commercial-drive.html</code>. See AGENTS.md.
+    <span data-error-detail style="display:block;margin-top:0.5rem;font-size:0.85em;"></span>
+  </div>
+
+  <script>
+    /**
+     * LOCATIONS — data/stops.json is the source of truth.
+     * Agent workflow: AGENTS.md | Template: data/stop-template.json
+     */
+    // --- DATA ---
+    const CATEGORIES = [
+      { id: "coffee", emoji: "☕", label: "Coffee", desc: "Cafés, espresso bars" },
+      { id: "food", emoji: "🍜", label: "Food", desc: "Restaurants, casual eats" },
+      { id: "drinks", emoji: "🍷", label: "Drinks", desc: "Bars, wine, cocktails" },
+      { id: "shopping", emoji: "🛍", label: "Shopping", desc: "Retail, boutiques" },
+      { id: "hangout", emoji: "🪑", label: "Hangout", desc: "Patios, parks, no-agenda spots" },
+      { id: "groceries", emoji: "🧺", label: "Groceries", desc: "Delis, specialty food shops" }
+    ];
+
+    const placeholderImg = (color) => `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='100%25' height='100%25' fill='%23${color}'/%3E%3C/svg%3E`;
+
+    let STOPS = [];
+    let STATION_LAT = 49.2634;
+    let STATION_LNG = -123.0694;
+
+    function formatCost(cost) {
+      if (cost == null || cost === "") return "";
+      if (typeof cost === "string") return cost;
+      if (Array.isArray(cost)) {
+        const min = cost[0];
+        const max = cost[cost.length - 1];
+        if (!min) return "";
+        if (!max || min === max) return min;
+        return `${min}\u2013${max}`;
+      }
+      if (typeof cost === "object") {
+        const { min, max } = cost;
+        if (min != null && max != null && min !== max) return `${min}\u2013${max}`;
+        return min || max || "";
+      }
+      return String(cost);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function resolveStopImages(stop) {
+      const color = stop.placeholderColor || "cccccc";
+      const fallback = placeholderImg(color);
+      const paths = Array.isArray(stop.images) && stop.images.length
+        ? stop.images
+        : stop.image
+          ? [stop.image]
+          : [];
+      const images = paths.length ? paths : [fallback];
+      return { images, image: images[0] };
+    }
+
+    function hydrateStops(rawStops) {
+      return rawStops.map((stop) => {
+        const { images, image } = resolveStopImages(stop);
+        const costLabel = formatCost(stop.cost);
+        return { ...stop, images, image, costLabel };
+      });
+    }
+
+    function renderPhotoHero(spot) {
+      return `<img src="${spot.image}" alt="${escapeHtml(spot.name)}">`;
+    }
+
+    function renderPhotoGallery(spot, galleryId) {
+      if (spot.images.length <= 1) {
+        return renderPhotoHero(spot);
+      }
+      const slides = spot.images.map((src, i) => `
+        <div class="photo-gallery__slide">
+          <img src="${src}" alt="${escapeHtml(spot.name)} — photo ${i + 1}" loading="${i === 0 ? "eager" : "lazy"}">
+        </div>
+      `).join("");
+      const dots = spot.images.map((_, i) =>
+        `<button type="button" class="photo-gallery__dot${i === 0 ? " is-active" : ""}" aria-label="Photo ${i + 1}" data-index="${i}"></button>`
+      ).join("");
+      return `
+        <div class="photo-gallery" data-gallery-id="${galleryId}">
+          <div class="photo-gallery__track">${slides}</div>
+          <button type="button" class="photo-gallery__arrow photo-gallery__arrow--prev" aria-label="Previous photo">&#8249;</button>
+          <button type="button" class="photo-gallery__arrow photo-gallery__arrow--next" aria-label="Next photo">&#8250;</button>
+          <div class="photo-gallery__dots">${dots}</div>
+        </div>
+      `;
+    }
+
+    function initPhotoGalleries(root) {
+      if (!root) return;
+      root.querySelectorAll(".photo-gallery").forEach((gallery) => {
+        const track = gallery.querySelector(".photo-gallery__track");
+        const dots = [...gallery.querySelectorAll(".photo-gallery__dot")];
+        const count = dots.length;
+        if (!track || count < 2) return;
+
+        let index = 0;
+        const goTo = (next) => {
+          index = (next + count) % count;
+          track.style.transform = `translateX(-${index * 100}%)`;
+          dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
+        };
+
+        gallery.querySelector(".photo-gallery__arrow--prev")
+          ?.addEventListener("click", (e) => { e.stopPropagation(); goTo(index - 1); });
+        gallery.querySelector(".photo-gallery__arrow--next")
+          ?.addEventListener("click", (e) => { e.stopPropagation(); goTo(index + 1); });
+        dots.forEach((dot, i) => {
+          dot.addEventListener("click", (e) => { e.stopPropagation(); goTo(i); });
+        });
+        gallery.addEventListener("click", (e) => e.stopPropagation());
+      });
+    }
+
+    async function loadStopsData() {
+      const banner = document.getElementById("data-load-error");
+      try {
+        const res = await fetch("data/stops.json", { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        STOPS = hydrateStops(data.stops || []);
+        if (data.station) {
+          STATION_LAT = data.station.lat;
+          STATION_LNG = data.station.lng;
+        }
+        if (banner) banner.hidden = true;
+        return true;
+      } catch (err) {
+        console.error("Failed to load data/stops.json", err);
+        if (banner) {
+          const detail = banner.querySelector("[data-error-detail]");
+          if (detail) detail.textContent = err.message || String(err);
+          banner.hidden = false;
+        }
+        return false;
+      }
+    }
+
+    const PLANS = {
+      '30min':  { title: 'Quick Hit', stops: [] },
+      '45min':  { title: 'The Essentials', stops: [] },
+      '1hr':    { title: 'The Classic', stops: [] },
+      '1.5hr':  { title: 'The Full Loop', stops: [] },
+      'allday': { title: 'The Grand Tour', stops: [] },
+    };
+
+    const PLAN_TIME_LABELS = {
+      '30min': '30 min',
+      '45min': '45 min',
+      '1hr': '1 hour',
+      '1.5hr': '1.5 hours',
+      'allday': 'all day',
+    };
+
+    const PATH1_STEPS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+    const DINING_STYLE_FILTER_CATEGORIES = ['coffee', 'food'];
+    const DINING_STYLE_TAGS = {
+      sitDown: 'sit down',
+      grabAndGo: 'grab and go',
+    };
+
+    // --- STATE ---
+    let state = {
+      timeFilter: null,
+      selectedCategories: [],
+      userRanked: false,
+      routeOrder: "manual",
+      selectedStops: {},
+      currentStep: "LANDING",
+      currentCategoryIndex: 0,
+      planTime: null,
+      expandedSpotId: null,
+      pathContext: null,
+      diningStyleFilter: null,
+      stepDCategoryId: null,
+    };
+
+    function resetState() {
+      state = {
+        timeFilter: null,
+        selectedCategories: [],
+        userRanked: false,
+        routeOrder: "manual",
+        selectedStops: {},
+        currentStep: "LANDING",
+        currentCategoryIndex: 0,
+        planTime: null,
+        expandedSpotId: null,
+        pathContext: null,
+        diningStyleFilter: null,
+        stepDCategoryId: null,
+      };
+    }
+
+    // --- NAVIGATION ---
+    const steps = PATH1_STEPS;
+
+    function updateProgress(step) {
+      const nav = document.getElementById("progress-bar");
+      nav.innerHTML = steps.map(s => {
+        if (s === "C" && state.userRanked) return "";
+        const isActive = s === step;
+        const isPast = steps.indexOf(s) < steps.indexOf(step);
+        return `<span class="${isActive || isPast ? 'active' : ''}">${isActive || isPast ? '●' : '○'}</span>`;
+      }).join('');
+    }
+
+    function updatePathContext() {
+      const el = document.getElementById('path-context');
+      const titleEl = document.getElementById('path-context-title');
+      if (!state.pathContext) {
+        el.style.display = 'none';
+        return;
+      }
+      titleEl.textContent = state.pathContext;
+      el.style.display = 'block';
+    }
+
+    function showStep(step) {
+      state.currentStep = step;
+      const landing = document.getElementById('step-LANDING');
+      const main = document.getElementById('main-container');
+      const topNav = document.getElementById('top-nav');
+      const progress = document.getElementById('progress-bar');
+
+      if (step === 'LANDING') {
+        document.body.classList.add('landing-active');
+        landing.classList.add('active');
+        main.classList.remove('visible');
+        topNav.style.display = 'none';
+        progress.classList.add('hidden');
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      document.body.classList.remove('landing-active');
+      landing.classList.remove('active');
+      main.classList.add('visible');
+      topNav.style.display = 'block';
+
+      if (PATH1_STEPS.includes(step)) {
+        progress.classList.remove('hidden');
+        updateProgress(step);
+      } else {
+        progress.classList.add('hidden');
+      }
+
+      document.querySelectorAll('#main-container section.step').forEach(s => s.classList.remove('active'));
+      document.getElementById(`step-${step}`).classList.add('active');
+      updatePathContext();
+      window.scrollTo(0, 0);
+
+      if (step === 'B') renderStepB();
+      if (step === 'D') renderStepD();
+      if (step === 'E') renderStepE();
+      if (step === 'F') renderStepF();
+      if (step === 'P2-PLAN') renderP2Plan();
+      if (step === 'P3') renderP3();
+    }
+
+    function goTo(step) { showStep(step); }
+
+    function startPath1() {
+      state.pathContext = 'Choose Your Own Adventure';
+      showStep('A');
+    }
+    function startPath2() {
+      state.pathContext = 'See Pre-Built Plans';
+      showStep('P2-TIME');
+    }
+    function startPath3() {
+      state.expandedSpotId = null;
+      state.pathContext = 'See All Spots';
+      showStep('P3');
+    }
+
+    // --- STEP A ---
+    function selectTime(time) {
+      state.timeFilter = time;
+      goTo('B');
+    }
+
+    // --- STEP B ---
+    function renderStepB() {
+      const grid = document.getElementById("cat-grid");
+      grid.innerHTML = CATEGORIES.map(c => {
+        const isSelected = state.selectedCategories.includes(c.id);
+        return `
+          <div class="cat-tile ${isSelected ? 'selected' : ''}" onclick="toggleCategory('${c.id}')">
+            <span class="label">${c.label}</span>
+            <span class="label desc" style="font-size: 0.65rem; text-transform:none;">${c.desc}</span>
+            <span class="label">${isSelected ? '✓' : '+'}</span>
+          </div>
+        `;
+      }).join('');
+      renderRankedList();
+      document.getElementById("btn-next-b").disabled = state.selectedCategories.length === 0;
+    }
+
+    function toggleCategory(catId) {
+      if (state.selectedCategories.includes(catId)) {
+        state.selectedCategories = state.selectedCategories.filter(id => id !== catId);
+      } else {
+        state.selectedCategories.push(catId);
+      }
+      // Reset userRanked if categories change to be safe
+      state.userRanked = false;
+      renderStepB();
+    }
+
+    function renderRankedList() {
+      const container = document.getElementById("ranked-list-container");
+      const list = document.getElementById("ranked-list");
+      
+      if (state.selectedCategories.length === 0) {
+        container.style.display = "none";
+        return;
+      }
+      
+      container.style.display = "block";
+      list.innerHTML = state.selectedCategories.map((catId, index) => {
+        const cat = CATEGORIES.find(c => c.id === catId);
+        return `
+          <div class="rank-item" draggable="true" data-id="${cat.id}">
+            <span class="num">${index + 1}</span>
+            <span class="name">${cat.label}</span>
+            <span class="remove" onclick="toggleCategory('${cat.id}')">×</span>
+          </div>
+        `;
+      }).join('');
+
+      // Drag and drop setup
+      const items = list.querySelectorAll('.rank-item');
+      let draggedItem = null;
+
+      items.forEach(item => {
+        item.addEventListener('dragstart', function(e) {
+          draggedItem = item;
+          setTimeout(() => item.style.opacity = '0.5', 0);
+        });
+
+        item.addEventListener('dragend', function() {
+          setTimeout(() => {
+            draggedItem.style.opacity = '1';
+            draggedItem = null;
+            updateCategoryOrder();
+          }, 0);
+        });
+
+        item.addEventListener('dragover', function(e) { e.preventDefault(); });
+
+        item.addEventListener('dragenter', function(e) {
+          e.preventDefault();
+          this.style.background = 'rgba(255,255,255,0.4)';
+        });
+
+        item.addEventListener('dragleave', function() {
+          this.style.background = 'rgba(255,255,255,0.2)';
+        });
+
+        item.addEventListener('drop', function() {
+          this.style.background = 'rgba(255,255,255,0.2)';
+          if (this !== draggedItem) {
+            let all = Array.from(list.querySelectorAll('.rank-item'));
+            let draggedIdx = all.indexOf(draggedItem);
+            let targetIdx = all.indexOf(this);
+            if (draggedIdx < targetIdx) {
+              this.parentNode.insertBefore(draggedItem, this.nextSibling);
+            } else {
+              this.parentNode.insertBefore(draggedItem, this);
+            }
+            state.userRanked = true;
+          }
+        });
+      });
+    }
+
+    function updateCategoryOrder() {
+      const list = document.getElementById("ranked-list");
+      const ids = Array.from(list.querySelectorAll('.rank-item')).map(item => item.getAttribute('data-id'));
+      state.selectedCategories = ids;
+      renderStepB(); // re-render to update numbers
+    }
+
+    function finishStepB() {
+      if (state.selectedCategories.length > 1 && !state.userRanked) {
+        goTo('C');
+      } else {
+        if (state.userRanked) state.routeOrder = "manual";
+        state.currentCategoryIndex = 0;
+        goTo('D');
+      }
+    }
+
+    // --- STEP C ---
+    function selectRouteOrder(order) {
+      state.routeOrder = order;
+      state.currentCategoryIndex = 0;
+      goTo('D');
+    }
+
+    // --- STEP D ---
+    const STEP_D_DESC =
+      "Select one or two stops for this category, locations appear in geographic distance from the Skytrain";
+
+    function showsDiningStyleFilter(catId) {
+      return DINING_STYLE_FILTER_CATEGORIES.includes(catId);
+    }
+
+    function getMaxWalkMinutes() {
+      if (state.timeFilter === '1hr') return 15;
+      if (state.timeFilter === 'halfday') return 25;
+      return Infinity;
+    }
+
+    function getCategoryStops(catId) {
+      return STOPS
+        .filter(s => s.tags.includes(catId))
+        .sort((a, b) => a.walkFromStation - b.walkFromStation);
+    }
+
+    function applyDiningStyleFilter(stops, catId) {
+      if (!showsDiningStyleFilter(catId) || !state.diningStyleFilter) return stops;
+      return stops.filter(s => s.tags.includes(state.diningStyleFilter));
+    }
+
+    function partitionByWalkRadius(stops) {
+      const maxWalk = getMaxWalkMinutes();
+      if (!Number.isFinite(maxWalk)) {
+        return { within: stops, outside: [] };
+      }
+      return {
+        within: stops.filter(s => s.walkFromStation <= maxWalk),
+        outside: stops.filter(s => s.walkFromStation > maxWalk),
+      };
+    }
+
+    function getDisplayedStopsForCategory(catId) {
+      const filtered = applyDiningStyleFilter(getCategoryStops(catId), catId);
+      return partitionByWalkRadius(filtered);
+    }
+
+    function getDisplayedStops(catId) {
+      const { within, outside } = getDisplayedStopsForCategory(catId);
+      return [...within, ...outside];
+    }
+
+    function renderSpotTile(spot, catId) {
+      const isSelected = (state.selectedStops[catId] || []).includes(spot.id);
+      const outsideClass = spot._outsideRadius ? " spot-tile--outside-radius" : "";
+      return `
+          <div class="spot-tile${outsideClass} ${isSelected ? 'selected' : ''}" onclick="toggleSpot('${catId}', '${spot.id}')">
+            <div class="img-wrapper">
+              ${renderPhotoGallery(spot, `d-${spot.id}`)}
+            </div>
+            ${isSelected ? '<div class="checkmark">✓</div>' : ''}
+            <div class="content">
+              <h2>${spot.name}</h2>
+              <div class="tags">
+                ${spot.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                <span class="tag">${spot.costLabel}</span>
+                <span class="tag">${spot.walkFromStation} min walk</span>
+              </div>
+              <p>${spot.description}</p>
+            </div>
+          </div>
+        `;
+    }
+
+    function setDiningStyleFilter(key) {
+      const tag = DINING_STYLE_TAGS[key];
+      if (!tag) return;
+      state.diningStyleFilter = state.diningStyleFilter === tag ? null : tag;
+      renderStepD();
+    }
+
+    function renderDiningStyleFilters(catId, eligibleCount) {
+      const bar = document.getElementById("step-d-filters");
+      if (!showsDiningStyleFilter(catId) || eligibleCount === 0) {
+        bar.style.display = "none";
+        bar.innerHTML = "";
+        return;
+      }
+      bar.style.display = "flex";
+      const { sitDown, grabAndGo } = DINING_STYLE_TAGS;
+      bar.innerHTML = `
+        <button type="button" class="${state.diningStyleFilter === sitDown ? 'active' : ''}" onclick="setDiningStyleFilter('sitDown')">Sit down</button>
+        <button type="button" class="${state.diningStyleFilter === grabAndGo ? 'active' : ''}" onclick="setDiningStyleFilter('grabAndGo')">Grab and go</button>
+      `;
+    }
+
+    function renderStepD() {
+      const catId = state.selectedCategories[state.currentCategoryIndex];
+      const cat = CATEGORIES.find(c => c.id === catId);
+
+      if (state.stepDCategoryId !== catId) {
+        state.diningStyleFilter = null;
+        state.stepDCategoryId = catId;
+      }
+      
+      document.getElementById("step-d-title").innerText = `Choose: ${cat.label}`;
+      
+      const categoryStops = getCategoryStops(catId);
+      const { within, outside } = getDisplayedStopsForCategory(catId);
+      const grid = document.getElementById("spot-grid");
+
+      renderDiningStyleFilters(catId, categoryStops.length);
+
+      if (categoryStops.length === 0) {
+        document.getElementById("step-d-desc").innerText = `No ${cat.label} spots on the map yet. Skip to next.`;
+        grid.innerHTML = "";
+        updateStepDNextBtn();
+        return;
+      }
+
+      const displayedCount = within.length + outside.length;
+      if (displayedCount === 0) {
+        const label = state.diningStyleFilter === DINING_STYLE_TAGS.sitDown ? 'sit down' : 'grab and go';
+        document.getElementById("step-d-desc").innerText =
+          `No ${cat.label} spots match "${label}". Try the other filter or tap again to show all.`;
+        grid.innerHTML = "";
+        updateStepDNextBtn();
+        return;
+      }
+
+      if (within.length === 0 && outside.length > 0) {
+        document.getElementById("step-d-desc").innerText =
+          `No ${cat.label} spots fit your time radius — you can still pick from further stops below.`;
+      } else if (outside.length > 0) {
+        document.getElementById("step-d-desc").innerText =
+          `${STEP_D_DESC} Further options are listed below outside your time radius.`;
+      } else {
+        document.getElementById("step-d-desc").innerText = STEP_D_DESC;
+      }
+
+      if (!state.selectedStops[catId]) state.selectedStops[catId] = [];
+
+      const markOutside = (spots) =>
+        spots.map(s => Object.assign({}, s, { _outsideRadius: true }));
+
+      let html = within.map(spot => renderSpotTile(spot, catId)).join('');
+      if (outside.length > 0) {
+        html += `<p class="spot-section-label">Outside your time radius</p>`;
+        html += markOutside(outside).map(spot => renderSpotTile(spot, catId)).join('');
+      }
+
+      grid.innerHTML = html;
+
+      initPhotoGalleries(grid);
+      updateStepDNextBtn();
+    }
+
+    function toggleSpot(catId, spotId) {
+      let selected = state.selectedStops[catId] || [];
+      if (selected.includes(spotId)) {
+        selected = selected.filter(id => id !== spotId);
+      } else {
+        if (selected.length >= 2) selected.shift(); // Max 2 per category
+        selected.push(spotId);
+      }
+      state.selectedStops[catId] = selected;
+      renderStepD();
+    }
+
+    function updateStepDNextBtn() {
+      const catId = state.selectedCategories[state.currentCategoryIndex];
+      const selected = state.selectedStops[catId] || [];
+      const displayed = getDisplayedStops(catId);
+      // Can proceed if nothing to pick, OR at least 1 selected
+      const canProceed = !(displayed.length > 0 && selected.length === 0);
+      const btn = document.getElementById("btn-next-d");
+      btn.disabled = !canProceed;
+      document.getElementById("step-d-next-fixed").hidden = !canProceed;
+    }
+
+    function nextCategory() {
+      if (state.currentCategoryIndex < state.selectedCategories.length - 1) {
+        state.currentCategoryIndex++;
+        renderStepD();
+        window.scrollTo(0, 0);
+      } else {
+        goTo('E');
+      }
+    }
+
+    function backFromStepD() {
+      if (state.currentCategoryIndex > 0) {
+        state.currentCategoryIndex--;
+        renderStepD();
+        window.scrollTo(0, 0);
+      } else {
+        // Go back to C or B
+        if (!state.userRanked && state.selectedCategories.length > 1) {
+          goTo('C');
+        } else {
+          goTo('B');
+        }
+      }
+    }
+
+    // --- STEP E ---
+    const STATION_WALK_LABEL = "Commercial Skytrain";
+    const WALK_SPEED_KMH = 5;
+
+    function haversineKm(lat1, lng1, lat2, lng2) {
+      const R = 6371;
+      const toRad = (d) => (d * Math.PI) / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLng = toRad(lng2 - lng1);
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function formatKm(km) {
+      if (km < 1) return km.toFixed(2);
+      return km.toFixed(1);
+    }
+
+    function getWalkLeg(lat1, lng1, lat2, lng2) {
+      const km = haversineKm(lat1, lng1, lat2, lng2);
+      const minutes = Math.max(1, Math.round((km / WALK_SPEED_KMH) * 60));
+      return { km, minutes };
+    }
+
+    function getStopWalkFromStation(stop) {
+      const km = haversineKm(STATION_LAT, STATION_LNG, stop.lat, stop.lng);
+      const minutes = stop.walkFromStation ?? Math.max(1, Math.round((km / WALK_SPEED_KMH) * 60));
+      return { km, minutes };
+    }
+
+    function getRouteLegs(route) {
+      if (!route.length) return [];
+      const legs = [];
+      legs.push({
+        ...getWalkLeg(STATION_LAT, STATION_LNG, route[0].lat, route[0].lng),
+        label: `To ${route[0].name}`,
+      });
+      for (let i = 0; i < route.length - 1; i++) {
+        const a = route[i];
+        const b = route[i + 1];
+        legs.push({
+          ...getWalkLeg(a.lat, a.lng, b.lat, b.lng),
+          label: `To ${b.name}`,
+        });
+      }
+      const last = route[route.length - 1];
+      legs.push({
+        ...getWalkLeg(last.lat, last.lng, STATION_LAT, STATION_LNG),
+        label: `Back to ${STATION_WALK_LABEL}`,
+      });
+      return legs;
+    }
+
+    function getRouteWalkTotals(route) {
+      const legs = getRouteLegs(route);
+      if (!legs.length) {
+        return { totalKm: 0, totalMin: 0, legs: [] };
+      }
+      const totalKm = legs.reduce((sum, leg) => sum + leg.km, 0);
+      const totalMin = legs.reduce((sum, leg) => sum + leg.minutes, 0);
+      return { totalKm, totalMin, legs };
+    }
+
+    function getFinalRoute() {
+      let finalIds = [];
+      // If manual, preserve category order
+      if (state.routeOrder === "manual") {
+        state.selectedCategories.forEach(catId => {
+          if (state.selectedStops[catId]) {
+            finalIds.push(...state.selectedStops[catId]);
+          }
+        });
+      } else {
+        // Gather all selected
+        Object.values(state.selectedStops).forEach(ids => finalIds.push(...ids));
+      }
+      
+      // Deduplicate
+      finalIds = [...new Set(finalIds)];
+      
+      let route = finalIds.map(id => STOPS.find(s => s.id === id)).filter(Boolean);
+
+      if (state.routeOrder === "geographic") {
+        // Sort by y coordinate (south to north roughly)
+        route.sort((a, b) => b.coords.y - a.coords.y); 
+      }
+      return route;
+    }
+
+    function animateMapPath(pathEl, options = {}) {
+      const { duration = 1500, direction = 'draw', onComplete = null } = options;
+      if (!pathEl) return;
+      const length = pathEl.getTotalLength();
+      if (!length) {
+        onComplete?.();
+        return;
+      }
+      const startOffset = direction === 'draw' ? length : 0;
+      const endOffset = direction === 'draw' ? 0 : length;
+      pathEl.style.transition = 'none';
+      pathEl.style.strokeDasharray = `${length}`;
+      pathEl.style.strokeDashoffset = `${startOffset}`;
+      pathEl.getBoundingClientRect();
+      pathEl.style.transition = `stroke-dashoffset ${duration}ms ease-in-out`;
+      pathEl.style.strokeDashoffset = `${endOffset}`;
+      if (onComplete) {
+        pathEl.addEventListener('transitionend', function handler(e) {
+          if (e.propertyName !== 'stroke-dashoffset') return;
+          pathEl.removeEventListener('transitionend', handler);
+          onComplete();
+        });
+      }
+    }
+
+    function drawMap(svgId, route) {
+      const svg = document.getElementById(svgId);
+      if (!svg) return;
+      let svgHtml = `
+        <line class="map-line" x1="150" y1="50" x2="150" y2="550" />
+        <text class="map-text" x="160" y="55">North</text>
+        <circle cx="150" cy="550" r="5" fill="var(--ink)"/>
+        <text class="map-text" x="160" y="555">Station</text>
+      `;
+
+      // Draw path
+      if (route.length > 0) {
+        let pathD = `M 150 550 `;
+        route.forEach(s => {
+          pathD += `L ${s.coords.x} ${s.coords.y} `;
+        });
+        svgHtml += `<path class="map-path" id="anim-path-${svgId}" d="${pathD}" />`;
+      }
+
+      // Draw stops
+      route.forEach((s, idx) => {
+        svgHtml += `
+          <circle class="map-stop" cx="${s.coords.x}" cy="${s.coords.y}" r="5" />
+          <text class="map-text" x="${s.coords.x + 15}" y="${s.coords.y + 4}">${idx + 1}. ${s.crossStreet}</text>
+        `;
+      });
+      svg.innerHTML = svgHtml;
+
+      const pathEl = document.getElementById(`anim-path-${svgId}`);
+      animateMapPath(pathEl, { duration: 1500, direction: 'draw' });
+    }
+
+    function renderRouteLegHtml(leg) {
+      return `
+        <div class="route-leg" aria-hidden="true">
+          <span class="route-leg-arrow">↓</span>
+          <span>~${formatKm(leg.km)} km · ~${leg.minutes} min · ${escapeHtml(leg.label)}</span>
+        </div>
+      `;
+    }
+
+    function renderRouteCardHtml(s, idx) {
+      const { km, minutes } = getStopWalkFromStation(s);
+      return `
+        <div class="route-card">
+          <img src="${s.image}" alt="${escapeHtml(s.name)}">
+          <div class="content">
+            <h3 style="font-size: 1rem; text-transform:uppercase;">${idx + 1}. ${escapeHtml(s.name)}</h3>
+            <div class="meta">${escapeHtml(s.crossStreet)}</div>
+            <div class="meta walk-line">~${formatKm(km)} km · ~${minutes} min from ${STATION_WALK_LABEL}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRouteCards(containerId, route) {
+      const legs = getRouteLegs(route);
+      const parts = [];
+      route.forEach((s, idx) => {
+        if (legs[idx]) parts.push(renderRouteLegHtml(legs[idx]));
+        parts.push(renderRouteCardHtml(s, idx));
+      });
+      const returnLeg = legs[route.length];
+      if (returnLeg) parts.push(renderRouteLegHtml(returnLeg));
+      document.getElementById(containerId).innerHTML = parts.join("");
+    }
+
+    function renderRouteTotals(containerId, route) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      if (!route.length) {
+        el.innerHTML = "";
+        return;
+      }
+      const { totalKm, totalMin } = getRouteWalkTotals(route);
+      el.innerHTML = `
+        <div>Total walking (your route order): ~${formatKm(totalKm)} km · ~${totalMin} min</div>
+        <p class="walk-disclaimer">Straight-line estimates between stops in visit order, including return to the station. Does not include time spent at locations.</p>
+      `;
+    }
+
+        function renderStepE() {
+      const route = getFinalRoute();
+      drawMap("route-map", route);
+      renderRouteCards("route-cards", route);
+      renderRouteTotals("route-totals", route);
+    }
+
+    function editSpots() {
+      state.currentCategoryIndex = 0;
+      goTo('D');
+    }
+
+    // --- STEP F ---
+    function renderStepF() {
+      const route = getFinalRoute();
+      document.getElementById("export-summary").innerText = `YOUR COMMERCIAL DRIVE ROUTE — ${route.length} STOPS`;
+      drawMap("route-map-final", route);
+    }
+
+    function openGoogleMaps() {
+      const route = getFinalRoute();
+      if (route.length === 0) return;
+
+      const origin = `${STATION_LAT},${STATION_LNG}`;
+      const dest = `${route[route.length-1].lat},${route[route.length-1].lng}`;
+      
+      let waypoints = "";
+      if (route.length > 1) {
+        waypoints = "&waypoints=" + route.slice(0, -1).map(s => `${s.lat},${s.lng}`).join('|');
+      }
+
+      const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}${waypoints}&travelmode=walking`;
+      window.open(url, '_blank');
+    }
+
+    function startOver() {
+      resetState();
+      showStep('LANDING');
+    }
+
+    // --- PATH 2 ---
+    function selectPlanTime(key) {
+      state.planTime = key;
+      showStep('P2-PLAN');
+    }
+
+    function getPlanRoute() {
+      const plan = PLANS[state.planTime];
+      if (!plan) return [];
+      return plan.stops.map(id => STOPS.find(s => s.id === id)).filter(Boolean);
+    }
+
+    function renderP2Plan() {
+      const key = state.planTime;
+      const plan = PLANS[key] || { title: 'Your Plan', stops: [] };
+      const label = PLAN_TIME_LABELS[key] || key;
+      const route = getPlanRoute();
+
+      document.getElementById('p2-plan-title').innerText = plan.title;
+
+      if (route.length === 0) {
+        document.getElementById('p2-plan-desc').innerText = `[Pre-built plan for ${label} — coming soon]`;
+        document.getElementById('route-cards-p2').innerHTML = [1, 2, 3].map(n => `
+          <div class="route-card placeholder">
+            <div class="content" style="padding: 1.5rem;">
+              <h3 style="font-size: 1rem; text-transform:uppercase;">Stop ${n}</h3>
+              <div class="meta">Coming soon</div>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        document.getElementById('p2-plan-desc').innerText = `${label.toUpperCase()} · ${route.length} STOPS`;
+        renderRouteCards('route-cards-p2', route);
+        renderRouteTotals('route-totals-p2', route);
+      }
+
+      const totalsEl = document.getElementById('route-totals-p2');
+      if (route.length === 0 && totalsEl) totalsEl.innerHTML = '';
+
+      drawMap('route-map-p2', route);
+    }
+
+    // --- PATH 3 ---
+    function renderP3() {
+      const grid = document.getElementById('p3-grid');
+      grid.innerHTML = STOPS.map(spot => {
+        const expanded = state.expandedSpotId === spot.id;
+        const testClass = spot._test ? " spot-tile--test" : "";
+        return `
+          <div class="spot-tile expandable${testClass} ${expanded ? 'expanded' : ''}" onclick="toggleP3Spot('${spot.id}')">
+            <div class="img-wrapper">
+              ${expanded ? renderPhotoGallery(spot, `p3-${spot.id}`) : renderPhotoHero(spot)}
+            </div>
+            <div class="content tile-summary">
+              <h2>${spot.name}</h2>
+              <div class="tags">
+                ${spot.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                <span class="tag">${spot.costLabel}</span>
+                <span class="tag">${spot.walkFromStation} min walk</span>
+              </div>
+            </div>
+            <div class="expanded-content">
+              <p>${spot.description}</p>
+              <p class="label" style="margin-top: 0.75rem;">${spot.crossStreet}</p>
+              <button class="btn-maps" onclick="event.stopPropagation(); openSpotInMaps(${spot.lat}, ${spot.lng})">Add to Google Maps</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      initPhotoGalleries(grid);
+    }
+
+    function toggleP3Spot(id) {
+      state.expandedSpotId = state.expandedSpotId === id ? null : id;
+      renderP3();
+    }
+
+    function openSpotInMaps(lat, lng) {
+      window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
+    }
+
+    // Init — locations from data/stops.json (see AGENTS.md)
+    loadStopsData().then((ok) => {
+      if (ok) showStep("LANDING");
+    });
+  </script>
+</body>
+</html>
