@@ -1,0 +1,240 @@
+Google Maps link: https://maps.app.goo.gl/AwZS4EyBQ6Koy7Yk9
+Name: JJ bean
+Slug:JJ
+Tags: coffee, cookies, snacks
+Cost:$
+Time of day: any
+Cross street: commercial and 6th
+Description: Local legend cafe. Home of my favorite chocolate chip cookie. Local meet up spot with decent little patio in the back, great drinks and an excellent roast of espresso.
+Optional: 3 mins from train
+
+Google Maps link:https://maps.app.goo.gl/xrSmVVWZyz74Mtgm9
+Name:Rollzzy
+Slug: Rollzzy
+Tags: Indian food, to-go
+Cost: $
+Time of day: any
+Cross street: 6th and commercial
+Description: Your favorite Indian dishes, wrapped up in a delicious package to go. Both meat and veggie options. 
+Optional: 3 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJXUNrtUdxhlQRMWfiCLV27a0
+Name: Prado Cafe
+Slug: prado-cafe
+Tags: cafe, coffee, pastries
+Cost: $$
+Time of day: Morning-late afternoon
+Cross street: E 4th Ave
+Description: Locally owned coffee shop with great coffee and some unique, hearty baked goods. Great spot to sit on the corner and people watch.
+Walk minutes from station:7 mins from skytrain
+
+Google Maps link:  https://www.google.com/maps/place/?q=place_id:ChIJMT-DoxBxhlQRBg0F_c9gG68
+Name: Skewers Souvlaki Pita Bar
+Slug: skewers-souvlaki-pita-bar
+Tags: restaurant, greek, souvlaki, pita, casual dining
+Cost: $$
+Time of day:All day
+Cross street: E 2nd Ave
+Description: Newer locally owned spot with super authentic Souvlaki. Big share plates or personal portions
+Optional: 10 mins from skytrian
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJnQBdDEdxhlQRDLbQZmhbIOU
+Name: La Grotta del Formaggio
+Slug: la-grotta-del-formaggio
+Tags: deli, italian, sandwiches, grocery, cheese
+Cost: $$
+Time of day: Daytime
+Cross street: E 2nd Ave
+Description: Classic Italian Deli with a delicious sandwich counter and quick stop for European groceries.
+Optional: 10mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJL4-dMwBxhlQRx_HBHWoYlDE
+Name: Belli Pizza
+Slug: belli-pizza
+Tags: pizza, italian, restaurant, sourdough, dine-in
+Cost: $$$
+Time of day: lunch - late night
+Cross street: E 2nd
+Description: Newest pizza place to hit Commercial. Their dough is super high quality with a unique flavor, they cook it to perfection with a simple menu that has me coming back for more. The late night vibe is worth checking out as their playlists are always on point and the drinks somehow always keep on flowing.
+Optional: 12 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJARfKW7txhlQRgm1BxguLamU
+Name: Loula's
+Slug: loulas
+Tags: restaurant, greek, dinner, date night, cocktails
+Cost: $$$
+Time of day: dinner
+Cross street: Graveley
+Description: Upscale Greek dishes with authentic flavors. Great cocktails and a fun evening vibe if you're into staying late. Check out the backroom for more cocktails.
+Optional: 15 min from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJNWm91udxhlQRv_cFcXKSgDk
+Name: Bar Corso
+Slug: bar-corso
+Tags: italian, wine bar, cocktails, small plates, dinner, date night
+Cost: $$$
+Time of day: night
+Cross street: Grant
+Description: Good late afternoon - late night Italian snacks and cocktails. Cute little patio on the sidewalk with a good mix of wine and cocktails on the menu.
+Optional: 17 min from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJ0z_tUz9xhlQRX7t01nVfqL4
+Name: The Charlatan
+Slug: the-charlatan
+Tags: gastropub, bar, pub food, happy hour, live music, patio
+Cost: $$
+Time of day: Afternoon - late night
+Cross street: Grant
+Description: A neighborhood staple that takes in all walks of life. A big sidewalk facing patio where you can catch some evening sun, a cold beer, some wings, and potentially some live jazz. Inside has screens for all your sport-viewing needs and often has a good crew of locals kicking around.
+Optional: 20 min from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJMWyr8N9xhlQRhsd_Hpa8sq0
+Name: Cozen Japanese Cuisine
+Slug: cozen-japanese-cuisine
+Tags: japanese, sushi, sashimi, lunch, dinner
+Cost: $$
+Time of day: lunch & dinner
+Cross street: Grant
+Description: My goto sushi spot on Commercial. A bit more expensive compared to some of the other options, but I've never been disappointed in the quality of their fish and their Japanese dishes.
+Optional: 20 min from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJZw7gbUdxhlQR1inpfufueaE
+Name: Mintage
+Slug: mintage
+Tags: vintage, clothing, thrift, shopping, accessories
+Cost: $-$$$$
+Time of day: daytime
+Cross street: E 1st
+Description: One of the oldest vintage sellers in the city. Amazing selection of all types of vintage, from one of a kind dresses, to ratty band tees, beloved sports jackets, rocks and gems, reworks, and so much more. Worth a look even if you're not shopping for anything
+Optional: 15 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJD7OS67pxhlQR99jnRuImeFo
+Name: LIVIA Forno e Vino
+Slug: livia-forno-e-vino
+Tags: bakery, café, italian, wine-bar, breakfast, brunch, pastries, sourdough, sit-down, grab-and-go
+Cost: $$
+Time of day: mostly days, some evenings
+Cross street: Kitchener
+Description: One of the cutest coffee shops in the neighborhood. Great patio with an amazing piazza next door where you can sit with your take out if the restaurant is too busy (it usually is!). Amazing baked goods made in house every day, a great place for a coffee, a treat, lunch, or to take home some bread.
+Optional: 15 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJNwjdpkdxhlQRlKAwiWMe-5U
+Name: Mediterranean Specialty Foods - Turkish Market
+Slug: mediterranean-specialty-foods-turkish-market
+Tags: grocery, mediterranean, turkish, specialty-foods, baklava, sweets, spices, deli, grab-and-go
+Cost: $ - $$$
+Time of day: daytime 
+Cross street: E 2nd
+Description: A great place to stop to get some Mediterranean groceries or a quick snack. 
+Optional: 10 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJi_5Fqz9xhlQRctWWsZ8SyR8
+Name: Sula Indian Restaurant
+Slug: sula-indian-restaurant
+Tags: indian, restaurant, cocktails, vegetarian-friendly, curry, sit-down, grab-and-go, lunch, dinner
+Cost: $$
+Time of day: day or night
+Cross street: William St
+Description: With multiple locations in the city, it's no secret that this is some of the best Indian food you can get. I've tried many of the dishes and always find myself coming back for more!
+Optional:20 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJacVfweBxhlQRJSijA6JfJSI
+Name: Nomo Nomo
+Slug: nomo-nomo
+Tags: japanese, izakaya, small-plates, cocktails, late-night, date-night, sharing, dinner, sit-down
+Cost: $$$-$$$$
+Time of day: nighttime
+Cross street: Kitchener
+Description: A newer Izakaya on the block, this location has some of the best cocktails in the city. Some serious chemistry going on in here to get some wild cocktails. Their super sharable plates are awesome for dining with 2-6 people, make a reso, this place fills up fast!
+Optional: 17 min from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJG8_wk4dxhlQRM-VxydVoPp0
+Name: Magari by Oca
+Slug: magari-by-oca
+Tags: italian, pasta, dinner, no-reservations, wine, tasting-menu
+Cost: $$$-$$$$
+Time of day: night
+Cross street: Kitchener
+Description: One of the most in demand restaurants in the city. Unrivaled hand-made pasta that truly provides a unique tasting-menu experience. The team there is super knowledgeable and always a great time. Get in line by 4:30 if you want to be in the first round of seating!
+Optional: 17 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJ37AAWSFxhlQRqdBHv9FgZuA
+Name: Don't Argue Pizza
+Slug: dont-argue-pizza
+Tags: pizza, new-york-style, by-the-slice, grab-and-go, casual, sandwiches, lunch, dinner
+Cost: $$
+Time of day: Any time
+Cross street: Kitchener
+Description: A great local spot to grab a slice, a shot of espresso, and catch a game. One of the best slices in the city hands down and one of my go-tos for a quick bite. Authentic NY slice in the heart of little Italy.
+Optional: 15 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJS8M2rT9xhlQR8CnI5SU3p40
+Name: Sweet Cherubim
+Slug: sweet-cherubim
+Tags: vegan, vegetarian, health-food, grocery, desserts, cafe, chocolate, juice, lunch, sit-down, grab-and-go
+Cost: $$
+Time of day:
+Cross street:
+Description: A long-standing Commercial drive staple. This is part restaurant part grocery shop. My go to here is a Potato Pea fried Samosa and Chocolate Macaroon cookie to go. Large selection of natural foods, drinks, vitamins, and much more. The other side of the shop is a sit-down restaurant with some super tasty traditional dishes.
+Optional: 20 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJm_zob_ZxhlQRZ80MTXXJJGU
+Name: Mogu Fried Chicken
+Slug: mogu-fried-chicken
+Tags: japanese, fried-chicken, izakaya, casual, dinner, takeout, lunch
+Cost: $$
+Time of day: lunch or dinner
+Cross street: Parker
+Description: Korean Fried chicken on a bowl of rice with pickles. Enough said.
+Optional: 22 mins form skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJw-s4pFdxhlQRh2jK22eXlnU
+Name: Downlow Chicken Shack
+Slug: downlow-chicken-shack
+Tags: fried-chicken, southern, casual, lunch, dinner, sandwiches, fast-casual, grab-and-go, sit-down
+Cost: $$
+Time of day: any
+Cross street: Venables
+Description: A local favorite, Downlow always serves amazing southern style fried chicken. I usually go for the mild options, but if you're feeling spicy, there is a ton of options to get your sweat on.
+Optional: 30 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJX8KXIj5xhlQR5BwjsZtGOgU
+Name: Kin Kao
+Slug: kin-kao
+Tags: thai, restaurant, cocktails, wine-bar, dinner, curry, noodles, sit-down
+Cost: $$
+Time of day: night
+Cross street: Venables
+Description: Wonderful, cozy, Thai restaurant with some amazing curries and pad-thai dishes. Menu changes frequently and I love checking in at least once a year to see whats new.
+Optional: 30 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJn9FuS6pxhlQR39FNX2yee2o
+Name: Caffè La Tana
+Slug: caffe-la-tana
+Tags: italian, cafe, pasta, wine, market, dine-in, lunch, dinner
+Cost: $$ - $$$
+Time of day: any
+Cross street: E Georgia
+Description: One of my forever favorite Cafes in the city. Their lunch is always fantastic, stop for a coffee and a quick bite with rotating pastas, salads, and sandwiches to satisfy any taste for any time of day.
+Optional: 35 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJ3-oFcgBxhlQRFhb6LF4JCLw
+Name: FUN HÄUS
+Slug: fun-haus
+Tags: vintage, clothing, collectibles, home-decor, local, shopping, video games
+Cost: $$
+Time of day: day time
+Cross street: Venables
+Description: One of the newest Vintage shops in the neighborhood by two OG vintage pickers in the city. You can find anything your vintage heart desires from super accessible collectables and clothes all the way up to rare t-shirts that have back stories that will make your head spin.
+Optional: 30 mins from skytrain
+
+Google Maps link: https://www.google.com/maps/place/?q=place_id:ChIJDQNbJz5xhlQRu7LEZ0yEI_M
+Name: Slice of Life Art Gallery
+Slug: slice-of-life-art-gallery
+Tags: art-gallery, gift-shop, photo-booth, thrift, art-classes, local, shopping, community
+Cost: $ - $$$
+Time of day: any
+Cross street: Venables
+Description: Part art-gallery, part shop, part co-working space, photo booth, part vintage shop this place has it all. It is a must stop if you make it to Venables from the skytrain, there is truly something for everyone. Local gifts made by local artists of all shapes and sizes.
+Optional: 30 mins from skytrain
+
