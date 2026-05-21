@@ -330,18 +330,106 @@
     }
     .spot-tile.selected .tag { border-color: #fff; }
 
-    .dining-style-filters {
-      display: flex;
-      gap: 0.75rem;
+    .step-d-filters {
       margin-bottom: 1.5rem;
     }
-    .dining-style-filters button {
+    .step-d-filters-row,
+    .step-d-filters-subrow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .step-d-filters-row:last-child,
+    .step-d-filters-subrow:last-child {
+      margin-bottom: 0;
+    }
+    .step-d-filters-row button,
+    .step-d-filters-subrow button {
       flex: 1;
+      min-width: 6rem;
       padding: 0.75rem 1rem;
     }
-    .dining-style-filters button.active {
+    .step-d-filters-row button.active,
+    .step-d-filters-subrow button.active {
       background: var(--ink);
       color: #fff;
+    }
+    .step-d-filters-subrow button {
+      flex: 0 1 auto;
+    }
+
+    .p3-filters {
+      margin-bottom: 1.25rem;
+    }
+    .p3-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .p3-filter-toggle {
+      padding: 0.6rem 1.25rem;
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      background: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: background 0.35s ease;
+    }
+    .p3-filter-toggle:hover {
+      background: linear-gradient(to bottom, #bafabf, #faecb5);
+    }
+    .p3-filter-toggle.active {
+      background: var(--ink);
+      color: #fff;
+    }
+    .p3-filter-clear {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      background: none;
+      border: none;
+      text-decoration: underline;
+      padding: 0;
+      cursor: pointer;
+    }
+    .p3-filter-panel {
+      margin-top: 0.85rem;
+    }
+    .p3-cat-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .p3-cat-chip {
+      padding: 0.5rem 0.9rem;
+      font-size: 0.65rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: background 0.35s ease;
+    }
+    .p3-cat-chip:hover {
+      background: linear-gradient(to bottom, #bafabf, #faecb5);
+    }
+    .p3-cat-chip.active {
+      background: var(--ink);
+      color: #fff;
+    }
+    .p3-filters .p3-tag-filters {
+      margin-top: 0.75rem;
+    }
+    .p3-empty-filters {
+      grid-column: 1 / -1;
+      padding: 2rem 1rem;
+      text-align: center;
+      border: 1px dashed var(--ink-muted);
     }
     .spot-section-label {
       grid-column: 1 / -1;
@@ -675,7 +763,7 @@
           </div>
           <div class="card" onclick="startPath2()">
             <h2>See Pre-Built Plans</h2>
-            <span class="label">My go-to spots, pre-built based on time</span>
+            <span class="label">Curated experiences — pick a vibe, not a spreadsheet</span>
           </div>
           <div class="card" onclick="startPath3()">
             <h2>See All Spots</h2>
@@ -759,7 +847,7 @@
       <h1 id="step-d-title">Choose your spot</h1>
       <p id="step-d-desc">Select one or two stops for this category, locations appear in geographic distance from the Skytrain</p>
 
-      <div id="step-d-filters" class="dining-style-filters" style="display: none;" aria-label="Filter by dining style"></div>
+      <div id="step-d-filters" class="step-d-filters" style="display: none;" aria-label="Filter spots"></div>
 
       <div class="photo-grid" id="spot-grid">
         <!-- Rendered via JS -->
@@ -810,16 +898,11 @@
       <button style="width: 100%;" onclick="startOver()">Start Over</button>
     </section>
 
-    <!-- PATH 2: TIME -->
+    <!-- PATH 2: PICK PLAN -->
     <section id="step-P2-TIME" class="step">
-      <h1>How much time do you have?</h1>
-      <p>Select a time window to see a curated plan.</p>
-      
-      <div class="card" onclick="selectPlanTime('30min')"><h2>30 min</h2><span class="label">Quick Hit</span></div>
-      <div class="card" onclick="selectPlanTime('45min')"><h2>45 min</h2><span class="label">The Essentials</span></div>
-      <div class="card" onclick="selectPlanTime('1hr')"><h2>1 hour</h2><span class="label">The Classic</span></div>
-      <div class="card" onclick="selectPlanTime('1.5hr')"><h2>1.5 hours</h2><span class="label">The Full Loop</span></div>
-      <div class="card" onclick="selectPlanTime('allday')"><h2>All day</h2><span class="label">The Grand Tour</span></div>
+      <h1>Pick your experience</h1>
+      <p>Four curated routes — time is a guide, not the headline.</p>
+      <div id="p2-plan-picker"></div>
       <div class="nav-buttons">
         <button onclick="showStep('LANDING')">Back</button>
       </div>
@@ -828,7 +911,7 @@
     <!-- PATH 2: PLAN -->
     <section id="step-P2-PLAN" class="step">
       <h1 id="p2-plan-title">Your Plan</h1>
-      <p id="p2-plan-desc" class="label" style="margin-bottom: 2rem;">...</p>
+      <p id="p2-plan-desc" class="label" style="margin-bottom: 2rem; white-space: pre-line;">...</p>
       
       <div class="map-split">
         <div class="map-container">
@@ -841,13 +924,15 @@
       </div>
       <div class="nav-buttons">
         <button onclick="showStep('P2-TIME')">Back</button>
+        <button class="primary" id="p2-open-maps" style="display: none;" onclick="openGoogleMaps(getPlanRoute())">Open in Google Maps</button>
       </div>
     </section>
 
     <!-- PATH 3: ALL SPOTS -->
     <section id="step-P3" class="step">
       <h1>All Spots</h1>
-      <p>Browse every recommendation and add stops to Google Maps.</p>
+      <p id="p3-desc">Browse every recommendation and add stops to Google Maps.</p>
+      <div id="p3-filters" class="p3-filters" aria-label="Filter spots"></div>
       <div class="photo-grid" id="p3-grid">
         <!-- Rendered via JS -->
       </div>
@@ -867,20 +952,20 @@
     Photos: assets/stops/<slug>.jpg, <slug>-2.jpg, … → images[] in data/stops.json
 
     Tell Cursor: "Add a new stop" and paste the prompt block from AGENTS.md.
-    Preview: npx serve .  →  open commercial-drive.html  →  Path 3 (browse all spots).
+    Preview: npx serve .  →  open index.html  →  Path 3 (browse all spots).
   -->
 
   <div id="data-load-error" class="data-load-error" hidden>
     <strong>Could not load locations.</strong>
     Open this site through a local server (not as a file:// URL).
     From the project folder run: <code>npx --yes serve .</code>
-    Then open <code>/commercial-drive.html</code>. See AGENTS.md.
+    Then open <code>/index.html</code>. See AGENTS.md.
     <span data-error-detail style="display:block;margin-top:0.5rem;font-size:0.85em;"></span>
   </div>
 
   <script>
     /**
-     * LOCATIONS — data/stops.json is the source of truth.
+     * LOCATIONS — data/stops.json | PLANS — data/plans.json
      * Agent workflow: AGENTS.md | Template: data/stop-template.json
      */
     // --- DATA ---
@@ -937,11 +1022,22 @@
       return { images, image: images[0] };
     }
 
+    const CANONICAL_CATEGORIES = ["coffee", "food", "drinks", "shopping", "hangout", "groceries"];
+
+    function getStopCategories(stop) {
+      if (Array.isArray(stop.categories) && stop.categories.length) {
+        return stop.categories.filter((c) => CANONICAL_CATEGORIES.includes(c));
+      }
+      return CANONICAL_CATEGORIES.filter((c) => (stop.tags || []).includes(c));
+    }
+
     function hydrateStops(rawStops) {
       return rawStops.map((stop) => {
         const { images, image } = resolveStopImages(stop);
         const costLabel = formatCost(stop.cost);
-        return { ...stop, images, image, costLabel };
+        const neighborhood = (stop.neighborhood || "commercial").toLowerCase();
+        const categories = getStopCategories(stop);
+        return { ...stop, images, image, costLabel, neighborhood, categories };
       });
     }
 
@@ -997,21 +1093,33 @@
       });
     }
 
-    async function loadStopsData() {
+    let PLANS = {};
+    let PLAN_ORDER = [];
+
+    async function loadAppData() {
       const banner = document.getElementById("data-load-error");
       try {
-        const res = await fetch("data/stops.json", { cache: "no-store" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        STOPS = hydrateStops(data.stops || []);
-        if (data.station) {
-          STATION_LAT = data.station.lat;
-          STATION_LNG = data.station.lng;
+        const [stopsRes, plansRes] = await Promise.all([
+          fetch("data/stops.json", { cache: "no-store" }),
+          fetch("data/plans.json", { cache: "no-store" }),
+        ]);
+        if (!stopsRes.ok) throw new Error(`stops.json HTTP ${stopsRes.status}`);
+        if (!plansRes.ok) throw new Error(`plans.json HTTP ${plansRes.status}`);
+        const stopsData = await stopsRes.json();
+        const plansData = await plansRes.json();
+        STOPS = hydrateStops(stopsData.stops || []);
+        if (stopsData.station) {
+          STATION_LAT = stopsData.station.lat;
+          STATION_LNG = stopsData.station.lng;
         }
+        PLANS = plansData.plans || {};
+        PLAN_ORDER = Array.isArray(plansData.planOrder)
+          ? plansData.planOrder
+          : Object.keys(PLANS);
         if (banner) banner.hidden = true;
         return true;
       } catch (err) {
-        console.error("Failed to load data/stops.json", err);
+        console.error("Failed to load app data", err);
         if (banner) {
           const detail = banner.querySelector("[data-error-detail]");
           if (detail) detail.textContent = err.message || String(err);
@@ -1021,29 +1129,54 @@
       }
     }
 
-    const PLANS = {
-      '30min':  { title: 'Quick Hit', stops: [] },
-      '45min':  { title: 'The Essentials', stops: [] },
-      '1hr':    { title: 'The Classic', stops: [] },
-      '1.5hr':  { title: 'The Full Loop', stops: [] },
-      'allday': { title: 'The Grand Tour', stops: [] },
-    };
-
-    const PLAN_TIME_LABELS = {
-      '30min': '30 min',
-      '45min': '45 min',
-      '1hr': '1 hour',
-      '1.5hr': '1.5 hours',
-      'allday': 'all day',
-    };
-
     const PATH1_STEPS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
-    const DINING_STYLE_FILTER_CATEGORIES = ['coffee', 'food'];
-    const DINING_STYLE_TAGS = {
-      sitDown: 'sit down',
-      grabAndGo: 'grab and go',
+    const STEP_D_PRIMARY_FILTERS = {
+      coffee: [
+        { id: "sitDown", label: "Sit down", tag: "sit down" },
+        { id: "grabAndGo", label: "Grab and go", tag: "grab and go" },
+        { id: "cookies", label: "Cookies", tag: "cookies" },
+      ],
+      drinks: [
+        { id: "sitDown", label: "Sit down", tag: "sit down" },
+        { id: "patio", label: "Patio", tag: "patio" },
+        { id: "tvs", label: "TVs", tag: "tvs" },
+      ],
+      food: [
+        { id: "sitDown", label: "Sit down", tag: "sit down" },
+        { id: "grabAndGo", label: "Grab and go", tag: "grab and go" },
+      ],
+      hangout: [
+        { id: "shops", label: "Shops", tag: "shops" },
+        { id: "artGallery", label: "Art Galleries", tag: "art gallery" },
+        { id: "activities", label: "Activities", tag: "activities" },
+        { id: "park", label: "Parks", tag: "park" },
+      ],
     };
+    const STEP_D_FOOD_TYPE_TAG_DENYLIST = new Set([
+      "sit down", "grab and go", "take out", "patio", "tvs", "cookies",
+      "bar", "cocktails", "wine", "beer", "dinner", "lunch", "late night",
+      "snacks", "baked goods", "shops", "art gallery", "activities", "park",
+      ...CANONICAL_CATEGORIES,
+    ]);
+
+    function stopMatchesCategory(stop, categoryId) {
+      return getStopCategories(stop).includes(categoryId);
+    }
+
+    function stopHasTag(stop, tag) {
+      const needle = tag.toLowerCase();
+      return (stop.tags || []).some((t) => t.toLowerCase() === needle);
+    }
+
+    function defaultP3Filters() {
+      return {
+        filterOpen: false,
+        categories: [],
+        tags: [],
+        foodTypeExpanded: false,
+      };
+    }
 
     // --- STATE ---
     let state = {
@@ -1057,8 +1190,11 @@
       planTime: null,
       expandedSpotId: null,
       pathContext: null,
-      diningStyleFilter: null,
+      stepDPrimaryFilter: null,
+      stepDTypeFilter: null,
+      stepDTypeExpanded: false,
       stepDCategoryId: null,
+      p3Filters: defaultP3Filters(),
     };
 
     function resetState() {
@@ -1073,8 +1209,11 @@
         planTime: null,
         expandedSpotId: null,
         pathContext: null,
-        diningStyleFilter: null,
+        stepDPrimaryFilter: null,
+        stepDTypeFilter: null,
+        stepDTypeExpanded: false,
         stepDCategoryId: null,
+        p3Filters: defaultP3Filters(),
       };
     }
 
@@ -1140,6 +1279,7 @@
       if (step === 'D') renderStepD();
       if (step === 'E') renderStepE();
       if (step === 'F') renderStepF();
+      if (step === 'P2-TIME') renderP2PlanPicker();
       if (step === 'P2-PLAN') renderP2Plan();
       if (step === 'P3') renderP3();
     }
@@ -1156,6 +1296,7 @@
     }
     function startPath3() {
       state.expandedSpotId = null;
+      state.p3Filters = defaultP3Filters();
       state.pathContext = 'See All Spots';
       showStep('P3');
     }
@@ -1289,8 +1430,47 @@
     const STEP_D_DESC =
       "Select one or two stops for this category, locations appear in geographic distance from the Skytrain";
 
-    function showsDiningStyleFilter(catId) {
-      return DINING_STYLE_FILTER_CATEGORIES.includes(catId);
+    function countCategoryStopsWithTag(catId, tag) {
+      return getCategoryStops(catId).filter((s) => stopHasTag(s, tag)).length;
+    }
+
+    function getStepDPrimaryFilters(catId) {
+      const filters = STEP_D_PRIMARY_FILTERS[catId];
+      if (!filters) return [];
+      return filters.filter((f) => {
+        if (f.tag === "park" && countCategoryStopsWithTag(catId, "park") === 0) return false;
+        return countCategoryStopsWithTag(catId, f.tag) > 0;
+      });
+    }
+
+    function getStepDFoodTypeTags() {
+      const seen = new Set();
+      const tags = [];
+      getCategoryStops("food").forEach((stop) => {
+        (stop.tags || []).forEach((t) => {
+          const lower = t.toLowerCase();
+          if (STEP_D_FOOD_TYPE_TAG_DENYLIST.has(lower) || seen.has(lower)) return;
+          seen.add(lower);
+          tags.push(t);
+        });
+      });
+      return tags.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+    }
+
+    function hasStepDFilters(catId) {
+      if (!STEP_D_PRIMARY_FILTERS[catId]) return false;
+      if (getCategoryStops(catId).length === 0) return false;
+      return (
+        getStepDPrimaryFilters(catId).length > 0 ||
+        (catId === "food" && getStepDFoodTypeTags().length > 0)
+      );
+    }
+
+    function formatStepDFilterLabel() {
+      const parts = [];
+      if (state.stepDPrimaryFilter) parts.push(state.stepDPrimaryFilter);
+      if (state.stepDTypeFilter) parts.push(state.stepDTypeFilter);
+      return parts.join(" + ");
     }
 
     function getMaxWalkMinutes() {
@@ -1301,13 +1481,19 @@
 
     function getCategoryStops(catId) {
       return STOPS
-        .filter(s => s.tags.includes(catId))
+        .filter((s) => stopMatchesCategory(s, catId))
         .sort((a, b) => a.walkFromStation - b.walkFromStation);
     }
 
-    function applyDiningStyleFilter(stops, catId) {
-      if (!showsDiningStyleFilter(catId) || !state.diningStyleFilter) return stops;
-      return stops.filter(s => s.tags.includes(state.diningStyleFilter));
+    function applyStepDFilters(stops, catId) {
+      let result = stops;
+      if (state.stepDPrimaryFilter) {
+        result = result.filter((s) => stopHasTag(s, state.stepDPrimaryFilter));
+      }
+      if (catId === "food" && state.stepDTypeFilter) {
+        result = result.filter((s) => stopHasTag(s, state.stepDTypeFilter));
+      }
+      return result;
     }
 
     function partitionByWalkRadius(stops) {
@@ -1322,7 +1508,7 @@
     }
 
     function getDisplayedStopsForCategory(catId) {
-      const filtered = applyDiningStyleFilter(getCategoryStops(catId), catId);
+      const filtered = applyStepDFilters(getCategoryStops(catId), catId);
       return partitionByWalkRadius(filtered);
     }
 
@@ -1353,26 +1539,53 @@
         `;
     }
 
-    function setDiningStyleFilter(key) {
-      const tag = DINING_STYLE_TAGS[key];
-      if (!tag) return;
-      state.diningStyleFilter = state.diningStyleFilter === tag ? null : tag;
+    function escapeJsString(s) {
+      return String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+    }
+
+    function setStepDPrimaryFilter(tag) {
+      state.stepDPrimaryFilter = state.stepDPrimaryFilter === tag ? null : tag;
       renderStepD();
     }
 
-    function renderDiningStyleFilters(catId, eligibleCount) {
+    function toggleStepDTypeExpand() {
+      state.stepDTypeExpanded = !state.stepDTypeExpanded;
+      renderStepD();
+    }
+
+    function setStepDTypeFilter(tag) {
+      state.stepDTypeFilter = state.stepDTypeFilter === tag ? null : tag;
+      renderStepD();
+    }
+
+    function renderStepDFilters(catId) {
       const bar = document.getElementById("step-d-filters");
-      if (!showsDiningStyleFilter(catId) || eligibleCount === 0) {
+      if (!hasStepDFilters(catId)) {
         bar.style.display = "none";
         bar.innerHTML = "";
         return;
       }
-      bar.style.display = "flex";
-      const { sitDown, grabAndGo } = DINING_STYLE_TAGS;
-      bar.innerHTML = `
-        <button type="button" class="${state.diningStyleFilter === sitDown ? 'active' : ''}" onclick="setDiningStyleFilter('sitDown')">Sit down</button>
-        <button type="button" class="${state.diningStyleFilter === grabAndGo ? 'active' : ''}" onclick="setDiningStyleFilter('grabAndGo')">Grab and go</button>
-      `;
+      bar.style.display = "block";
+      const primary = getStepDPrimaryFilters(catId);
+      let html = `<div class="step-d-filters-row">`;
+      primary.forEach((f) => {
+        const active = state.stepDPrimaryFilter === f.tag ? "active" : "";
+        html += `<button type="button" class="${active}" onclick="setStepDPrimaryFilter('${escapeJsString(f.tag)}')">${f.label}</button>`;
+      });
+      if (catId === "food" && getStepDFoodTypeTags().length > 0) {
+        const typeActive = state.stepDTypeFilter || state.stepDTypeExpanded ? "active" : "";
+        html += `<button type="button" class="${typeActive}" onclick="toggleStepDTypeExpand()">Cuisine</button>`;
+      }
+      html += `</div>`;
+      if (catId === "food" && state.stepDTypeExpanded) {
+        html += `<div class="step-d-filters-subrow">`;
+        getStepDFoodTypeTags().forEach((tag) => {
+          const active = state.stepDTypeFilter === tag ? "active" : "";
+          html += `<button type="button" class="${active}" onclick="setStepDTypeFilter('${escapeJsString(tag)}')">${tag}</button>`;
+        });
+        html += `</div>`;
+      }
+      bar.innerHTML = html;
     }
 
     function renderStepD() {
@@ -1380,7 +1593,9 @@
       const cat = CATEGORIES.find(c => c.id === catId);
 
       if (state.stepDCategoryId !== catId) {
-        state.diningStyleFilter = null;
+        state.stepDPrimaryFilter = null;
+        state.stepDTypeFilter = null;
+        state.stepDTypeExpanded = false;
         state.stepDCategoryId = catId;
       }
       
@@ -1390,7 +1605,7 @@
       const { within, outside } = getDisplayedStopsForCategory(catId);
       const grid = document.getElementById("spot-grid");
 
-      renderDiningStyleFilters(catId, categoryStops.length);
+      renderStepDFilters(catId);
 
       if (categoryStops.length === 0) {
         document.getElementById("step-d-desc").innerText = `No ${cat.label} spots on the map yet. Skip to next.`;
@@ -1401,9 +1616,9 @@
 
       const displayedCount = within.length + outside.length;
       if (displayedCount === 0) {
-        const label = state.diningStyleFilter === DINING_STYLE_TAGS.sitDown ? 'sit down' : 'grab and go';
+        const filterLabel = formatStepDFilterLabel() || "your filters";
         document.getElementById("step-d-desc").innerText =
-          `No ${cat.label} spots match "${label}". Try the other filter or tap again to show all.`;
+          `No ${cat.label} spots match "${filterLabel}". Try another filter or tap again to show all.`;
         grid.innerHTML = "";
         updateStepDNextBtn();
         return;
@@ -1700,20 +1915,20 @@
       drawMap("route-map-final", route);
     }
 
-    function openGoogleMaps() {
-      const route = getFinalRoute();
-      if (route.length === 0) return;
+    function openGoogleMaps(route) {
+      const resolved = route || getFinalRoute();
+      if (resolved.length === 0) return;
 
       const origin = `${STATION_LAT},${STATION_LNG}`;
-      const dest = `${route[route.length-1].lat},${route[route.length-1].lng}`;
-      
+      const dest = `${resolved[resolved.length - 1].lat},${resolved[resolved.length - 1].lng}`;
+
       let waypoints = "";
-      if (route.length > 1) {
-        waypoints = "&waypoints=" + route.slice(0, -1).map(s => `${s.lat},${s.lng}`).join('|');
+      if (resolved.length > 1) {
+        waypoints = "&waypoints=" + resolved.slice(0, -1).map(s => `${s.lat},${s.lng}`).join("|");
       }
 
       const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}${waypoints}&travelmode=walking`;
-      window.open(url, '_blank');
+      window.open(url, "_blank");
     }
 
     function startOver() {
@@ -1722,9 +1937,29 @@
     }
 
     // --- PATH 2 ---
-    function selectPlanTime(key) {
-      state.planTime = key;
-      showStep('P2-PLAN');
+    function selectPlan(id) {
+      state.planTime = id;
+      showStep("P2-PLAN");
+    }
+
+    function renderP2PlanPicker() {
+      const container = document.getElementById("p2-plan-picker");
+      if (!container) return;
+      const ids = PLAN_ORDER.filter((id) => PLANS[id]);
+      if (!ids.length) {
+        container.innerHTML = `<p class="label">Plans are loading…</p>`;
+        return;
+      }
+      container.innerHTML = ids.map((id) => {
+        const plan = PLANS[id];
+        const duration = plan.duration || "";
+        return `
+          <div class="card" onclick="selectPlan('${id}')">
+            <h2>${plan.title}</h2>
+            <span class="label">${duration}</span>
+          </div>
+        `;
+      }).join("");
     }
 
     function getPlanRoute() {
@@ -1735,38 +1970,221 @@
 
     function renderP2Plan() {
       const key = state.planTime;
-      const plan = PLANS[key] || { title: 'Your Plan', stops: [] };
-      const label = PLAN_TIME_LABELS[key] || key;
+      const plan = PLANS[key] || { title: "Your Plan", stops: [] };
+      const duration = plan.duration || "";
       const route = getPlanRoute();
+      const mapsBtn = document.getElementById("p2-open-maps");
 
-      document.getElementById('p2-plan-title').innerText = plan.title;
+      document.getElementById("p2-plan-title").innerText = plan.title;
 
       if (route.length === 0) {
-        document.getElementById('p2-plan-desc').innerText = `[Pre-built plan for ${label} — coming soon]`;
-        document.getElementById('route-cards-p2').innerHTML = [1, 2, 3].map(n => `
+        document.getElementById("p2-plan-desc").innerText = duration
+          ? `[${plan.title} — ${duration} — coming soon]`
+          : `[Pre-built plan — coming soon]`;
+        document.getElementById("route-cards-p2").innerHTML = [1, 2, 3].map(n => `
           <div class="route-card placeholder">
             <div class="content" style="padding: 1.5rem;">
               <h3 style="font-size: 1rem; text-transform:uppercase;">Stop ${n}</h3>
               <div class="meta">Coming soon</div>
             </div>
           </div>
-        `).join('');
+        `).join("");
+        if (mapsBtn) mapsBtn.style.display = "none";
       } else {
-        document.getElementById('p2-plan-desc').innerText = `${label.toUpperCase()} · ${route.length} STOPS`;
-        renderRouteCards('route-cards-p2', route);
-        renderRouteTotals('route-totals-p2', route);
+        const meta = duration
+          ? `${duration.toUpperCase()} · ${route.length} STOPS`
+          : `${route.length} STOPS`;
+        document.getElementById("p2-plan-desc").innerText = plan.description
+          ? `${plan.description}\n${meta}`
+          : meta;
+        renderRouteCards("route-cards-p2", route);
+        renderRouteTotals("route-totals-p2", route);
+        if (mapsBtn) mapsBtn.style.display = "";
       }
 
-      const totalsEl = document.getElementById('route-totals-p2');
-      if (route.length === 0 && totalsEl) totalsEl.innerHTML = '';
+      const totalsEl = document.getElementById("route-totals-p2");
+      if (route.length === 0 && totalsEl) totalsEl.innerHTML = "";
 
-      drawMap('route-map-p2', route);
+      drawMap("route-map-p2", route);
     }
 
     // --- PATH 3 ---
+    function getP3UnionPrimaryFilters() {
+      const f = state.p3Filters;
+      if (!f.categories.length) return [];
+      const byTag = new Map();
+      f.categories.forEach((catId) => {
+        getStepDPrimaryFilters(catId).forEach((filter) => {
+          const key = filter.tag.toLowerCase();
+          if (!byTag.has(key)) byTag.set(key, filter);
+        });
+      });
+      return [...byTag.values()].sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { sensitivity: "base" })
+      );
+    }
+
+    function getP3FoodTypeTags() {
+      if (!state.p3Filters.categories.includes("food")) return [];
+      return getStepDFoodTypeTags();
+    }
+
+    function p3TagIsActive(tag) {
+      const needle = tag.toLowerCase();
+      return state.p3Filters.tags.some((t) => t.toLowerCase() === needle);
+    }
+
+    function stopMatchesP3Filters(stop) {
+      const f = state.p3Filters;
+      if (f.categories.length && !f.categories.some((c) => stopMatchesCategory(stop, c))) return false;
+      if (f.tags.length && !f.tags.some((tag) => stopHasTag(stop, tag))) return false;
+      return true;
+    }
+
+    function getP3FilteredStops() {
+      return STOPS.filter(stopMatchesP3Filters);
+    }
+
+    function p3HasActiveFilters() {
+      const f = state.p3Filters;
+      return f.categories.length > 0 || f.tags.length > 0;
+    }
+
+    function p3FilterToggleLabel() {
+      const f = state.p3Filters;
+      if (!p3HasActiveFilters()) return "Filter";
+      const parts = [];
+      if (f.categories.length) {
+        parts.push(
+          f.categories
+            .map((id) => CATEGORIES.find((c) => c.id === id)?.label || id)
+            .join(", ")
+        );
+      }
+      if (f.tags.length) parts.push(`${f.tags.length} tag${f.tags.length === 1 ? "" : "s"}`);
+      return `Filter · ${parts.join(" · ")}`;
+    }
+
+    function toggleP3FilterPanel() {
+      state.p3Filters.filterOpen = !state.p3Filters.filterOpen;
+      renderP3();
+    }
+
+    function pruneP3FoodTypeTags() {
+      if (state.p3Filters.categories.includes("food")) return;
+      const foodTags = new Set(getStepDFoodTypeTags().map((t) => t.toLowerCase()));
+      state.p3Filters.tags = state.p3Filters.tags.filter((t) => !foodTags.has(t.toLowerCase()));
+      state.p3Filters.foodTypeExpanded = false;
+    }
+
+    function toggleP3Category(id) {
+      const list = state.p3Filters.categories;
+      state.p3Filters.categories = list.includes(id)
+        ? list.filter((c) => c !== id)
+        : [...list, id];
+      pruneP3FoodTypeTags();
+      renderP3();
+    }
+
+    function toggleP3Tag(tag) {
+      const list = state.p3Filters.tags;
+      const needle = tag.toLowerCase();
+      const idx = list.findIndex((t) => t.toLowerCase() === needle);
+      state.p3Filters.tags = idx >= 0
+        ? list.filter((_, i) => i !== idx)
+        : [...list, tag];
+      renderP3();
+    }
+
+    function toggleP3FoodTypeExpand() {
+      state.p3Filters.foodTypeExpanded = !state.p3Filters.foodTypeExpanded;
+      renderP3();
+    }
+
+    function clearP3Filters() {
+      state.p3Filters = defaultP3Filters();
+      renderP3();
+    }
+
+    function renderP3Filters() {
+      const el = document.getElementById("p3-filters");
+      if (!el) return;
+      const f = state.p3Filters;
+      const hasActive = p3HasActiveFilters();
+      const toggleActive = f.filterOpen || hasActive;
+
+      let html = `<div class="p3-filter-bar">`;
+      html += `<button type="button" class="p3-filter-toggle ${toggleActive ? "active" : ""}" onclick="toggleP3FilterPanel()">${p3FilterToggleLabel()}</button>`;
+      if (hasActive) {
+        html += `<button type="button" class="p3-filter-clear" onclick="clearP3Filters()">Clear</button>`;
+      }
+      html += `</div>`;
+
+      if (f.filterOpen) {
+        html += `<div class="p3-filter-panel">`;
+        html += `<div class="p3-cat-chips">`;
+        CATEGORIES.forEach((c) => {
+          const isSelected = f.categories.includes(c.id);
+          html += `<button type="button" class="p3-cat-chip ${isSelected ? "active" : ""}" onclick="toggleP3Category('${c.id}')">${c.label}</button>`;
+        });
+        html += `</div>`;
+
+        const primaryFilters = getP3UnionPrimaryFilters();
+        const foodTypeTags = getP3FoodTypeTags();
+        if (f.categories.length > 0 && (primaryFilters.length > 0 || foodTypeTags.length > 0)) {
+          html += `<div class="step-d-filters p3-tag-filters">`;
+          if (primaryFilters.length > 0) {
+            html += `<div class="step-d-filters-row">`;
+            primaryFilters.forEach((filter) => {
+              const active = p3TagIsActive(filter.tag) ? "active" : "";
+              html += `<button type="button" class="${active}" onclick="toggleP3Tag('${escapeJsString(filter.tag)}')">${filter.label}</button>`;
+            });
+            if (foodTypeTags.length > 0) {
+              const typeActive =
+                f.foodTypeExpanded || foodTypeTags.some((tag) => p3TagIsActive(tag)) ? "active" : "";
+              html += `<button type="button" class="${typeActive}" onclick="toggleP3FoodTypeExpand()">Cuisine</button>`;
+            }
+            html += `</div>`;
+          } else if (foodTypeTags.length > 0) {
+            const typeActive =
+              f.foodTypeExpanded || foodTypeTags.some((tag) => p3TagIsActive(tag)) ? "active" : "";
+            html += `<div class="step-d-filters-row">`;
+            html += `<button type="button" class="${typeActive}" onclick="toggleP3FoodTypeExpand()">Cuisine</button>`;
+            html += `</div>`;
+          }
+          if (f.foodTypeExpanded && foodTypeTags.length > 0) {
+            html += `<div class="step-d-filters-subrow">`;
+            foodTypeTags.forEach((tag) => {
+              const active = p3TagIsActive(tag) ? "active" : "";
+              html += `<button type="button" class="${active}" onclick="toggleP3Tag('${escapeJsString(tag)}')">${tag}</button>`;
+            });
+            html += `</div>`;
+          }
+          html += `</div>`;
+        }
+        html += `</div>`;
+      }
+
+      el.innerHTML = html;
+    }
+
     function renderP3() {
+      renderP3Filters();
+      const filtered = getP3FilteredStops();
+      const desc = document.getElementById("p3-desc");
+      if (desc) {
+        desc.textContent = p3HasActiveFilters()
+          ? `Showing ${filtered.length} of ${STOPS.length} spots. Tap a spot to read more and add it to Google Maps.`
+          : "Browse every recommendation and add stops to Google Maps.";
+      }
+
       const grid = document.getElementById('p3-grid');
-      grid.innerHTML = STOPS.map(spot => {
+      if (filtered.length === 0) {
+        grid.innerHTML = `<p class="p3-empty-filters">No spots match these filters. Try turning one off or tap <strong>Clear</strong>.</p>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(spot => {
         const expanded = state.expandedSpotId === spot.id;
         const testClass = spot._test ? " spot-tile--test" : "";
         return `
@@ -1802,8 +2220,8 @@
       window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
     }
 
-    // Init — locations from data/stops.json (see AGENTS.md)
-    loadStopsData().then((ok) => {
+    // Init — data/stops.json + data/plans.json (see AGENTS.md)
+    loadAppData().then((ok) => {
       if (ok) showStep("LANDING");
     });
   </script>

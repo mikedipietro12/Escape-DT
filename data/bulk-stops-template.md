@@ -9,7 +9,8 @@ See `AGENTS.md` → **Bulk add (photos later)** for the full workflow.
 Google Maps link:
 Name:
 Slug:
-Tags:
+Categories:
+Tags (optional):
 Cost:
 Time of day:
 Cross street:
@@ -21,7 +22,8 @@ Optional: walk minutes from station
 Google Maps link:
 Name:
 Slug:
-Tags:
+Categories:
+Tags (optional):
 Cost:
 Time of day:
 Cross street:
@@ -33,7 +35,8 @@ Optional: walk minutes from station
 Google Maps link:
 Name:
 Slug:
-Tags:
+Categories:
+Tags (optional):
 Cost:
 Time of day:
 Cross street:
@@ -45,7 +48,8 @@ Optional: walk minutes from station
 Google Maps link:
 Name:
 Slug:
-Tags:
+Categories:
+Tags (optional):
 Cost:
 Time of day:
 Cross street:
@@ -57,7 +61,8 @@ Optional: walk minutes from station
 Google Maps link:
 Name:
 Slug:
-Tags:
+Categories:
+Tags (optional):
 Cost:
 Time of day:
 Cross street:

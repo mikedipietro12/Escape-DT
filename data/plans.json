@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "planOrder": [
+    "quick-sip-shop",
+    "coffee-cookie-explore",
+    "coffee-shop-lunch",
+    "all-day-experience"
+  ],
+  "plans": {
+    "quick-sip-shop": {
+      "title": "Quick Sip & Shop",
+      "duration": "45 mins",
+      "description": "Coffee and cookies near the station, then a quick vintage browse — in and out feeling like you did the Drive.",
+      "stops": ["s1", "s3", "s7"]
+    },
+    "coffee-cookie-explore": {
+      "title": "Coffee, Cookie, and Explore",
+      "duration": "1 hour",
+      "description": "JJ Bean for the cookie, a bite on the way up, and time to wander Mintage before you head back.",
+      "stops": ["s2", "s1", "s4", "s7"]
+    },
+    "coffee-shop-lunch": {
+      "title": "Coffee, Shop, Lunch",
+      "duration": "1.5–2 hours",
+      "description": "Caffeine, a shop stop, deli lunch, and LIVIA for a treat — the mid-Drive rhythm without rushing.",
+      "stops": ["s1", "s3", "s4", "s5", "s7", "s14"]
+    },
+    "all-day-experience": {
+      "title": "Coffee, Shop, Lunch, Activity, Dinner",
+      "duration": "All day",
+      "description": "The full arc: sip, browse, eat, gallery and vintage north of Venables, then settle in for dinner and drinks.",
+      "stops": ["s1", "s3", "s4", "s7", "s8", "s14", "s9", "s12", "s26", "s13", "s24"]
+    }
+  }
+}

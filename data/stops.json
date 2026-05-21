@@ -12,10 +12,11 @@
             "lat": 49.2649446,
             "cost": "$",
             "tags": [
-                "coffee",
-                "food",
-                "sit down",
-                "grab and go"
+                "snacks",
+                "cookies",
+                "baked goods",
+                "grab and go",
+                "sit down"
             ],
             "name": "JJ Bean",
             "coords": {
@@ -29,6 +30,10 @@
             "lng": -123.069428,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "coffee"
             ]
         },
         {
@@ -37,8 +42,9 @@
             "lat": 49.2644127,
             "cost": "$",
             "tags": [
-                "food",
-                "grab and go"
+                "wraps",
+                "grab and go",
+                "indian"
             ],
             "name": "Rollzzy",
             "coords": {
@@ -52,6 +58,10 @@
             "lng": -123.0699587,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food"
             ]
         },
         {
@@ -61,10 +71,12 @@
             "googlePlaceId": "ChIJXUNrtUdxhlQRMWfiCLV27a0",
             "cost": "$$",
             "tags": [
-                "coffee",
-                "food",
-                "sit down",
-                "grab and go"
+                "snacks",
+                "cookies",
+                "baked goods",
+                "patio",
+                "grab and go",
+                "sit down"
             ],
             "name": "Prado Cafe",
             "coords": {
@@ -79,6 +91,10 @@
             "timeOfDay": [
                 "morning",
                 "afternoon"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "coffee"
             ]
         },
         {
@@ -88,9 +104,11 @@
             "googlePlaceId": "ChIJMT-DoxBxhlQRBg0F_c9gG68",
             "cost": "$$",
             "tags": [
-                "food",
                 "sit down",
-                "grab and go"
+                "grab and go",
+                "take out",
+                "wraps",
+                "greek"
             ],
             "name": "Skewers Souvlaki Pita Bar",
             "coords": {
@@ -104,6 +122,10 @@
             "lng": -123.0698791,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food"
             ]
         },
         {
@@ -113,9 +135,9 @@
             "googlePlaceId": "ChIJnQBdDEdxhlQRDLbQZmhbIOU",
             "cost": "$$",
             "tags": [
-                "groceries",
-                "food",
-                "grab and go"
+                "grab and go",
+                "sandwiches",
+                "italian"
             ],
             "name": "La Grotta del Formaggio",
             "coords": {
@@ -130,6 +152,10 @@
             "timeOfDay": [
                 "morning",
                 "afternoon"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "groceries"
             ]
         },
         {
@@ -139,9 +165,11 @@
             "googlePlaceId": "ChIJL4-dMwBxhlQRx_HBHWoYlDE",
             "cost": "$$$",
             "tags": [
-                "food",
                 "sit down",
-                "grab and go"
+                "take out",
+                "patio",
+                "pizza",
+                "wine"
             ],
             "name": "Belli Pizza",
             "coords": {
@@ -156,6 +184,11 @@
             "timeOfDay": [
                 "afternoon",
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food",
+                "drinks"
             ]
         },
         {
@@ -168,7 +201,8 @@
                 "max": "$$$$"
             },
             "tags": [
-                "shopping"
+                "vintage",
+                "unisex"
             ],
             "name": "Mintage",
             "coords": {
@@ -182,6 +216,10 @@
             "lng": -123.0694185,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "shopping"
             ]
         },
         {
@@ -191,9 +229,11 @@
             "googlePlaceId": "ChIJARfKW7txhlQRgm1BxguLamU",
             "cost": "$$$",
             "tags": [
-                "food",
-                "drinks",
-                "sit down"
+                "greek",
+                "dinner",
+                "cocktails",
+                "sit down",
+                "bar"
             ],
             "name": "Loula's",
             "coords": {
@@ -207,6 +247,11 @@
             "lng": -123.069427,
             "timeOfDay": [
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food",
+                "drinks"
             ]
         },
         {
@@ -216,9 +261,11 @@
             "googlePlaceId": "ChIJNWm91udxhlQRv_cFcXKSgDk",
             "cost": "$$$",
             "tags": [
-                "drinks",
-                "food",
-                "sit down"
+                "cocktails",
+                "italian",
+                "sit down",
+                "bar",
+                "patio"
             ],
             "name": "Bar Corso",
             "coords": {
@@ -232,6 +279,11 @@
             "lng": -123.0694252,
             "timeOfDay": [
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "drinks",
+                "food"
             ]
         },
         {
@@ -241,10 +293,13 @@
             "googlePlaceId": "ChIJ0z_tUz9xhlQRX7t01nVfqL4",
             "cost": "$$",
             "tags": [
-                "drinks",
-                "food",
-                "hangout",
-                "sit down"
+                "sit down",
+                "patio",
+                "beer",
+                "bar",
+                "tvs",
+                "pub",
+                "wings"
             ],
             "name": "The Charlatan",
             "coords": {
@@ -259,6 +314,11 @@
             "timeOfDay": [
                 "afternoon",
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "drinks",
+                "food"
             ]
         },
         {
@@ -268,9 +328,10 @@
             "googlePlaceId": "ChIJMWyr8N9xhlQRhsd_Hpa8sq0",
             "cost": "$$",
             "tags": [
-                "food",
+                "japanese",
+                "sushi",
                 "sit down",
-                "grab and go"
+                "take out"
             ],
             "name": "Cozen Japanese Cuisine",
             "coords": {
@@ -285,6 +346,10 @@
             "timeOfDay": [
                 "afternoon",
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food"
             ]
         },
         {
@@ -296,8 +361,13 @@
                 "max": "$$$"
             },
             "tags": [
-                "shopping",
-                "hangout"
+                "books",
+                "clothing",
+                "denim",
+                "houseware",
+                "shoes",
+                "shops",
+                "activities"
             ],
             "name": "Alterior",
             "coords": {
@@ -314,6 +384,11 @@
             "timeOfDay": [
                 "afternoon",
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "shopping",
+                "hangout"
             ]
         },
         {
@@ -325,8 +400,8 @@
                 "max": "$$$"
             },
             "tags": [
-                "shopping",
-                "hangout"
+                "vintage",
+                "shoes"
             ],
             "name": "Vintage Sponsor",
             "coords": {
@@ -343,6 +418,10 @@
             "timeOfDay": [
                 "afternoon",
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "shopping"
             ]
         },
         {
@@ -352,11 +431,14 @@
             "googlePlaceId": "ChIJD7OS67pxhlQR99jnRuImeFo",
             "cost": "$$",
             "tags": [
-                "coffee",
-                "food",
-                "drinks",
+                "cocktails",
+                "baked goods",
+                "cookies",
+                "italian",
                 "sit down",
-                "grab and go"
+                "take out",
+                "grab and go",
+                "patio"
             ],
             "name": "LIVIA Forno e Vino",
             "coords": {
@@ -372,6 +454,11 @@
                 "morning",
                 "afternoon",
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "coffee",
+                "food"
             ]
         },
         {
@@ -384,8 +471,7 @@
                 "max": "$$$"
             },
             "tags": [
-                "groceries",
-                "food",
+                "mediterranean",
                 "grab and go"
             ],
             "name": "Mediterranean Specialty Foods - Turkish Market",
@@ -400,6 +486,10 @@
             "lng": -123.0694339,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "groceries"
             ]
         },
         {
@@ -409,10 +499,9 @@
             "googlePlaceId": "ChIJi_5Fqz9xhlQRctWWsZ8SyR8",
             "cost": "$$",
             "tags": [
-                "food",
-                "drinks",
                 "sit down",
-                "grab and go"
+                "take out",
+                "indian"
             ],
             "name": "Sula Indian Restaurant",
             "coords": {
@@ -426,6 +515,10 @@
             "lng": -123.0693531,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food"
             ]
         },
         {
@@ -438,9 +531,11 @@
                 "max": "$$$$"
             },
             "tags": [
-                "food",
-                "drinks",
-                "sit down"
+                "cocktails",
+                "izakaya",
+                "japanese",
+                "sit down",
+                "late night"
             ],
             "name": "Nomo Nomo",
             "coords": {
@@ -454,6 +549,11 @@
             "lng": -123.0692966,
             "timeOfDay": [
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "drinks",
+                "food"
             ]
         },
         {
@@ -466,9 +566,12 @@
                 "max": "$$$$"
             },
             "tags": [
-                "food",
-                "drinks",
-                "sit down"
+                "wine",
+                "pasta",
+                "italian",
+                "sit down",
+                "patio",
+                "late night"
             ],
             "name": "Magari by Oca",
             "coords": {
@@ -482,6 +585,11 @@
             "lng": -123.0693791,
             "timeOfDay": [
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food",
+                "drinks"
             ]
         },
         {
@@ -491,8 +599,11 @@
             "googlePlaceId": "ChIJ37AAWSFxhlQRqdBHv9FgZuA",
             "cost": "$$",
             "tags": [
-                "food",
-                "grab and go"
+                "pizza",
+                "grab and go",
+                "sit down",
+                "tvs",
+                "patio"
             ],
             "name": "Don't Argue Pizza",
             "coords": {
@@ -506,6 +617,11 @@
             "lng": -123.069778,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food",
+                "coffee"
             ]
         },
         {
@@ -515,11 +631,10 @@
             "googlePlaceId": "ChIJS8M2rT9xhlQR8CnI5SU3p40",
             "cost": "$$",
             "tags": [
-                "coffee",
-                "food",
-                "groceries",
+                "grab and go",
+                "indian",
                 "sit down",
-                "grab and go"
+                "patio"
             ],
             "name": "Sweet Cherubim",
             "coords": {
@@ -533,6 +648,11 @@
             "lng": -123.0698694,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "groceries",
+                "food"
             ]
         },
         {
@@ -542,8 +662,11 @@
             "googlePlaceId": "ChIJm_zob_ZxhlQRZ80MTXXJJGU",
             "cost": "$$",
             "tags": [
-                "food",
-                "grab and go"
+                "korean",
+                "fried chicken",
+                "take out",
+                "sit down",
+                "patio"
             ],
             "name": "Mogu Fried Chicken",
             "coords": {
@@ -558,6 +681,10 @@
             "timeOfDay": [
                 "afternoon",
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food"
             ]
         },
         {
@@ -567,9 +694,11 @@
             "googlePlaceId": "ChIJw-s4pFdxhlQRh2jK22eXlnU",
             "cost": "$$",
             "tags": [
-                "food",
+                "fried chicken",
+                "take out",
                 "sit down",
-                "grab and go"
+                "grab and go",
+                "patio"
             ],
             "name": "Downlow Chicken Shack",
             "coords": {
@@ -583,6 +712,10 @@
             "lng": -123.0697102,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food"
             ]
         },
         {
@@ -592,9 +725,11 @@
             "googlePlaceId": "ChIJX8KXIj5xhlQR5BwjsZtGOgU",
             "cost": "$$",
             "tags": [
-                "food",
-                "drinks",
-                "sit down"
+                "thai",
+                "curry",
+                "take out",
+                "sit down",
+                "late night"
             ],
             "name": "Kin Kao",
             "coords": {
@@ -608,6 +743,10 @@
             "lng": -123.069698,
             "timeOfDay": [
                 "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food"
             ]
         },
         {
@@ -620,11 +759,15 @@
                 "max": "$$$"
             },
             "tags": [
-                "coffee",
-                "food",
-                "drinks",
-                "groceries",
-                "sit down"
+                "italian",
+                "pasta",
+                "lunch",
+                "dinner",
+                "sit down",
+                "take out",
+                "grab and go",
+                "wine",
+                "cocktails"
             ],
             "name": "Caffè La Tana",
             "coords": {
@@ -638,6 +781,12 @@
             "lng": -123.070601,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "coffee",
+                "food",
+                "drinks"
             ]
         },
         {
@@ -647,7 +796,9 @@
             "googlePlaceId": "ChIJ3-oFcgBxhlQRFhb6LF4JCLw",
             "cost": "$$",
             "tags": [
-                "shopping"
+                "vintage",
+                "clothing",
+                "collectables"
             ],
             "name": "FUN HÄUS",
             "coords": {
@@ -661,6 +812,10 @@
             "lng": -123.0699425,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "shopping"
             ]
         },
         {
@@ -673,8 +828,16 @@
                 "max": "$$$"
             },
             "tags": [
-                "shopping",
-                "hangout"
+                "art gallery",
+                "housewares",
+                "stickers",
+                "books",
+                "photobooth",
+                "vintage",
+                "clothing",
+                "gifts",
+                "shops",
+                "activities"
             ],
             "name": "Slice of Life Art Gallery",
             "coords": {
@@ -688,6 +851,11 @@
             "lng": -123.0704529,
             "timeOfDay": [
                 "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "shopping",
+                "hangout"
             ]
         }
     ]
