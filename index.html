@@ -102,6 +102,16 @@
     button:hover { background: var(--ink); color: #fff; }
     button.primary { background: var(--ink); color: #fff; }
     button.primary:hover { background: transparent; color: var(--ink); }
+    button.btn-google-maps {
+      background: #1a73e8;
+      color: #fff;
+      border-color: #1a73e8;
+    }
+    button.btn-google-maps:hover {
+      background: #1557b0;
+      color: #fff;
+      border-color: #1557b0;
+    }
 
     .nav-buttons {
       margin-top: auto;
@@ -134,7 +144,18 @@
       display: none;
     }
     .step-d-action-fixed button {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    }
+    .step-d-action-fixed button:hover:not(:disabled) {
+      background: transparent;
+      color: var(--ink);
+    }
+    .step-d-action-fixed button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
 
     /* Cards */
@@ -165,16 +186,26 @@
       padding: 1rem;
       text-align: center;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.1);
+      background: #fff;
+      color: var(--ink);
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
       align-items: center;
       transition: background 0.35s ease;
     }
-    .cat-tile:hover { background: linear-gradient(to bottom, #bafabf, #faecb5); }
-    .cat-tile.selected { background: var(--ink); color: #fff; }
-    .cat-tile.selected .desc { color: #ccc; }
+    .cat-tile.selected {
+      background: linear-gradient(to bottom, #bafabf, #faecb5);
+      color: var(--ink);
+    }
+    .cat-tile.selected .desc {
+      color: var(--ink-muted);
+    }
+    @media (hover: hover) {
+      .cat-tile:not(.selected):hover {
+        background: linear-gradient(to bottom, #bafabf, #faecb5);
+      }
+    }
 
     .ranked-list {
       border-top: 1px solid var(--border);
@@ -396,8 +427,50 @@
       padding: 0;
       cursor: pointer;
     }
-    .p3-filter-panel {
+    .p3-filter-panel,
+    .p3-sort-panel {
       margin-top: 0.85rem;
+    }
+    .p3-sort-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .p3-sort-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: background 0.35s ease;
+    }
+    .p3-sort-option:hover {
+      background: linear-gradient(to bottom, #bafabf, #faecb5);
+    }
+    .p3-sort-option.active {
+      background: var(--ink);
+      color: #fff;
+    }
+    .p3-sort-option__title {
+      display: block;
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+    .p3-sort-option__desc {
+      display: block;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      text-transform: none;
+      letter-spacing: normal;
+      opacity: 0.85;
+    }
+    .p3-sort-option.active .p3-sort-option__desc {
+      opacity: 0.9;
     }
     .p3-cat-chips {
       display: flex;
@@ -425,12 +498,6 @@
     .p3-filters .p3-tag-filters {
       margin-top: 0.75rem;
     }
-    .p3-empty-filters {
-      grid-column: 1 / -1;
-      padding: 2rem 1rem;
-      text-align: center;
-      border: 1px dashed var(--ink-muted);
-    }
     .spot-section-label {
       grid-column: 1 / -1;
       margin: 1.25rem 0 0;
@@ -455,16 +522,90 @@
 
 
     /* Step E: Map Review */
-    .map-split {
+    .map-split,
+    .route-review {
       display: flex;
       flex-direction: column;
       gap: 2rem;
       margin-bottom: 2rem;
     }
     @media (min-width: 768px) {
-      .map-split { flex-direction: row; }
-      .map-container { width: 40%; flex-shrink: 0; }
-      .route-list { width: 60%; }
+      .map-split,
+      .route-review.route-phase-summary { flex-direction: row; }
+      .map-split .map-container,
+      .route-review.route-phase-summary .map-container { width: 40%; flex-shrink: 0; }
+      .map-split .route-list,
+      .route-review.route-phase-summary .route-summary { width: 60%; }
+    }
+    .route-review.route-phase-map {
+      align-items: center;
+    }
+    .route-review.route-phase-map .map-container {
+      max-width: 400px;
+      width: 100%;
+    }
+    .route-review.route-phase-map .route-summary {
+      display: none;
+    }
+    .map-container {
+      position: relative;
+    }
+    .route-scroll-hint {
+      display: none;
+    }
+    @media (max-width: 767px) {
+      .route-review.route-phase-summary .map-container::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2.5rem;
+        pointer-events: none;
+        background: linear-gradient(to bottom, transparent, var(--bg-top));
+      }
+      .route-review.route-phase-summary .route-scroll-hint--visible {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        width: 100%;
+        margin-top: 0.5rem;
+        padding: 0.5rem 1rem 0;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        font-family: inherit;
+        font-size: var(--type-label);
+        font-weight: 500;
+        letter-spacing: var(--tracking-wide);
+        text-transform: uppercase;
+        text-align: center;
+        color: var(--ink-muted);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .route-review.route-phase-summary .route-scroll-hint--visible:hover {
+        background: transparent;
+        color: var(--ink);
+      }
+      .route-scroll-hint__arrow {
+        font-size: 1.25rem;
+        line-height: 1;
+        animation: route-scroll-bounce 1.4s ease-in-out infinite;
+      }
+    }
+    @keyframes route-scroll-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+    .route-export-summary {
+      margin-bottom: 1.5rem;
+    }
+    #step-E .nav-buttons .btn-google-maps {
+      flex: 1 1 100%;
+      width: 100%;
+      font-size: 1.2rem;
     }
     
     .map-container svg {
@@ -477,7 +618,6 @@
     .map-line { stroke: var(--ink); stroke-width: 2; }
     .map-text { font-family: inherit; font-size: 10px; fill: var(--ink); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
     .map-path { 
-      stroke: var(--ink); 
       stroke-width: 4; 
       fill: none; 
       stroke-linejoin: round;
@@ -490,6 +630,30 @@
       transition: r 0.2s;
     }
     .map-stop:hover { r: 8; cursor: pointer; }
+    .map-leg {
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .map-leg.is-visible {
+      opacity: 1;
+    }
+    .map-leg-bracket {
+      stroke-width: 2;
+      fill: none;
+    }
+    .map-leg-label {
+      font-family: inherit;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+    }
+    .map-stop-group {
+      opacity: 1;
+      transition: opacity 0.35s ease;
+    }
+    .map-stop-group--hidden {
+      opacity: 0;
+    }
 
     .route-card {
       display: flex;
@@ -508,24 +672,6 @@
     }
     .route-card .content { padding: 1rem; flex-grow: 1; }
     .route-card .meta { font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); opacity: 0.7; }
-    .route-card .walk-line { text-transform: none; letter-spacing: normal; opacity: 0.85; }
-
-    .route-leg {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin: 0.25rem 0 0.75rem 1.25rem;
-      padding-left: 0.75rem;
-      border-left: 2px dashed var(--ink);
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-wide);
-      opacity: 0.85;
-    }
-    .route-leg-arrow {
-      font-size: 0.85rem;
-      line-height: 1;
-    }
     
     .totals {
       border-top: 2px solid var(--ink);
@@ -699,39 +845,227 @@
     }
 
     /* Path 3: All Spots */
-    .spot-tile.expandable {
+    #p3-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .p3-empty-filters {
+      grid-column: 1 / -1;
+      padding: 2rem 1rem;
+      text-align: center;
+      border: 1px dashed var(--ink-muted);
+    }
+    .p3-card {
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      overflow: hidden;
+      transition: background 0.35s ease, box-shadow 0.35s ease;
       display: flex;
       flex-direction: column;
-      cursor: pointer;
     }
-    .spot-tile--test {
+    .p3-card:not(.is-expanded):hover {
+      background: linear-gradient(to bottom, #bafabf, #faecb5);
+    }
+    .p3-card.is-expanded {
+      grid-column: 1 / -1;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      overflow: visible;
+      align-self: start;
+    }
+    .p3-card.is-in-route:not(.is-expanded) {
+      background: rgba(255, 255, 255, 0.35);
+      border-left-width: 4px;
+    }
+    .p3-card--test {
       outline: 2px dashed var(--ink-muted);
       outline-offset: 4px;
     }
-
-    .spot-tile.expandable:not(.expanded):hover {
-      background: linear-gradient(to bottom, #bafabf, #faecb5);
+    .p3-card__summary {
+      display: flex;
+      flex-direction: column;
     }
-    .spot-tile.expandable .tile-summary p.desc {
-      display: none;
-    }
-    .spot-tile.expandable .expanded-content {
-      display: none;
-      padding: 0 1.5rem 1.5rem;
-      border-top: 1px solid var(--ink);
-    }
-    .spot-tile.expandable.expanded .expanded-content {
+    .p3-card__thumb {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-bottom: 1px solid var(--ink);
       display: block;
     }
-    .spot-tile.expandable.expanded {
-      background: #fff;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-      grid-column: 1 / -1;
+    .p3-card.is-expanded .p3-card__summary .p3-card__thumb {
+      display: none;
     }
-    .spot-tile.expandable .btn-maps {
-      margin-top: 1rem;
-      padding: 0.65rem 1rem;
+    .p3-card__body {
+      padding: 0.6rem 0.65rem 0.75rem;
+      flex-grow: 1;
+      min-width: 0;
+    }
+    .p3-card.is-expanded .p3-card__body {
+      padding-bottom: 0.5rem;
+    }
+    .p3-card__body h3 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+      line-height: 1.2;
+    }
+    .p3-card.is-expanded .p3-card__body h3 {
+      font-size: 0.95rem;
+    }
+    .p3-card .meta {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      opacity: 0.7;
+    }
+    .p3-card__expand-panel {
+      display: none;
+      flex-shrink: 0;
+      width: 100%;
+      border-top: 1px solid var(--ink);
+    }
+    .p3-card.is-expanded .p3-card__expand-panel {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .p3-card__gallery {
+      position: relative;
+      width: 100%;
+      height: 11rem;
+      max-height: 36vh;
+      flex-shrink: 0;
+      overflow: hidden;
+      isolation: isolate;
+      border-bottom: 1px solid var(--ink);
+    }
+    .p3-card__gallery > img,
+    .p3-card__gallery .photo-gallery {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .p3-card__gallery > img {
+      object-fit: cover;
+      display: block;
+    }
+    .p3-card__gallery .photo-gallery__slide img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .p3-card__expand-body {
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      padding: 0.85rem 1rem 0.5rem;
+      background: #fff;
+    }
+    .p3-card__expand-body .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.75rem;
+    }
+    .p3-card__expand-body .tag {
+      font-size: 0.6rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      padding: 0.2rem 0.45rem;
+      border: 1px solid var(--ink);
+    }
+    .p3-card__expand-body .description {
+      font-size: 0.85rem;
+      line-height: 1.45;
+      margin-bottom: 0.65rem;
+    }
+    .p3-card__expand-meta {
       font-size: 0.65rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 0.25rem;
+    }
+    .p3-card__expand-meta.walk-line {
+      text-transform: none;
+      letter-spacing: normal;
+      opacity: 0.9;
+      margin-bottom: 0;
+    }
+    .p3-card.is-expanded .p3-card__actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.08);
+    }
+    .p3-card__actions {
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding: 0.75rem 1rem 1rem;
+      border-top: 1px solid var(--ink);
+      background: #fff;
+    }
+    .p3-card__actions button {
+      flex: 1;
+      min-width: 8rem;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.6rem;
+    }
+    .p3-card__actions button.p3-route-btn.is-added {
+      background: var(--ink);
+      color: #fff;
+    }
+    #step-P3:has(#p3-route-bar:not([hidden])) {
+      padding-bottom: 3.25rem;
+    }
+    .p3-route-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 200;
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: nowrap;
+      padding: 0.35rem 1rem;
+      padding-bottom: max(0.35rem, env(safe-area-inset-bottom, 0px));
+      border: none;
+      border-top: 1px solid var(--ink);
+      border-radius: 0;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.06);
+    }
+    .p3-route-bar[hidden] {
+      display: none !important;
+    }
+    .p3-route-bar span {
+      font-size: 0.65rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      line-height: 1.2;
+      min-width: 0;
+    }
+    .p3-route-bar button {
+      flex-shrink: 0;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.6rem;
+      line-height: 1.2;
     }
 
     .route-card.placeholder {
@@ -767,7 +1101,7 @@
           </div>
           <div class="card" onclick="startPath3()">
             <h2>See All Spots</h2>
-            <span class="label">Browse every recommendation and add stops to Google Maps</span>
+            <span class="label">Browse every spot, build a route, open it in Google Maps</span>
           </div>
         </div>
       </div>
@@ -861,41 +1195,31 @@
       </div>
     </section>
 
-    <!-- STEP E: MAP REVIEW -->
+    <!-- STEP E: ROUTE REVIEW (map animation → summary → finalize → Google Maps) -->
     <section id="step-E" class="step">
       <h1>Your Route</h1>
-      
-      <div class="map-split">
+
+      <div id="route-review" class="route-review route-phase-map">
         <div class="map-container">
-          <svg id="route-map" viewBox="0 0 300 600">
+          <svg id="route-map" viewBox="0 0 340 600">
             <!-- Rendered via JS -->
           </svg>
+          <button type="button" id="route-scroll-hint" class="route-scroll-hint" hidden aria-label="Scroll down to see your stops and finalize your route">
+            <span class="route-scroll-hint__text">Scroll for your stops &amp; to finalize</span>
+            <span class="route-scroll-hint__arrow" aria-hidden="true">↓</span>
+          </button>
         </div>
-        <div class="route-list">
+        <div id="route-summary-panel" class="route-summary" hidden>
+          <p id="route-export-summary" class="label route-export-summary">YOUR COMMERCIAL DRIVE ROUTE — N STOPS</p>
           <div id="route-cards"></div>
           <div class="totals" id="route-totals"></div>
         </div>
       </div>
 
       <div class="nav-buttons">
-        <button onclick="editSpots()">Edit Spots</button>
-        <button class="primary" onclick="goTo('F')">Finish</button>
+        <button type="button" id="btn-edit-route" onclick="editSpots()" hidden>Edit Spots</button>
+        <button type="button" id="btn-route-finalize" class="primary" onclick="handleRouteFinalize()" hidden>Finalize</button>
       </div>
-    </section>
-
-    <!-- STEP F: EXPORT -->
-    <section id="step-F" class="step">
-      <h1>Ready to go.</h1>
-      <p id="export-summary" class="label" style="margin-bottom: 2rem;">YOUR COMMERCIAL DRIVE ROUTE — N STOPS</p>
-
-      <div class="map-container" style="margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto; width: 100%;">
-        <svg id="route-map-final" viewBox="0 0 300 600">
-          <!-- Rendered via JS -->
-        </svg>
-      </div>
-
-      <button class="primary" style="width: 100%; margin-bottom: 1rem; font-size: 1.2rem;" onclick="openGoogleMaps()">Open in Google Maps</button>
-      <button style="width: 100%;" onclick="startOver()">Start Over</button>
     </section>
 
     <!-- PATH 2: PICK PLAN -->
@@ -915,7 +1239,7 @@
       
       <div class="map-split">
         <div class="map-container">
-          <svg id="route-map-p2" viewBox="0 0 300 600"></svg>
+          <svg id="route-map-p2" viewBox="0 0 340 600"></svg>
         </div>
         <div class="route-list">
           <div id="route-cards-p2"></div>
@@ -932,12 +1256,37 @@
     <section id="step-P3" class="step">
       <h1>All Spots</h1>
       <p id="p3-desc">Browse every recommendation and add stops to Google Maps.</p>
-      <div id="p3-filters" class="p3-filters" aria-label="Filter spots"></div>
-      <div class="photo-grid" id="p3-grid">
+      <div id="p3-filters" class="p3-filters" aria-label="Filter and sort spots"></div>
+      <div id="p3-grid">
         <!-- Rendered via JS -->
+      </div>
+      <div id="p3-route-bar" class="p3-route-bar" hidden>
+        <span id="p3-route-count"></span>
+        <button type="button" class="primary" onclick="viewP3Route()">View route</button>
       </div>
       <div class="nav-buttons">
         <button onclick="showStep('LANDING')">Back</button>
+      </div>
+    </section>
+
+    <!-- PATH 3: VISIT ROUTE -->
+    <section id="step-P3-ROUTE" class="step">
+      <h1>Your Visit List</h1>
+      <p id="p3-route-desc" class="label" style="margin-bottom: 2rem;">Stops sorted north to south along the Drive for walking.</p>
+
+      <div class="map-split">
+        <div class="map-container">
+          <svg id="route-map-p3" viewBox="0 0 340 600"></svg>
+        </div>
+        <div class="route-list">
+          <div id="route-cards-p3"></div>
+          <div class="totals" id="route-totals-p3"></div>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button onclick="showStep('P3')">Back to All Spots</button>
+        <button class="primary" onclick="openGoogleMaps(sortStopsGeographic(getP3BuiltRoute()))">Open in Google Maps</button>
       </div>
     </section>
 
@@ -1129,7 +1478,7 @@
       }
     }
 
-    const PATH1_STEPS = ['A', 'B', 'C', 'D', 'E', 'F'];
+    const PATH1_STEPS = ['A', 'B', 'C', 'D', 'E'];
 
     const STEP_D_PRIMARY_FILTERS = {
       coffee: [
@@ -1195,6 +1544,10 @@
       stepDTypeExpanded: false,
       stepDCategoryId: null,
       p3Filters: defaultP3Filters(),
+      p3SortOrder: "south-north",
+      p3SortOpen: false,
+      p3RouteIds: [],
+      routeReviewFinalized: false,
     };
 
     function resetState() {
@@ -1214,6 +1567,10 @@
         stepDTypeExpanded: false,
         stepDCategoryId: null,
         p3Filters: defaultP3Filters(),
+        p3SortOrder: "south-north",
+        p3SortOpen: false,
+        p3RouteIds: [],
+        routeReviewFinalized: false,
       };
     }
 
@@ -1243,6 +1600,9 @@
 
     function showStep(step) {
       state.currentStep = step;
+      if (step !== "P3") {
+        state.expandedSpotId = null;
+      }
       const landing = document.getElementById('step-LANDING');
       const main = document.getElementById('main-container');
       const topNav = document.getElementById('top-nav');
@@ -1263,11 +1623,14 @@
       main.classList.add('visible');
       topNav.style.display = 'block';
 
-      if (PATH1_STEPS.includes(step)) {
-        progress.classList.remove('hidden');
+      const showPath1Progress =
+        PATH1_STEPS.includes(step) &&
+        !(step === "E" && state.pathContext === "See All Spots");
+      if (showPath1Progress) {
+        progress.classList.remove("hidden");
         updateProgress(step);
       } else {
-        progress.classList.add('hidden');
+        progress.classList.add("hidden");
       }
 
       document.querySelectorAll('#main-container section.step').forEach(s => s.classList.remove('active'));
@@ -1278,10 +1641,10 @@
       if (step === 'B') renderStepB();
       if (step === 'D') renderStepD();
       if (step === 'E') renderStepE();
-      if (step === 'F') renderStepF();
       if (step === 'P2-TIME') renderP2PlanPicker();
       if (step === 'P2-PLAN') renderP2Plan();
       if (step === 'P3') renderP3();
+      if (step === 'P3-ROUTE') renderP3Route();
     }
 
     function goTo(step) { showStep(step); }
@@ -1297,6 +1660,8 @@
     function startPath3() {
       state.expandedSpotId = null;
       state.p3Filters = defaultP3Filters();
+      state.p3SortOrder = "south-north";
+      state.p3SortOpen = false;
       state.pathContext = 'See All Spots';
       showStep('P3');
     }
@@ -1764,7 +2129,43 @@
       return { totalKm, totalMin, legs };
     }
 
+    function getFurthestStopInRoute(route) {
+      if (!route.length) return null;
+      let furthest = route[0];
+      let maxMinutes = getStopWalkFromStation(route[0]).minutes;
+      route.forEach((stop) => {
+        const { minutes } = getStopWalkFromStation(stop);
+        if (minutes > maxMinutes) {
+          maxMinutes = minutes;
+          furthest = stop;
+        }
+      });
+      return furthest;
+    }
+
+    function getRouteWalkToFurthestTotals(route) {
+      const legs = getRouteLegs(route);
+      if (!legs.length) return { km: 0, min: 0 };
+      const furthest = getFurthestStopInRoute(route);
+      const idx = route.findIndex((s) => s.id === furthest.id);
+      const outboundLegs = legs.slice(0, idx + 1);
+      return {
+        km: outboundLegs.reduce((sum, leg) => sum + leg.km, 0),
+        min: outboundLegs.reduce((sum, leg) => sum + leg.minutes, 0),
+      };
+    }
+
+    function getP3BuiltRoute() {
+      return state.p3RouteIds
+        .map((id) => STOPS.find((s) => s.id === id))
+        .filter(Boolean);
+    }
+
     function getFinalRoute() {
+      if (state.pathContext === "See All Spots" && state.p3RouteIds.length > 0) {
+        return sortStopsGeographic(getP3BuiltRoute());
+      }
+
       let finalIds = [];
       // If manual, preserve category order
       if (state.routeOrder === "manual") {
@@ -1777,116 +2178,338 @@
         // Gather all selected
         Object.values(state.selectedStops).forEach(ids => finalIds.push(...ids));
       }
-      
+
       // Deduplicate
       finalIds = [...new Set(finalIds)];
-      
+
       let route = finalIds.map(id => STOPS.find(s => s.id === id)).filter(Boolean);
 
       if (state.routeOrder === "geographic") {
         // Sort by y coordinate (south to north roughly)
-        route.sort((a, b) => b.coords.y - a.coords.y); 
+        route.sort((a, b) => b.coords.y - a.coords.y);
       }
       return route;
     }
 
+    const MAP = {
+      xCenter: 150,
+      yNorth: 50,
+      yStation: 550,
+      ySpan: 500,
+      bracketLeftX: 130,
+      bracketArm: 10,
+      labelLeftX: 8,
+      legDurationMs: 1000,
+    };
+
+    const MAP_LEG_COLORS = [
+      "#3d8f4a",
+      "#52a362",
+      "#6ab87a",
+      "#84cc94",
+      "#9ad4a8",
+      "#bafabf",
+    ];
+    const MAP_BACKWARD_COLOR = "#c9a227";
+
+    function isMapLegBackward(y1, y2) {
+      return y2 > y1;
+    }
+
+    function getMapLegColor(leg) {
+      if (leg.isBackward) return MAP_BACKWARD_COLOR;
+      return MAP_LEG_COLORS[leg.legIndex % MAP_LEG_COLORS.length];
+    }
+
+    let mapAnimationGeneration = 0;
+    let routeScrollHintObserver = null;
+
+    function teardownRouteScrollHint() {
+      const hint = document.getElementById("route-scroll-hint");
+      if (routeScrollHintObserver) {
+        routeScrollHintObserver.disconnect();
+        routeScrollHintObserver = null;
+      }
+      if (hint?._scrollHandler) {
+        window.removeEventListener("scroll", hint._scrollHandler, { passive: true });
+        hint._scrollHandler = null;
+      }
+      if (hint) {
+        hint.hidden = true;
+        hint.classList.remove("route-scroll-hint--visible");
+        hint.onclick = null;
+      }
+    }
+
+    function setupRouteScrollHint() {
+      const hint = document.getElementById("route-scroll-hint");
+      const summaryPanel = document.getElementById("route-summary-panel");
+      const finalizeBtn = document.getElementById("btn-route-finalize");
+      if (!hint) return;
+
+      teardownRouteScrollHint();
+
+      if (!window.matchMedia("(max-width: 767px)").matches) return;
+
+      const dismiss = () => teardownRouteScrollHint();
+
+      hint.hidden = false;
+      hint.classList.add("route-scroll-hint--visible");
+      hint.onclick = () => {
+        summaryPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
+      };
+
+      const onScroll = () => {
+        const map = document.querySelector("#route-review .map-container svg");
+        if (!map) return;
+        const mapBottom = map.getBoundingClientRect().bottom;
+        if (mapBottom < window.innerHeight * 0.88) dismiss();
+      };
+      hint._scrollHandler = onScroll;
+      window.addEventListener("scroll", onScroll, { passive: true });
+
+      routeScrollHintObserver = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting && e.intersectionRatio >= 0.15)) {
+            dismiss();
+          }
+        },
+        { threshold: [0, 0.15, 0.4] }
+      );
+      if (summaryPanel) routeScrollHintObserver.observe(summaryPanel);
+      if (finalizeBtn) routeScrollHintObserver.observe(finalizeBtn);
+    }
+
+    function getRouteMapLayout(route) {
+      const station = { x: MAP.xCenter, y: MAP.yStation };
+      const routeLegs = getRouteLegs(route);
+      if (!route.length) {
+        return { station, points: [], legs: [], stopCount: 0 };
+      }
+
+      const furthestDist = Math.max(
+        ...route.map((s) => getStopWalkFromStation(s).km),
+        0.0001
+      );
+
+      const points = route.map((stop, idx) => {
+        const dist = getStopWalkFromStation(stop).km;
+        const y = MAP.yStation - (dist / furthestDist) * MAP.ySpan;
+        return { stop, x: MAP.xCenter, y, idx };
+      });
+
+      for (let i = 1; i < points.length; i++) {
+        if (Math.abs(points[i].y - points[i - 1].y) < 6) {
+          points[i].y = points[i - 1].y - 8;
+        }
+      }
+
+      const legs = routeLegs
+        .slice(0, route.length)
+        .map((leg, i) => {
+          let x1, y1, x2, y2;
+          if (i === 0) {
+            x1 = station.x;
+            y1 = station.y;
+            x2 = points[0].x;
+            y2 = points[0].y;
+          } else {
+            x1 = points[i - 1].x;
+            y1 = points[i - 1].y;
+            x2 = points[i].x;
+            y2 = points[i].y;
+          }
+          const isBackward = isMapLegBackward(y1, y2);
+          return {
+            ...leg,
+            x1,
+            y1,
+            x2,
+            y2,
+            legIndex: i,
+            isBackward,
+          };
+        });
+
+      return { station, points, legs, stopCount: route.length };
+    }
+
+    function renderMapStaticSvg() {
+      return `
+        <line class="map-line" x1="${MAP.xCenter}" y1="${MAP.yNorth}" x2="${MAP.xCenter}" y2="${MAP.yStation}" />
+        <circle cx="${MAP.xCenter}" cy="${MAP.yStation}" r="5" fill="var(--ink)"/>
+        <text class="map-text" x="${MAP.xCenter + 10}" y="${MAP.yStation + 5}">Station</text>
+      `;
+    }
+
+    function renderMapLegBracketSvg(leg, legIndex) {
+      const color = getMapLegColor(leg);
+      const yTop = Math.min(leg.y1, leg.y2);
+      const yBot = Math.max(leg.y1, leg.y2);
+      const midY = (yTop + yBot) / 2;
+      const arm = MAP.bracketArm;
+      const label = `~${formatKm(leg.km)} km · ~${leg.minutes} min`;
+      const bx = MAP.bracketLeftX;
+      const d = `M ${bx} ${yTop} L ${bx} ${yBot} M ${bx} ${yTop} L ${bx + arm} ${yTop} M ${bx} ${yBot} L ${bx + arm} ${yBot}`;
+      const legClass = leg.isBackward ? "map-leg--backward" : "map-leg--outbound";
+      return `
+        <g class="map-leg ${legClass}" data-leg-index="${legIndex}" data-leg-color="${color}">
+          <path class="map-leg-bracket" d="${d}" style="stroke:${color}"/>
+          <text class="map-leg-label" x="${MAP.labelLeftX}" y="${midY}" text-anchor="start" style="fill:${color}">${label}</text>
+        </g>
+      `;
+    }
+
+    function renderMapStopSvg(point) {
+      const s = point.stop;
+      const idx = point.idx;
+      return `
+        <g class="map-stop-group map-stop-group--hidden" data-stop-index="${idx}">
+          <circle class="map-stop" cx="${point.x}" cy="${point.y}" r="5" />
+          <text class="map-text" x="${point.x + 15}" y="${point.y + 4}">${idx + 1}. ${escapeHtml(s.crossStreet)}</text>
+        </g>
+      `;
+    }
+
+    function renderMapLegsLayerSvg(legs) {
+      return `<g class="map-legs-layer">${legs.map((leg, i) => renderMapLegBracketSvg(leg, i)).join("")}</g>`;
+    }
+
     function animateMapPath(pathEl, options = {}) {
-      const { duration = 1500, direction = 'draw', onComplete = null } = options;
-      if (!pathEl) return;
+      const { duration = 1500, direction = "draw", onComplete = null } = options;
+      if (!pathEl) {
+        onComplete?.();
+        return;
+      }
       const length = pathEl.getTotalLength();
       if (!length) {
         onComplete?.();
         return;
       }
-      const startOffset = direction === 'draw' ? length : 0;
-      const endOffset = direction === 'draw' ? 0 : length;
-      pathEl.style.transition = 'none';
+      const startOffset = direction === "draw" ? length : 0;
+      const endOffset = direction === "draw" ? 0 : length;
+      pathEl.style.transition = "none";
       pathEl.style.strokeDasharray = `${length}`;
       pathEl.style.strokeDashoffset = `${startOffset}`;
       pathEl.getBoundingClientRect();
       pathEl.style.transition = `stroke-dashoffset ${duration}ms ease-in-out`;
       pathEl.style.strokeDashoffset = `${endOffset}`;
       if (onComplete) {
-        pathEl.addEventListener('transitionend', function handler(e) {
-          if (e.propertyName !== 'stroke-dashoffset') return;
-          pathEl.removeEventListener('transitionend', handler);
+        pathEl.addEventListener("transitionend", function handler(e) {
+          if (e.propertyName !== "stroke-dashoffset") return;
+          pathEl.removeEventListener("transitionend", handler);
           onComplete();
         });
       }
     }
 
-    function drawMap(svgId, route) {
+    function drawMap(svgId, route, options = {}) {
       const svg = document.getElementById(svgId);
       if (!svg) return;
-      let svgHtml = `
-        <line class="map-line" x1="150" y1="50" x2="150" y2="550" />
-        <text class="map-text" x="160" y="55">North</text>
-        <circle cx="150" cy="550" r="5" fill="var(--ink)"/>
-        <text class="map-text" x="160" y="555">Station</text>
-      `;
 
-      // Draw path
-      if (route.length > 0) {
-        let pathD = `M 150 550 `;
-        route.forEach(s => {
-          pathD += `L ${s.coords.x} ${s.coords.y} `;
-        });
-        svgHtml += `<path class="map-path" id="anim-path-${svgId}" d="${pathD}" />`;
+      const gen = ++mapAnimationGeneration;
+      const isStale = () => gen !== mapAnimationGeneration;
+
+      const layout = getRouteMapLayout(route);
+      const { points, legs } = layout;
+      const legDuration = options.legDuration ?? MAP.legDurationMs;
+
+      let html = renderMapStaticSvg();
+      if (legs.length) {
+        html += renderMapLegsLayerSvg(legs);
+      }
+      html += `<g class="map-route-layer"></g>`;
+      svg.innerHTML = html;
+
+      const routeLayer = svg.querySelector(".map-route-layer");
+      const legsLayer = svg.querySelector(".map-legs-layer");
+
+      if (!route.length || !legs.length) {
+        options.onComplete?.();
+        return;
       }
 
-      // Draw stops
-      route.forEach((s, idx) => {
-        svgHtml += `
-          <circle class="map-stop" cx="${s.coords.x}" cy="${s.coords.y}" r="5" />
-          <text class="map-text" x="${s.coords.x + 15}" y="${s.coords.y + 4}">${idx + 1}. ${s.crossStreet}</text>
-        `;
-      });
-      svg.innerHTML = svgHtml;
+      function revealBracket(legIndex) {
+        const g = legsLayer?.querySelector(`[data-leg-index="${legIndex}"]`);
+        if (g) g.classList.add("is-visible");
+      }
 
-      const pathEl = document.getElementById(`anim-path-${svgId}`);
-      animateMapPath(pathEl, { duration: 1500, direction: 'draw' });
-    }
+      function revealStop(stopIndex) {
+        const existing = routeLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
+        if (existing) {
+          requestAnimationFrame(() => existing.classList.remove("map-stop-group--hidden"));
+          return;
+        }
+        routeLayer.insertAdjacentHTML("beforeend", renderMapStopSvg(points[stopIndex]));
+        const g = routeLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
+        requestAnimationFrame(() => g?.classList.remove("map-stop-group--hidden"));
+      }
 
-    function renderRouteLegHtml(leg) {
-      return `
-        <div class="route-leg" aria-hidden="true">
-          <span class="route-leg-arrow">↓</span>
-          <span>~${formatKm(leg.km)} km · ~${leg.minutes} min · ${escapeHtml(leg.label)}</span>
-        </div>
-      `;
+      function runLeg(legIndex) {
+        if (isStale()) return;
+        if (legIndex >= legs.length) {
+          options.onComplete?.();
+          return;
+        }
+
+        const leg = legs[legIndex];
+        const color = getMapLegColor(leg);
+        const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        pathEl.setAttribute("class", leg.isBackward ? "map-path map-path--backward" : "map-path");
+        pathEl.setAttribute("data-leg-index", String(legIndex));
+        pathEl.setAttribute("d", `M ${leg.x1} ${leg.y1} L ${leg.x2} ${leg.y2}`);
+        pathEl.style.stroke = color;
+        routeLayer.appendChild(pathEl);
+
+        animateMapPath(pathEl, {
+          duration: legDuration,
+          direction: "draw",
+          onComplete: () => {
+            if (isStale()) return;
+            revealBracket(legIndex);
+            if (legIndex < points.length) {
+              revealStop(legIndex);
+            }
+            runLeg(legIndex + 1);
+          },
+        });
+      }
+
+      runLeg(0);
     }
 
     function renderRouteCardHtml(s, idx) {
-      const { km, minutes } = getStopWalkFromStation(s);
       return `
         <div class="route-card">
           <img src="${s.image}" alt="${escapeHtml(s.name)}">
           <div class="content">
             <h3 style="font-size: 1rem; text-transform:uppercase;">${idx + 1}. ${escapeHtml(s.name)}</h3>
             <div class="meta">${escapeHtml(s.crossStreet)}</div>
-            <div class="meta walk-line">~${formatKm(km)} km · ~${minutes} min from ${STATION_WALK_LABEL}</div>
           </div>
         </div>
       `;
     }
 
     function renderRouteCards(containerId, route) {
-      const legs = getRouteLegs(route);
-      const parts = [];
-      route.forEach((s, idx) => {
-        if (legs[idx]) parts.push(renderRouteLegHtml(legs[idx]));
-        parts.push(renderRouteCardHtml(s, idx));
-      });
-      const returnLeg = legs[route.length];
-      if (returnLeg) parts.push(renderRouteLegHtml(returnLeg));
+      const parts = route.map((s, idx) => renderRouteCardHtml(s, idx));
       document.getElementById(containerId).innerHTML = parts.join("");
     }
 
-    function renderRouteTotals(containerId, route) {
+    function renderRouteTotals(containerId, route, options = {}) {
       const el = document.getElementById(containerId);
       if (!el) return;
       if (!route.length) {
         el.innerHTML = "";
+        return;
+      }
+      if (options.style === "furthest-roundtrip") {
+        const { km: furthestKm, min: furthestMin } = getRouteWalkToFurthestTotals(route);
+        const { totalKm, totalMin } = getRouteWalkTotals(route);
+        el.innerHTML = `
+          <div>Time to furthest point: ~${formatKm(furthestKm)} km · ~${furthestMin} min</div>
+          <div>Round trip: ~${formatKm(totalKm)} km · ~${totalMin} min</div>
+          <p class="walk-disclaimer">Does not include time in places.</p>
+        `;
         return;
       }
       const { totalKm, totalMin } = getRouteWalkTotals(route);
@@ -1896,23 +2519,65 @@
       `;
     }
 
-        function renderStepE() {
+    function renderStepE() {
       const route = getFinalRoute();
-      drawMap("route-map", route);
+      state.routeReviewFinalized = false;
+
+      const review = document.getElementById("route-review");
+      const summaryPanel = document.getElementById("route-summary-panel");
+      const editBtn = document.getElementById("btn-edit-route");
+      const finalizeBtn = document.getElementById("btn-route-finalize");
+
+      review.classList.remove("route-phase-summary");
+      review.classList.add("route-phase-map");
+      summaryPanel.hidden = true;
+      const totalsEl = document.getElementById("route-totals");
+      if (totalsEl) totalsEl.innerHTML = "";
+      editBtn.hidden = true;
+      finalizeBtn.hidden = true;
+      finalizeBtn.textContent = "Finalize";
+      finalizeBtn.className = "primary";
+      finalizeBtn.disabled = false;
+      teardownRouteScrollHint();
+
+      drawMap("route-map", route, {
+        onComplete: () => revealRouteSummary(route),
+      });
+    }
+
+    function revealRouteSummary(route) {
+      const review = document.getElementById("route-review");
+      document.getElementById("route-export-summary").innerText =
+        `YOUR COMMERCIAL DRIVE ROUTE — ${route.length} STOPS`;
       renderRouteCards("route-cards", route);
-      renderRouteTotals("route-totals", route);
+      renderRouteTotals("route-totals", route, { style: "furthest-roundtrip" });
+      review.classList.remove("route-phase-map");
+      review.classList.add("route-phase-summary");
+      document.getElementById("route-summary-panel").hidden = false;
+      document.getElementById("btn-edit-route").hidden = false;
+      document.getElementById("btn-route-finalize").hidden = false;
+      requestAnimationFrame(() => setupRouteScrollHint());
+    }
+
+    function handleRouteFinalize() {
+      if (state.routeReviewFinalized) {
+        openGoogleMaps();
+        return;
+      }
+      state.routeReviewFinalized = true;
+      const btn = document.getElementById("btn-route-finalize");
+      btn.textContent = "Add to Google Maps";
+      btn.className = "btn-google-maps";
     }
 
     function editSpots() {
+      if (state.pathContext === "See All Spots" && state.p3RouteIds.length > 0) {
+        state.expandedSpotId = null;
+        goTo("P3");
+        return;
+      }
       state.currentCategoryIndex = 0;
       goTo('D');
-    }
-
-    // --- STEP F ---
-    function renderStepF() {
-      const route = getFinalRoute();
-      document.getElementById("export-summary").innerText = `YOUR COMMERCIAL DRIVE ROUTE — ${route.length} STOPS`;
-      drawMap("route-map-final", route);
     }
 
     function openGoogleMaps(route) {
@@ -2041,8 +2706,37 @@
       return true;
     }
 
+    function sortStopsGeographic(stops) {
+      return [...stops].sort((a, b) => b.coords.y - a.coords.y);
+    }
+
+    function sortStopsForP3(stops) {
+      const towardStation = state.p3SortOrder !== "north-south";
+      return [...stops].sort((a, b) =>
+        towardStation ? b.coords.y - a.coords.y : a.coords.y - b.coords.y
+      );
+    }
+
     function getP3FilteredStops() {
-      return STOPS.filter(stopMatchesP3Filters);
+      return sortStopsForP3(STOPS.filter(stopMatchesP3Filters));
+    }
+
+    function p3SortToggleLabel() {
+      const choice =
+        state.p3SortOrder === "north-south" ? "North to south" : "South to north";
+      return `Sort by · ${choice}`;
+    }
+
+    function toggleP3SortPanel() {
+      state.p3SortOpen = !state.p3SortOpen;
+      if (state.p3SortOpen) state.p3Filters.filterOpen = false;
+      renderP3();
+    }
+
+    function setP3SortOrder(order) {
+      state.p3SortOrder = order;
+      state.p3SortOpen = false;
+      renderP3();
     }
 
     function p3HasActiveFilters() {
@@ -2067,6 +2761,7 @@
 
     function toggleP3FilterPanel() {
       state.p3Filters.filterOpen = !state.p3Filters.filterOpen;
+      if (state.p3Filters.filterOpen) state.p3SortOpen = false;
       renderP3();
     }
 
@@ -2111,14 +2806,31 @@
       if (!el) return;
       const f = state.p3Filters;
       const hasActive = p3HasActiveFilters();
-      const toggleActive = f.filterOpen || hasActive;
+      const sortToggleActive = state.p3SortOpen;
+      const filterToggleActive = f.filterOpen || hasActive;
+      const southActive = state.p3SortOrder !== "north-south";
+      const northActive = state.p3SortOrder === "north-south";
 
       let html = `<div class="p3-filter-bar">`;
-      html += `<button type="button" class="p3-filter-toggle ${toggleActive ? "active" : ""}" onclick="toggleP3FilterPanel()">${p3FilterToggleLabel()}</button>`;
+      html += `<button type="button" class="p3-filter-toggle ${sortToggleActive ? "active" : ""}" onclick="toggleP3SortPanel()">${p3SortToggleLabel()}</button>`;
+      html += `<button type="button" class="p3-filter-toggle ${filterToggleActive ? "active" : ""}" onclick="toggleP3FilterPanel()">${p3FilterToggleLabel()}</button>`;
       if (hasActive) {
         html += `<button type="button" class="p3-filter-clear" onclick="clearP3Filters()">Clear</button>`;
       }
       html += `</div>`;
+
+      if (state.p3SortOpen) {
+        html += `<div class="p3-sort-panel" role="group" aria-label="Sort order">`;
+        html += `<button type="button" class="p3-sort-option${southActive ? " active" : ""}" onclick="setP3SortOrder('south-north')">`;
+        html += `<span class="p3-sort-option__title">Sort by South to North</span>`;
+        html += `<span class="p3-sort-option__desc">Starts at Skytrain and moves north.</span>`;
+        html += `</button>`;
+        html += `<button type="button" class="p3-sort-option${northActive ? " active" : ""}" onclick="setP3SortOrder('north-south')">`;
+        html += `<span class="p3-sort-option__title">Sort by North to South</span>`;
+        html += `<span class="p3-sort-option__desc">Starts at Hastings and moves towards Skytrain.</span>`;
+        html += `</button>`;
+        html += `</div>`;
+      }
 
       if (f.filterOpen) {
         html += `<div class="p3-filter-panel">`;
@@ -2168,52 +2880,152 @@
       el.innerHTML = html;
     }
 
+    function renderP3GridMeta(spot) {
+      return `<div class="meta">${escapeHtml(spot.crossStreet)}</div>`;
+    }
+
+    function renderP3DetailMeta(spot) {
+      const { km, minutes } = getStopWalkFromStation(spot);
+      const costPart = spot.costLabel ? `${escapeHtml(spot.costLabel)} · ` : "";
+      return `
+        <div class="p3-card__expand-meta">${escapeHtml(spot.crossStreet)}</div>
+        <div class="p3-card__expand-meta walk-line">${costPart}~${formatKm(km)} km · ~${minutes} min from ${STATION_WALK_LABEL}</div>
+      `;
+    }
+
+    function renderP3ExpandPanel(spot) {
+      const inRoute = state.p3RouteIds.includes(spot.id);
+      const routeBtnClass = inRoute ? "p3-route-btn is-added" : "p3-route-btn";
+      const routeLabel = inRoute ? "On your route" : "Add to route";
+      return `
+        <div class="p3-card__expand-panel">
+          <div class="p3-card__gallery">${renderPhotoGallery(spot, `p3-${spot.id}`)}</div>
+          <div class="p3-card__expand-body">
+            <div class="tags">${renderP3Tags(spot)}</div>
+            <p class="description">${escapeHtml(spot.description)}</p>
+            ${renderP3DetailMeta(spot)}
+          </div>
+          <div class="p3-card__actions">
+            <button type="button" onclick="event.stopPropagation(); openSpotInMaps(${spot.lat}, ${spot.lng})">See in Google Maps</button>
+            <button type="button" class="${routeBtnClass}" onclick="event.stopPropagation(); addP3ToRoute('${spot.id}')">${routeLabel}</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderP3Tags(spot) {
+      const tags = (spot.tags || []).map(
+        (t) => `<span class="tag">${escapeHtml(t)}</span>`
+      );
+      if (spot.costLabel) {
+        tags.push(`<span class="tag">${escapeHtml(spot.costLabel)}</span>`);
+      }
+      const { minutes } = getStopWalkFromStation(spot);
+      tags.push(
+        `<span class="tag">${minutes} min from ${STATION_WALK_LABEL}</span>`
+      );
+      return tags.join("");
+    }
+
+    function renderP3RouteBar() {
+      const bar = document.getElementById("p3-route-bar");
+      const countEl = document.getElementById("p3-route-count");
+      if (!bar) return;
+      const n = state.p3RouteIds.length;
+      bar.hidden = n === 0;
+      if (countEl) {
+        countEl.textContent =
+          n === 1 ? "1 stop on your route" : `${n} stops on your route`;
+      }
+    }
+
+    function addP3ToRoute(spotId) {
+      const idx = state.p3RouteIds.indexOf(spotId);
+      if (idx >= 0) state.p3RouteIds.splice(idx, 1);
+      else state.p3RouteIds.push(spotId);
+      renderP3();
+    }
+
+    function viewP3Route() {
+      if (state.p3RouteIds.length === 0) return;
+      state.expandedSpotId = null;
+      showStep("E");
+    }
+
+    function renderP3Route() {
+      const route = sortStopsGeographic(getP3BuiltRoute());
+      const desc = document.getElementById("p3-route-desc");
+      if (desc) {
+        desc.textContent = route.length
+          ? `${route.length} stop${route.length === 1 ? "" : "s"} sorted north to south along the Drive for walking.`
+          : "Add spots from All Spots to build your route.";
+      }
+      drawMap("route-map-p3", route);
+      renderRouteCards("route-cards-p3", route);
+      renderRouteTotals("route-totals-p3", route);
+    }
+
     function renderP3() {
       renderP3Filters();
       const filtered = getP3FilteredStops();
+      const routeCount = state.p3RouteIds.length;
       const desc = document.getElementById("p3-desc");
       if (desc) {
-        desc.textContent = p3HasActiveFilters()
-          ? `Showing ${filtered.length} of ${STOPS.length} spots. Tap a spot to read more and add it to Google Maps.`
-          : "Browse every recommendation and add stops to Google Maps.";
+        const filterNote = p3HasActiveFilters()
+          ? `Showing ${filtered.length} of ${STOPS.length} spots. `
+          : "";
+        const routeNote = routeCount > 0
+          ? `${routeCount} on your route — tap View route when ready. `
+          : "";
+        desc.textContent =
+          filterNote +
+          routeNote +
+          "Tap a spot to expand or collapse — add stops to your route from there.";
       }
 
-      const grid = document.getElementById('p3-grid');
+      const grid = document.getElementById("p3-grid");
       if (filtered.length === 0) {
         grid.innerHTML = `<p class="p3-empty-filters">No spots match these filters. Try turning one off or tap <strong>Clear</strong>.</p>`;
+        renderP3RouteBar();
         return;
       }
 
-      grid.innerHTML = filtered.map(spot => {
-        const expanded = state.expandedSpotId === spot.id;
-        const testClass = spot._test ? " spot-tile--test" : "";
-        return `
-          <div class="spot-tile expandable${testClass} ${expanded ? 'expanded' : ''}" onclick="toggleP3Spot('${spot.id}')">
-            <div class="img-wrapper">
-              ${expanded ? renderPhotoGallery(spot, `p3-${spot.id}`) : renderPhotoHero(spot)}
-            </div>
-            <div class="content tile-summary">
-              <h2>${spot.name}</h2>
-              <div class="tags">
-                ${spot.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-                <span class="tag">${spot.costLabel}</span>
-                <span class="tag">${spot.walkFromStation} min walk</span>
+      grid.innerHTML = filtered
+        .map((spot) => {
+          const expanded = state.expandedSpotId === spot.id;
+          const inRoute = state.p3RouteIds.includes(spot.id);
+          const testClass = spot._test ? " p3-card--test" : "";
+          const expandedClass = expanded ? " is-expanded" : "";
+          const routeClass = inRoute ? " is-in-route" : "";
+          return `
+          <div class="p3-card${testClass}${expandedClass}${routeClass}" onclick="toggleP3Spot('${spot.id}')">
+            <div class="p3-card__summary">
+              <img class="p3-card__thumb" src="${spot.image}" alt="${escapeHtml(spot.name)}" loading="lazy">
+              <div class="p3-card__body">
+                <h3>${escapeHtml(spot.name)}</h3>
+                ${renderP3GridMeta(spot)}
               </div>
             </div>
-            <div class="expanded-content">
-              <p>${spot.description}</p>
-              <p class="label" style="margin-top: 0.75rem;">${spot.crossStreet}</p>
-              <button class="btn-maps" onclick="event.stopPropagation(); openSpotInMaps(${spot.lat}, ${spot.lng})">Add to Google Maps</button>
-            </div>
+            ${renderP3ExpandPanel(spot)}
           </div>
         `;
-      }).join('');
+        })
+        .join("");
+
       initPhotoGalleries(grid);
+      renderP3RouteBar();
     }
 
     function toggleP3Spot(id) {
-      state.expandedSpotId = state.expandedSpotId === id ? null : id;
+      const wasExpanded = state.expandedSpotId === id;
+      state.expandedSpotId = wasExpanded ? null : id;
       renderP3();
+      if (!wasExpanded && state.expandedSpotId) {
+        requestAnimationFrame(() => {
+          const card = document.querySelector(`.p3-card.is-expanded`);
+          card?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+      }
     }
 
     function openSpotInMaps(lat, lng) {
