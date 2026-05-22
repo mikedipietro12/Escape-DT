@@ -284,11 +284,19 @@
         "position": 40,
         "name": "Equinox Gallery",
         "item": "https://explore.seasonsofeastvan.com/spots/equinox-gallery/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 41,
+        "name": "Earnest Ice Cream",
+        "item": "https://explore.seasonsofeastvan.com/spots/earnest/"
       }
     ]
   }
 ]</script>
   <!-- /build:seo-head -->
+
+
 
 
 
@@ -2852,6 +2860,7 @@
     const MAP = {
       xCenter: 150,
       xEast: 175,
+      xWest: 125,
       yNorth: 50,
       yStation: 550,
       ySpan: 500,
@@ -2884,26 +2893,27 @@
       return /\bvictoria\b/i.test(String(crossStreet || ""));
     }
 
+    function isFrancesCrossStreet(crossStreet) {
+      return /\bfrances\b/i.test(String(crossStreet || ""));
+    }
+
     function getStopMapX(stop) {
       const explicit = stop.coords?.x;
       if (explicit != null && explicit !== MAP.xCenter) return explicit;
       if (isVictoriaCrossStreet(stop.crossStreet)) return MAP.xEast;
+      if (isFrancesCrossStreet(stop.crossStreet)) return MAP.xWest;
       return explicit ?? MAP.xCenter;
     }
 
-    function isMapStopEastOffset(x) {
-      return x > MAP.xCenter + 5;
+    function isStopOffSpine(stop) {
+      return Math.abs(getStopMapX(stop) - MAP.xCenter) > 5;
     }
 
-    function isStopOnVictoria(stop) {
-      return isMapStopEastOffset(getStopMapX(stop));
-    }
-
-    function getMapLegPathD(x1, y1, x2, y2, fromVictoria, toVictoria) {
+    function getMapLegPathD(x1, y1, x2, y2, fromOffSpine, toOffSpine) {
       const spine = MAP.xCenter;
       const nearSpine = (x) => Math.abs(x - spine) <= 5;
 
-      if (toVictoria && !fromVictoria) {
+      if (toOffSpine && !fromOffSpine) {
         const parts = [`M ${x1} ${y1}`];
         if (!nearSpine(x1)) parts.push(`L ${spine} ${y1}`);
         if (y1 !== y2) parts.push(`L ${spine} ${y2}`);
@@ -2911,7 +2921,7 @@
         return parts.join(" ");
       }
 
-      if (fromVictoria && !toVictoria) {
+      if (fromOffSpine && !toOffSpine) {
         const parts = [`M ${x1} ${y1}`, `L ${spine} ${y1}`];
         if (y1 !== y2) parts.push(`L ${spine} ${y2}`);
         if (!nearSpine(x2)) parts.push(`L ${x2} ${y2}`);
@@ -3116,8 +3126,8 @@
             x2 = points[i].x;
             y2 = points[i].y;
           }
-          const fromVictoria = fromStop ? isStopOnVictoria(fromStop) : false;
-          const toVictoria = toStop ? isStopOnVictoria(toStop) : false;
+          const fromOffSpine = fromStop ? isStopOffSpine(fromStop) : false;
+          const toOffSpine = toStop ? isStopOffSpine(toStop) : false;
           const isBackward = isMapLegBackward(y1, y2);
           return {
             ...leg,
@@ -3125,7 +3135,7 @@
             y1,
             x2,
             y2,
-            pathD: getMapLegPathD(x1, y1, x2, y2, fromVictoria, toVictoria),
+            pathD: getMapLegPathD(x1, y1, x2, y2, fromOffSpine, toOffSpine),
             legIndex: i,
             isBackward,
           };

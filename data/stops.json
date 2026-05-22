@@ -1377,6 +1377,34 @@
             "categories": [
                 "hangout"
             ]
+        },
+        {
+            "crossStreet": "Frances & Woodland",
+            "id": "s41",
+            "lat": 49.2795862,
+            "cost": "$",
+            "tags": [
+                "dessert",
+                "ice cream",
+                "grab and go",
+                "commercial"
+            ],
+            "name": "Earnest Ice Cream",
+            "coords": {
+                "y": 178
+            },
+            "description": "Top 3 Ice cream in the city hands down. I could go for a scoop of Cookies & Cream any day. A bit off the beaten path, but close to a big park with a playground and a large open field where locals tend to picnic.",
+            "walkFromStation": 30,
+            "placeholderColor": "ffb703",
+            "slug": "earnest",
+            "lng": -123.0749371,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food"
+            ]
         }
     ]
 }
