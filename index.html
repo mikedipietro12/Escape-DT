@@ -602,6 +602,28 @@
     .route-export-summary {
       margin-bottom: 1.5rem;
     }
+    #step-P2-PLAN .plan-detail-meta {
+      margin: 0 0 1.25rem;
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    #step-P2-PLAN .plan-intro {
+      margin: 0 0 2.5rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      white-space: pre-line;
+    }
+    #step-P2-PLAN .p2-plan-picker-desc {
+      margin: 0.5rem 0 0;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: normal;
+      color: var(--ink-muted);
+    }
     #step-E .nav-buttons .btn-google-maps {
       flex: 1 1 100%;
       width: 100%;
@@ -672,6 +694,37 @@
     }
     .route-card .content { padding: 1rem; flex-grow: 1; }
     .route-card .meta { font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); opacity: 0.7; }
+    .route-card--removable { position: relative; padding-right: 2.75rem; }
+    .route-card-remove {
+      position: absolute;
+      top: 50%;
+      right: 0.75rem;
+      transform: translateY(-50%);
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      background: var(--bg-top);
+      font-family: inherit;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--ink);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .route-card-remove:hover {
+      background: var(--ink);
+      color: var(--bg-top);
+    }
+    .route-card-remove:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .route-card-remove:disabled:hover {
+      background: var(--bg-top);
+      color: var(--ink);
+    }
     
     .totals {
       border-top: 2px solid var(--ink);
@@ -937,8 +990,9 @@
     .p3-card__gallery {
       position: relative;
       width: 100%;
-      height: 11rem;
-      max-height: 36vh;
+      aspect-ratio: 3 / 2;
+      min-height: 14rem;
+      max-height: min(52vh, 26rem);
       flex-shrink: 0;
       overflow: hidden;
       isolation: isolate;
@@ -961,6 +1015,133 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+    .p3-card.is-expanded .p3-card__gallery img {
+      cursor: zoom-in;
+    }
+    .photo-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+    .photo-lightbox.is-open {
+      display: flex;
+    }
+    body.photo-lightbox-open {
+      overflow: hidden;
+    }
+    .photo-lightbox__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      cursor: pointer;
+    }
+    .photo-lightbox__panel {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 40rem);
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      pointer-events: none;
+    }
+    .photo-lightbox__panel > * {
+      pointer-events: auto;
+    }
+    .photo-lightbox__close {
+      position: fixed;
+      top: 0.85rem;
+      right: 0.85rem;
+      z-index: 2;
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--ink);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-lightbox__close:hover {
+      background: #fff;
+    }
+    .photo-lightbox__stage {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-lightbox__img {
+      display: block;
+      max-width: 100%;
+      max-height: min(78vh, 32rem);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: #111;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
+    .photo-lightbox__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2.25rem;
+      height: 2.25rem;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--ink);
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-lightbox__arrow:hover { background: #fff; }
+    .photo-lightbox__arrow--prev { left: -0.25rem; }
+    .photo-lightbox__arrow--next { right: -0.25rem; }
+    .photo-lightbox__arrow[hidden] { display: none; }
+    .photo-lightbox__caption {
+      color: #fff;
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      text-align: center;
+      max-width: 100%;
+    }
+    .photo-lightbox__dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .photo-lightbox__dots[hidden] { display: none; }
+    .photo-lightbox__dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+    }
+    .photo-lightbox__dot.is-active {
+      background: #fff;
     }
     .p3-card__expand-body {
       position: relative;
@@ -1235,17 +1416,24 @@
     <!-- PATH 2: PLAN -->
     <section id="step-P2-PLAN" class="step">
       <h1 id="p2-plan-title">Your Plan</h1>
-      <p id="p2-plan-desc" class="label" style="margin-bottom: 2rem; white-space: pre-line;">...</p>
-      
-      <div class="map-split">
+      <p id="p2-plan-meta" class="plan-detail-meta label" hidden></p>
+      <div id="p2-plan-intro" class="plan-intro"></div>
+
+      <div id="p2-route-review" class="route-review route-phase-map">
         <div class="map-container">
           <svg id="route-map-p2" viewBox="0 0 340 600"></svg>
+          <button type="button" id="p2-route-scroll-hint" class="route-scroll-hint" hidden aria-label="Scroll down to see your stops">
+            <span class="route-scroll-hint__text">Scroll for your stops</span>
+            <span class="route-scroll-hint__arrow" aria-hidden="true">↓</span>
+          </button>
         </div>
-        <div class="route-list">
+        <div id="p2-route-summary-panel" class="route-summary" hidden>
+          <p id="p2-route-export-summary" class="label route-export-summary">YOUR PLAN — N STOPS</p>
           <div id="route-cards-p2"></div>
           <div class="totals" id="route-totals-p2"></div>
         </div>
       </div>
+
       <div class="nav-buttons">
         <button onclick="showStep('P2-TIME')">Back</button>
         <button class="primary" id="p2-open-maps" style="display: none;" onclick="openGoogleMaps(getPlanRoute())">Open in Google Maps</button>
@@ -1290,6 +1478,20 @@
       </div>
     </section>
 
+    </div>
+  </div>
+
+  <div id="p3-photo-lightbox" class="photo-lightbox" aria-hidden="true">
+    <div class="photo-lightbox__backdrop" aria-hidden="true"></div>
+    <button type="button" class="photo-lightbox__close" aria-label="Close photos">&times;</button>
+    <div class="photo-lightbox__panel" role="dialog" aria-modal="true" aria-labelledby="p3-photo-lightbox-title">
+      <p id="p3-photo-lightbox-title" class="photo-lightbox__caption"></p>
+      <div class="photo-lightbox__stage">
+        <button type="button" class="photo-lightbox__arrow photo-lightbox__arrow--prev" aria-label="Previous photo" hidden>&#8249;</button>
+        <img class="photo-lightbox__img" alt="">
+        <button type="button" class="photo-lightbox__arrow photo-lightbox__arrow--next" aria-label="Next photo" hidden>&#8250;</button>
+      </div>
+      <div class="photo-lightbox__dots" hidden></div>
     </div>
   </div>
 
@@ -1414,6 +1616,152 @@
           <div class="photo-gallery__dots">${dots}</div>
         </div>
       `;
+    }
+
+    let p3LightboxState = { spotId: null, index: 0 };
+
+    function getP3LightboxEl() {
+      return document.getElementById("p3-photo-lightbox");
+    }
+
+    function getP3InlineGalleryIndex(gallery) {
+      const active = gallery?.querySelector(".photo-gallery__dot.is-active");
+      if (active) return parseInt(active.dataset.index, 10) || 0;
+      return 0;
+    }
+
+    function updateP3PhotoLightbox() {
+      const lb = getP3LightboxEl();
+      const spot = STOPS.find((s) => s.id === p3LightboxState.spotId);
+      if (!lb || !spot?.images?.length) return;
+
+      const { images } = spot;
+      const count = images.length;
+      const index = ((p3LightboxState.index % count) + count) % count;
+      p3LightboxState.index = index;
+
+      const img = lb.querySelector(".photo-lightbox__img");
+      const title = lb.querySelector("#p3-photo-lightbox-title");
+      const prev = lb.querySelector(".photo-lightbox__arrow--prev");
+      const next = lb.querySelector(".photo-lightbox__arrow--next");
+      const dotsWrap = lb.querySelector(".photo-lightbox__dots");
+      const multi = count > 1;
+
+      if (img) {
+        img.src = images[index];
+        img.alt = `${spot.name} — photo ${index + 1} of ${count}`;
+      }
+      if (title) {
+        title.textContent = multi
+          ? `${spot.name} · ${index + 1} / ${count}`
+          : spot.name;
+      }
+      if (prev) prev.hidden = !multi;
+      if (next) next.hidden = !multi;
+      if (dotsWrap) {
+        dotsWrap.hidden = !multi;
+        if (multi) {
+          dotsWrap.innerHTML = images
+            .map(
+              (_, i) =>
+                `<button type="button" class="photo-lightbox__dot${i === index ? " is-active" : ""}" aria-label="Photo ${i + 1}" data-index="${i}"></button>`
+            )
+            .join("");
+          dotsWrap.querySelectorAll(".photo-lightbox__dot").forEach((dot) => {
+            dot.addEventListener("click", (e) => {
+              e.stopPropagation();
+              p3LightboxState.index = parseInt(dot.dataset.index, 10) || 0;
+              updateP3PhotoLightbox();
+            });
+          });
+        }
+      }
+    }
+
+    function openP3PhotoLightbox(spotId, startIndex = 0) {
+      const spot = STOPS.find((s) => s.id === spotId);
+      if (!spot?.images?.length) return;
+      const lb = getP3LightboxEl();
+      if (!lb) return;
+
+      p3LightboxState = {
+        spotId,
+        index: Math.min(Math.max(0, startIndex), spot.images.length - 1),
+      };
+      lb.classList.add("is-open");
+      lb.setAttribute("aria-hidden", "false");
+      document.body.classList.add("photo-lightbox-open");
+      updateP3PhotoLightbox();
+      lb.querySelector(".photo-lightbox__close")?.focus();
+    }
+
+    function closeP3PhotoLightbox() {
+      const lb = getP3LightboxEl();
+      if (!lb?.classList.contains("is-open")) return;
+      lb.classList.remove("is-open");
+      lb.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("photo-lightbox-open");
+      p3LightboxState = { spotId: null, index: 0 };
+      const img = lb.querySelector(".photo-lightbox__img");
+      if (img) img.removeAttribute("src");
+    }
+
+    function stepP3PhotoLightbox(delta) {
+      const spot = STOPS.find((s) => s.id === p3LightboxState.spotId);
+      if (!spot?.images || spot.images.length < 2) return;
+      p3LightboxState.index += delta;
+      updateP3PhotoLightbox();
+    }
+
+    function initP3PhotoLightbox() {
+      const lb = getP3LightboxEl();
+      if (!lb || lb.dataset.bound) return;
+      lb.dataset.bound = "1";
+
+      lb.querySelector(".photo-lightbox__backdrop")
+        ?.addEventListener("click", closeP3PhotoLightbox);
+      lb.querySelector(".photo-lightbox__close")
+        ?.addEventListener("click", (e) => {
+          e.stopPropagation();
+          closeP3PhotoLightbox();
+        });
+      lb.querySelector(".photo-lightbox__arrow--prev")
+        ?.addEventListener("click", (e) => {
+          e.stopPropagation();
+          stepP3PhotoLightbox(-1);
+        });
+      lb.querySelector(".photo-lightbox__arrow--next")
+        ?.addEventListener("click", (e) => {
+          e.stopPropagation();
+          stepP3PhotoLightbox(1);
+        });
+      lb.querySelector(".photo-lightbox__panel")
+        ?.addEventListener("click", (e) => e.stopPropagation());
+
+      document.addEventListener("keydown", (e) => {
+        if (!lb.classList.contains("is-open")) return;
+        if (e.key === "Escape") closeP3PhotoLightbox();
+        if (e.key === "ArrowLeft") stepP3PhotoLightbox(-1);
+        if (e.key === "ArrowRight") stepP3PhotoLightbox(1);
+      });
+    }
+
+    function initP3GalleryLightbox(root) {
+      if (!root) return;
+      root.querySelectorAll(".p3-card.is-expanded .p3-card__gallery").forEach((gallery) => {
+        const spotId = gallery.closest(".p3-card")?.dataset?.spotId;
+        if (!spotId) return;
+        gallery.querySelectorAll("img").forEach((img) => {
+          img.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const inlineGallery = gallery.querySelector(".photo-gallery");
+            const index = inlineGallery
+              ? getP3InlineGalleryIndex(inlineGallery)
+              : 0;
+            openP3PhotoLightbox(spotId, index);
+          });
+        });
+      });
     }
 
     function initPhotoGalleries(root) {
@@ -1547,6 +1895,7 @@
       p3SortOrder: "south-north",
       p3SortOpen: false,
       p3RouteIds: [],
+      p2CustomStopIds: [],
       routeReviewFinalized: false,
     };
 
@@ -1570,6 +1919,7 @@
         p3SortOrder: "south-north",
         p3SortOpen: false,
         p3RouteIds: [],
+        p2CustomStopIds: [],
         routeReviewFinalized: false,
       };
     }
@@ -1602,6 +1952,7 @@
       state.currentStep = step;
       if (step !== "P3") {
         state.expandedSpotId = null;
+        closeP3PhotoLightbox();
       }
       const landing = document.getElementById('step-LANDING');
       const main = document.getElementById('main-container');
@@ -2193,6 +2544,7 @@
 
     const MAP = {
       xCenter: 150,
+      xEast: 175,
       yNorth: 50,
       yStation: 550,
       ySpan: 500,
@@ -2221,11 +2573,53 @@
       return MAP_LEG_COLORS[leg.legIndex % MAP_LEG_COLORS.length];
     }
 
+    function isVictoriaCrossStreet(crossStreet) {
+      return /\bvictoria\b/i.test(String(crossStreet || ""));
+    }
+
+    function getStopMapX(stop) {
+      const explicit = stop.coords?.x;
+      if (explicit != null && explicit !== MAP.xCenter) return explicit;
+      if (isVictoriaCrossStreet(stop.crossStreet)) return MAP.xEast;
+      return explicit ?? MAP.xCenter;
+    }
+
+    function isMapStopEastOffset(x) {
+      return x > MAP.xCenter + 5;
+    }
+
+    function isStopOnVictoria(stop) {
+      return isMapStopEastOffset(getStopMapX(stop));
+    }
+
+    function getMapLegPathD(x1, y1, x2, y2, fromVictoria, toVictoria) {
+      const spine = MAP.xCenter;
+      const nearSpine = (x) => Math.abs(x - spine) <= 5;
+
+      if (toVictoria && !fromVictoria) {
+        const parts = [`M ${x1} ${y1}`];
+        if (!nearSpine(x1)) parts.push(`L ${spine} ${y1}`);
+        if (y1 !== y2) parts.push(`L ${spine} ${y2}`);
+        parts.push(`L ${x2} ${y2}`);
+        return parts.join(" ");
+      }
+
+      if (fromVictoria && !toVictoria) {
+        const parts = [`M ${x1} ${y1}`, `L ${spine} ${y1}`];
+        if (y1 !== y2) parts.push(`L ${spine} ${y2}`);
+        if (!nearSpine(x2)) parts.push(`L ${x2} ${y2}`);
+        return parts.join(" ");
+      }
+
+      return `M ${x1} ${y1} L ${x2} ${y2}`;
+    }
+
     let mapAnimationGeneration = 0;
     let routeScrollHintObserver = null;
+    let activeRouteScrollHint = null;
 
-    function teardownRouteScrollHint() {
-      const hint = document.getElementById("route-scroll-hint");
+    function teardownRouteScrollHint(hintEl) {
+      const hint = hintEl || activeRouteScrollHint || document.getElementById("route-scroll-hint");
       if (routeScrollHintObserver) {
         routeScrollHintObserver.disconnect();
         routeScrollHintObserver = null;
@@ -2239,19 +2633,22 @@
         hint.classList.remove("route-scroll-hint--visible");
         hint.onclick = null;
       }
+      if (hint === activeRouteScrollHint) activeRouteScrollHint = null;
     }
 
-    function setupRouteScrollHint() {
-      const hint = document.getElementById("route-scroll-hint");
-      const summaryPanel = document.getElementById("route-summary-panel");
-      const finalizeBtn = document.getElementById("btn-route-finalize");
+    function setupRouteScrollHint(options = {}) {
+      const hint = options.hintEl || document.getElementById("route-scroll-hint");
+      const summaryPanel = options.summaryPanelEl || document.getElementById("route-summary-panel");
+      const reviewSelector = options.reviewSelector || "#route-review";
+      const observeEl = options.observeEl || document.getElementById("btn-route-finalize");
       if (!hint) return;
 
-      teardownRouteScrollHint();
+      teardownRouteScrollHint(hint);
 
       if (!window.matchMedia("(max-width: 767px)").matches) return;
 
-      const dismiss = () => teardownRouteScrollHint();
+      activeRouteScrollHint = hint;
+      const dismiss = () => teardownRouteScrollHint(hint);
 
       hint.hidden = false;
       hint.classList.add("route-scroll-hint--visible");
@@ -2260,7 +2657,7 @@
       };
 
       const onScroll = () => {
-        const map = document.querySelector("#route-review .map-container svg");
+        const map = document.querySelector(`${reviewSelector} .map-container svg`);
         if (!map) return;
         const mapBottom = map.getBoundingClientRect().bottom;
         if (mapBottom < window.innerHeight * 0.88) dismiss();
@@ -2277,7 +2674,67 @@
         { threshold: [0, 0.15, 0.4] }
       );
       if (summaryPanel) routeScrollHintObserver.observe(summaryPanel);
-      if (finalizeBtn) routeScrollHintObserver.observe(finalizeBtn);
+      if (observeEl) routeScrollHintObserver.observe(observeEl);
+    }
+
+    function revealRouteReviewSummary(config) {
+      const {
+        reviewEl,
+        summaryPanelEl,
+        exportSummaryEl,
+        exportSummaryText,
+        cardsId,
+        totalsId,
+        route,
+        totalsStyle = "furthest-roundtrip",
+        scrollHintEl,
+        reviewSelector,
+        observeEl,
+      } = config;
+
+      if (exportSummaryEl && exportSummaryText) {
+        exportSummaryEl.innerText = exportSummaryText;
+      }
+      renderRouteCards(cardsId, route, config.routeCardOptions);
+      renderRouteTotals(totalsId, route, { style: totalsStyle });
+      reviewEl.classList.remove("route-phase-map");
+      reviewEl.classList.add("route-phase-summary");
+      summaryPanelEl.hidden = false;
+      requestAnimationFrame(() =>
+        setupRouteScrollHint({
+          hintEl: scrollHintEl,
+          summaryPanelEl,
+          reviewSelector,
+          observeEl,
+        })
+      );
+    }
+
+    function initRouteReviewAnimation(config) {
+      const {
+        reviewEl,
+        summaryPanelEl,
+        mapSvgId,
+        route,
+        onMapComplete,
+      } = config;
+
+      teardownRouteScrollHint(config.scrollHintEl);
+      reviewEl.classList.remove("route-phase-summary");
+      reviewEl.classList.add("route-phase-map");
+      summaryPanelEl.hidden = true;
+
+      const totalsEl = document.getElementById(config.totalsId);
+      if (totalsEl) totalsEl.innerHTML = "";
+      const cardsEl = document.getElementById(config.cardsId);
+      if (cardsEl) cardsEl.innerHTML = "";
+
+      drawMap(mapSvgId, route, {
+        onComplete: () => {
+          revealRouteReviewSummary(config);
+          onMapComplete?.();
+        },
+      });
     }
 
     function getRouteMapLayout(route) {
@@ -2295,7 +2752,8 @@
       const points = route.map((stop, idx) => {
         const dist = getStopWalkFromStation(stop).km;
         const y = MAP.yStation - (dist / furthestDist) * MAP.ySpan;
-        return { stop, x: MAP.xCenter, y, idx };
+        const x = getStopMapX(stop);
+        return { stop, x, y, idx };
       });
 
       for (let i = 1; i < points.length; i++) {
@@ -2308,17 +2766,23 @@
         .slice(0, route.length)
         .map((leg, i) => {
           let x1, y1, x2, y2;
+          let fromStop = null;
+          let toStop = points[0].stop;
           if (i === 0) {
             x1 = station.x;
             y1 = station.y;
             x2 = points[0].x;
             y2 = points[0].y;
           } else {
+            fromStop = points[i - 1].stop;
+            toStop = points[i].stop;
             x1 = points[i - 1].x;
             y1 = points[i - 1].y;
             x2 = points[i].x;
             y2 = points[i].y;
           }
+          const fromVictoria = fromStop ? isStopOnVictoria(fromStop) : false;
+          const toVictoria = isStopOnVictoria(toStop);
           const isBackward = isMapLegBackward(y1, y2);
           return {
             ...leg,
@@ -2326,6 +2790,7 @@
             y1,
             x2,
             y2,
+            pathD: getMapLegPathD(x1, y1, x2, y2, fromVictoria, toVictoria),
             legIndex: i,
             isBackward,
           };
@@ -2363,10 +2828,13 @@
     function renderMapStopSvg(point) {
       const s = point.stop;
       const idx = point.idx;
+      const east = isMapStopEastOffset(point.x);
+      const labelX = east ? point.x - 12 : point.x + 15;
+      const labelAnchor = east ? "end" : "start";
       return `
         <g class="map-stop-group map-stop-group--hidden" data-stop-index="${idx}">
           <circle class="map-stop" cx="${point.x}" cy="${point.y}" r="5" />
-          <text class="map-text" x="${point.x + 15}" y="${point.y + 4}">${idx + 1}. ${escapeHtml(s.crossStreet)}</text>
+          <text class="map-text" x="${labelX}" y="${point.y + 4}" text-anchor="${labelAnchor}">${idx + 1}. ${escapeHtml(s.crossStreet)}</text>
         </g>
       `;
     }
@@ -2457,7 +2925,7 @@
         const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
         pathEl.setAttribute("class", leg.isBackward ? "map-path map-path--backward" : "map-path");
         pathEl.setAttribute("data-leg-index", String(legIndex));
-        pathEl.setAttribute("d", `M ${leg.x1} ${leg.y1} L ${leg.x2} ${leg.y2}`);
+        pathEl.setAttribute("d", leg.pathD || `M ${leg.x1} ${leg.y1} L ${leg.x2} ${leg.y2}`);
         pathEl.style.stroke = color;
         routeLayer.appendChild(pathEl);
 
@@ -2478,21 +2946,50 @@
       runLeg(0);
     }
 
-    function renderRouteCardHtml(s, idx) {
+    function renderRouteCardHtml(s, idx, options = {}) {
+      const removable = options.removable && options.removeHandler;
+      const canRemove = removable && options.routeLength !== 1;
+      const removeBtn = removable
+        ? `<button type="button" class="route-card-remove" aria-label="Remove ${escapeHtml(s.name)} from route" ${canRemove ? `onclick="${options.removeHandler}('${s.id}')"` : "disabled"} title="${canRemove ? "Remove from route" : "Keep at least one stop"}">×</button>`
+        : "";
+      const cardClass = removable ? "route-card route-card--removable" : "route-card";
       return `
-        <div class="route-card">
+        <div class="${cardClass}">
           <img src="${s.image}" alt="${escapeHtml(s.name)}">
           <div class="content">
             <h3 style="font-size: 1rem; text-transform:uppercase;">${idx + 1}. ${escapeHtml(s.name)}</h3>
             <div class="meta">${escapeHtml(s.crossStreet)}</div>
           </div>
+          ${removeBtn}
         </div>
       `;
     }
 
-    function renderRouteCards(containerId, route) {
-      const parts = route.map((s, idx) => renderRouteCardHtml(s, idx));
-      document.getElementById(containerId).innerHTML = parts.join("");
+    function renderRouteCards(containerId, route, options = {}) {
+      const cardOptions = {
+        ...options,
+        routeLength: route.length,
+      };
+      const parts = route.map((s, idx) => renderRouteCardHtml(s, idx, cardOptions));
+      const el = document.getElementById(containerId);
+      if (el) el.innerHTML = parts.join("");
+    }
+
+    function updateRouteReviewSummary(config) {
+      const route = config.getRoute ? config.getRoute() : config.route;
+      if (config.exportSummaryEl) {
+        const text =
+          typeof config.buildExportSummaryText === "function"
+            ? config.buildExportSummaryText(route)
+            : config.exportSummaryText;
+        if (text) config.exportSummaryEl.innerText = text;
+      }
+      renderRouteCards(config.cardsId, route, config.routeCardOptions);
+      renderRouteTotals(config.totalsId, route, {
+        style: config.totalsStyle || "furthest-roundtrip",
+      });
+      drawMap(config.mapSvgId, route);
+      if (config.onRouteChange) config.onRouteChange(route);
     }
 
     function renderRouteTotals(containerId, route, options = {}) {
@@ -2523,40 +3020,76 @@
       const route = getFinalRoute();
       state.routeReviewFinalized = false;
 
-      const review = document.getElementById("route-review");
-      const summaryPanel = document.getElementById("route-summary-panel");
       const editBtn = document.getElementById("btn-edit-route");
       const finalizeBtn = document.getElementById("btn-route-finalize");
-
-      review.classList.remove("route-phase-summary");
-      review.classList.add("route-phase-map");
-      summaryPanel.hidden = true;
-      const totalsEl = document.getElementById("route-totals");
-      if (totalsEl) totalsEl.innerHTML = "";
       editBtn.hidden = true;
       finalizeBtn.hidden = true;
       finalizeBtn.textContent = "Finalize";
       finalizeBtn.className = "primary";
       finalizeBtn.disabled = false;
-      teardownRouteScrollHint();
 
-      drawMap("route-map", route, {
-        onComplete: () => revealRouteSummary(route),
+      const fromP3 =
+        state.pathContext === "See All Spots" && state.p3RouteIds.length > 0;
+      initRouteReviewAnimation({
+        reviewEl: document.getElementById("route-review"),
+        summaryPanelEl: document.getElementById("route-summary-panel"),
+        mapSvgId: "route-map",
+        cardsId: "route-cards",
+        totalsId: "route-totals",
+        scrollHintEl: document.getElementById("route-scroll-hint"),
+        exportSummaryEl: document.getElementById("route-export-summary"),
+        exportSummaryText: `YOUR COMMERCIAL DRIVE ROUTE — ${route.length} STOPS`,
+        reviewSelector: "#route-review",
+        observeEl: finalizeBtn,
+        route,
+        totalsStyle: "furthest-roundtrip",
+        routeCardOptions: fromP3
+          ? { removable: true, removeHandler: "removeP3RouteStop" }
+          : undefined,
+        onMapComplete: () => {
+          editBtn.hidden = false;
+          finalizeBtn.hidden = false;
+        },
       });
     }
 
-    function revealRouteSummary(route) {
-      const review = document.getElementById("route-review");
-      document.getElementById("route-export-summary").innerText =
-        `YOUR COMMERCIAL DRIVE ROUTE — ${route.length} STOPS`;
-      renderRouteCards("route-cards", route);
-      renderRouteTotals("route-totals", route, { style: "furthest-roundtrip" });
-      review.classList.remove("route-phase-map");
-      review.classList.add("route-phase-summary");
-      document.getElementById("route-summary-panel").hidden = false;
-      document.getElementById("btn-edit-route").hidden = false;
-      document.getElementById("btn-route-finalize").hidden = false;
-      requestAnimationFrame(() => setupRouteScrollHint());
+    function removeP3RouteStop(stopId) {
+      const idx = state.p3RouteIds.indexOf(stopId);
+      if (idx < 0 || state.p3RouteIds.length <= 1) return;
+      state.p3RouteIds.splice(idx, 1);
+      renderP3RouteBar();
+      if (state.currentStep === "E") {
+        refreshStepERouteAfterEdit();
+      } else if (state.currentStep === "P3-ROUTE") {
+        renderP3Route();
+      }
+    }
+
+    function refreshStepERouteAfterEdit() {
+      const route = getFinalRoute();
+      const finalizeBtn = document.getElementById("btn-route-finalize");
+      if (route.length === 0) {
+        state.routeReviewFinalized = false;
+        state.expandedSpotId = null;
+        showStep("P3");
+        renderP3();
+        return;
+      }
+      updateRouteReviewSummary({
+        mapSvgId: "route-map",
+        cardsId: "route-cards",
+        totalsId: "route-totals",
+        exportSummaryEl: document.getElementById("route-export-summary"),
+        buildExportSummaryText: (r) =>
+          `YOUR COMMERCIAL DRIVE ROUTE — ${r.length} STOP${r.length === 1 ? "" : "S"}`,
+        totalsStyle: "furthest-roundtrip",
+        route,
+        routeCardOptions: {
+          removable: true,
+          removeHandler: "removeP3RouteStop",
+        },
+      });
+      if (finalizeBtn) finalizeBtn.hidden = false;
     }
 
     function handleRouteFinalize() {
@@ -2604,7 +3137,55 @@
     // --- PATH 2 ---
     function selectPlan(id) {
       state.planTime = id;
+      const plan = PLANS[id];
+      state.p2CustomStopIds = plan?.stops ? [...plan.stops] : [];
       showStep("P2-PLAN");
+    }
+
+    function getP2PlanStopIds() {
+      if (!state.planTime) return [];
+      if (Array.isArray(state.p2CustomStopIds)) return state.p2CustomStopIds;
+      const plan = PLANS[state.planTime];
+      return plan?.stops ? [...plan.stops] : [];
+    }
+
+    function removeP2Stop(stopId) {
+      const ids = getP2PlanStopIds();
+      const idx = ids.indexOf(stopId);
+      if (idx < 0 || ids.length <= 1) return;
+      ids.splice(idx, 1);
+      state.p2CustomStopIds = ids;
+      refreshP2RouteAfterEdit();
+    }
+
+    function refreshP2RouteAfterEdit() {
+      if (state.currentStep !== "P2-PLAN") return;
+      const plan = PLANS[state.planTime] || { title: "Your Plan" };
+      const duration = plan.duration || "";
+      const route = getPlanRoute();
+      const metaEl = document.getElementById("p2-plan-meta");
+      const mapsBtn = document.getElementById("p2-open-maps");
+      const meta = duration
+        ? `${duration.toUpperCase()} · ${route.length} STOP${route.length === 1 ? "" : "S"}`
+        : `${route.length} STOP${route.length === 1 ? "" : "S"}`;
+      if (metaEl) metaEl.innerText = meta;
+      if (mapsBtn) mapsBtn.style.display = route.length ? "" : "none";
+      updateRouteReviewSummary({
+        reviewEl: document.getElementById("p2-route-review"),
+        summaryPanelEl: document.getElementById("p2-route-summary-panel"),
+        mapSvgId: "route-map-p2",
+        cardsId: "route-cards-p2",
+        totalsId: "route-totals-p2",
+        exportSummaryEl: document.getElementById("p2-route-export-summary"),
+        buildExportSummaryText: (r) =>
+          `${plan.title.toUpperCase()} — ${r.length} STOP${r.length === 1 ? "" : "S"}`,
+        totalsStyle: "furthest-roundtrip",
+        route,
+        routeCardOptions: {
+          removable: true,
+          removeHandler: "removeP2Stop",
+        },
+      });
     }
 
     function renderP2PlanPicker() {
@@ -2618,19 +3199,28 @@
       container.innerHTML = ids.map((id) => {
         const plan = PLANS[id];
         const duration = plan.duration || "";
+        const teaser = plan.description
+          ? `<p class="label p2-plan-picker-desc">${escapeHtml(plan.description)}</p>`
+          : "";
         return `
           <div class="card" onclick="selectPlan('${id}')">
-            <h2>${plan.title}</h2>
-            <span class="label">${duration}</span>
+            <h2>${escapeHtml(plan.title)}</h2>
+            <span class="label">${escapeHtml(duration)}</span>
+            ${teaser}
           </div>
         `;
       }).join("");
     }
 
+    function getPlanIntroduction(plan) {
+      if (plan.introduction && String(plan.introduction).trim()) return plan.introduction;
+      if (plan.description && String(plan.description).trim()) return plan.description;
+      return "";
+    }
+
     function getPlanRoute() {
-      const plan = PLANS[state.planTime];
-      if (!plan) return [];
-      return plan.stops.map(id => STOPS.find(s => s.id === id)).filter(Boolean);
+      const ids = getP2PlanStopIds();
+      return ids.map((id) => STOPS.find((s) => s.id === id)).filter(Boolean);
     }
 
     function renderP2Plan() {
@@ -2639,38 +3229,66 @@
       const duration = plan.duration || "";
       const route = getPlanRoute();
       const mapsBtn = document.getElementById("p2-open-maps");
+      const metaEl = document.getElementById("p2-plan-meta");
+      const introEl = document.getElementById("p2-plan-intro");
+      const review = document.getElementById("p2-route-review");
+      const summaryPanel = document.getElementById("p2-route-summary-panel");
 
       document.getElementById("p2-plan-title").innerText = plan.title;
 
       if (route.length === 0) {
-        document.getElementById("p2-plan-desc").innerText = duration
-          ? `[${plan.title} — ${duration} — coming soon]`
-          : `[Pre-built plan — coming soon]`;
-        document.getElementById("route-cards-p2").innerHTML = [1, 2, 3].map(n => `
-          <div class="route-card placeholder">
-            <div class="content" style="padding: 1.5rem;">
-              <h3 style="font-size: 1rem; text-transform:uppercase;">Stop ${n}</h3>
-              <div class="meta">Coming soon</div>
-            </div>
-          </div>
-        `).join("");
+        if (metaEl) {
+          metaEl.hidden = false;
+          metaEl.innerText = duration
+            ? `${duration.toUpperCase()} · COMING SOON`
+            : "COMING SOON";
+        }
+        if (introEl) {
+          introEl.innerText = duration
+            ? `This plan (${duration}) is being curated — check back soon.`
+            : "This plan is being curated — check back soon.";
+          introEl.hidden = false;
+        }
+        teardownRouteScrollHint(document.getElementById("p2-route-scroll-hint"));
+        if (review) review.hidden = true;
         if (mapsBtn) mapsBtn.style.display = "none";
-      } else {
-        const meta = duration
-          ? `${duration.toUpperCase()} · ${route.length} STOPS`
-          : `${route.length} STOPS`;
-        document.getElementById("p2-plan-desc").innerText = plan.description
-          ? `${plan.description}\n${meta}`
-          : meta;
-        renderRouteCards("route-cards-p2", route);
-        renderRouteTotals("route-totals-p2", route);
-        if (mapsBtn) mapsBtn.style.display = "";
+        return;
       }
 
-      const totalsEl = document.getElementById("route-totals-p2");
-      if (route.length === 0 && totalsEl) totalsEl.innerHTML = "";
+      if (review) review.hidden = false;
 
-      drawMap("route-map-p2", route);
+      const meta = duration
+        ? `${duration.toUpperCase()} · ${route.length} STOPS`
+        : `${route.length} STOPS`;
+      if (metaEl) {
+        metaEl.hidden = false;
+        metaEl.innerText = meta;
+      }
+      if (introEl) {
+        const intro = getPlanIntroduction(plan);
+        introEl.innerText = intro || "";
+        introEl.hidden = !intro;
+      }
+      if (mapsBtn) mapsBtn.style.display = "";
+
+      initRouteReviewAnimation({
+        reviewEl: review,
+        summaryPanelEl: summaryPanel,
+        mapSvgId: "route-map-p2",
+        cardsId: "route-cards-p2",
+        totalsId: "route-totals-p2",
+        scrollHintEl: document.getElementById("p2-route-scroll-hint"),
+        exportSummaryEl: document.getElementById("p2-route-export-summary"),
+        exportSummaryText: `${plan.title.toUpperCase()} — ${route.length} STOPS`,
+        reviewSelector: "#p2-route-review",
+        observeEl: mapsBtn,
+        route,
+        totalsStyle: "furthest-roundtrip",
+        routeCardOptions: {
+          removable: true,
+          removeHandler: "removeP2Stop",
+        },
+      });
     }
 
     // --- PATH 3 ---
@@ -2957,11 +3575,14 @@
       const desc = document.getElementById("p3-route-desc");
       if (desc) {
         desc.textContent = route.length
-          ? `${route.length} stop${route.length === 1 ? "" : "s"} sorted north to south along the Drive for walking.`
+          ? `${route.length} stop${route.length === 1 ? "" : "s"} sorted north to south along the Drive for walking. Tap × on a stop to remove it.`
           : "Add spots from All Spots to build your route.";
       }
       drawMap("route-map-p3", route);
-      renderRouteCards("route-cards-p3", route);
+      renderRouteCards("route-cards-p3", route, {
+        removable: true,
+        removeHandler: "removeP3RouteStop",
+      });
       renderRouteTotals("route-totals-p3", route);
     }
 
@@ -2998,7 +3619,7 @@
           const expandedClass = expanded ? " is-expanded" : "";
           const routeClass = inRoute ? " is-in-route" : "";
           return `
-          <div class="p3-card${testClass}${expandedClass}${routeClass}" onclick="toggleP3Spot('${spot.id}')">
+          <div class="p3-card${testClass}${expandedClass}${routeClass}" data-spot-id="${spot.id}" onclick="toggleP3Spot('${spot.id}')">
             <div class="p3-card__summary">
               <img class="p3-card__thumb" src="${spot.image}" alt="${escapeHtml(spot.name)}" loading="lazy">
               <div class="p3-card__body">
@@ -3013,11 +3634,13 @@
         .join("");
 
       initPhotoGalleries(grid);
+      initP3GalleryLightbox(grid);
       renderP3RouteBar();
     }
 
     function toggleP3Spot(id) {
       const wasExpanded = state.expandedSpotId === id;
+      if (wasExpanded) closeP3PhotoLightbox();
       state.expandedSpotId = wasExpanded ? null : id;
       renderP3();
       if (!wasExpanded && state.expandedSpotId) {
@@ -3031,6 +3654,8 @@
     function openSpotInMaps(lat, lng) {
       window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
     }
+
+    initP3PhotoLightbox();
 
     // Init — data/stops.json + data/plans.json (see AGENTS.md)
     loadAppData().then((ok) => {

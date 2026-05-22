@@ -62,6 +62,9 @@
             "neighborhood": "commercial",
             "categories": [
                 "food"
+            ],
+            "images": [
+                "assets/stops/rollzzy.jpg"
             ]
         },
         {
@@ -95,6 +98,12 @@
             "neighborhood": "commercial",
             "categories": [
                 "coffee"
+            ],
+            "images": [
+                "assets/stops/prado-cafe.jpg",
+                "assets/stops/prado-cafe-2.jpg",
+                "assets/stops/prado-cafe-3.jpg",
+                "assets/stops/prado-cafe-4.jpg"
             ]
         },
         {
@@ -156,6 +165,9 @@
             "neighborhood": "commercial",
             "categories": [
                 "groceries"
+            ],
+            "images": [
+                "assets/stops/la-grotta-del-formaggio.jpg"
             ]
         },
         {
@@ -189,6 +201,11 @@
             "categories": [
                 "food",
                 "drinks"
+            ],
+            "images": [
+                "assets/stops/belli-pizza.jpg",
+                "assets/stops/belli-pizza-2.jpg",
+                "assets/stops/belli-pizza-3.jpg"
             ]
         },
         {
@@ -220,6 +237,12 @@
             "neighborhood": "commercial",
             "categories": [
                 "shopping"
+            ],
+            "images": [
+                "assets/stops/mintage.jpg",
+                "assets/stops/mintage-2.jpg",
+                "assets/stops/mintage-3.jpg",
+                "assets/stops/mintage-4.jpg"
             ]
         },
         {
@@ -252,6 +275,11 @@
             "categories": [
                 "food",
                 "drinks"
+            ],
+            "images": [
+                "assets/stops/loulas.jpg",
+                "assets/stops/loulas-2.jpg",
+                "assets/stops/loulas-3.jpg"
             ]
         },
         {
@@ -284,6 +312,10 @@
             "categories": [
                 "drinks",
                 "food"
+            ],
+            "images": [
+                "assets/stops/bar-corso.jpg",
+                "assets/stops/bar-corso-2.jpg"
             ]
         },
         {
@@ -319,6 +351,9 @@
             "categories": [
                 "drinks",
                 "food"
+            ],
+            "images": [
+                "assets/stops/the-charlatan.jpg"
             ]
         },
         {
@@ -350,6 +385,9 @@
             "neighborhood": "commercial",
             "categories": [
                 "food"
+            ],
+            "images": [
+                "assets/stops/cozen-japanese-cuisine.jpg"
             ]
         },
         {
@@ -412,7 +450,10 @@
             "walkFromStation": 28,
             "slug": "vintage-sponsor",
             "images": [
-                "assets/stops/vintage-sponsor.jpg"
+                "assets/stops/vintage-sponsor.jpg",
+                "assets/stops/vintage-sponsor-2.jpg",
+                "assets/stops/vintage-sponsor-3.jpg",
+                "assets/stops/vintage-sponsor-4.jpg"
             ],
             "lng": -123.0703,
             "timeOfDay": [
@@ -490,6 +531,11 @@
             "neighborhood": "commercial",
             "categories": [
                 "groceries"
+            ],
+            "images": [
+                "assets/stops/mediterranean-specialty-foods-turkish-market.jpg",
+                "assets/stops/mediterranean-specialty-foods-turkish-market-2.jpg",
+                "assets/stops/mediterranean-specialty-foods-turkish-market-3.jpg"
             ]
         },
         {
@@ -519,6 +565,9 @@
             "neighborhood": "commercial",
             "categories": [
                 "food"
+            ],
+            "images": [
+                "assets/stops/sula-indian-restaurant.jpg"
             ]
         },
         {
@@ -622,6 +671,10 @@
             "categories": [
                 "food",
                 "coffee"
+            ],
+            "images": [
+                "assets/stops/dont-argue-pizza.jpg",
+                "assets/stops/dont-argue-pizza-2.jpg"
             ]
         },
         {
@@ -653,6 +706,10 @@
             "categories": [
                 "groceries",
                 "food"
+            ],
+            "images": [
+                "assets/stops/sweet-cherubim.jpg",
+                "assets/stops/sweet-cherubim-2.jpg"
             ]
         },
         {
@@ -716,6 +773,9 @@
             "neighborhood": "commercial",
             "categories": [
                 "food"
+            ],
+            "images": [
+                "assets/stops/downlow-chicken-shack.jpg"
             ]
         },
         {
@@ -816,6 +876,9 @@
             "neighborhood": "commercial",
             "categories": [
                 "shopping"
+            ],
+            "images": [
+                "assets/stops/fun-haus.jpg"
             ]
         },
         {
@@ -855,6 +918,450 @@
             "neighborhood": "commercial",
             "categories": [
                 "shopping",
+                "hangout"
+            ],
+            "images": [
+                "assets/stops/slice-of-life-art-gallery.jpg"
+            ]
+        },
+        {
+            "crossStreet": "E 4th",
+            "id": "s27",
+            "lat": 49.2668884,
+            "cost": {
+                "min": "$",
+                "max": "$$$"
+            },
+            "tags": [
+                "records",
+                "music"
+            ],
+            "name": "Audiopile",
+            "coords": {
+                "y": 468,
+                "x": 150
+            },
+            "description": "A huge selection of used and new records, one of the OG spots on the drive for all your music needs.",
+            "walkFromStation": 10,
+            "placeholderColor": "5c4d7d",
+            "slug": "audiopile",
+            "lng": -123.0694994,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "shopping"
+            ]
+        },
+        {
+            "crossStreet": "E 4th",
+            "id": "s28",
+            "lat": 49.267024,
+            "cost": {
+                "min": "$",
+                "max": "$$"
+            },
+            "tags": [
+                "books"
+            ],
+            "name": "Canterbury Tales",
+            "coords": {
+                "y": 465,
+                "x": 150
+            },
+            "description": "A quaint little book shop where you can find used and new books from many different genres.",
+            "walkFromStation": 10,
+            "placeholderColor": "3d5a80",
+            "slug": "canterbury",
+            "lng": -123.0695122,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "shopping"
+            ]
+        },
+        {
+            "crossStreet": "E 4th",
+            "id": "s29",
+            "lat": 49.2669913,
+            "cost": {
+                "min": "$",
+                "max": "$$"
+            },
+            "tags": [
+                "skateboarding",
+                "clothing",
+                "unisex",
+                "skateboards"
+            ],
+            "name": "The Drive Skateshop",
+            "coords": {
+                "y": 466,
+                "x": 152
+            },
+            "description": "A great spot to check out some local and legendary brands, magazines, equipment, hardware, or anything skateboard related!",
+            "walkFromStation": 10,
+            "placeholderColor": "8b4513",
+            "slug": "the-drive-skateshop",
+            "lng": -123.0698612,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "shopping"
+            ],
+            "images": [
+                "assets/stops/the-drive-skateshop.jpg"
+            ]
+        },
+        {
+            "crossStreet": "Venables",
+            "id": "s30",
+            "lat": 49.2764205,
+            "cost": {
+                "min": "$",
+                "max": "$$"
+            },
+            "tags": [
+                "clover",
+                "sit down",
+                "grab and go",
+                "cookies"
+            ],
+            "name": "Bump N Grind Cafe",
+            "coords": {
+                "y": 232,
+                "x": 150
+            },
+            "description": "An eccelectic little coffee shop at the end of the drive with the only clover coffee machine in the neighborhood. They also have other flavored drinks, if that's your vibe!",
+            "walkFromStation": 30,
+            "placeholderColor": "556b2f",
+            "slug": "bump-n-grind",
+            "lng": -123.0693457,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "coffee"
+            ]
+        },
+        {
+            "crossStreet": "Venables",
+            "id": "s31",
+            "lat": 49.2770122,
+            "cost": "$",
+            "tags": [
+                "books",
+                "magazines",
+                "library"
+            ],
+            "name": "Book Section",
+            "coords": {
+                "y": 230,
+                "x": 150
+            },
+            "description": "Tucked away upstairs in Alterior, book section is a free library where you can browse Donnel's (local photographer) amazing collection of magazines and books.",
+            "walkFromStation": 30,
+            "placeholderColor": "7b2cbf",
+            "slug": "book-section",
+            "lng": -123.0703038,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "hangout"
+            ]
+        },
+        {
+            "crossStreet": "Victoria & Grant",
+            "id": "s32",
+            "lat": 49.2710982,
+            "cost": {
+                "min": "$",
+                "max": "$$"
+            },
+            "tags": [
+                "baked goods",
+                "patio",
+                "grab and go",
+                "sit down"
+            ],
+            "name": "Mah Milk Bar",
+            "coords": {
+                "y": 362
+            },
+            "description": "One block east of Commercial, Mah is a great place to grab a coffee and light lunch, or some unique groceries and sit on their little patio, or head across the street into the park to enjoy your purchases.",
+            "walkFromStation": 20,
+            "placeholderColor": "d4a373",
+            "slug": "mah",
+            "lng": -123.065507,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "coffee",
+                "groceries",
+                "food"
+            ]
+        },
+        {
+            "crossStreet": "Victoria & Grant",
+            "id": "s33",
+            "lat": 49.27174,
+            "cost": "free",
+            "tags": [
+                "playground",
+                "park",
+                "bathrooms"
+            ],
+            "name": "Victoria Park",
+            "coords": {
+                "y": 356
+            },
+            "description": "Nice little park to play with the kids, throw down a blanket, or just sit on a bench while you are between Commercial and Victoria.",
+            "walkFromStation": 20,
+            "placeholderColor": "588157",
+            "slug": "victoria-park",
+            "lng": -123.066755,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "hangout"
+            ]
+        },
+        {
+            "crossStreet": "Charles",
+            "id": "s34",
+            "lat": 49.2734896,
+            "cost": "free",
+            "tags": [
+                "playground",
+                "park",
+                "bathrooms",
+                "splash pad"
+            ],
+            "name": "Grandview Park",
+            "coords": {
+                "y": 300,
+                "x": 150
+            },
+            "description": "Big park in the heart of Commercial, places to sit and have mountain views, a splash pad and great playground. Locals can be boisterous here, but they are usually a welcoming group. Great spot for people watching or eating a slice of pizza, sneaky beer, or coffee.",
+            "walkFromStation": 20,
+            "placeholderColor": "40916c",
+            "slug": "grandview-park",
+            "lng": -123.0704882,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "hangout"
+            ]
+        },
+        {
+            "crossStreet": "Charles",
+            "id": "s35",
+            "lat": 49.2737344,
+            "cost": "$$",
+            "tags": [
+                "sit down",
+                "patio",
+                "cuban",
+                "cocktails"
+            ],
+            "name": "Havana",
+            "coords": {
+                "y": 293,
+                "x": 150
+            },
+            "description": "One of the best patios in the neighborhood, lots of space and great people watching. Food is good, drinks are cold, and vibes are high.",
+            "walkFromStation": 20,
+            "placeholderColor": "cb997e",
+            "slug": "havana",
+            "lng": -123.0693075,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "drinks",
+                "food"
+            ],
+            "images": [
+                "assets/stops/havana.jpg",
+                "assets/stops/havana-2.jpg"
+            ]
+        },
+        {
+            "crossStreet": "E 3rd",
+            "id": "s36",
+            "lat": 49.26805,
+            "cost": "$",
+            "tags": [
+                "convenience",
+                "snacks"
+            ],
+            "name": "Easy Shop",
+            "coords": {
+                "y": 425,
+                "x": 150
+            },
+            "description": "My go to stop for a quick drink, snack, or just to say hi to the gentleman who work there!",
+            "walkFromStation": 12,
+            "placeholderColor": "ff9f1c",
+            "slug": "easy-shop",
+            "lng": -123.06944,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "groceries"
+            ],
+            "images": [
+                "assets/stops/easy-shop.jpg",
+                "assets/stops/easy-shop-2.jpg"
+            ]
+        },
+        {
+            "crossStreet": "Venables",
+            "id": "s37",
+            "lat": 49.2751995,
+            "cost": "$",
+            "tags": [
+                "convenience",
+                "snacks",
+                "tacos",
+                "grab and go",
+                "mexican",
+                "latina"
+            ],
+            "name": "Mi Tierra Latina Store",
+            "coords": {
+                "y": 268,
+                "x": 150
+            },
+            "description": "If you're looking for latinx snacks, this is your go to stop! This shop is filled with authentic groceries from all over North, Central, and South America. The best part is, in the back corner, are cheap and delicious tacos. One of the best kept secrets in the neighborhood (you're lucky I'm tellin you!).",
+            "walkFromStation": 20,
+            "placeholderColor": "06d6a0",
+            "slug": "mi-tierra",
+            "lng": -123.0691774,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "groceries",
+                "food"
+            ],
+            "images": [
+                "assets/stops/mi-tierra.jpg",
+                "assets/stops/mi-tierra-2.jpg"
+            ]
+        },
+        {
+            "crossStreet": "E 1st",
+            "id": "s38",
+            "lat": 49.2700614,
+            "cost": {
+                "min": "$",
+                "max": "$$"
+            },
+            "tags": [
+                "baked goods",
+                "cookies",
+                "cinnamon buns",
+                "grab and go"
+            ],
+            "name": "Bench Bakery",
+            "coords": {
+                "y": 388,
+                "x": 150
+            },
+            "description": "My wifes favorite cinnamon bun in the city, great sausage roll and cookies too!",
+            "walkFromStation": 12,
+            "placeholderColor": "b08968",
+            "slug": "bench",
+            "lng": -123.0701482,
+            "timeOfDay": [
+                "morning",
+                "afternoon"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "coffee"
+            ]
+        },
+        {
+            "crossStreet": "E 18th",
+            "id": "s39",
+            "lat": 49.2539316,
+            "cost": {
+                "min": "$",
+                "max": "$$$"
+            },
+            "tags": [
+                "baked goods",
+                "fresh bread",
+                "cookies",
+                "patio",
+                "sit down",
+                "grab and go"
+            ],
+            "name": "Flourist Bakery",
+            "coords": {
+                "y": 205,
+                "x": 150
+            },
+            "description": "A great spot for coffee, snacks, or a full lunch. Some of the best sourdough in the city and a great spot to sit in the sun. It's further South from the Skytrain than the main Commercial Drive area, but it's definitely worth a visit.",
+            "walkFromStation": 12,
+            "placeholderColor": "f72585",
+            "slug": "flourist",
+            "lng": -123.068215,
+            "timeOfDay": [
+                "morning",
+                "afternoon"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "coffee",
+                "groceries",
+                "food"
+            ]
+        },
+        {
+            "crossStreet": "E 18th",
+            "id": "s40",
+            "lat": 49.2521585,
+            "cost": "free",
+            "tags": [
+                "art gallery"
+            ],
+            "name": "Equinox Gallery",
+            "coords": {
+                "y": 195,
+                "x": 152
+            },
+            "description": "One of my favorite galleries in the entire city with a constant rotating showing.",
+            "walkFromStation": 15,
+            "placeholderColor": "4cc9f0",
+            "slug": "equinox-gallery",
+            "lng": -123.0678869,
+            "timeOfDay": [
+                "morning",
+                "afternoon"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
                 "hangout"
             ]
         }

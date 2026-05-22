@@ -1,7 +1,7 @@
 # Edit a pre-built plan
 
 Copy one block below into chat when you want to populate or change a plan.
-Use **stop names** (or `s1` IDs if you know them) in **visit order** — first = first stop after leaving the station.
+You can write a full **Introduction** in your voice; the agent extracts place names and builds the `stops` array. Add an explicit **Stops in order** line when names are ambiguous.
 
 ---
 
@@ -13,9 +13,12 @@ Plan: quick-sip-shop
 
 Title: Quick Sip & Shop
 Duration: 45 mins
-Description: [1–2 sentences in your voice — what this experience feels like]
+Description: [1–2 sentences — short teaser for the picker card only]
 
-Stops in order (visit order):
+Introduction:
+[Multi-paragraph narrative — mention each stop you want on the route, in the order you have in mind]
+
+Stops in order (optional — use when names are ambiguous):
 1. JJ Bean — coffee + cookie first
 2. Prado Cafe — sit and people-watch
 3. Mintage — quick vintage browse
@@ -31,10 +34,10 @@ Optional notes:
 
 | Key | Current title |
 |-----|----------------|
-| `quick-sip-shop` | Quick Sip & Shop |
-| `coffee-cookie-explore` | Coffee, Cookie, and Explore |
-| `coffee-shop-lunch` | Coffee, Shop, Lunch |
-| `all-day-experience` | Coffee, Shop, Lunch, Activity, Dinner |
+| `quick-sip-shop` | Quick Sip & Shop (Stay Close to Train) |
+| `quick-sip-shop-2` | Quick Sip & Shop 2 (Start in the North) |
+| `half-a-day-mid-morning` | Half A Day On Commercial (Food & Shopping) — Mid-Morning |
+| `half-a-day-evening` | Half A Day On Commercial (Food & Shopping) — Evening |
 
 ---
 
@@ -44,7 +47,8 @@ Optional notes:
 |-------------|-------------|
 | Plan key or title | Finds the right entry in `data/plans.json` |
 | Title, duration, description (if changing) | Updates JSON strings |
-| Stop names **in order** | Maps names → `s1`, `s2`, … from `data/stops.json`; fixes order along the Drive if needed |
+| Introduction (prose) | `introduction` field; extracts stop names → `s1`, `s2`, … |
+| Stop names **in order** (optional line) | Confirms or overrides order; fixes walk order along the Drive if needed |
 | Optional vibe (“less walking”, “more shopping”) | Picks sensible stops from existing list |
 
 You do **not** need: Maps links, lat/lng, tags, or photos for plans — only for **new** locations in `stops.json`.

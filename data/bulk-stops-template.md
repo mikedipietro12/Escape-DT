@@ -2,7 +2,9 @@
 
 Copy the blocks below into chat, fill in each stop, and ask the agent to bulk add. One `---` block per location. Photos are optional — add JPGs and `images` in JSON later.
 
-See `AGENTS.md` → **Bulk add (photos later)** for the full workflow.
+See `AGENTS.md` → **Bulk add (photos later)** and **Victoria (off-Commercial)** for the full workflow.
+
+**Victoria Street (east of Commercial):** use `Cross street: Victoria & Grant` (or `Victoria & Georgia`). Pin the Maps link on Victoria. `coords.x` is optional — omit when `crossStreet` includes Victoria.
 
 ---
 
@@ -26,7 +28,7 @@ Categories:
 Tags (optional):
 Cost:
 Time of day:
-Cross street:
+Cross street: Victoria & Grant
 Description:
 Optional: walk minutes from station
 
@@ -39,7 +41,7 @@ Categories:
 Tags (optional):
 Cost:
 Time of day:
-Cross street:
+Cross street: Victoria & Georgia
 Description:
 Optional: walk minutes from station
 
