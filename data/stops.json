@@ -1405,6 +1405,103 @@
             "categories": [
                 "food"
             ]
+        },
+        {
+            "crossStreet": "Woodland & Adanac",
+            "id": "s42",
+            "lat": 49.277689,
+            "cost": "free",
+            "tags": [
+                "playground",
+                "park",
+                "splash pad",
+                "swings",
+                "picnic",
+                "bathrooms"
+            ],
+            "name": "Woodland Park",
+            "coords": {
+                "y": 216,
+                "x": 125
+            },
+            "description": "A secret gem in the neighborhood. With a concrete wading pool that gets filled during the day it's a great place for parents and kids to cool off in the summer. The playground is \"oldschool\", but still provides lots of fun. You will often find locals picnicking in the large open fields, a great place to also watch all the bikes zip past the Adanac bike path. With three local breweries a stone's throw away, it's an easy choice for a chill afternoon/evening hang out.",
+            "walkFromStation": 28,
+            "placeholderColor": "6a994e",
+            "slug": "woodland-park",
+            "lng": -123.073001,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "hangout"
+            ]
+        },
+        {
+            "crossStreet": "Adanac & Maclean",
+            "id": "s43",
+            "lat": 49.2774245,
+            "cost": "$",
+            "tags": [
+                "beer",
+                "craft beer",
+                "snacks",
+                "patio",
+                "commercial",
+                "sit down"
+            ],
+            "name": "Bomber Brewing",
+            "coords": {
+                "y": 218,
+                "x": 125
+            },
+            "description": "A great place to grab a pint, a taco from the food truck, or grab a six pack to drink in the park. Also check out their selection of sparkling water!",
+            "walkFromStation": 28,
+            "placeholderColor": "bc6c25",
+            "slug": "bomber-brewing",
+            "lng": -123.0746127,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "drinks"
+            ]
+        },
+        {
+            "crossStreet": "Frances & Clark",
+            "id": "s44",
+            "lat": 49.2801766,
+            "cost": {
+                "min": "$",
+                "max": "$$"
+            },
+            "tags": [
+                "beer",
+                "craft beer",
+                "snacks",
+                "patio",
+                "commercial",
+                "sit down"
+            ],
+            "name": "Superflux",
+            "coords": {
+                "y": 168
+            },
+            "description": "One of my favorite breweries in the city. Some of the freshest beers you can find, with lots of rotating taps, off sales, and a great kitchen serving up more than just \"pub food\".",
+            "walkFromStation": 32,
+            "placeholderColor": "7f5539",
+            "slug": "superflux",
+            "lng": -123.0775112,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "drinks"
+            ]
         }
     ]
 }
