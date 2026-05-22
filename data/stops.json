@@ -1502,6 +1502,42 @@
             "categories": [
                 "drinks"
             ]
+        },
+        {
+            "crossStreet": "Clark & Charles",
+            "id": "s45",
+            "lat": 49.2725048,
+            "cost": {
+                "min": "$",
+                "max": "$$"
+            },
+            "tags": [
+                "craft beer",
+                "beer",
+                "snacks",
+                "sit down",
+                "grab and go",
+                "patio",
+                "commercial"
+            ],
+            "name": "Strange Fellows",
+            "coords": {
+                "y": 312,
+                "x": 125
+            },
+            "description": "The home of \"old world beer\" with some of the most pungent and flavorful beers you'll have. With a patio and classic beer snacks, this place is a go to for a strong pint!",
+            "walkFromStation": 26,
+            "placeholderColor": "9c6644",
+            "slug": "strange-fellows",
+            "lng": -123.0780409,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "drinks"
+            ]
         }
     ]
 }
