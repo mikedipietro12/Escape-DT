@@ -7,5 +7,16 @@
   "ogImage": "assets/logo.png",
   "publisherName": "Seasons of East Van",
   "publisherUrl": "https://www.seasonsofeastvan.com",
-  "pilotSpotSlugs": ["jj-bean"]
+  "pilotSpotSlugs": [
+    "jj-bean",
+    "prado-cafe",
+    "mintage",
+    "vintage-sponsor",
+    "alterior",
+    "slice-of-life-art-gallery",
+    "fun-haus",
+    "havana",
+    "dont-argue-pizza",
+    "the-charlatan"
+  ]
 }

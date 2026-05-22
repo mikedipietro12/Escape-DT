@@ -2,6 +2,7 @@
   "name": "escape-dt",
   "private": true,
   "scripts": {
-    "build": "node scripts/build-seo.mjs"
+    "build": "node scripts/build-seo.mjs",
+    "test:seo": "node scripts/test-seo.mjs"
   }
 }
