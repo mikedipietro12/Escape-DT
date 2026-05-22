@@ -18,8 +18,9 @@
       "title": "Quick Sip & Shop 2 (Start in the North)",
       "duration": "45-60 mins",
       "description": "Starting at the opposite end of the Skytrain and working your way back to the train. Coffee, shopping, art, and a nice walk.",
-      "introduction": "If you have the ability to start in the north end, this would probably be my preferred quick stop. Start by popping into Alterior, in there you can check out locally made clothing and some specially curated brands you've never seen anywhere else. While you are in Alterior, you can also check out Vintage Sponsor; easily one of the best vintage shops in the city, I can't even go in there without buying something. Head upstairs and check out Book Section, a free library and book shop. From there, head over to Bump N Grind for a quick clover coffee, and if you have the time, pop into Slice of Life or Fun Haus. Slice if you are looking to browse some art and some locally made gifts. Fun Haus if you want to see some collectabiles and more vintange clothing. At this point, it's likely time to head towards the train, which would be about a 20 minute walk south where you will be tempted by so many more spots!",
-      "stops": ["s12", "s13", "s31", "s30", "s26", "s25"]
+      "introduction": "If you have the ability to start in the north end, this would probably be my preferred quick stop. Start with getting a coffee at La Tana (either to stay or go), then pop into Alterior, in there you can check out locally made clothing and some specially curated brands you've never seen anywhere else. While you are in Alterior, you can also check out Vintage Sponsor; easily one of the best vintage shops in the city, I can't even go in there without buying something. Head upstairs and check out Book Section, a free library and book shop. If you have the time, pop into Slice of Life or Fun Haus. Slice if you are looking to browse some art and some locally made gifts. Fun Haus if you want to see some collectabiles and more vintange clothing. At this point, it's likely time to head towards the train, which would be about a 20 minute walk south where you will be tempted by so many more spots!",
+      "routeMap": "start-north",
+      "stops": ["s24", "s12", "s13", "s31", "s26", "s25"]
     },
     "half-a-day-mid-morning": {
       "title": "Half A Day On Commercial (Food & Shopping) — Mid-Morning",

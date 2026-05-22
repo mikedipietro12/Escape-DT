@@ -34,6 +34,9 @@
             "neighborhood": "commercial",
             "categories": [
                 "coffee"
+            ],
+            "images": [
+                "assets/stops/jj-bean.jpg"
             ]
         },
         {
@@ -103,7 +106,8 @@
                 "assets/stops/prado-cafe.jpg",
                 "assets/stops/prado-cafe-2.jpg",
                 "assets/stops/prado-cafe-3.jpg",
-                "assets/stops/prado-cafe-4.jpg"
+                "assets/stops/prado-cafe-4.jpg",
+                "assets/stops/prado-cafe-5.jpg"
             ]
         },
         {
@@ -500,6 +504,9 @@
             "categories": [
                 "coffee",
                 "food"
+            ],
+            "images": [
+                "assets/stops/livia-forno-e-vino.jpg"
             ]
         },
         {
@@ -1299,6 +1306,9 @@
             "neighborhood": "commercial",
             "categories": [
                 "coffee"
+            ],
+            "images": [
+                "assets/stops/bench.jpg"
             ]
         },
         {
@@ -1336,6 +1346,9 @@
                 "coffee",
                 "groceries",
                 "food"
+            ],
+            "images": [
+                "assets/stops/flourist.jpg"
             ]
         },
         {

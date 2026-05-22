@@ -2708,13 +2708,19 @@
       return { km, minutes };
     }
 
-    function getRouteLegs(route) {
+    function getPlanMapOptions(plan) {
+      return plan?.routeMap === "start-north" ? { startAtFirstStop: true } : {};
+    }
+
+    function getRouteLegs(route, mapOptions = {}) {
       if (!route.length) return [];
       const legs = [];
-      legs.push({
-        ...getWalkLeg(STATION_LAT, STATION_LNG, route[0].lat, route[0].lng),
-        label: `To ${route[0].name}`,
-      });
+      if (!mapOptions.startAtFirstStop) {
+        legs.push({
+          ...getWalkLeg(STATION_LAT, STATION_LNG, route[0].lat, route[0].lng),
+          label: `To ${route[0].name}`,
+        });
+      }
       for (let i = 0; i < route.length - 1; i++) {
         const a = route[i];
         const b = route[i + 1];
@@ -2991,6 +2997,7 @@
       if (cardsEl) cardsEl.innerHTML = "";
 
       drawMap(mapSvgId, route, {
+        mapOptions: config.mapOptions,
         onComplete: () => {
           revealRouteReviewSummary(config);
           onMapComplete?.();
@@ -2998,9 +3005,9 @@
       });
     }
 
-    function getRouteMapLayout(route) {
+    function getRouteMapLayout(route, mapOptions = {}) {
       const station = { x: MAP.xCenter, y: MAP.yStation };
-      const routeLegs = getRouteLegs(route);
+      const routeLegs = getRouteLegs(route, mapOptions);
       if (!route.length) {
         return { station, points: [], legs: [], stopCount: 0 };
       }
@@ -3030,10 +3037,37 @@
           let fromStop = null;
           let toStop = points[0].stop;
           if (i === 0) {
-            x1 = station.x;
-            y1 = station.y;
-            x2 = points[0].x;
-            y2 = points[0].y;
+            if (mapOptions.startAtFirstStop) {
+              fromStop = points[0].stop;
+              if (points.length > 1) {
+                toStop = points[1].stop;
+                x1 = points[0].x;
+                y1 = points[0].y;
+                x2 = points[1].x;
+                y2 = points[1].y;
+              } else {
+                toStop = null;
+                x1 = points[0].x;
+                y1 = points[0].y;
+                x2 = station.x;
+                y2 = station.y;
+              }
+            } else {
+              x1 = station.x;
+              y1 = station.y;
+              x2 = points[0].x;
+              y2 = points[0].y;
+            }
+          } else if (
+            mapOptions.startAtFirstStop &&
+            i === route.length - 1
+          ) {
+            fromStop = points[points.length - 1].stop;
+            toStop = null;
+            x1 = points[points.length - 1].x;
+            y1 = points[points.length - 1].y;
+            x2 = station.x;
+            y2 = station.y;
           } else {
             fromStop = points[i - 1].stop;
             toStop = points[i].stop;
@@ -3043,7 +3077,7 @@
             y2 = points[i].y;
           }
           const fromVictoria = fromStop ? isStopOnVictoria(fromStop) : false;
-          const toVictoria = isStopOnVictoria(toStop);
+          const toVictoria = toStop ? isStopOnVictoria(toStop) : false;
           const isBackward = isMapLegBackward(y1, y2);
           return {
             ...leg,
@@ -3139,7 +3173,8 @@
       const gen = ++mapAnimationGeneration;
       const isStale = () => gen !== mapAnimationGeneration;
 
-      const layout = getRouteMapLayout(route);
+      const mapOptions = options.mapOptions || {};
+      const layout = getRouteMapLayout(route, mapOptions);
       const { points, legs } = layout;
       const legDuration = options.legDuration ?? MAP.legDurationMs;
 
@@ -3204,6 +3239,9 @@
         });
       }
 
+      if (mapOptions.startAtFirstStop && points.length) {
+        revealStop(0);
+      }
       runLeg(0);
     }
 
@@ -3249,7 +3287,7 @@
       renderRouteTotals(config.totalsId, route, {
         style: config.totalsStyle || "furthest-roundtrip",
       });
-      drawMap(config.mapSvgId, route);
+      drawMap(config.mapSvgId, route, { mapOptions: config.mapOptions });
       if (config.onRouteChange) config.onRouteChange(route);
     }
 
@@ -3374,16 +3412,35 @@
       goTo('D');
     }
 
-    function openGoogleMaps(route) {
+    function openGoogleMaps(route, mapOptions) {
       const resolved = route || getFinalRoute();
       if (resolved.length === 0) return;
 
-      const origin = `${STATION_LAT},${STATION_LNG}`;
-      const dest = `${resolved[resolved.length - 1].lat},${resolved[resolved.length - 1].lng}`;
+      const opts =
+        mapOptions ||
+        (state.currentStep === "P2-PLAN" && state.planTime
+          ? getPlanMapOptions(PLANS[state.planTime])
+          : {});
+
+      let origin;
+      let dest;
+      let waypointStops = [];
+
+      if (opts.startAtFirstStop) {
+        origin = `${resolved[0].lat},${resolved[0].lng}`;
+        dest = `${STATION_LAT},${STATION_LNG}`;
+        waypointStops = resolved.slice(1);
+      } else {
+        origin = `${STATION_LAT},${STATION_LNG}`;
+        dest = `${resolved[resolved.length - 1].lat},${resolved[resolved.length - 1].lng}`;
+        waypointStops = resolved.slice(0, -1);
+      }
 
       let waypoints = "";
-      if (resolved.length > 1) {
-        waypoints = "&waypoints=" + resolved.slice(0, -1).map(s => `${s.lat},${s.lng}`).join("|");
+      if (waypointStops.length) {
+        waypoints =
+          "&waypoints=" +
+          waypointStops.map((s) => `${s.lat},${s.lng}`).join("|");
       }
 
       const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}${waypoints}&travelmode=walking`;
@@ -3431,6 +3488,7 @@
         : `${route.length} STOP${route.length === 1 ? "" : "S"}`;
       if (metaEl) metaEl.innerText = meta;
       if (mapsBtn) mapsBtn.style.display = route.length ? "" : "none";
+      const mapOptions = getPlanMapOptions(plan);
       updateRouteReviewSummary({
         reviewEl: document.getElementById("p2-route-review"),
         summaryPanelEl: document.getElementById("p2-route-summary-panel"),
@@ -3440,7 +3498,8 @@
         exportSummaryEl: document.getElementById("p2-route-export-summary"),
         buildExportSummaryText: (r) =>
           `${plan.title.toUpperCase()} — ${r.length} STOP${r.length === 1 ? "" : "S"}`,
-        totalsStyle: "furthest-roundtrip",
+        totalsStyle: mapOptions.startAtFirstStop ? "linear" : "furthest-roundtrip",
+        mapOptions,
         route,
         routeCardOptions: {
           removable: true,
@@ -3532,6 +3591,7 @@
       }
       if (mapsBtn) mapsBtn.style.display = "";
 
+      const mapOptions = getPlanMapOptions(plan);
       initRouteReviewAnimation({
         reviewEl: review,
         summaryPanelEl: summaryPanel,
@@ -3544,7 +3604,8 @@
         reviewSelector: "#p2-route-review",
         observeEl: mapsBtn,
         route,
-        totalsStyle: "furthest-roundtrip",
+        mapOptions,
+        totalsStyle: mapOptions.startAtFirstStop ? "linear" : "furthest-roundtrip",
         routeCardOptions: {
           removable: true,
           removeHandler: "removeP2Stop",
