@@ -44,6 +44,18 @@ function heroImage(stop) {
   return null;
 }
 
+function buildGoogleAnalyticsTag(measurementId) {
+  if (!measurementId) return "";
+  const id = escapeHtml(measurementId);
+  return `  <script async src="https://www.googletagmanager.com/gtag/js?id=${id}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${id}');
+  </script>`;
+}
+
 function buildHomeHead(config, stops) {
   const { siteUrl, title, description, locale, ogImage, siteName, publisherName, publisherUrl } =
     config;
@@ -84,7 +96,10 @@ function buildHomeHead(config, stops) {
   const jsonLd = JSON.stringify([website, itemList], null, 2)
     .replace(/</g, "\\u003c");
 
+  const analytics = buildGoogleAnalyticsTag(config.gaMeasurementId);
+
   return `  ${MARKER_START}
+${analytics}
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">
   <meta property="og:type" content="website">
@@ -198,6 +213,7 @@ function buildSpotPage(stop, config) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="../../assets/favicon.png" type="image/png" sizes="64x64">
   <title>${escapeHtml(title)}</title>
+${buildGoogleAnalyticsTag(config.gaMeasurementId)}
   <meta name="description" content="${escapeHtml(metaDesc)}">
   <link rel="canonical" href="${escapeHtml(pageUrl)}">
   <meta property="og:type" content="website">

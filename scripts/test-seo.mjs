@@ -49,6 +49,9 @@ const index = read("index.html");
 assertIncludes(index, 'name="description"', "index meta description");
 assertIncludes(index, 'rel="canonical"', "index canonical");
 assertIncludes(index, 'property="og:image"', "index og:image");
+if (config.gaMeasurementId) {
+  assertIncludes(index, config.gaMeasurementId, "index Google Analytics");
+}
 try {
   parseJsonLd(index);
   ok("index JSON-LD parses");
@@ -70,6 +73,9 @@ for (const slug of pilotSlugs) {
   const spot = read(spotPath);
   assertIncludes(spot, `<h1>${stop.name}</h1>`, `${slug} h1`);
   assertIncludes(spot, "Open interactive guide", `${slug} CTA`);
+  if (config.gaMeasurementId) {
+    assertIncludes(spot, config.gaMeasurementId, `${slug} Google Analytics`);
+  }
   try {
     parseJsonLd(spot);
     ok(`${slug} JSON-LD parses`);

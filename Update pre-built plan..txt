@@ -28,15 +28,15 @@ Introduction:
 Once you get off the Skytrain, head north towards the mountains. Stop in at JJ bean and grab a chocolate chip cookie (or a Krispie raisin), grab a quick shot of espresso. If you wanted to spend a bit more time (or need a second coffee), head up to Prado for another drink and some people watching on the corner. You can pop into Audiopile or Canterbury Tales if you want to take a look, but if time is really limited, keep walking down to Mintage. In Mintage, you will find some amazing vintage clothing, from t-shirts, to vintage dresses, cowboy boots to running vests. An amazing spot to just walk around even if you're not shopping.
 
 Stops in order :
-1. JJ Bean — coffee + cookie first
-2. Prado Cafe — sit and people-watch
-3. Audiopile - Record shopping
-4. Canterbury Tales - Used books
-3. Mintage — quick vintage browse
+1. JJ Bean 
+2. Prado Cafe 
+3. Audiopile 
+4. Canterbury Tales 
+3. Mintage 
 
 
 
-Update pre-built plan.
+
 
 Plan: quick-sip-shop2
 
@@ -56,7 +56,6 @@ Stops in order:
 5. Slice of Life
 6. Fun Haus
 
-Update pre-built plan.
 
 Plan: Half-a-day-on-Commercial (mid-morning-early evening)
 
@@ -66,26 +65,44 @@ Duration: 2-5 Hours
 Description: This plan is for people who aren't in a rush, and might need a quick lunch while they shop around the neighborhood.
 
 Introduction:
-If you are wanting to spend a few hours in the neighborhood, this route is for you. It'll first get you walking a bit off the path of Commercial to head to Mah Milk Bar. From the Skytrain station, you can start walking north, and then at any point, hang a right to head down one of the side streets until you get to Victoria. Keep walking North down Victoria and enjoy this century old neighborhood with some unique houses and massive trees. If you're feeling really adventurous,  you can take another right at some point and go up to Lakewood for some more beautiful and unique architecture. Once you get to Grant & Victoria, head into Mah and grab a coffee and snack. You can eat it there or go across the street to 
+If you are wanting to spend a few hours in the neighborhood, early-mid day this route is for you. It'll first get you walking a bit off the path of Commercial to head to Mah Milk Bar. From the Skytrain station, you can start walking north, and then at any point, hang a right to head down one of the side streets until you get to Victoria. Keep walking North down Victoria and enjoy this century old neighborhood with some unique houses and massive trees. If you're feeling really adventurous,  you can take another right at some point and go up to Lakewood for some more beautiful and unique architecture. Once you get to Grant & Victoria, head into Mah and grab a coffee and snack. You can eat it there or go across the street to Victoria Park to enjoy some sun in a local neighborhood hangout spot. Once you're done your coffee, you can head back to Commercial to grab a slice of pizza from Don't Argue. Eat it our front with the locals, or, walk down to Grandview Park for some mountain views and people watching. From there, head down the street towards Venables and stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making, and if you're feeling hungry after all that walking, walk one more block north to hit up Cafe La Tana for a delicious Italian lunch. At this point, if you're finding yourself with some time, you can head back to the drive and stop in at Havanas for a snack or drink, while you meander your way back to the Skytrain station.
 
 Stops in order 
+1. Mah Milk Bar
+2. Victoria Park
+3. Don't Argue
+4. Grandview Park
+5. Slice of Life
+6. Fun Haus
+7. Alterior
+8. Cafe La Tana
+9. Havana
 
-Optional notes:
 
-Update pre-built plan.
+
 
 Plan: Half-a-day-on-Commercial (late afternoon-evening)
 
 Title: Half A Day On Commercial (Food & Shopping)
 Duration: 2-5 Hours
 
-Description: This plan is for people who aren't in a rush, and might need a quick lunch while they shop around the neighborhood.
+Description: This plan is for people who aren't in a rush and want to check out the neighborhood, stop for a drink or afternoon treat, do some shopping, and settle in for a later dinner.
 
 Introduction:
+If you are wanting to spend a few hours in the neighborhood and will want to take in some shopping before deciding on a place to eat, this plan would be for you! Start by getting off the Skytrain and enjoying a walk down Commercial to take in the sights and sounds. If you're into records or books, the first two stops would be Canterbury and Audiopile. From there, continue north for your first vintage shop at Mintage, where you will find all kinds of great vintage items for any shape, size, and style. Once you're done there, keep heading towards the mountains and stop for a treat at one of the many coffee shops or corner stores to keep yourself fueled for an early evening of shopping. Once you get to Venables, stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making. At this point, depending on time, you could head back to the drive and grab a drink at the Charlattan patio or Havana patio before heading to Nomo Nomo (reservation recommended) for dinner. If Nomo Nomo is all booked up, Cozen is a great back-up where you can dine-in or take out and eat in one of the many parks or the piazza in the neighborhood.
+
+Stops in order:
+1. Audiopile 
+2. Canterbury
+3. Mintage
+4. Slice of Life
+5. Fun Haus 
+6. Alterior
+7. The Charlattan
+8. Havana
+9. Nomo Nomo
+10. Cozen
 
 
-Stops in order 
-
-Optional notes:
 
  
