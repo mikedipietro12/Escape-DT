@@ -1,12 +1,20 @@
 {
   "version": 2,
   "planOrder": [
+    "world-cup-day",
     "quick-sip-shop",
     "quick-sip-shop-2",
     "half-a-day-mid-morning",
     "half-a-day-evening"
   ],
   "plans": {
+    "world-cup-day": {
+      "title": "A World Cup Day on the Drive (Off Downtown)",
+      "duration": "3–5 hours",
+      "description": "Get out of downtown and come to Little Italy for a game.",
+      "introduction": "I've been lucky enough to experience Italy winning the Euros on Commercial Drive. The energy is unlike anything else you will experience. Unfortunately, as many of you know, Italy did not make this year's World Cup, but trust me, that won't affect the Drive. There is still a plethora of spots to check out to get all of your World Cup culture, grab a coffee, watch a game, and support some local businesses who are equally as excited about the World Cup. The neighborhood is home to the Portuguese Club, a Turkish/Mediterranean grocer, and many, many soccer fans.\n\nFor me, I'd start the day early-ish. Head to the Drive on the Skytrain and walk up to Prado for a quick espresso and a \"cookie with no name\" to get the belly ready for the nerves of the day. From there, you can walk around and find a spot for lunch or to watch the game. Don't Argue would be a great spot to get a slice of pizza, and if you can nab a table, you can likely watch a game (it's a small space, and will likely be tight). From there, you can wander to the Charlatan or any other bar or restaurant on the Drive; I'm sure most will be playing the game!\n\nPost game, head further down the Drive and get some fried chicken from Mogu or Downlow while you observe ecstatic winners parading their colours around the neighborhood.",
+      "stops": ["s3", "s19", "s10", "s21", "s22"]
+    },
     "quick-sip-shop": {
       "title": "Quick Sip & Shop (Stay Close to Train)",
       "duration": "45-60 mins",

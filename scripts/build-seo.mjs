@@ -125,10 +125,152 @@ Sitemap: ${absoluteUrl(siteUrl, "/sitemap.xml")}
 `;
 }
 
-function buildSitemap(config, stops) {
+function introParagraphsHtml(introduction) {
+  const parts = String(introduction || "")
+    .split(/\n\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (!parts.length) return "";
+  return parts.map((p) => `    <p>${escapeHtml(p)}</p>`).join("\n");
+}
+
+function buildPlanPage(planKey, plan, stops, config) {
+  const { siteUrl, siteName, publisherUrl, pilotSpotSlugs = [] } = config;
+  const pageUrl = absoluteUrl(siteUrl, `/plans/${planKey}/`);
+  const guideUrl = absoluteUrl(siteUrl, "/");
+  const metaDesc = truncateMeta(
+    plan.description || plan.introduction || plan.title
+  );
+  const title = `${plan.title} · ${siteName}`;
+  const duration = plan.duration ? String(plan.duration) : "";
+  const routeStops = (plan.stops || [])
+    .map((id) => stops.find((s) => s.id === id))
+    .filter(Boolean);
+
+  const itemList = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: plan.title,
+    description: plan.description || metaDesc,
+    itemListElement: routeStops.map((stop, i) => {
+      const entry = {
+        "@type": "ListItem",
+        position: i + 1,
+        name: stop.name,
+      };
+      if (pilotSpotSlugs.includes(stop.slug)) {
+        entry.item = absoluteUrl(siteUrl, `/spots/${stop.slug}/`);
+      }
+      return entry;
+    }),
+  };
+
+  const jsonLd = JSON.stringify(itemList, null, 2).replace(/</g, "\\u003c");
+
+  const stopsList = routeStops
+    .map((stop, i) => {
+      const spotUrl = pilotSpotSlugs.includes(stop.slug)
+        ? absoluteUrl(siteUrl, `/spots/${stop.slug}/`)
+        : null;
+      const label = spotUrl
+        ? `<a href="${escapeHtml(spotUrl)}">${escapeHtml(stop.name)}</a>`
+        : escapeHtml(stop.name);
+      const cross = stop.crossStreet ? ` <span class="stop-meta">(${escapeHtml(stop.crossStreet)})</span>` : "";
+      return `      <li>${label}${cross}</li>`;
+    })
+    .join("\n");
+
+  const introBlock = introParagraphsHtml(plan.introduction);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../../assets/favicon.png" type="image/png" sizes="64x64">
+  <title>${escapeHtml(title)}</title>
+${buildGoogleAnalyticsTag(config.gaMeasurementId)}
+  <meta name="description" content="${escapeHtml(metaDesc)}">
+  <link rel="canonical" href="${escapeHtml(pageUrl)}">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="${escapeHtml(title)}">
+  <meta property="og:description" content="${escapeHtml(metaDesc)}">
+  <meta property="og:url" content="${escapeHtml(pageUrl)}">
+  <meta property="og:image" content="${escapeHtml(absoluteUrl(siteUrl, config.ogImage))}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${escapeHtml(title)}">
+  <meta name="twitter:description" content="${escapeHtml(metaDesc)}">
+  <meta name="twitter:image" content="${escapeHtml(absoluteUrl(siteUrl, config.ogImage))}">
+  <script type="application/ld+json">${jsonLd}</script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Futura, "Futura PT", "Century Gothic", "Trebuchet MS", sans-serif;
+      color: #000;
+      background: #fff;
+      line-height: 1.5;
+      padding: 2rem 1.5rem 3rem;
+      max-width: 42rem;
+      margin: 0 auto;
+    }
+    .back { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2rem; }
+    .back a { color: #000; }
+    h1 { font-size: 1.75rem; text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
+    .meta { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; margin-bottom: 1.25rem; }
+    p { margin-bottom: 1rem; }
+    ol.stops { margin: 0 0 1.5rem 1.25rem; }
+    ol.stops li { margin-bottom: 0.5rem; }
+    .stop-meta { font-size: 0.85em; opacity: 0.75; text-transform: none; letter-spacing: 0; }
+    .cta {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.75rem 1.25rem;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      border-radius: 8px;
+    }
+    .cta:hover { opacity: 0.85; }
+    .footnote { margin-top: 2rem; font-size: 0.85rem; opacity: 0.7; }
+    .footnote a { color: inherit; }
+  </style>
+</head>
+<body>
+  <p class="back"><a href="${escapeHtml(guideUrl)}">← ${escapeHtml(siteName)}</a></p>
+  <article>
+    <h1>${escapeHtml(plan.title)}</h1>
+    <p class="meta">${duration ? `${escapeHtml(duration)} · ` : ""}${routeStops.length} stops · Commercial Drive, Vancouver</p>
+${introBlock}
+    <h2 style="font-size:1rem;text-transform:uppercase;letter-spacing:0.08em;margin:1.5rem 0 0.75rem;">Stops in order</h2>
+    <ol class="stops">
+${stopsList}
+    </ol>
+    <a class="cta" href="${escapeHtml(guideUrl)}">Open interactive guide</a>
+  </article>
+  <p class="footnote">Part of <a href="${escapeHtml(guideUrl)}">${escapeHtml(siteName)}</a> · <a href="${escapeHtml(publisherUrl)}" rel="noopener noreferrer">Seasons of East Van</a></p>
+</body>
+</html>
+`;
+}
+
+function buildSitemap(config, stops, plans) {
   const urls = [
     { loc: absoluteUrl(config.siteUrl, "/"), changefreq: "weekly", priority: "1.0" },
   ];
+  for (const planKey of config.seoPlanSlugs || []) {
+    if (!plans?.plans?.[planKey]) {
+      console.warn("seo plan slug not in plans.json:", planKey);
+      continue;
+    }
+    urls.push({
+      loc: absoluteUrl(config.siteUrl, `/plans/${planKey}/`),
+      changefreq: "monthly",
+      priority: "0.9",
+    });
+  }
   for (const slug of config.pilotSpotSlugs || []) {
     const stop = stops.find((s) => s.slug === slug);
     if (!stop) {
@@ -292,12 +434,15 @@ function injectHomeHead(indexHtml, headBlock) {
 }
 
 // --- main ---
+const plansPath = path.join(root, "data", "plans.json");
 const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
 const { stops } = JSON.parse(fs.readFileSync(stopsPath, "utf8"));
+const plans = JSON.parse(fs.readFileSync(plansPath, "utf8"));
 const pilotSlugs = config.pilotSpotSlugs || [];
+const seoPlanSlugs = config.seoPlanSlugs || [];
 
 fs.writeFileSync(path.join(root, "robots.txt"), buildRobotsTxt(config.siteUrl));
-fs.writeFileSync(path.join(root, "sitemap.xml"), buildSitemap(config, stops));
+fs.writeFileSync(path.join(root, "sitemap.xml"), buildSitemap(config, stops, plans));
 
 const headBlock = buildHomeHead(config, stops);
 let indexHtml = fs.readFileSync(indexPath, "utf8");
@@ -314,6 +459,18 @@ for (const slug of pilotSlugs) {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"), buildSpotPage(stop, config));
   console.log("wrote spots/" + slug + "/index.html");
+}
+
+for (const planKey of seoPlanSlugs) {
+  const plan = plans.plans?.[planKey];
+  if (!plan) {
+    console.warn("skip plan page — unknown key:", planKey);
+    continue;
+  }
+  const dir = path.join(root, "plans", planKey);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, "index.html"), buildPlanPage(planKey, plan, stops, config));
+  console.log("wrote plans/" + planKey + "/index.html");
 }
 
 console.log("wrote robots.txt, sitemap.xml");

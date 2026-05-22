@@ -34,6 +34,7 @@ Optional notes:
 
 | Key | Current title |
 |-----|----------------|
+| `world-cup-day` | A World Cup Day on the Drive (Off Downtown) |
 | `quick-sip-shop` | Quick Sip & Shop (Stay Close to Train) |
 | `quick-sip-shop-2` | Quick Sip & Shop 2 (Start in the North) |
 | `half-a-day-mid-morning` | Half A Day On Commercial (Food & Shopping) — Mid-Morning |

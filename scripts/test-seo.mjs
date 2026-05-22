@@ -9,6 +9,8 @@ const PORT = Number(process.env.SEO_TEST_PORT) || 3457;
 const config = JSON.parse(fs.readFileSync(path.join(root, "seo.config.json"), "utf8"));
 const { stops } = JSON.parse(fs.readFileSync(path.join(root, "data", "stops.json"), "utf8"));
 const pilotSlugs = config.pilotSpotSlugs || [];
+const seoPlanSlugs = config.seoPlanSlugs || [];
+const plans = JSON.parse(fs.readFileSync(path.join(root, "data", "plans.json"), "utf8"));
 
 const checks = [];
 function ok(msg) {
@@ -43,6 +45,33 @@ for (const slug of pilotSlugs) {
     `<loc>https://explore.seasonsofeastvan.com/spots/${slug}/</loc>`,
     `sitemap ${slug}`
   );
+}
+
+for (const planKey of seoPlanSlugs) {
+  assertIncludes(
+    read("sitemap.xml"),
+    `<loc>https://explore.seasonsofeastvan.com/plans/${planKey}/</loc>`,
+    `sitemap plan ${planKey}`
+  );
+  const plan = plans.plans?.[planKey];
+  if (!plan) {
+    fail(`plan missing in plans.json: ${planKey}`);
+    continue;
+  }
+  const planPath = `plans/${planKey}/index.html`;
+  if (!fs.existsSync(path.join(root, planPath))) {
+    fail(`plan page file missing: ${planPath}`);
+    continue;
+  }
+  const html = read(planPath);
+  assertIncludes(html, `<h1>${plan.title}</h1>`, `${planKey} h1`);
+  assertIncludes(html, "Open interactive guide", `${planKey} CTA`);
+  try {
+    parseJsonLd(html);
+    ok(`${planKey} JSON-LD parses`);
+  } catch (e) {
+    fail(`${planKey} JSON-LD parses — ${e.message}`);
+  }
 }
 
 const index = read("index.html");
@@ -138,6 +167,7 @@ const routes = [
   ["/sitemap.xml", "sitemap"],
   ["/assets/logo.png", "logo png"],
   ...pilotSlugs.map((slug) => [`/spots/${slug}/`, `${slug} spot`]),
+  ...seoPlanSlugs.map((key) => [`/plans/${key}/`, `${key} plan`]),
 ];
 
 for (const [route, label] of routes) {

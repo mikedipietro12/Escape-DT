@@ -33,10 +33,13 @@ This runs `scripts/build-seo.mjs` and:
 - Writes `robots.txt` and `sitemap.xml` at the repo root
 - Regenerates the `<!-- build:seo-head -->` block in `index.html` (meta, Open Graph, JSON-LD)
 - Regenerates `spots/<slug>/index.html` for each slug in `pilotSpotSlugs`
+- Regenerates `plans/<plan-key>/index.html` for each key in `seoPlanSlugs` (from `data/plans.json`)
 
-**When to run:** After changing `seo.config.json`, `data/stops.json` (descriptions/names for pilot spots), or when adding a slug to `pilotSpotSlugs`. Commit the generated files with your deploy.
+**When to run:** After changing `seo.config.json`, `data/stops.json` (descriptions/names for pilot spots), `data/plans.json` (for SEO plan pages), or when adding a slug to `pilotSpotSlugs` / `seoPlanSlugs`. Commit the generated files with your deploy.
 
-**Adding more static spot pages:** append slugs to `pilotSpotSlugs` in `seo.config.json`, then `npm run build`. The interactive app (`index.html`) is unchanged unless you add deep links later.
+**Adding more static spot pages:** append the new stop’s `slug` to `pilotSpotSlugs` in `seo.config.json` (currently all stops in `data/stops.json`), then `npm run build`. The interactive app (`index.html`) is unchanged unless you add deep links later.
+
+**Adding a crawlable pre-built plan page:** add the plan to `data/plans.json`, append its key to `seoPlanSlugs`, then `npm run build` → `/plans/<plan-key>/` (story + stop list; links to `/spots/<slug>/` when the stop is in `pilotSpotSlugs`).
 
 ---
 
