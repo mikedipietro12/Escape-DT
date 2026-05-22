@@ -1,0 +1,7 @@
+{
+  "name": "escape-dt",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-seo.mjs"
+  }
+}

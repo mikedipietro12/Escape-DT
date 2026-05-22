@@ -1,0 +1,11 @@
+{
+  "siteUrl": "https://explore.seasonsofeastvan.com",
+  "siteName": "Escape the Downtown",
+  "title": "Escape the Downtown | Commercial Drive",
+  "description": "Curated Commercial Drive walks from Commercial–Broadway SkyTrain. Build your own route by time and vibe, or follow pre-built plans from a local guide.",
+  "locale": "en_CA",
+  "ogImage": "assets/logo.png",
+  "publisherName": "Seasons of East Van",
+  "publisherUrl": "https://www.seasonsofeastvan.com",
+  "pilotSpotSlugs": ["jj-bean"]
+}

@@ -18,6 +18,28 @@ Opening the HTML file directly (`file://`) will **not** load locations — you'l
 
 ---
 
+## SEO build (before deploy)
+
+**Config:** `seo.config.json` (site URL, meta copy, `pilotSpotSlugs` for static spot pages).
+
+**Command** (from repo root):
+
+```bash
+npm run build
+```
+
+This runs `scripts/build-seo.mjs` and:
+
+- Writes `robots.txt` and `sitemap.xml` at the repo root
+- Regenerates the `<!-- build:seo-head -->` block in `index.html` (meta, Open Graph, JSON-LD)
+- Regenerates `spots/<slug>/index.html` for each slug in `pilotSpotSlugs`
+
+**When to run:** After changing `seo.config.json`, `data/stops.json` (descriptions/names for pilot spots), or when adding a slug to `pilotSpotSlugs`. Commit the generated files with your deploy.
+
+**Adding more static spot pages:** append slugs to `pilotSpotSlugs` in `seo.config.json`, then `npm run build`. The interactive app (`index.html`) is unchanged unless you add deep links later.
+
+---
+
 ## When the user says "add a new location"
 
 Collect or infer each field below. Copy `data/stop-template.json` for structure.
