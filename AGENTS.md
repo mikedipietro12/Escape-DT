@@ -77,7 +77,7 @@ Path 1 “Choose” screens filter by **exact tag strings** (case-insensitive ma
 | Category | Filter tags |
 |----------|-------------|
 | Coffee | `sit down`, `grab and go`, `cookies` |
-| Drinks | `sit down`, `patio`, `tvs` |
+| Drinks | `sit down`, `patio`, `tvs`, `cocktails`, `beer` |
 | Food | `sit down`, `grab and go` — plus any other tag on food stops for **Cuisine** (cuisine/vibe; not categories) |
 | Hangout | `shops`, `art gallery`, `activities`, `park` (Parks button hidden until a hangout stop has `park`) |
 | Shopping / groceries | no Step D filters |
