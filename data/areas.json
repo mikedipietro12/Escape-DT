@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "areaOrder": ["commercial-drive"],
+  "areas": {
+    "commercial-drive": {
+      "id": "commercial-drive",
+      "title": "Explore Commercial Drive",
+      "label": "Build a route, follow a plan, or browse every spot on the Drive.",
+      "paths": [
+        {
+          "start": "path1",
+          "title": "Choose Your Own Adventure",
+          "label": "Build a path based on time and activity preferences"
+        },
+        {
+          "start": "path2",
+          "title": "See Pre-Built Plans",
+          "label": "Curated based on my own tastes and experience."
+        },
+        {
+          "start": "path3",
+          "title": "See All Spots",
+          "label": "Browse every spot, build a route, open it in Google Maps"
+        }
+      ]
+    }
+  }
+}

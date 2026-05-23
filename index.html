@@ -1211,6 +1211,35 @@
       color: #fff;
     }
 
+    .landing-panel[hidden] {
+      display: none !important;
+    }
+
+    .landing-back {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--ink);
+      text-transform: uppercase;
+      text-decoration: none;
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      cursor: pointer;
+      font-weight: bold;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .landing-back:hover {
+      opacity: 0.6;
+    }
+
+    #landing-areas,
+    #landing-paths-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
     #main-container {
       width: 100%;
       display: none;
@@ -1608,17 +1637,10 @@
         <h1>Let&rsquo;s get you out of <span class="hero-location-wrap" aria-live="polite"><span class="hero-location" id="hero-location-word">downtown</span></span> and into &ldquo;East&nbsp;Vancouver&rdquo;<sup><a class="footnote-link" href="https://www.seasonsofeastvan.com/about" target="_blank" rel="noopener noreferrer" title="About East Vancouver">1</a></sup></h1>
         <p class="hero-subtitle">Whether you&rsquo;re here visiting for the first time, or have found yourself stuck in your regular routine, I am here to get you into some of our more eclectic east-end neighborhoods.</p>
         <div class="landing-options">
-          <div class="card" onclick="startPath1()">
-            <h2>Choose Your Own Adventure</h2>
-            <span class="label">Build a path based on time and activity preferences</span>
-          </div>
-          <div class="card" onclick="startPath2()">
-            <h2>See Pre-Built Plans</h2>
-            <span class="label">Curated based on my own tastes and experience.</span>
-          </div>
-          <div class="card" onclick="startPath3()">
-            <h2>See All Spots</h2>
-            <span class="label">Browse every spot, build a route, open it in Google Maps</span>
+          <div id="landing-areas" class="landing-panel" aria-label="Explore neighborhoods"></div>
+          <div id="landing-paths" class="landing-panel" hidden aria-label="Ways to explore this neighborhood">
+            <button type="button" class="landing-back" onclick="showLandingAreas()">← Back</button>
+            <div id="landing-paths-cards"></div>
           </div>
         </div>
       </div>
@@ -1634,6 +1656,29 @@
     </nav>
 
     <div class="container">
+
+    <!-- ROUTE START (Path 1 / 2 entry; Path 3 on View route) -->
+    <section id="step-ROUTE-START" class="step">
+      <h1>Where are you starting?</h1>
+      <p class="label">This sets how your route map and Google Maps directions begin.</p>
+
+      <div class="card" role="button" tabindex="0"
+        onclick="selectRouteStart('station')"
+        onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRouteStart('station'); }">
+        <h2>Start me at the SkyTrain</h2>
+        <span class="label">Walk from Commercial&ndash;Broadway station to your first stop</span>
+      </div>
+      <div class="card" role="button" tabindex="0"
+        onclick="selectRouteStart('firstStop')"
+        onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRouteStart('firstStop'); }">
+        <h2>Start me at my first location</h2>
+        <span class="label">Your first stop on the route is already where you are; directions end at the station</span>
+      </div>
+
+      <div class="nav-buttons">
+        <button type="button" onclick="backFromRouteStart()">Back</button>
+      </div>
+    </section>
 
     <!-- STEP A: TIME -->
     <section id="step-A" class="step">
@@ -1651,6 +1696,10 @@
       <div class="card" onclick="selectTime('fullday')">
         <h2>Full day</h2>
         <span class="label">Explore it all</span>
+      </div>
+
+      <div class="nav-buttons">
+        <button type="button" onclick="backFromStepA()">Back</button>
       </div>
     </section>
 
@@ -1745,7 +1794,7 @@
       <p>Let me suggest some of my favorite curated routes — time is a guide, not a restriction.</p>
       <div id="p2-plan-picker"></div>
       <div class="nav-buttons">
-        <button onclick="showStep('LANDING')">Back</button>
+        <button type="button" onclick="backFromP2Time()">Back</button>
       </div>
     </section>
 
@@ -1789,7 +1838,7 @@
         <button type="button" class="primary" onclick="viewP3Route()">View route</button>
       </div>
       <div class="nav-buttons">
-        <button onclick="showStep('LANDING')">Back</button>
+        <button onclick="backToLandingPaths()">Back</button>
       </div>
     </section>
 
@@ -2128,18 +2177,128 @@
 
     let PLANS = {};
     let PLAN_ORDER = [];
+    let AREAS = {};
+    let AREA_ORDER = [];
+    const DEFAULT_LANDING_AREA = "commercial-drive";
+
+    const FALLBACK_AREAS = {
+      version: 1,
+      areaOrder: [DEFAULT_LANDING_AREA],
+      areas: {
+        [DEFAULT_LANDING_AREA]: {
+          id: DEFAULT_LANDING_AREA,
+          title: "Explore Commercial Drive",
+          label: "Build a route, follow a plan, or browse every spot on the Drive.",
+          paths: [
+            { start: "path1", title: "Choose Your Own Adventure", label: "Build a path based on time and activity preferences" },
+            { start: "path2", title: "See Pre-Built Plans", label: "Curated based on my own tastes and experience." },
+            { start: "path3", title: "See All Spots", label: "Browse every spot, build a route, open it in Google Maps" },
+          ],
+        },
+      },
+    };
+
+    function hydrateAreas(areasData) {
+      AREAS = areasData?.areas || FALLBACK_AREAS.areas;
+      AREA_ORDER = Array.isArray(areasData?.areaOrder)
+        ? areasData.areaOrder
+        : Object.keys(AREAS);
+    }
+
+    function renderLandingAreas() {
+      const container = document.getElementById("landing-areas");
+      if (!container) return;
+      const order = AREA_ORDER.length ? AREA_ORDER : [DEFAULT_LANDING_AREA];
+      container.innerHTML = order
+        .map((id) => {
+          const area = AREAS[id];
+          if (!area) return "";
+          return `
+            <div class="card" role="button" tabindex="0" data-area-id="${escapeHtml(id)}"
+              onclick="openLandingArea('${escapeJsString(id)}')"
+              onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLandingArea('${escapeJsString(id)}'); }">
+              <h2>${escapeHtml(area.title)}</h2>
+              <span class="label">${escapeHtml(area.label || "")}</span>
+            </div>`;
+        })
+        .join("");
+    }
+
+    function renderLandingPaths(areaId) {
+      const container = document.getElementById("landing-paths-cards");
+      if (!container) return;
+      const area = AREAS[areaId];
+      if (!area?.paths?.length) {
+        container.innerHTML = "";
+        return;
+      }
+      const startHandlers = { path1: "startPath1", path2: "startPath2", path3: "startPath3" };
+      container.innerHTML = area.paths
+        .map((path) => {
+          const handler = startHandlers[path.start];
+          if (!handler) return "";
+          return `
+            <div class="card" role="button" tabindex="0"
+              onclick="${handler}()"
+              onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); ${handler}(); }">
+              <h2>${escapeHtml(path.title)}</h2>
+              <span class="label">${escapeHtml(path.label || "")}</span>
+            </div>`;
+        })
+        .join("");
+    }
+
+    function applyLandingView() {
+      const areasEl = document.getElementById("landing-areas");
+      const pathsEl = document.getElementById("landing-paths");
+      if (!areasEl || !pathsEl) return;
+      const showPaths = state.landingView === "paths" && state.landingAreaId;
+      areasEl.hidden = !!showPaths;
+      pathsEl.hidden = !showPaths;
+      if (showPaths) renderLandingPaths(state.landingAreaId);
+      else renderLandingAreas();
+    }
+
+    function showLandingAreas() {
+      state.landingView = "areas";
+      state.landingAreaId = null;
+      applyLandingView();
+    }
+
+    function showLandingForArea(areaId) {
+      state.landingView = "paths";
+      state.landingAreaId = areaId;
+      applyLandingView();
+    }
+
+    function openLandingArea(areaId) {
+      showLandingForArea(areaId);
+    }
+
+    function backToLandingPaths() {
+      const areaId = state.landingAreaId || DEFAULT_LANDING_AREA;
+      showLandingForArea(areaId);
+      showStep("LANDING");
+    }
 
     async function loadAppData() {
       const banner = document.getElementById("data-load-error");
       try {
-        const [stopsRes, plansRes] = await Promise.all([
+        const [stopsRes, plansRes, areasRes] = await Promise.all([
           fetch("data/stops.json", { cache: "no-store" }),
           fetch("data/plans.json", { cache: "no-store" }),
+          fetch("data/areas.json", { cache: "no-store" }),
         ]);
         if (!stopsRes.ok) throw new Error(`stops.json HTTP ${stopsRes.status}`);
         if (!plansRes.ok) throw new Error(`plans.json HTTP ${plansRes.status}`);
         const stopsData = await stopsRes.json();
         const plansData = await plansRes.json();
+        if (areasRes.ok) {
+          hydrateAreas(await areasRes.json());
+        } else {
+          console.warn("areas.json not loaded, using fallback");
+          hydrateAreas(FALLBACK_AREAS);
+        }
         STOPS = hydrateStops(stopsData.stops || []);
         if (stopsData.station) {
           STATION_LAT = stopsData.station.lat;
@@ -2149,10 +2308,13 @@
         PLAN_ORDER = Array.isArray(plansData.planOrder)
           ? plansData.planOrder
           : Object.keys(PLANS);
+        renderLandingAreas();
         if (banner) banner.hidden = true;
         return true;
       } catch (err) {
         console.error("Failed to load app data", err);
+        hydrateAreas(FALLBACK_AREAS);
+        renderLandingAreas();
         if (banner) {
           const detail = banner.querySelector("[data-error-detail]");
           if (detail) detail.textContent = err.message || String(err);
@@ -2163,6 +2325,19 @@
     }
 
     const PATH1_STEPS = ['A', 'B', 'C', 'D', 'E'];
+
+    /** Set false (or ?routeStartPrompt=0) to disable the start prompt and user first-stop map mode. */
+    const ENABLE_ROUTE_START_PROMPT = true;
+
+    function isRouteStartPromptEnabled() {
+      if (!ENABLE_ROUTE_START_PROMPT) return false;
+      try {
+        if (new URLSearchParams(window.location.search).get("routeStartPrompt") === "0") {
+          return false;
+        }
+      } catch (_) { /* ignore */ }
+      return true;
+    }
 
     const STEP_D_PRIMARY_FILTERS = {
       coffee: [
@@ -2235,6 +2410,10 @@
       p3RouteIds: [],
       p2CustomStopIds: [],
       routeReviewFinalized: false,
+      routeStart: null,
+      afterRouteStartStep: null,
+      landingView: "areas",
+      landingAreaId: null,
     };
 
     function resetState() {
@@ -2259,6 +2438,10 @@
         p3RouteIds: [],
         p2CustomStopIds: [],
         routeReviewFinalized: false,
+        routeStart: null,
+        afterRouteStartStep: null,
+        landingView: "areas",
+        landingAreaId: null,
       };
     }
 
@@ -2303,6 +2486,7 @@
         main.classList.remove('visible');
         topNav.style.display = 'none';
         progress.classList.add('hidden');
+        applyLandingView();
         window.scrollTo(0, 0);
         return;
       }
@@ -2323,7 +2507,12 @@
       }
 
       document.querySelectorAll('#main-container section.step').forEach(s => s.classList.remove('active'));
-      document.getElementById(`step-${step}`).classList.add('active');
+      const stepEl = document.getElementById(`step-${step}`);
+      if (!stepEl) {
+        console.error(`Unknown step: ${step}`);
+        return;
+      }
+      stepEl.classList.add('active');
       updatePathContext();
       window.scrollTo(0, 0);
 
@@ -2338,15 +2527,60 @@
 
     function goTo(step) { showStep(step); }
 
+    function goToRouteStartOr(nextStep) {
+      state.afterRouteStartStep = nextStep;
+      if (isRouteStartPromptEnabled()) {
+        showStep("ROUTE-START");
+      } else {
+        showStep(nextStep);
+      }
+    }
+
+    function selectRouteStart(mode) {
+      state.routeStart = mode;
+      const next = state.afterRouteStartStep || "A";
+      showStep(next);
+    }
+
+    function backFromRouteStart() {
+      state.pathContext = null;
+      state.afterRouteStartStep = null;
+      showLandingForArea(DEFAULT_LANDING_AREA);
+      showStep("LANDING");
+    }
+
+    function backFromStepA() {
+      if (isRouteStartPromptEnabled()) {
+        state.afterRouteStartStep = "A";
+        showStep("ROUTE-START");
+      } else {
+        showLandingForArea(DEFAULT_LANDING_AREA);
+        showStep("LANDING");
+      }
+    }
+
+    function backFromP2Time() {
+      if (isRouteStartPromptEnabled()) {
+        state.afterRouteStartStep = "P2-TIME";
+        showStep("ROUTE-START");
+      } else {
+        showLandingForArea(DEFAULT_LANDING_AREA);
+        showStep("LANDING");
+      }
+    }
+
     function startPath1() {
+      state.landingAreaId = DEFAULT_LANDING_AREA;
       state.pathContext = 'Choose Your Own Adventure';
-      showStep('A');
+      goToRouteStartOr("A");
     }
     function startPath2() {
+      state.landingAreaId = DEFAULT_LANDING_AREA;
       state.pathContext = 'See Pre-Built Plans';
-      showStep('P2-TIME');
+      goToRouteStartOr("P2-TIME");
     }
     function startPath3() {
+      state.landingAreaId = DEFAULT_LANDING_AREA;
       state.expandedSpotId = null;
       state.p3Filters = defaultP3Filters();
       state.p3SortOrder = "south-north";
@@ -2789,6 +3023,29 @@
       return plan?.routeMap === "start-north" ? { startAtFirstStop: true } : {};
     }
 
+    function getUserRouteMapOptions() {
+      if (!isRouteStartPromptEnabled() || state.routeStart !== "firstStop") return {};
+      return { startAtFirstStop: true };
+    }
+
+    function getEffectiveMapOptions(plan) {
+      const user = getUserRouteMapOptions();
+      if (Object.keys(user).length) return user;
+      return getPlanMapOptions(plan);
+    }
+
+    function getTotalsStyleForMapOptions(mapOptions = {}) {
+      return mapOptions.startAtFirstStop ? "linear" : "furthest-roundtrip";
+    }
+
+    function resolveOpenGoogleMapsOptions(mapOptions) {
+      if (mapOptions) return mapOptions;
+      if (state.currentStep === "P2-PLAN" && state.planTime) {
+        return getEffectiveMapOptions(PLANS[state.planTime]);
+      }
+      return getUserRouteMapOptions();
+    }
+
     function getRouteLegs(route, mapOptions = {}) {
       if (!route.length) return [];
       const legs = [];
@@ -2814,8 +3071,8 @@
       return legs;
     }
 
-    function getRouteWalkTotals(route) {
-      const legs = getRouteLegs(route);
+    function getRouteWalkTotals(route, mapOptions = {}) {
+      const legs = getRouteLegs(route, mapOptions);
       if (!legs.length) {
         return { totalKm: 0, totalMin: 0, legs: [] };
       }
@@ -2838,8 +3095,8 @@
       return furthest;
     }
 
-    function getRouteWalkToFurthestTotals(route) {
-      const legs = getRouteLegs(route);
+    function getRouteWalkToFurthestTotals(route, mapOptions = {}) {
+      const legs = getRouteLegs(route, mapOptions);
       if (!legs.length) return { km: 0, min: 0 };
       const furthest = getFurthestStopInRoute(route);
       const idx = route.findIndex((s) => s.id === furthest.id);
@@ -2911,6 +3168,10 @@
 
     function isMapLegBackward(y1, y2) {
       return y2 > y1;
+    }
+
+    function isMapStopEastOffset(x) {
+      return x > MAP.xCenter + 5;
     }
 
     function getMapLegColor(leg) {
@@ -3042,7 +3303,10 @@
         exportSummaryEl.innerText = exportSummaryText;
       }
       renderRouteCards(cardsId, route, config.routeCardOptions);
-      renderRouteTotals(totalsId, route, { style: totalsStyle });
+      renderRouteTotals(totalsId, route, {
+        style: totalsStyle,
+        mapOptions: config.mapOptions,
+      });
       reviewEl.classList.remove("route-phase-map");
       reviewEl.classList.add("route-phase-summary");
       summaryPanelEl.hidden = false;
@@ -3109,66 +3373,63 @@
         }
       }
 
-      const legs = routeLegs
-        .slice(0, route.length)
-        .map((leg, i) => {
-          let x1, y1, x2, y2;
-          let fromStop = null;
-          let toStop = points[0].stop;
-          if (i === 0) {
-            if (mapOptions.startAtFirstStop) {
-              fromStop = points[0].stop;
-              if (points.length > 1) {
-                toStop = points[1].stop;
-                x1 = points[0].x;
-                y1 = points[0].y;
-                x2 = points[1].x;
-                y2 = points[1].y;
-              } else {
-                toStop = null;
-                x1 = points[0].x;
-                y1 = points[0].y;
-                x2 = station.x;
-                y2 = station.y;
-              }
-            } else {
-              x1 = station.x;
-              y1 = station.y;
-              x2 = points[0].x;
-              y2 = points[0].y;
-            }
-          } else if (
-            mapOptions.startAtFirstStop &&
-            i === route.length - 1
-          ) {
+      const legs = routeLegs.map((leg, i) => {
+        let x1, y1, x2, y2;
+        let fromStop = null;
+        let toStop = null;
+
+        if (mapOptions.startAtFirstStop) {
+          if (i < points.length - 1) {
+            fromStop = points[i].stop;
+            toStop = points[i + 1].stop;
+            x1 = points[i].x;
+            y1 = points[i].y;
+            x2 = points[i + 1].x;
+            y2 = points[i + 1].y;
+          } else {
             fromStop = points[points.length - 1].stop;
             toStop = null;
             x1 = points[points.length - 1].x;
             y1 = points[points.length - 1].y;
             x2 = station.x;
             y2 = station.y;
-          } else {
-            fromStop = points[i - 1].stop;
-            toStop = points[i].stop;
-            x1 = points[i - 1].x;
-            y1 = points[i - 1].y;
-            x2 = points[i].x;
-            y2 = points[i].y;
           }
-          const fromOffSpine = fromStop ? isStopOffSpine(fromStop) : false;
-          const toOffSpine = toStop ? isStopOffSpine(toStop) : false;
-          const isBackward = isMapLegBackward(y1, y2);
-          return {
-            ...leg,
-            x1,
-            y1,
-            x2,
-            y2,
-            pathD: getMapLegPathD(x1, y1, x2, y2, fromOffSpine, toOffSpine),
-            legIndex: i,
-            isBackward,
-          };
-        });
+        } else if (i === 0) {
+          x1 = station.x;
+          y1 = station.y;
+          x2 = points[0].x;
+          y2 = points[0].y;
+          toStop = points[0].stop;
+        } else if (i < points.length) {
+          fromStop = points[i - 1].stop;
+          toStop = points[i].stop;
+          x1 = points[i - 1].x;
+          y1 = points[i - 1].y;
+          x2 = points[i].x;
+          y2 = points[i].y;
+        } else {
+          fromStop = points[points.length - 1].stop;
+          toStop = null;
+          x1 = points[points.length - 1].x;
+          y1 = points[points.length - 1].y;
+          x2 = station.x;
+          y2 = station.y;
+        }
+
+        const fromOffSpine = fromStop ? isStopOffSpine(fromStop) : false;
+        const toOffSpine = toStop ? isStopOffSpine(toStop) : false;
+        const isBackward = isMapLegBackward(y1, y2);
+        return {
+          ...leg,
+          x1,
+          y1,
+          x2,
+          y2,
+          pathD: getMapLegPathD(x1, y1, x2, y2, fromOffSpine, toOffSpine),
+          legIndex: i,
+          isBackward,
+        };
+      });
 
       return { station, points, legs, stopCount: route.length };
     }
@@ -3217,6 +3478,15 @@
       return `<g class="map-legs-layer">${legs.map((leg, i) => renderMapLegBracketSvg(leg, i)).join("")}</g>`;
     }
 
+    function getMapStopIndexAfterLeg(legIndex, mapOptions, pointCount) {
+      if (mapOptions.startAtFirstStop) {
+        if (legIndex < pointCount - 1) return legIndex + 1;
+        return pointCount > 0 ? pointCount - 1 : null;
+      }
+      if (legIndex < pointCount) return legIndex;
+      return null;
+    }
+
     function animateMapPath(pathEl, options = {}) {
       const { duration = 1500, direction = "draw", onComplete = null } = options;
       if (!pathEl) {
@@ -3233,15 +3503,25 @@
       pathEl.style.transition = "none";
       pathEl.style.strokeDasharray = `${length}`;
       pathEl.style.strokeDashoffset = `${startOffset}`;
-      pathEl.getBoundingClientRect();
-      pathEl.style.transition = `stroke-dashoffset ${duration}ms ease-in-out`;
-      pathEl.style.strokeDashoffset = `${endOffset}`;
+      pathEl.setAttribute("fill", "none");
+      const runTransition = () => {
+        pathEl.style.transition = `stroke-dashoffset ${duration}ms ease-in-out`;
+        pathEl.style.strokeDashoffset = `${endOffset}`;
+      };
+      requestAnimationFrame(() => requestAnimationFrame(runTransition));
       if (onComplete) {
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          onComplete();
+        };
         pathEl.addEventListener("transitionend", function handler(e) {
           if (e.propertyName !== "stroke-dashoffset") return;
           pathEl.removeEventListener("transitionend", handler);
-          onComplete();
+          finish();
         });
+        setTimeout(finish, duration + 150);
       }
     }
 
@@ -3309,9 +3589,16 @@
           direction: "draw",
           onComplete: () => {
             if (isStale()) return;
-            revealBracket(legIndex);
-            if (legIndex < points.length) {
-              revealStop(legIndex);
+            try {
+              revealBracket(legIndex);
+              const stopIdx = getMapStopIndexAfterLeg(
+                legIndex,
+                mapOptions,
+                points.length
+              );
+              if (stopIdx != null) revealStop(stopIdx);
+            } catch (err) {
+              console.error("Map leg reveal failed", err);
             }
             runLeg(legIndex + 1);
           },
@@ -3365,6 +3652,7 @@
       renderRouteCards(config.cardsId, route, config.routeCardOptions);
       renderRouteTotals(config.totalsId, route, {
         style: config.totalsStyle || "furthest-roundtrip",
+        mapOptions: config.mapOptions,
       });
       drawMap(config.mapSvgId, route, { mapOptions: config.mapOptions });
       if (config.onRouteChange) config.onRouteChange(route);
@@ -3377,9 +3665,10 @@
         el.innerHTML = "";
         return;
       }
+      const mapOpts = options.mapOptions || {};
       if (options.style === "furthest-roundtrip") {
-        const { km: furthestKm, min: furthestMin } = getRouteWalkToFurthestTotals(route);
-        const { totalKm, totalMin } = getRouteWalkTotals(route);
+        const { km: furthestKm, min: furthestMin } = getRouteWalkToFurthestTotals(route, mapOpts);
+        const { totalKm, totalMin } = getRouteWalkTotals(route, mapOpts);
         el.innerHTML = `
           <div>Time to furthest point: ~${formatKm(furthestKm)} km · ~${furthestMin} min</div>
           <div>Round trip: ~${formatKm(totalKm)} km · ~${totalMin} min</div>
@@ -3387,7 +3676,7 @@
         `;
         return;
       }
-      const { totalKm, totalMin } = getRouteWalkTotals(route);
+      const { totalKm, totalMin } = getRouteWalkTotals(route, mapOpts);
       el.innerHTML = `
         <div>Total walking (your route order): ~${formatKm(totalKm)} km · ~${totalMin} min</div>
         <p class="walk-disclaimer">Straight-line estimates between stops in visit order, including return to the station. Does not include time spent at locations.</p>
@@ -3408,6 +3697,7 @@
 
       const fromP3 =
         state.pathContext === "See All Spots" && state.p3RouteIds.length > 0;
+      const mapOptions = getUserRouteMapOptions();
       initRouteReviewAnimation({
         reviewEl: document.getElementById("route-review"),
         summaryPanelEl: document.getElementById("route-summary-panel"),
@@ -3420,7 +3710,8 @@
         reviewSelector: "#route-review",
         observeEl: finalizeBtn,
         route,
-        totalsStyle: "furthest-roundtrip",
+        mapOptions,
+        totalsStyle: getTotalsStyleForMapOptions(mapOptions),
         routeCardOptions: fromP3
           ? { removable: true, removeHandler: "removeP3RouteStop" }
           : undefined,
@@ -3453,6 +3744,7 @@
         renderP3();
         return;
       }
+      const mapOptions = getUserRouteMapOptions();
       updateRouteReviewSummary({
         mapSvgId: "route-map",
         cardsId: "route-cards",
@@ -3460,7 +3752,8 @@
         exportSummaryEl: document.getElementById("route-export-summary"),
         buildExportSummaryText: (r) =>
           `YOUR COMMERCIAL DRIVE ROUTE — ${r.length} STOP${r.length === 1 ? "" : "S"}`,
-        totalsStyle: "furthest-roundtrip",
+        mapOptions,
+        totalsStyle: getTotalsStyleForMapOptions(mapOptions),
         route,
         routeCardOptions: {
           removable: true,
@@ -3495,11 +3788,7 @@
       const resolved = route || getFinalRoute();
       if (resolved.length === 0) return;
 
-      const opts =
-        mapOptions ||
-        (state.currentStep === "P2-PLAN" && state.planTime
-          ? getPlanMapOptions(PLANS[state.planTime])
-          : {});
+      const opts = resolveOpenGoogleMapsOptions(mapOptions);
 
       let origin;
       let dest;
@@ -3567,7 +3856,7 @@
         : `${route.length} STOP${route.length === 1 ? "" : "S"}`;
       if (metaEl) metaEl.innerText = meta;
       if (mapsBtn) mapsBtn.style.display = route.length ? "" : "none";
-      const mapOptions = getPlanMapOptions(plan);
+      const mapOptions = getEffectiveMapOptions(plan);
       updateRouteReviewSummary({
         reviewEl: document.getElementById("p2-route-review"),
         summaryPanelEl: document.getElementById("p2-route-summary-panel"),
@@ -3577,7 +3866,7 @@
         exportSummaryEl: document.getElementById("p2-route-export-summary"),
         buildExportSummaryText: (r) =>
           `${plan.title.toUpperCase()} — ${r.length} STOP${r.length === 1 ? "" : "S"}`,
-        totalsStyle: mapOptions.startAtFirstStop ? "linear" : "furthest-roundtrip",
+        totalsStyle: getTotalsStyleForMapOptions(mapOptions),
         mapOptions,
         route,
         routeCardOptions: {
@@ -3670,7 +3959,7 @@
       }
       if (mapsBtn) mapsBtn.style.display = "";
 
-      const mapOptions = getPlanMapOptions(plan);
+      const mapOptions = getEffectiveMapOptions(plan);
       initRouteReviewAnimation({
         reviewEl: review,
         summaryPanelEl: summaryPanel,
@@ -3684,7 +3973,7 @@
         observeEl: mapsBtn,
         route,
         mapOptions,
-        totalsStyle: mapOptions.startAtFirstStop ? "linear" : "furthest-roundtrip",
+        totalsStyle: getTotalsStyleForMapOptions(mapOptions),
         routeCardOptions: {
           removable: true,
           removeHandler: "removeP2Stop",
@@ -3968,7 +4257,12 @@
     function viewP3Route() {
       if (state.p3RouteIds.length === 0) return;
       state.expandedSpotId = null;
-      showStep("E");
+      if (isRouteStartPromptEnabled() && state.routeStart == null) {
+        state.afterRouteStartStep = "E";
+        showStep("ROUTE-START");
+      } else {
+        showStep("E");
+      }
     }
 
     function renderP3Route() {
