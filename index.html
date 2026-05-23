@@ -330,6 +330,8 @@
 
   <style>
     :root {
+      --fade-top: #b2fdb5;
+      --fade-bottom: #ffeea1;
       --bg-top: #FFFFFF;
       --bg-bottom: #FFFFFF;
       --ink: #000000;
@@ -491,7 +493,7 @@
       background: rgba(255, 255, 255, 0.1);
       transition: background 0.35s ease;
     }
-    .card:hover { background: linear-gradient(to bottom, #bafabf, #faecb5); }
+    .card:hover { background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom)); }
 
     /* Step B: Categories Grid */
     .category-grid {
@@ -518,7 +520,7 @@
       transition: background 0.35s ease;
     }
     .cat-tile.selected {
-      background: linear-gradient(to bottom, #bafabf, #faecb5);
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
       color: var(--ink);
     }
     .cat-tile.selected .desc {
@@ -526,7 +528,7 @@
     }
     @media (hover: hover) {
       .cat-tile:not(.selected):hover {
-        background: linear-gradient(to bottom, #bafabf, #faecb5);
+        background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
       }
     }
 
@@ -625,7 +627,7 @@
       flex-direction: column;
       transition: background 0.35s ease;
     }
-    .spot-tile:not(.selected):hover { background: linear-gradient(to bottom, #bafabf, #faecb5); }
+    .spot-tile:not(.selected):hover { background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom)); }
     .spot-tile .img-wrapper {
       width: 100%;
       padding-top: 60%;
@@ -775,7 +777,7 @@
       transition: background 0.35s ease;
     }
     .p3-filter-toggle:hover {
-      background: linear-gradient(to bottom, #bafabf, #faecb5);
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
     }
     .p3-filter-toggle.active {
       background: var(--ink);
@@ -812,7 +814,7 @@
       transition: background 0.35s ease;
     }
     .p3-sort-option:hover {
-      background: linear-gradient(to bottom, #bafabf, #faecb5);
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
     }
     .p3-sort-option.active {
       background: var(--ink);
@@ -853,7 +855,7 @@
       transition: background 0.35s ease;
     }
     .p3-cat-chip:hover {
-      background: linear-gradient(to bottom, #bafabf, #faecb5);
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
     }
     .p3-cat-chip.active {
       background: var(--ink);
@@ -1133,8 +1135,8 @@
 
     body.landing-active {
       padding-bottom: 0;
-      --bg-top: #bafabf;
-      --bg-bottom: #faecb5;
+      --bg-top: var(--fade-top);
+      --bg-bottom: var(--fade-bottom);
     }
 
     #step-LANDING {
@@ -1327,7 +1329,7 @@
       flex-direction: column;
     }
     .p3-card:not(.is-expanded):hover {
-      background: linear-gradient(to bottom, #bafabf, #faecb5);
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
     }
     .p3-card.is-expanded {
       grid-column: 1 / -1;
@@ -1663,6 +1665,7 @@
       font-size: 0.85rem;
     }
   </style>
+  <script src="js/season-theme.js"></script>
 </head>
 <body class="landing-active">
 
@@ -3258,15 +3261,23 @@
       legDurationMs: 1000,
     };
 
-    const MAP_LEG_COLORS = [
+    const MAP_LEG_COLORS_BASE = [
       "#3d8f4a",
       "#52a362",
       "#6ab87a",
       "#84cc94",
       "#9ad4a8",
-      "#bafabf",
     ];
     const MAP_BACKWARD_COLOR = "#c9a227";
+
+    function getSeasonFadeTop() {
+      const v = getComputedStyle(document.documentElement).getPropertyValue("--fade-top").trim();
+      return v || "#b2fdb5";
+    }
+
+    function getMapLegColors() {
+      return [...MAP_LEG_COLORS_BASE, getSeasonFadeTop()];
+    }
 
     function isMapLegBackward(y1, y2) {
       return y2 > y1;
@@ -3278,7 +3289,8 @@
 
     function getMapLegColor(leg) {
       if (leg.isBackward) return MAP_BACKWARD_COLOR;
-      return MAP_LEG_COLORS[leg.legIndex % MAP_LEG_COLORS.length];
+      const colors = getMapLegColors();
+      return colors[leg.legIndex % colors.length];
     }
 
     function isVictoriaCrossStreet(crossStreet) {

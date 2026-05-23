@@ -1,0 +1,57 @@
+/**
+ * Year-round fade themes (Vancouver / Northern hemisphere).
+ * Six labelled periods, split at the 15th so each half-month has one gradient.
+ * Sets --fade-top / --fade-bottom on <html> before paint when loaded in <head>.
+ * Preview: ?season=winter|thaw|spring|summer|autumn|late-fall
+ */
+(function applySeasonTheme() {
+  const FADE = {
+    yellow: "#ffeea1",
+    green: "#b2fdb5",
+    red: "#fd696c",
+    blue: "#8edcee",
+    orange: "#ffaf64",
+    white: "#ffffff",
+  };
+
+  /** @type {Record<string, { top: string, bottom: string }>} */
+  const THEMES = {
+    winter: { top: FADE.blue, bottom: FADE.white },
+    thaw: { top: FADE.blue, bottom: FADE.green },
+    spring: { top: FADE.green, bottom: FADE.yellow },
+    summer: { top: FADE.yellow, bottom: FADE.orange },
+    autumn: { top: FADE.yellow, bottom: FADE.red },
+    "late-fall": { top: FADE.red, bottom: FADE.blue },
+  };
+
+  /** 0 = days 1–15, 1 = days 16–end */
+  function halfMonthIndex(date) {
+    return date.getMonth() * 2 + (date.getDate() >= 16 ? 1 : 0);
+  }
+
+  /**
+   * Calendar labels (overlapping) → non-overlapping half-months (chronological):
+   * Dec–Feb: Dec 16–Feb 15 | Feb–Apr: Feb 16–Apr 15 | Apr–Jun: Apr 16–Jun 15
+   * Jun–Sept: Jun 16–Sep 15 | Sept–Oct: Sep 16–Oct 15 | Oct–Dec: Oct 16–Dec 15
+   */
+  function themeKeyFromDate(date) {
+    const i = halfMonthIndex(date);
+    if (i <= 2 || i === 23) return "winter";
+    if (i <= 7) return "thaw";
+    if (i <= 11) return "spring";
+    if (i <= 17) return "summer";
+    if (i <= 19) return "autumn";
+    if (i <= 22) return "late-fall";
+    return "winter";
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const override = (params.get("season") || "").toLowerCase();
+  const key = THEMES[override] ? override : themeKeyFromDate(new Date());
+  const theme = THEMES[key];
+  const root = document.documentElement;
+
+  root.dataset.season = key;
+  root.style.setProperty("--fade-top", theme.top);
+  root.style.setProperty("--fade-bottom", theme.bottom);
+})();

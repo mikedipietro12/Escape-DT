@@ -30,8 +30,25 @@ Page backgrounds use a vertical fade: `linear-gradient(to bottom, var(--bg-top),
 | Green | `rgb(178, 253, 181)` | `#b2fdb5` |
 | Red | `rgb(253, 105, 108)` | `#fd696c` |
 | Blue | `rgb(142, 220, 238)` | `#8edcee` |
+| Orange | `rgb(255, 175, 100)` | `#ffaf64` |
+| White | (winter fade end) | `#ffffff` |
 
-**Current usage:** Landing (`body.landing-active`) and card hovers use green → yellow (`#bafabf` / `#faecb5`, close to the table). Red and blue are reserved for future path or category themes.
+**CSS variables:** `--fade-top` and `--fade-bottom` on `:root` (set before paint by [`js/season-theme.js`](js/season-theme.js)). Gradients and `body.landing-active` use these vars; the lightest route-map leg colour follows `--fade-top`.
+
+**Automatic year-round themes** (Northern hemisphere). Six calendar labels overlap; the app uses **half-month windows** (change on the **16th**) so every date has a top→bottom gradient. See `themeKeyFromDate` in `js/season-theme.js`.
+
+| Calendar label | Half-month window | Fade (top → bottom) | `?season=` |
+|----------------|-------------------|---------------------|------------|
+| Dec – Feb | Dec 16 – Feb 15 | Blue → white | `winter` |
+| Feb – Apr | Feb 16 – Apr 15 | Blue → green | `thaw` |
+| Apr – Jun | Apr 16 – Jun 15 | Green → yellow | `spring` |
+| Jun – Sept | Jun 16 – Sep 15 | Yellow → orange | `summer` |
+| Sept – Oct | Sep 16 – Oct 15 | Yellow → red | `autumn` |
+| Oct – Dec | Oct 16 – Dec 15 | Red → blue | `late-fall` |
+
+Logic lives in `js/season-theme.js` (loaded synchronously in `<head>` of `index.html`). `<html data-season="…">` reflects the active theme key.
+
+**Preview locally:** `http://localhost:3000/index.html?season=summer` — keys: `winter`, `thaw`, `spring`, `summer`, `autumn`, `late-fall`. Invalid values fall back to the date-based theme.
 
 ---
 
