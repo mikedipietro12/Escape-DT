@@ -18,6 +18,23 @@ Opening the HTML file directly (`file://`) will **not** load locations — you'l
 
 ---
 
+## Theme colours (UI)
+
+Page backgrounds use a vertical fade: `linear-gradient(to bottom, var(--bg-top), var(--bg-bottom))` on `body` in [`index.html`](index.html). Set `--bg-top` and `--bg-bottom` per screen or theme.
+
+**Fade endpoint colours** (canonical values for background gradients):
+
+| Name | RGB | Hex |
+|------|-----|-----|
+| Yellow | `rgb(255, 238, 161)` | `#ffeea1` |
+| Green | `rgb(178, 253, 181)` | `#b2fdb5` |
+| Red | `rgb(253, 105, 108)` | `#fd696c` |
+| Blue | `rgb(142, 220, 238)` | `#8edcee` |
+
+**Current usage:** Landing (`body.landing-active`) and card hovers use green → yellow (`#bafabf` / `#faecb5`, close to the table). Red and blue are reserved for future path or category themes.
+
+---
+
 ## Home page areas
 
 The landing screen in [`index.html`](index.html) is two levels:
