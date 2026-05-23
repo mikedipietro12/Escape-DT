@@ -1329,7 +1329,7 @@
             ],
             "name": "Flourist Bakery",
             "coords": {
-                "y": 205,
+                "y": 118,
                 "x": 150
             },
             "description": "A great spot for coffee, snacks, or a full lunch. Some of the best sourdough in the city and a great spot to sit in the sun. It's further South from the Skytrain than the main Commercial Drive area, but it's definitely worth a visit.",
@@ -1361,7 +1361,7 @@
             ],
             "name": "Equinox Gallery",
             "coords": {
-                "y": 195,
+                "y": 108,
                 "x": 152
             },
             "description": "One of my favorite galleries in the entire city with a constant rotating showing.",

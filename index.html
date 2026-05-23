@@ -538,17 +538,58 @@
     .rank-item {
       display: flex;
       align-items: center;
+      gap: 0.5rem;
       padding: 1rem;
       border: 1px solid var(--ink);
       border-radius: var(--tile-radius);
       margin-bottom: 0.5rem;
       background: rgba(255, 255, 255, 0.2);
-      cursor: grab;
     }
-    .rank-item:active { cursor: grabbing; }
-    .rank-item .num { font-weight: bold; margin-right: 1rem; width: 1.5rem; }
-    .rank-item .name { flex-grow: 1; text-transform: uppercase; font-size: var(--type-label); letter-spacing: var(--tracking-wide); }
-    .rank-item .remove { cursor: pointer; padding: 0 0.5rem; font-size: 1.25rem; line-height: 1; }
+    @media (hover: hover) and (pointer: fine) {
+      .rank-item--draggable { cursor: grab; }
+      .rank-item--draggable:active { cursor: grabbing; }
+    }
+    .rank-item .num { font-weight: bold; width: 1.5rem; flex-shrink: 0; }
+    .rank-item .name {
+      flex-grow: 1;
+      min-width: 0;
+      text-transform: uppercase;
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+    }
+    .rank-item__controls {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-shrink: 0;
+    }
+    .rank-move,
+    .rank-remove {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.75rem;
+      min-height: 2.75rem;
+      padding: 0;
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      background: rgba(255, 255, 255, 0.35);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .rank-move:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .rank-remove {
+      font-size: 1.25rem;
+      border: none;
+      background: transparent;
+      min-width: 2.25rem;
+    }
 
     .data-load-error {
       position: fixed;
@@ -1706,14 +1747,14 @@
     <!-- STEP B: PRIORITY -->
     <section id="step-B" class="step">
       <h1>What would you like to do?</h1>
-      <p>Select what you're looking for. Then, rank them in order of priority by clicking and dragging.</p>
+      <p>Select what you're looking for. Then rank your priorities with the ↑ and ↓ buttons (most important first).</p>
 
       <div class="category-grid" id="cat-grid">
         <!-- Rendered via JS -->
       </div>
 
       <div class="ranked-list" id="ranked-list-container" style="display: none;">
-        <p class="label">Your Priorities (Drag to reorder)</p>
+        <p class="label">Your priorities (most important at top)</p>
         <div id="ranked-list"></div>
       </div>
 
@@ -2379,6 +2420,24 @@
       return (stop.tags || []).some((t) => t.toLowerCase() === needle);
     }
 
+    /** OR within each tag group; AND across groups (e.g. sit down + greek). */
+    function stopMatchesTagGroups(stop, selectedTags, primaryTagSet, foodTypeTagSet) {
+      if (!selectedTags.length) return true;
+      const selected = selectedTags.map((t) => t.toLowerCase());
+      const primarySelected = selected.filter((t) => primaryTagSet.has(t));
+      const foodTypeSelected = selected.filter((t) => foodTypeTagSet.has(t));
+      const otherSelected = selected.filter(
+        (t) => !primaryTagSet.has(t) && !foodTypeTagSet.has(t)
+      );
+      const groupMatches = (group) =>
+        !group.length || group.some((t) => stopHasTag(stop, t));
+      return (
+        groupMatches(primarySelected) &&
+        groupMatches(foodTypeSelected) &&
+        groupMatches(otherSelected)
+      );
+    }
+
     function defaultP3Filters() {
       return {
         filterOpen: false,
@@ -2623,6 +2682,22 @@
       renderStepB();
     }
 
+    function moveCategoryRank(catId, direction) {
+      const idx = state.selectedCategories.indexOf(catId);
+      if (idx < 0) return;
+      const nextIdx = idx + direction;
+      if (nextIdx < 0 || nextIdx >= state.selectedCategories.length) return;
+      const order = [...state.selectedCategories];
+      [order[idx], order[nextIdx]] = [order[nextIdx], order[idx]];
+      state.selectedCategories = order;
+      state.userRanked = true;
+      renderStepB();
+    }
+
+    const rankListDragFinePointer =
+      typeof matchMedia === "function" &&
+      matchMedia("(hover: hover) and (pointer: fine)").matches;
+
     function renderRankedList() {
       const container = document.getElementById("ranked-list-container");
       const list = document.getElementById("ranked-list");
@@ -2633,32 +2708,40 @@
       }
       
       container.style.display = "block";
+      const count = state.selectedCategories.length;
       list.innerHTML = state.selectedCategories.map((catId, index) => {
         const cat = CATEGORIES.find(c => c.id === catId);
+        const dragClass = rankListDragFinePointer ? " rank-item--draggable" : "";
+        const dragAttr = rankListDragFinePointer ? ' draggable="true"' : "";
         return `
-          <div class="rank-item" draggable="true" data-id="${cat.id}">
+          <div class="rank-item${dragClass}"${dragAttr} data-id="${cat.id}">
             <span class="num">${index + 1}</span>
             <span class="name">${cat.label}</span>
-            <span class="remove" onclick="toggleCategory('${cat.id}')">×</span>
+            <div class="rank-item__controls">
+              <button type="button" class="rank-move" onclick="moveCategoryRank('${cat.id}', -1)" ${index === 0 ? "disabled" : ""} aria-label="Move ${cat.label} up">↑</button>
+              <button type="button" class="rank-move" onclick="moveCategoryRank('${cat.id}', 1)" ${index === count - 1 ? "disabled" : ""} aria-label="Move ${cat.label} down">↓</button>
+              <button type="button" class="rank-remove" onclick="toggleCategory('${cat.id}')" aria-label="Remove ${cat.label}">×</button>
+            </div>
           </div>
         `;
       }).join('');
 
-      // Drag and drop setup
+      if (!rankListDragFinePointer) return;
+
       const items = list.querySelectorAll('.rank-item');
       let draggedItem = null;
 
       items.forEach(item => {
-        item.addEventListener('dragstart', function(e) {
+        item.addEventListener('dragstart', function() {
           draggedItem = item;
           setTimeout(() => item.style.opacity = '0.5', 0);
         });
 
         item.addEventListener('dragend', function() {
           setTimeout(() => {
-            draggedItem.style.opacity = '1';
+            if (draggedItem) draggedItem.style.opacity = '1';
             draggedItem = null;
-            updateCategoryOrder();
+            updateCategoryOrderFromDom();
           }, 0);
         });
 
@@ -2670,15 +2753,15 @@
         });
 
         item.addEventListener('dragleave', function() {
-          this.style.background = 'rgba(255,255,255,0.2)';
+          this.style.background = 'rgba(255, 255, 255, 0.2)';
         });
 
         item.addEventListener('drop', function() {
-          this.style.background = 'rgba(255,255,255,0.2)';
+          this.style.background = 'rgba(255, 255, 255, 0.2)';
           if (this !== draggedItem) {
-            let all = Array.from(list.querySelectorAll('.rank-item'));
-            let draggedIdx = all.indexOf(draggedItem);
-            let targetIdx = all.indexOf(this);
+            const all = Array.from(list.querySelectorAll('.rank-item'));
+            const draggedIdx = all.indexOf(draggedItem);
+            const targetIdx = all.indexOf(this);
             if (draggedIdx < targetIdx) {
               this.parentNode.insertBefore(draggedItem, this.nextSibling);
             } else {
@@ -2690,11 +2773,11 @@
       });
     }
 
-    function updateCategoryOrder() {
+    function updateCategoryOrderFromDom() {
       const list = document.getElementById("ranked-list");
       const ids = Array.from(list.querySelectorAll('.rank-item')).map(item => item.getAttribute('data-id'));
       state.selectedCategories = ids;
-      renderStepB(); // re-render to update numbers
+      renderStepB();
     }
 
     function finishStepB() {
@@ -2774,14 +2857,16 @@
     }
 
     function applyStepDFilters(stops, catId) {
-      let result = stops;
-      if (state.stepDPrimaryFilter) {
-        result = result.filter((s) => stopHasTag(s, state.stepDPrimaryFilter));
-      }
-      if (catId === "food" && state.stepDTypeFilter) {
-        result = result.filter((s) => stopHasTag(s, state.stepDTypeFilter));
-      }
-      return result;
+      const selected = [];
+      if (state.stepDPrimaryFilter) selected.push(state.stepDPrimaryFilter);
+      if (catId === "food" && state.stepDTypeFilter) selected.push(state.stepDTypeFilter);
+      const primarySet = new Set(
+        getStepDPrimaryFilters(catId).map((f) => f.tag.toLowerCase())
+      );
+      const foodTypeSet = new Set(getStepDFoodTypeTags().map((t) => t.toLowerCase()));
+      return stops.filter((s) =>
+        stopMatchesTagGroups(s, selected, primarySet, foodTypeSet)
+      );
     }
 
     function partitionByWalkRadius(stops) {
@@ -3019,6 +3104,23 @@
       return { km, minutes };
     }
 
+    function isStopSouthOfStation(stop) {
+      return stop.lat < STATION_LAT - 1e-5;
+    }
+
+    function sortStopsNorthSouth(stops) {
+      return [...stops].sort((a, b) => b.lat - a.lat);
+    }
+
+    function sortStopsSouthNorth(stops) {
+      return [...stops].sort((a, b) => {
+        const aSouth = isStopSouthOfStation(a);
+        const bSouth = isStopSouthOfStation(b);
+        if (aSouth !== bSouth) return aSouth ? 1 : -1;
+        return a.lat - b.lat;
+      });
+    }
+
     function getPlanMapOptions(plan) {
       return plan?.routeMap === "start-north" ? { startAtFirstStop: true } : {};
     }
@@ -3137,8 +3239,7 @@
       let route = finalIds.map(id => STOPS.find(s => s.id === id)).filter(Boolean);
 
       if (state.routeOrder === "geographic") {
-        // Sort by y coordinate (south to north roughly)
-        route.sort((a, b) => b.coords.y - a.coords.y);
+        route = sortStopsNorthSouth(route);
       }
       return route;
     }
@@ -3150,6 +3251,7 @@
       yNorth: 50,
       yStation: 550,
       ySpan: 500,
+      ySouthSpan: 90,
       bracketLeftX: 130,
       bracketArm: 10,
       labelLeftX: 8,
@@ -3362,7 +3464,9 @@
 
       const points = route.map((stop, idx) => {
         const dist = getStopWalkFromStation(stop).km;
-        const y = MAP.yStation - (dist / furthestDist) * MAP.ySpan;
+        const y = isStopSouthOfStation(stop)
+          ? MAP.yStation + (dist / furthestDist) * MAP.ySouthSpan
+          : MAP.yStation - (dist / furthestDist) * MAP.ySpan;
         const x = getStopMapX(stop);
         return { stop, x, y, idx };
       });
@@ -4010,19 +4114,21 @@
     function stopMatchesP3Filters(stop) {
       const f = state.p3Filters;
       if (f.categories.length && !f.categories.some((c) => stopMatchesCategory(stop, c))) return false;
-      if (f.tags.length && !f.tags.some((tag) => stopHasTag(stop, tag))) return false;
-      return true;
+      const primarySet = new Set(
+        getP3UnionPrimaryFilters().map((filter) => filter.tag.toLowerCase())
+      );
+      const foodTypeSet = new Set(getP3FoodTypeTags().map((t) => t.toLowerCase()));
+      return stopMatchesTagGroups(stop, f.tags, primarySet, foodTypeSet);
     }
 
     function sortStopsGeographic(stops) {
-      return [...stops].sort((a, b) => b.coords.y - a.coords.y);
+      return sortStopsNorthSouth(stops);
     }
 
     function sortStopsForP3(stops) {
-      const towardStation = state.p3SortOrder !== "north-south";
-      return [...stops].sort((a, b) =>
-        towardStation ? b.coords.y - a.coords.y : a.coords.y - b.coords.y
-      );
+      return state.p3SortOrder === "north-south"
+        ? sortStopsNorthSouth(stops)
+        : sortStopsSouthNorth(stops);
     }
 
     function getP3FilteredStops() {
