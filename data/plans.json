@@ -13,6 +13,28 @@
       "duration": "3–5 hours",
       "description": "Get out of downtown and come to Little Italy for a game.",
       "introduction": "I've been lucky enough to experience Italy winning the Euros on Commercial Drive. The energy is unlike anything else you will experience. Unfortunately, as many of you know, Italy did not make this year's World Cup, but trust me, that won't affect the Drive. There is still a plethora of spots to check out to get all of your World Cup culture, grab a coffee, watch a game, and support some local businesses who are equally as excited about the World Cup. The neighborhood is home to the Portuguese Club, a Turkish/Mediterranean grocer, and many, many soccer fans.\n\nFor me, I'd start the day early-ish. Head to the Drive on the Skytrain and walk up to Prado for a quick espresso and a \"cookie with no name\" to get the belly ready for the nerves of the day. From there, you can walk around and find a spot for lunch or to watch the game. Don't Argue would be a great spot to get a slice of pizza, and if you can nab a table, you can likely watch a game (it's a small space, and will likely be tight). From there, you can wander to the Charlatan or any other bar or restaurant on the Drive; I'm sure most will be playing the game!\n\nPost game, head further down the Drive and get some fried chicken from Mogu or Downlow while you observe ecstatic winners parading their colours around the neighborhood.\n\nIf you're in the mood for celebration, I'd say an ice cream from Earnest is probably in order. From there, you can walk back to the skytrain, or hang around the drive and see where the night takes you!",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "I've been lucky enough to experience Italy winning the Euros on Commercial Drive. The energy is unlike anything else you will experience. Unfortunately, as many of you know, Italy did not make this year's World Cup, but trust me, that won't affect the Drive. There is still a plethora of spots to check out to get all of your World Cup culture, grab a coffee, watch a game, and support some local businesses who are equally as excited about the World Cup. The neighborhood is home to the Portuguese Club, a Turkish/Mediterranean grocer, and many, many soccer fans.\n\nFor me, I'd start the day early-ish. Head to the Drive on the Skytrain and walk up to Prado for a quick espresso and a \"cookie with no name\" to get the belly ready for the nerves of the day."
+        },
+        { "type": "stops", "ids": ["s3"] },
+        {
+          "type": "prose",
+          "text": "From there, you can walk around and find a spot for lunch or to watch the game. Don't Argue would be a great spot to get a slice of pizza, and if you can nab a table, you can likely watch a game (it's a small space, and will likely be tight). From there, you can wander to the Charlatan or any other bar or restaurant on the Drive; I'm sure most will be playing the game!"
+        },
+        { "type": "stops", "ids": ["s19", "s10"] },
+        {
+          "type": "prose",
+          "text": "Post game, head further down the Drive and get some fried chicken from Mogu or Downlow while you observe ecstatic winners parading their colours around the neighborhood."
+        },
+        { "type": "stops", "ids": ["s21", "s22"] },
+        {
+          "type": "prose",
+          "text": "If you're in the mood for celebration, I'd say an ice cream from Earnest is probably in order. From there, you can walk back to the skytrain, or hang around the drive and see where the night takes you!"
+        },
+        { "type": "stops", "ids": ["s41"] }
+      ],
       "stops": ["s3", "s19", "s10", "s21", "s22", "s41"]
     },
     "quick-sip-shop": {
@@ -20,6 +42,28 @@
       "duration": "45-60 mins",
       "description": "If you have under an hour, here's a quick taste of what Commercial has to offer.",
       "introduction": "Once you get off the Skytrain, head north towards the mountains. Stop in at JJ bean and grab a chocolate chip cookie (or a Krispie raisin), grab a quick shot of espresso. If you wanted to spend a bit more time (or need a second coffee), head up to Prado for another drink and some people watching on the corner. You can pop into Audiopile or Canterbury Tales if you want to take a look, but if time is really limited, keep walking down to Mintage. In Mintage, you will find some amazing vintage clothing, from t-shirts, to vintage dresses, cowboy boots to running vests. An amazing spot to just walk around even if you're not shopping.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "Once you get off the Skytrain, head north towards the mountains. Stop in at JJ bean and grab a chocolate chip cookie (or a Krispie raisin), grab a quick shot of espresso."
+        },
+        { "type": "stops", "ids": ["s1"] },
+        {
+          "type": "prose",
+          "text": "If you wanted to spend a bit more time (or need a second coffee), head up to Prado for another drink and some people watching on the corner."
+        },
+        { "type": "stops", "ids": ["s3"] },
+        {
+          "type": "prose",
+          "text": "You can pop into Audiopile or Canterbury Tales if you want to take a look, but if time is really limited, keep walking down to Mintage."
+        },
+        { "type": "stops", "ids": ["s27", "s28"] },
+        {
+          "type": "prose",
+          "text": "In Mintage, you will find some amazing vintage clothing, from t-shirts, to vintage dresses, cowboy boots to running vests. An amazing spot to just walk around even if you're not shopping."
+        },
+        { "type": "stops", "ids": ["s7"] }
+      ],
       "stops": ["s1", "s3", "s27", "s28", "s7"]
     },
     "quick-sip-shop-2": {
@@ -27,6 +71,32 @@
       "duration": "45-60 mins",
       "description": "Starting at the opposite end of the Skytrain and working your way back to the train. Coffee, shopping, art, and a nice walk.",
       "introduction": "If you have the ability to start in the north end, this would probably be my preferred quick stop. Start with getting a coffee at La Tana (either to stay or go), then pop into Alterior, in there you can check out locally made clothing and some specially curated brands you've never seen anywhere else. While you are in Alterior, you can also check out Vintage Sponsor; easily one of the best vintage shops in the city, I can't even go in there without buying something. Head upstairs and check out Book Section, a free library and book shop. If you have the time, pop into Slice of Life or Fun Haus. Slice if you are looking to browse some art and some locally made gifts. Fun Haus if you want to see some collectabiles and more vintange clothing. At this point, it's likely time to head towards the train, which would be about a 20 minute walk south where you will be tempted by so many more spots!",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "If you have the ability to start in the north end, this would probably be my preferred quick stop. Start with getting a coffee at La Tana (either to stay or go),"
+        },
+        { "type": "stops", "ids": ["s24"] },
+        {
+          "type": "prose",
+          "text": "then pop into Alterior, in there you can check out locally made clothing and some specially curated brands you've never seen anywhere else. While you are in Alterior, you can also check out Vintage Sponsor; easily one of the best vintage shops in the city, I can't even go in there without buying something."
+        },
+        { "type": "stops", "ids": ["s12", "s13"] },
+        {
+          "type": "prose",
+          "text": "Head upstairs and check out Book Section, a free library and book shop."
+        },
+        { "type": "stops", "ids": ["s31"] },
+        {
+          "type": "prose",
+          "text": "If you have the time, pop into Slice of Life or Fun Haus. Slice if you are looking to browse some art and some locally made gifts. Fun Haus if you want to see some collectabiles and more vintange clothing."
+        },
+        { "type": "stops", "ids": ["s26", "s25"] },
+        {
+          "type": "prose",
+          "text": "At this point, it's likely time to head towards the train, which would be about a 20 minute walk south where you will be tempted by so many more spots!"
+        }
+      ],
       "routeMap": "start-north",
       "stops": ["s24", "s12", "s13", "s31", "s26", "s25"]
     },
@@ -35,6 +105,33 @@
       "duration": "2-5 Hours",
       "description": "This plan is for people who aren't in a rush, and might need a quick lunch while they shop around the neighborhood.",
       "introduction": "If you are wanting to spend a few hours in the neighborhood, early-mid day this route is for you. It'll first get you walking a bit off the path of Commercial to head to Mah Milk Bar. From the Skytrain station, you can start walking north, and then at any point, hang a right to head down one of the side streets until you get to Victoria. Keep walking North down Victoria and enjoy this century old neighborhood with some unique houses and massive trees. If you're feeling really adventurous,  you can take another right at some point and go up to Lakewood for some more beautiful and unique architecture. Once you get to Grant & Victoria, head into Mah and grab a coffee and snack. You can eat it there or go across the street to Victoria Park to enjoy some sun in a local neighborhood hangout spot. Once you're done your coffee, you can head back to Commercial to grab a slice of pizza from Don't Argue. Eat it our front with the locals, or, walk down to Grandview Park for some mountain views and people watching. From there, head down the street towards Venables and stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making, and if you're feeling hungry after all that walking, walk one more block north to hit up Cafe La Tana for a delicious Italian lunch. At this point, if you're finding yourself with some time, you can head back to the drive and stop in at Havanas for a snack or drink, while you meander your way back to the Skytrain station.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "If you are wanting to spend a few hours in the neighborhood, early-mid day this route is for you. It'll first get you walking a bit off the path of Commercial to head to Mah Milk Bar. From the Skytrain station, you can start walking north, and then at any point, hang a right to head down one of the side streets until you get to Victoria. Keep walking North down Victoria and enjoy this century old neighborhood with some unique houses and massive trees. If you're feeling really adventurous,  you can take another right at some point and go up to Lakewood for some more beautiful and unique architecture. Once you get to Grant & Victoria, head into Mah and grab a coffee and snack. You can eat it there or go across the street to Victoria Park to enjoy some sun in a local neighborhood hangout spot."
+        },
+        { "type": "stops", "ids": ["s32"] },
+        {
+          "type": "prose",
+          "text": "Once you're done your coffee, you can head back to Commercial to grab a slice of pizza from Don't Argue. Eat it our front with the locals, or, walk down to Grandview Park for some mountain views and people watching."
+        },
+        { "type": "stops", "ids": ["s19", "s34"] },
+        {
+          "type": "prose",
+          "text": "From there, head down the street towards Venables and stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making,"
+        },
+        { "type": "stops", "ids": ["s26", "s25", "s12"] },
+        {
+          "type": "prose",
+          "text": "and if you're feeling hungry after all that walking, walk one more block north to hit up Cafe La Tana for a delicious Italian lunch."
+        },
+        { "type": "stops", "ids": ["s24"] },
+        {
+          "type": "prose",
+          "text": "At this point, if you're finding yourself with some time, you can head back to the drive and stop in at Havanas for a snack or drink, while you meander your way back to the Skytrain station."
+        },
+        { "type": "stops", "ids": ["s35"] }
+      ],
       "stops": ["s32", "s33", "s19", "s34", "s26", "s25", "s12", "s24", "s35"]
     },
     "half-a-day-evening": {
@@ -42,6 +139,28 @@
       "duration": "2-5 Hours",
       "description": "This plan is for people who aren't in a rush and want to check out the neighborhood, stop for a drink or afternoon treat, do some shopping, and settle in for a later dinner.",
       "introduction": "If you are wanting to spend a few hours in the neighborhood and will want to take in some shopping before deciding on a place to eat, this plan would be for you! Start by getting off the Skytrain and enjoying a walk down Commercial to take in the sights and sounds. If you're into records or books, the first two stops would be Canterbury and Audiopile. From there, continue north for your first vintage shop at Mintage, where you will find all kinds of great vintage items for any shape, size, and style. Once you're done there, keep heading towards the mountains and stop for a treat at one of the many coffee shops or corner stores to keep yourself fueled for an early evening of shopping. Once you get to Venables, stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making. At this point, depending on time, you could head back to the drive and grab a drink at the Charlattan patio or Havana patio before heading to Nomo Nomo (reservation recommended) for dinner. If Nomo Nomo is all booked up, Cozen is a great back-up where you can dine-in or take out and eat in one of the many parks or the piazza in the neighborhood.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "If you are wanting to spend a few hours in the neighborhood and will want to take in some shopping before deciding on a place to eat, this plan would be for you! Start by getting off the Skytrain and enjoying a walk down Commercial to take in the sights and sounds. If you're into records or books, the first two stops would be Canterbury and Audiopile."
+        },
+        { "type": "stops", "ids": ["s27", "s28"] },
+        {
+          "type": "prose",
+          "text": "From there, continue north for your first vintage shop at Mintage, where you will find all kinds of great vintage items for any shape, size, and style."
+        },
+        { "type": "stops", "ids": ["s7"] },
+        {
+          "type": "prose",
+          "text": "Once you're done there, keep heading towards the mountains and stop for a treat at one of the many coffee shops or corner stores to keep yourself fueled for an early evening of shopping. Once you get to Venables, stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making."
+        },
+        { "type": "stops", "ids": ["s26", "s25", "s12"] },
+        {
+          "type": "prose",
+          "text": "At this point, depending on time, you could head back to the drive and grab a drink at the Charlattan patio or Havana patio before heading to Nomo Nomo (reservation recommended) for dinner. If Nomo Nomo is all booked up, Cozen is a great back-up where you can dine-in or take out and eat in one of the many parks or the piazza in the neighborhood."
+        },
+        { "type": "stops", "ids": ["s10", "s35", "s17", "s11"] }
+      ],
       "stops": ["s27", "s28", "s7", "s26", "s25", "s12", "s10", "s35", "s17", "s11"]
     }
   }

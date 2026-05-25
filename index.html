@@ -450,6 +450,85 @@
       justify-content: flex-end;
     }
 
+    .connect-links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.85rem;
+      width: 100%;
+      max-width: 20rem;
+      margin: 1.25rem auto 0;
+      padding: 0;
+    }
+    .connect-links[hidden] {
+      display: none !important;
+    }
+    .connect-icons {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .connect-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      box-sizing: border-box;
+      border: 1px solid var(--ink);
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.35);
+      color: var(--ink);
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .connect-btn:hover {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+    .connect-btn__www {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .connect-btn svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      display: block;
+    }
+    .connect-btn__mark {
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .connect-tour-btn {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.65rem 1.25rem;
+      border: 1px solid var(--ink);
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.35);
+      color: var(--ink);
+      text-decoration: none;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .connect-tour-btn:hover {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
     /* Step D: fixed Back / Next along the bottom edge */
     #step-D {
       padding-bottom: 5.5rem;
@@ -968,18 +1047,78 @@
     .route-export-summary {
       margin-bottom: 1.5rem;
     }
-    #step-P2-PLAN .plan-detail-meta {
+    #step-P2-PLAN .plan-detail-header {
       margin: 0 0 1.25rem;
+    }
+    #step-P2-PLAN .plan-detail-meta {
+      margin: 0 0 0.5rem;
       font-size: var(--type-label);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
       color: var(--ink-muted);
+    }
+    #step-P2-PLAN .plan-customize-hint {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: normal;
+      color: var(--fade-top);
+    }
+    html[data-season="summer"] #step-P2-PLAN .plan-customize-hint {
+      color: color-mix(in srgb, var(--fade-top) 45%, var(--fade-bottom) 55%);
     }
     #step-P2-PLAN .plan-intro {
       margin: 0 0 2.5rem;
       font-size: 1.05rem;
       line-height: 1.65;
       white-space: pre-line;
+    }
+    #step-P2-PLAN .plan-narrative {
+      margin: 0 0 2.5rem;
+    }
+    #step-P2-PLAN .plan-narrative__prose {
+      margin: 0 0 1.25rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    #step-P2-PLAN .plan-narrative__prose:last-child {
+      margin-bottom: 0;
+    }
+    #step-P2-PLAN .plan-narrative__stops {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.65rem;
+      margin: 0 0 1.75rem;
+    }
+    #step-P2-PLAN .plan-narrative__stops .route-card--narrative {
+      display: inline-flex;
+      width: auto;
+      max-width: min(100%, 20rem);
+      margin-bottom: 0;
+      align-items: stretch;
+    }
+    #step-P2-PLAN .plan-narrative__stops .route-card--narrative img {
+      width: 4.5rem;
+      height: 4.5rem;
+      flex-shrink: 0;
+    }
+    #step-P2-PLAN .plan-narrative__stops .route-card--narrative .content {
+      padding: 0.4rem 0.65rem;
+      display: flex;
+      align-items: center;
+      min-height: 4.5rem;
+      box-sizing: border-box;
+    }
+    #step-P2-PLAN .plan-narrative__stops .route-card--narrative .content h3 {
+      font-size: 0.8rem;
+      line-height: 1.25;
+      margin: 0;
+    }
+    #step-P2-PLAN .plan-narrative__stops .route-card--narrative.route-card--removable {
+      padding-right: 2.35rem;
     }
     #step-P2-PLAN .p2-plan-picker-desc {
       margin: 0.5rem 0 0;
@@ -1217,6 +1356,21 @@
       font-weight: 400;
       max-width: 38rem;
       margin-bottom: 0;
+    }
+    .hero-about {
+      margin: 0.75rem 0 0;
+      width: 100%;
+      text-align: right;
+    }
+    .hero-about-link {
+      font-size: clamp(0.88rem, 2.2vw, 0.95rem);
+      color: var(--ink-muted);
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+      font-weight: 500;
+    }
+    .hero-about-link:hover {
+      color: var(--ink);
     }
 
     .landing-options {
@@ -1680,6 +1834,7 @@
         <img class="hero-logo" src="assets/logo.png" alt="Escape the Downtown logo" width="360" height="360">
         <h1>Let&rsquo;s get you out of <span class="hero-location-wrap" aria-live="polite"><span class="hero-location" id="hero-location-word">downtown</span></span> and into &ldquo;East&nbsp;Vancouver&rdquo;<sup><a class="footnote-link" href="https://www.seasonsofeastvan.com/about" target="_blank" rel="noopener noreferrer" title="About East Vancouver">1</a></sup></h1>
         <p class="hero-subtitle">Whether you&rsquo;re here visiting for the first time, or have found yourself stuck in your regular routine, I am here to get you into some of our more eclectic east-end neighborhoods.</p>
+        <p class="hero-about"><a class="hero-about-link" href="https://www.seasonsofeastvan.com/about" target="_blank" rel="noopener noreferrer">Who am I?</a></p>
         <div class="landing-options">
           <div id="landing-areas" class="landing-panel" aria-label="Explore neighborhoods"></div>
           <div id="landing-paths" class="landing-panel" hidden aria-label="Ways to explore this neighborhood">
@@ -1830,6 +1985,16 @@
         <button type="button" id="btn-edit-route" onclick="editSpots()" hidden>Edit Spots</button>
         <button type="button" id="btn-route-finalize" class="primary" onclick="handleRouteFinalize()" hidden>Finalize</button>
       </div>
+      <nav id="route-connect" class="connect-links" aria-label="Stay in touch" hidden>
+        <div class="connect-icons">
+          <a class="connect-btn" href="https://www.seasonsofeastvan.com/" target="_blank" rel="noopener noreferrer" aria-label="Seasons of East Van website"><span class="connect-btn__www" aria-hidden="true">www</span></a>
+          <a class="connect-btn" href="https://www.instagram.com/seasonsofeastvan" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg>
+          </a>
+          <a class="connect-btn" href="https://buymeacoffee.com/soev" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee"><span class="connect-btn__mark" aria-hidden="true">$</span></a>
+        </div>
+        <a class="connect-tour-btn" href="mailto:seasonsofeastvan@gmail.com?subject=Book%20a%20tour" aria-label="Book a tour — email Seasons of East Van">Book a tour</a>
+      </nav>
     </section>
 
     <!-- PATH 2: PICK PLAN -->
@@ -1845,7 +2010,10 @@
     <!-- PATH 2: PLAN -->
     <section id="step-P2-PLAN" class="step">
       <h1 id="p2-plan-title">Your Plan</h1>
-      <p id="p2-plan-meta" class="plan-detail-meta label" hidden></p>
+      <div class="plan-detail-header">
+        <p id="p2-plan-meta" class="plan-detail-meta label" hidden></p>
+        <p id="p2-plan-customize-hint" class="plan-customize-hint" hidden>Read through my pre-built plan and remove any stops that don't interest you to customize your route.</p>
+      </div>
       <div id="p2-plan-intro" class="plan-intro"></div>
 
       <div id="p2-route-review" class="route-review route-phase-map">
@@ -1867,6 +2035,16 @@
         <button onclick="showStep('P2-TIME')">Back</button>
         <button class="primary" id="p2-open-maps" style="display: none;" onclick="openGoogleMaps(getPlanRoute())">Open in Google Maps</button>
       </div>
+      <nav id="p2-connect" class="connect-links" aria-label="Stay in touch" hidden>
+        <div class="connect-icons">
+          <a class="connect-btn" href="https://www.seasonsofeastvan.com/" target="_blank" rel="noopener noreferrer" aria-label="Seasons of East Van website"><span class="connect-btn__www" aria-hidden="true">www</span></a>
+          <a class="connect-btn" href="https://www.instagram.com/seasonsofeastvan" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg>
+          </a>
+          <a class="connect-btn" href="https://buymeacoffee.com/soev" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee"><span class="connect-btn__mark" aria-hidden="true">$</span></a>
+        </div>
+        <a class="connect-tour-btn" href="mailto:seasonsofeastvan@gmail.com?subject=Book%20a%20tour" aria-label="Book a tour — email Seasons of East Van">Book a tour</a>
+      </nav>
     </section>
 
     <!-- PATH 3: ALL SPOTS -->
@@ -2369,6 +2547,50 @@
     }
 
     const PATH1_STEPS = ['A', 'B', 'C', 'D', 'E'];
+
+    const CONNECT_LINKS = {
+      website: "https://www.seasonsofeastvan.com/",
+      instagram: "https://www.instagram.com/seasonsofeastvan",
+      buyMeACoffee: "https://buymeacoffee.com/soev",
+      bookTour: null,
+      bookTourMailto:
+        "mailto:seasonsofeastvan@gmail.com?subject=Book%20a%20tour",
+    };
+
+    function getBookTourHref() {
+      return CONNECT_LINKS.bookTour || CONNECT_LINKS.bookTourMailto;
+    }
+
+    function initConnectLinks() {
+      document.querySelectorAll(".connect-tour-btn").forEach((el) => {
+        el.href = getBookTourHref();
+        if (CONNECT_LINKS.bookTour) {
+          el.target = "_blank";
+          el.rel = "noopener noreferrer";
+          el.setAttribute(
+            "aria-label",
+            "Book a tour on Airbnb"
+          );
+        } else {
+          el.removeAttribute("target");
+          el.removeAttribute("rel");
+          el.setAttribute(
+            "aria-label",
+            "Book a tour — email Seasons of East Van"
+          );
+        }
+      });
+    }
+
+    function setRouteConnectVisible(visible) {
+      const el = document.getElementById("route-connect");
+      if (el) el.hidden = !visible;
+    }
+
+    function setP2ConnectVisible(visible) {
+      const el = document.getElementById("p2-connect");
+      if (el) el.hidden = !visible;
+    }
 
     /** Set false (or ?routeStartPrompt=0) to disable the start prompt and user first-stop map mode. */
     const ENABLE_ROUTE_START_PROMPT = true;
@@ -3746,6 +3968,30 @@
       `;
     }
 
+    function renderNarrativeCardHtml(s, idx, options = {}) {
+      const removable = options.removable && options.removeHandler;
+      const canRemove = removable && options.routeLength !== 1;
+      const removeBtn = removable
+        ? `<button type="button" class="route-card-remove" aria-label="Remove ${escapeHtml(s.name)} from route" ${canRemove ? `onclick="${options.removeHandler}('${s.id}')"` : "disabled"} title="${canRemove ? "Remove from route" : "Keep at least one stop"}">×</button>`
+        : "";
+      const cardClass = removable
+        ? "route-card route-card--narrative route-card--removable"
+        : "route-card route-card--narrative";
+      const label =
+        typeof idx === "number" && idx >= 0
+          ? `${idx + 1}. ${escapeHtml(s.name)}`
+          : escapeHtml(s.name);
+      return `
+        <div class="${cardClass}">
+          <img src="${s.image}" alt="${escapeHtml(s.name)}">
+          <div class="content">
+            <h3 style="text-transform:uppercase;">${label}</h3>
+          </div>
+          ${removeBtn}
+        </div>
+      `;
+    }
+
     function renderRouteCards(containerId, route, options = {}) {
       const cardOptions = {
         ...options,
@@ -3802,6 +4048,7 @@
     function renderStepE() {
       const route = getFinalRoute();
       state.routeReviewFinalized = false;
+      setRouteConnectVisible(false);
 
       const editBtn = document.getElementById("btn-edit-route");
       const finalizeBtn = document.getElementById("btn-route-finalize");
@@ -3877,6 +4124,7 @@
         },
       });
       if (finalizeBtn) finalizeBtn.hidden = false;
+      if (state.routeReviewFinalized) setRouteConnectVisible(true);
     }
 
     function handleRouteFinalize() {
@@ -3888,6 +4136,7 @@
       const btn = document.getElementById("btn-route-finalize");
       btn.textContent = "Add to Google Maps";
       btn.className = "btn-google-maps";
+      setRouteConnectVisible(true);
     }
 
     function editSpots() {
@@ -3960,18 +4209,24 @@
       refreshP2RouteAfterEdit();
     }
 
+    function ensureP2RouteSummaryVisible() {
+      const reviewEl = document.getElementById("p2-route-review");
+      const summaryPanelEl = document.getElementById("p2-route-summary-panel");
+      if (!reviewEl || !summaryPanelEl) return;
+      reviewEl.classList.remove("route-phase-map");
+      reviewEl.classList.add("route-phase-summary");
+      summaryPanelEl.hidden = false;
+    }
+
     function refreshP2RouteAfterEdit() {
       if (state.currentStep !== "P2-PLAN") return;
       const plan = PLANS[state.planTime] || { title: "Your Plan" };
       const duration = plan.duration || "";
       const route = getPlanRoute();
-      const metaEl = document.getElementById("p2-plan-meta");
       const mapsBtn = document.getElementById("p2-open-maps");
-      const meta = duration
-        ? `${duration.toUpperCase()} · ${route.length} STOP${route.length === 1 ? "" : "S"}`
-        : `${route.length} STOP${route.length === 1 ? "" : "S"}`;
-      if (metaEl) metaEl.innerText = meta;
+      updateP2PlanHeader(plan, route);
       if (mapsBtn) mapsBtn.style.display = route.length ? "" : "none";
+      setP2ConnectVisible(route.length > 0);
       const mapOptions = getEffectiveMapOptions(plan);
       updateRouteReviewSummary({
         reviewEl: document.getElementById("p2-route-review"),
@@ -3990,6 +4245,8 @@
           removeHandler: "removeP2Stop",
         },
       });
+      ensureP2RouteSummaryVisible();
+      renderP2PlanNarrative(plan);
     }
 
     function renderP2PlanPicker() {
@@ -4022,6 +4279,78 @@
       return "";
     }
 
+    function planHasNarrative(plan) {
+      return Array.isArray(plan?.narrative) && plan.narrative.length > 0;
+    }
+
+    function updateP2PlanHeader(plan, route) {
+      const metaEl = document.getElementById("p2-plan-meta");
+      const hintEl = document.getElementById("p2-plan-customize-hint");
+      const duration = plan.duration || "";
+      const meta = duration
+        ? `${duration.toUpperCase()} · ${route.length} STOP${route.length === 1 ? "" : "S"}`
+        : `${route.length} STOP${route.length === 1 ? "" : "S"}`;
+      if (metaEl) {
+        metaEl.innerText = meta;
+        metaEl.hidden = false;
+      }
+      if (hintEl) {
+        const showHint = planHasNarrative(plan) && route.length > 0;
+        hintEl.hidden = !showHint;
+      }
+    }
+
+    function renderP2PlanNarrative(plan) {
+      const introEl = document.getElementById("p2-plan-intro");
+      if (!introEl) return;
+      if (!planHasNarrative(plan)) {
+        const intro = getPlanIntroduction(plan);
+        introEl.innerHTML = "";
+        introEl.innerText = intro || "";
+        introEl.hidden = !intro;
+        return;
+      }
+      const activeIds = new Set(getP2PlanStopIds());
+      const route = getPlanRoute();
+      const routeIndexById = new Map(route.map((s, i) => [s.id, i]));
+      const cardOptions = {
+        removable: true,
+        removeHandler: "removeP2Stop",
+        routeLength: route.length,
+      };
+      const parts = ['<div class="plan-narrative">'];
+      plan.narrative.forEach((segment) => {
+        if (!segment || typeof segment !== "object") return;
+        if (segment.type === "prose" && segment.text) {
+          parts.push(
+            `<p class="plan-narrative__prose">${escapeHtml(String(segment.text).trim())}</p>`
+          );
+          return;
+        }
+        if (segment.type === "stops" && Array.isArray(segment.ids)) {
+          const cards = segment.ids
+            .filter((id) => activeIds.has(id))
+            .map((id) => STOPS.find((s) => s.id === id))
+            .filter(Boolean)
+            .map((stop) =>
+              renderNarrativeCardHtml(
+                stop,
+                routeIndexById.get(stop.id),
+                cardOptions
+              )
+            );
+          if (cards.length) {
+            parts.push(
+              `<div class="plan-narrative__stops">${cards.join("")}</div>`
+            );
+          }
+        }
+      });
+      parts.push("</div>");
+      introEl.innerHTML = parts.join("");
+      introEl.hidden = false;
+    }
+
     function getPlanRoute() {
       const ids = getP2PlanStopIds();
       return ids.map((id) => STOPS.find((s) => s.id === id)).filter(Boolean);
@@ -4047,6 +4376,8 @@
             ? `${duration.toUpperCase()} · COMING SOON`
             : "COMING SOON";
         }
+        const hintEl = document.getElementById("p2-plan-customize-hint");
+        if (hintEl) hintEl.hidden = true;
         if (introEl) {
           introEl.innerText = duration
             ? `This plan (${duration}) is being curated — check back soon.`
@@ -4056,24 +4387,16 @@
         teardownRouteScrollHint(document.getElementById("p2-route-scroll-hint"));
         if (review) review.hidden = true;
         if (mapsBtn) mapsBtn.style.display = "none";
+        setP2ConnectVisible(false);
         return;
       }
 
       if (review) review.hidden = false;
 
-      const meta = duration
-        ? `${duration.toUpperCase()} · ${route.length} STOPS`
-        : `${route.length} STOPS`;
-      if (metaEl) {
-        metaEl.hidden = false;
-        metaEl.innerText = meta;
-      }
-      if (introEl) {
-        const intro = getPlanIntroduction(plan);
-        introEl.innerText = intro || "";
-        introEl.hidden = !intro;
-      }
+      updateP2PlanHeader(plan, route);
+      renderP2PlanNarrative(plan);
       if (mapsBtn) mapsBtn.style.display = "";
+      setP2ConnectVisible(true);
 
       const mapOptions = getEffectiveMapOptions(plan);
       initRouteReviewAnimation({
@@ -4499,6 +4822,7 @@
     }
 
     initHeroLocationCycle();
+    initConnectLinks();
 
     // Init — data/stops.json + data/plans.json (see AGENTS.md)
     loadAppData().then((ok) => {
