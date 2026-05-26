@@ -2796,6 +2796,7 @@
       expandedSpotId: null,
       pathContext: null,
       stepDPrimaryFilter: null,
+      stepDFoodMealFilter: null,
       stepDTypeFilter: null,
       stepDTypeExpanded: false,
       stepDCategoryId: null,
@@ -2825,6 +2826,7 @@
         expandedSpotId: null,
         pathContext: null,
         stepDPrimaryFilter: null,
+        stepDFoodMealFilter: null,
         stepDTypeFilter: null,
         stepDTypeExpanded: false,
         stepDCategoryId: null,
@@ -3330,6 +3332,7 @@
     function formatStepDFilterLabel() {
       const parts = [];
       if (state.stepDPrimaryFilter) parts.push(state.stepDPrimaryFilter);
+      if (state.stepDFoodMealFilter) parts.push(state.stepDFoodMealFilter);
       if (state.stepDTypeFilter) parts.push(state.stepDTypeFilter);
       return parts.join(" + ");
     }
@@ -3349,6 +3352,7 @@
     function applyStepDFilters(stops, catId) {
       const selected = [];
       if (state.stepDPrimaryFilter) selected.push(state.stepDPrimaryFilter);
+      if (catId === "food" && state.stepDFoodMealFilter) selected.push(state.stepDFoodMealFilter);
       if (catId === "food" && state.stepDTypeFilter) selected.push(state.stepDTypeFilter);
       const primarySet = new Set(
         getStepDPrimaryFilters(catId).map((f) => f.tag.toLowerCase())
@@ -3407,7 +3411,17 @@
     }
 
     function setStepDPrimaryFilter(tag) {
-      state.stepDPrimaryFilter = state.stepDPrimaryFilter === tag ? null : tag;
+      const next = state.stepDPrimaryFilter === tag ? null : tag;
+      state.stepDPrimaryFilter = next;
+      // Meal filter is only meaningful for Food + Sit down.
+      if (next !== "sit down") state.stepDFoodMealFilter = null;
+      renderStepD();
+    }
+
+    function setStepDFoodMealFilter(tag) {
+      // Safety: selecting a meal implies "sit down" as the primary filter.
+      if (state.stepDPrimaryFilter !== "sit down") state.stepDPrimaryFilter = "sit down";
+      state.stepDFoodMealFilter = state.stepDFoodMealFilter === tag ? null : tag;
       renderStepD();
     }
 
@@ -3440,6 +3454,17 @@
         html += `<button type="button" class="${typeActive}" onclick="toggleStepDTypeExpand()">Cuisine</button>`;
       }
       html += `</div>`;
+
+      // Food-only: Sit down expands into Lunch/Dinner options.
+      if (catId === "food" && state.stepDPrimaryFilter === "sit down") {
+        html += `<div class="step-d-filters-subrow">`;
+        const lunchActive = state.stepDFoodMealFilter === "lunch" ? "active" : "";
+        const dinnerActive = state.stepDFoodMealFilter === "dinner" ? "active" : "";
+        html += `<button type="button" class="${lunchActive}" onclick="setStepDFoodMealFilter('lunch')">Lunch</button>`;
+        html += `<button type="button" class="${dinnerActive}" onclick="setStepDFoodMealFilter('dinner')">Dinner</button>`;
+        html += `</div>`;
+      }
+
       if (catId === "food" && state.stepDTypeExpanded) {
         html += `<div class="step-d-filters-subrow">`;
         getStepDFoodTypeTags().forEach((tag) => {
@@ -3457,6 +3482,7 @@
 
       if (state.stepDCategoryId !== catId) {
         state.stepDPrimaryFilter = null;
+        state.stepDFoodMealFilter = null;
         state.stepDTypeFilter = null;
         state.stepDTypeExpanded = false;
         state.stepDCategoryId = catId;

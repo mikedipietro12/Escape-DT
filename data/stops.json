@@ -121,7 +121,9 @@
                 "grab and go",
                 "take out",
                 "wraps",
-                "greek"
+                "greek",
+                "lunch",
+                "dinner"
             ],
             "name": "Skewers Souvlaki Pita Bar",
             "coords": {
@@ -185,7 +187,9 @@
                 "take out",
                 "patio",
                 "pizza",
-                "wine"
+                "wine",
+                "lunch",
+                "dinner"
             ],
             "name": "Belli Pizza",
             "coords": {
@@ -297,7 +301,8 @@
                 "italian",
                 "sit down",
                 "bar",
-                "patio"
+                "patio",
+                "dinner"
             ],
             "name": "Bar Corso",
             "coords": {
@@ -370,7 +375,9 @@
                 "japanese",
                 "sushi",
                 "sit down",
-                "take out"
+                "take out",
+                "lunch",
+                "dinner"
             ],
             "name": "Cozen Japanese Cuisine",
             "coords": {
@@ -483,7 +490,9 @@
                 "sit down",
                 "take out",
                 "grab and go",
-                "patio"
+                "patio",
+                "lunch",
+                "dinner"
             ],
             "name": "LIVIA Forno e Vino",
             "coords": {
@@ -554,7 +563,8 @@
             "tags": [
                 "sit down",
                 "take out",
-                "indian"
+                "indian",
+                "dinner"
             ],
             "name": "Sula Indian Restaurant",
             "coords": {
@@ -591,7 +601,8 @@
                 "izakaya",
                 "japanese",
                 "sit down",
-                "late night"
+                "late night",
+                "dinner"
             ],
             "name": "Nomo Nomo",
             "coords": {
@@ -627,7 +638,8 @@
                 "italian",
                 "sit down",
                 "patio",
-                "late night"
+                "late night",
+                "dinner"
             ],
             "name": "Magari by Oca",
             "coords": {
@@ -659,7 +671,9 @@
                 "grab and go",
                 "sit down",
                 "tvs",
-                "patio"
+                "patio",
+                "lunch",
+                "dinner"
             ],
             "name": "Don't Argue Pizza",
             "coords": {
@@ -694,7 +708,9 @@
                 "grab and go",
                 "indian",
                 "sit down",
-                "patio"
+                "patio",
+                "lunch",
+                "dinner"
             ],
             "name": "Sweet Cherubim",
             "coords": {
@@ -730,7 +746,9 @@
                 "fried chicken",
                 "take out",
                 "sit down",
-                "patio"
+                "patio",
+                "lunch",
+                "dinner"
             ],
             "name": "Mogu Fried Chicken",
             "coords": {
@@ -762,7 +780,9 @@
                 "take out",
                 "sit down",
                 "grab and go",
-                "patio"
+                "patio",
+                "lunch",
+                "dinner"
             ],
             "name": "Downlow Chicken Shack",
             "coords": {
@@ -796,7 +816,8 @@
                 "curry",
                 "take out",
                 "sit down",
-                "late night"
+                "late night",
+                "dinner"
             ],
             "name": "Kin Kao",
             "coords": {
@@ -1097,7 +1118,9 @@
                 "baked goods",
                 "patio",
                 "grab and go",
-                "sit down"
+                "sit down",
+                "lunch",
+                "dinner"
             ],
             "name": "Mah Milk Bar",
             "coords": {
@@ -1183,7 +1206,9 @@
                 "sit down",
                 "patio",
                 "cuban",
-                "cocktails"
+                "cocktails",
+                "lunch",
+                "dinner"
             ],
             "name": "Havana",
             "coords": {
@@ -1325,7 +1350,9 @@
                 "cookies",
                 "patio",
                 "sit down",
-                "grab and go"
+                "grab and go",
+                "lunch",
+                "dinner"
             ],
             "name": "Flourist Bakery",
             "coords": {
