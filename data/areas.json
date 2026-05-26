@@ -8,19 +8,19 @@
       "label": "Build a route, follow a plan, or browse every spot on the Drive.",
       "paths": [
         {
-          "start": "path1",
-          "title": "Choose Your Own Adventure",
-          "label": "Build a path based on time and activity preferences"
+          "start": "path2",
+          "title": "See My Suggested Routes",
+          "label": "Curated based on my own tastes and experience."
         },
         {
-          "start": "path2",
-          "title": "See Pre-Built Plans",
-          "label": "Curated based on my own tastes and experience."
+          "start": "path1",
+          "title": "Choose Your Own Adventure",
+          "label": "Build a route based on your time, what you'd like to explore, and how you'll start and end"
         },
         {
           "start": "path3",
           "title": "See All Spots",
-          "label": "Browse every spot, build a route, open it in Google Maps"
+          "label": "Browse and filter every spot, build a route, open it in Google Maps"
         }
       ]
     }

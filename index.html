@@ -423,11 +423,14 @@
       text-transform: uppercase;
       font-size: var(--type-label);
       letter-spacing: var(--tracking-wide);
-      transition: background 0.2s, color 0.2s;
+      transition: background 0.35s ease, color 0.2s, border-color 0.2s;
     }
     button:hover { background: var(--ink); color: #fff; }
     button.primary { background: var(--ink); color: #fff; }
-    button.primary:hover { background: transparent; color: var(--ink); }
+    button.primary:hover:not(:disabled) {
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+      color: var(--ink);
+    }
     button.btn-google-maps {
       background: #1a73e8;
       color: #fff;
@@ -449,6 +452,10 @@
     
     .nav-buttons.right-only {
       justify-content: flex-end;
+    }
+    .nav-buttons button:hover:not(:disabled):not(.btn-google-maps) {
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+      color: var(--ink);
     }
 
     .connect-links {
@@ -555,7 +562,7 @@
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
     }
     .step-d-action-fixed button:hover:not(:disabled) {
-      background: transparent;
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
       color: var(--ink);
     }
     .step-d-action-fixed button:disabled {
@@ -574,6 +581,19 @@
       transition: background 0.35s ease;
     }
     .card:hover { background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom)); }
+    .card.selected {
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
+    }
+    .route-finalize-heading {
+      font-size: 1.1rem;
+      margin: 1.25rem 0 0.5rem;
+      font-weight: 600;
+      text-transform: none;
+    }
+    .route-finalize-section:first-of-type .route-finalize-heading {
+      margin-top: 0;
+    }
 
     /* Step B: Categories Grid */
     .category-grid {
@@ -1456,6 +1476,15 @@
       margin-bottom: 0;
       opacity: 0.65;
     }
+    .path-context-back {
+      display: block;
+      margin-bottom: 0;
+      opacity: 0.65;
+      text-align: left;
+    }
+    .path-context-back:hover {
+      opacity: 0.45;
+    }
 
     /* Path 3: All Spots */
     #p3-grid {
@@ -1846,7 +1875,7 @@
 
   <div id="main-container">
     <div id="path-context" class="path-context" style="display: none;">
-      <p class="label" id="path-context-title"></p>
+      <div id="path-context-inner"></div>
     </div>
     <nav class="progress" id="progress-bar">
       <!-- Generated via JS -->
@@ -1854,26 +1883,67 @@
 
     <div class="container">
 
-    <!-- ROUTE START (Path 1 / 2 entry; Path 3 on View route) -->
+    <!-- ROUTE START / Finalize Route Plan -->
     <section id="step-ROUTE-START" class="step">
-      <h1>Where are you starting?</h1>
-      <p class="label">This sets how your route map and Google Maps directions begin.</p>
-
-      <div class="card" role="button" tabindex="0"
-        onclick="selectRouteStart('station')"
-        onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRouteStart('station'); }">
-        <h2>Start me at the SkyTrain</h2>
-        <span class="label">Walk from Commercial&ndash;Broadway station to your first stop</span>
+      <div id="route-start-legacy" hidden>
+        <h1>Where are you starting?</h1>
+        <p class="label">This sets how your route map and Google Maps directions begin.</p>
+        <div class="card" role="button" tabindex="0"
+          onclick="selectRouteStart('station')"
+          onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRouteStart('station'); }">
+          <h2>Start me at the SkyTrain</h2>
+          <span class="label">Walk from Commercial&ndash;Broadway station to your first stop</span>
+        </div>
+        <div class="card" role="button" tabindex="0"
+          onclick="selectRouteStart('firstStop')"
+          onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRouteStart('firstStop'); }">
+          <h2>Start me at my first location</h2>
+          <span class="label">Your first stop on the route is already where you are; directions end at the station</span>
+        </div>
+        <div class="nav-buttons">
+          <button type="button" onclick="backFromRouteStart()">Back</button>
+        </div>
       </div>
-      <div class="card" role="button" tabindex="0"
-        onclick="selectRouteStart('firstStop')"
-        onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRouteStart('firstStop'); }">
-        <h2>Start me at my first location</h2>
-        <span class="label">Your first stop on the route is already where you are; directions end at the station</span>
-      </div>
 
-      <div class="nav-buttons">
-        <button type="button" onclick="backFromRouteStart()">Back</button>
+      <div id="route-finalize-v2" hidden>
+        <h1>Finalize Route Plan</h1>
+        <p class="label">This sets how your route map and Google Maps directions are drawn.</p>
+
+        <div class="route-finalize-section">
+          <h2 class="route-finalize-heading">Where would you like to start on the drive?</h2>
+          <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="start" data-value="station"
+            onclick="selectRouteFinalizeChoice('start', 'station')"
+            onkeydown="routeFinalizeCardKeydown(event, 'start', 'station')">
+            <h2>Commercial-Broadway Skytrain</h2>
+            <span class="label">I will take the skytrain over to Commercial</span>
+          </div>
+          <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="start" data-value="firstStop"
+            onclick="selectRouteFinalizeChoice('start', 'firstStop')"
+            onkeydown="routeFinalizeCardKeydown(event, 'start', 'firstStop')">
+            <h2>Start me at my first location</h2>
+            <span class="label">I will find my way to my first spot</span>
+          </div>
+        </div>
+
+        <div class="route-finalize-section">
+          <h2 class="route-finalize-heading">Where would you like to end?</h2>
+          <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="end" data-value="station"
+            onclick="selectRouteFinalizeChoice('end', 'station')"
+            onkeydown="routeFinalizeCardKeydown(event, 'end', 'station')">
+            <h2>Bring me back to the Skytrain</h2>
+          </div>
+          <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="end" data-value="lastStop"
+            onclick="selectRouteFinalizeChoice('end', 'lastStop')"
+            onkeydown="routeFinalizeCardKeydown(event, 'end', 'lastStop')">
+            <h2>I will leave from the last location</h2>
+            <span class="label">Or keep exploring!</span>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" onclick="backFromRouteStart()">Back</button>
+          <button type="button" class="primary" id="btn-route-finalize-continue" onclick="continueFromRouteFinalize()" disabled>Continue</button>
+        </div>
       </div>
     </section>
 
@@ -2030,7 +2100,7 @@
       </div>
 
       <div class="nav-buttons">
-        <button onclick="showStep('P2-TIME')">Back</button>
+        <button type="button" onclick="backFromP2Plan()">Back</button>
         <button class="primary" id="p2-open-maps" style="display: none;" onclick="openGoogleMaps(getPlanRoute())">Open in Google Maps</button>
       </div>
       <nav id="p2-connect" class="connect-links" aria-label="Stay in touch" hidden>
@@ -2410,9 +2480,9 @@
           title: "Explore Commercial Drive",
           label: "Build a route, follow a plan, or browse every spot on the Drive.",
           paths: [
-            { start: "path1", title: "Choose Your Own Adventure", label: "Build a path based on time and activity preferences" },
-            { start: "path2", title: "See Pre-Built Plans", label: "Curated based on my own tastes and experience." },
-            { start: "path3", title: "See All Spots", label: "Browse every spot, build a route, open it in Google Maps" },
+            { start: "path2", title: "See My Suggested Routes", label: "Curated based on my own tastes and experience." },
+            { start: "path1", title: "Choose Your Own Adventure", label: "Build a route based on your time, starting location, and what you'd like to explore" },
+            { start: "path3", title: "See All Spots", label: "Browse and filter every spot, build a route, open it in Google Maps" },
           ],
         },
       },
@@ -2544,7 +2614,23 @@
       }
     }
 
-    const PATH1_STEPS = ['A', 'B', 'C', 'D', 'E'];
+    const PATH1_STEPS_LEGACY = ['A', 'B', 'C', 'D', 'E'];
+    const PATH1_STEPS_V2 = ['A', 'B', 'C', 'ROUTE-START', 'D', 'E'];
+
+    function getPath1Steps() {
+      return isRouteFinalizeV2Enabled() ? PATH1_STEPS_V2 : PATH1_STEPS_LEGACY;
+    }
+
+    const PATH_CONTEXT_CONFIG = {
+      "Choose Your Own Adventure": {
+        homeStep: "A",
+        backLabel: "Back to choose your own adventure",
+      },
+      "See My Suggested Routes": {
+        homeStep: "P2-TIME",
+        backLabel: "Back to suggested routes",
+      },
+    };
 
     const CONNECT_LINKS = {
       website: "https://www.seasonsofeastvan.com/",
@@ -2590,8 +2676,20 @@
       if (el) el.hidden = !visible;
     }
 
-    /** Set false (or ?routeStartPrompt=0) to disable the start prompt and user first-stop map mode. */
+    /** Set false (or ?routeStartPrompt=0) to disable route endpoint prompts and use station↔station defaults. */
     const ENABLE_ROUTE_START_PROMPT = true;
+    /** Set false (or ?routeFinalize=0) to restore legacy flow and map behavior. */
+    const ENABLE_ROUTE_FINALIZE_V2 = true;
+
+    function isRouteFinalizeV2Enabled() {
+      if (!ENABLE_ROUTE_FINALIZE_V2) return false;
+      try {
+        const p = new URLSearchParams(window.location.search);
+        if (p.get("routeFinalize") === "0") return false;
+        if (p.get("routeFinalize") === "1") return true;
+      } catch (_) { /* ignore */ }
+      return true;
+    }
 
     function isRouteStartPromptEnabled() {
       if (!ENABLE_ROUTE_START_PROMPT) return false;
@@ -2601,6 +2699,21 @@
         }
       } catch (_) { /* ignore */ }
       return true;
+    }
+
+    function applyDefaultRouteEndpointsIfMissing() {
+      if (!state.routeStart) state.routeStart = "station";
+      if (isRouteFinalizeV2Enabled() && !state.routeEnd) state.routeEnd = "station";
+    }
+
+    function applyPlanRouteFinalizeDefaults(plan) {
+      if (plan?.routeMap === "start-north") {
+        state.routeStart = "firstStop";
+        state.routeEnd = "station";
+      } else {
+        state.routeStart = "station";
+        state.routeEnd = "station";
+      }
     }
 
     const STEP_D_PRIMARY_FILTERS = {
@@ -2693,6 +2806,7 @@
       p2CustomStopIds: [],
       routeReviewFinalized: false,
       routeStart: null,
+      routeEnd: null,
       afterRouteStartStep: null,
       landingView: "areas",
       landingAreaId: null,
@@ -2721,6 +2835,7 @@
         p2CustomStopIds: [],
         routeReviewFinalized: false,
         routeStart: null,
+        routeEnd: null,
         afterRouteStartStep: null,
         landingView: "areas",
         landingAreaId: null,
@@ -2728,10 +2843,10 @@
     }
 
     // --- NAVIGATION ---
-    const steps = PATH1_STEPS;
 
     function updateProgress(step) {
       const nav = document.getElementById("progress-bar");
+      const steps = getPath1Steps();
       nav.innerHTML = steps.map(s => {
         if (s === "C" && state.userRanked) return "";
         const isActive = s === step;
@@ -2740,15 +2855,55 @@
       }).join('');
     }
 
-    function updatePathContext() {
-      const el = document.getElementById('path-context');
-      const titleEl = document.getElementById('path-context-title');
-      if (!state.pathContext) {
-        el.style.display = 'none';
+    function getPathContextConfig() {
+      return state.pathContext ? PATH_CONTEXT_CONFIG[state.pathContext] : null;
+    }
+
+    function isAtPathHome() {
+      const cfg = getPathContextConfig();
+      return Boolean(cfg && state.currentStep === cfg.homeStep);
+    }
+
+    function getPathContextButtonLabel() {
+      const cfg = getPathContextConfig();
+      if (!cfg) return state.pathContext || "";
+      if (state.currentStep === "ROUTE-START" || !isAtPathHome()) return cfg.backLabel;
+      return state.pathContext;
+    }
+
+    function backToPathStart() {
+      const cfg = getPathContextConfig();
+      if (!cfg) return;
+      if (state.currentStep === "ROUTE-START" || isAtPathHome()) {
+        backToLandingPaths();
         return;
       }
-      titleEl.textContent = state.pathContext;
-      el.style.display = 'block';
+      showStep(cfg.homeStep);
+    }
+
+    function updatePathContext() {
+      const el = document.getElementById("path-context");
+      const inner = document.getElementById("path-context-inner");
+      if (!el || !inner) return;
+      if (!state.pathContext) {
+        el.style.display = "none";
+        inner.replaceChildren();
+        return;
+      }
+      if (state.pathContext === "See All Spots") {
+        const label = document.createElement("p");
+        label.className = "label";
+        label.textContent = state.pathContext;
+        inner.replaceChildren(label);
+      } else {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "path-context-back landing-back";
+        btn.textContent = getPathContextButtonLabel();
+        btn.addEventListener("click", backToPathStart);
+        inner.replaceChildren(btn);
+      }
+      el.style.display = "block";
     }
 
     function showStep(step) {
@@ -2779,7 +2934,7 @@
       topNav.style.display = 'block';
 
       const showPath1Progress =
-        PATH1_STEPS.includes(step) &&
+        getPath1Steps().includes(step) &&
         !(step === "E" && state.pathContext === "See All Spots");
       if (showPath1Progress) {
         progress.classList.remove("hidden");
@@ -2805,26 +2960,108 @@
       if (step === 'P2-PLAN') renderP2Plan();
       if (step === 'P3') renderP3();
       if (step === 'P3-ROUTE') renderP3Route();
+      if (step === 'ROUTE-START') renderRouteFinalizeStep();
     }
 
     function goTo(step) { showStep(step); }
 
+    function renderRouteFinalizeStep() {
+      const legacyEl = document.getElementById("route-start-legacy");
+      const v2El = document.getElementById("route-finalize-v2");
+      const useV2 = isRouteFinalizeV2Enabled();
+      if (legacyEl) legacyEl.hidden = useV2;
+      if (v2El) v2El.hidden = !useV2;
+      if (useV2) updateRouteFinalizeUi();
+    }
+
+    function updateRouteFinalizeUi() {
+      document.querySelectorAll(".route-finalize-card").forEach((card) => {
+        const kind = card.getAttribute("data-route-choice");
+        const value = card.getAttribute("data-value");
+        const selected =
+          (kind === "start" && state.routeStart === value) ||
+          (kind === "end" && state.routeEnd === value);
+        card.classList.toggle("selected", selected);
+        card.setAttribute("aria-pressed", selected ? "true" : "false");
+      });
+      const btn = document.getElementById("btn-route-finalize-continue");
+      if (btn) {
+        btn.disabled = !(state.routeStart && state.routeEnd);
+      }
+    }
+
+    function routeFinalizeCardKeydown(event, kind, value) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectRouteFinalizeChoice(kind, value);
+      }
+    }
+
+    function selectRouteFinalizeChoice(kind, value) {
+      if (kind === "start") state.routeStart = value;
+      else if (kind === "end") state.routeEnd = value;
+      updateRouteFinalizeUi();
+    }
+
+    function continueFromRouteFinalize() {
+      if (!state.routeStart || !state.routeEnd) return;
+      const next = state.afterRouteStartStep || "A";
+      showStep(next);
+    }
+
     function goToRouteStartOr(nextStep) {
       state.afterRouteStartStep = nextStep;
-      if (isRouteStartPromptEnabled()) {
-        showStep("ROUTE-START");
-      } else {
+      if (!isRouteStartPromptEnabled()) {
+        applyDefaultRouteEndpointsIfMissing();
         showStep(nextStep);
+        return;
+      }
+      showStep("ROUTE-START");
+      renderRouteFinalizeStep();
+    }
+
+    function goToRouteFinalizeOr(nextStep) {
+      state.afterRouteStartStep = nextStep;
+      if (!isRouteStartPromptEnabled()) {
+        applyDefaultRouteEndpointsIfMissing();
+        showStep(nextStep);
+        return;
+      }
+      if (isRouteFinalizeV2Enabled()) {
+        showStep("ROUTE-START");
+        renderRouteFinalizeStep();
+      } else {
+        goToRouteStartOr(nextStep);
       }
     }
 
     function selectRouteStart(mode) {
       state.routeStart = mode;
+      if (isRouteFinalizeV2Enabled()) state.routeEnd = "station";
       const next = state.afterRouteStartStep || "A";
       showStep(next);
     }
 
     function backFromRouteStart() {
+      const next = state.afterRouteStartStep;
+      if (isRouteFinalizeV2Enabled()) {
+        if (next === "D") {
+          if (!state.userRanked && state.selectedCategories.length > 1) {
+            showStep("C");
+          } else {
+            showStep("B");
+          }
+          return;
+        }
+        if (next === "P2-PLAN") {
+          showStep("P2-TIME");
+          return;
+        }
+        if (next === "E") {
+          showStep("P3");
+          return;
+        }
+      }
       state.pathContext = null;
       state.afterRouteStartStep = null;
       showLandingForArea(DEFAULT_LANDING_AREA);
@@ -2832,9 +3069,15 @@
     }
 
     function backFromStepA() {
+      if (isRouteFinalizeV2Enabled()) {
+        showLandingForArea(DEFAULT_LANDING_AREA);
+        showStep("LANDING");
+        return;
+      }
       if (isRouteStartPromptEnabled()) {
         state.afterRouteStartStep = "A";
         showStep("ROUTE-START");
+        renderRouteFinalizeStep();
       } else {
         showLandingForArea(DEFAULT_LANDING_AREA);
         showStep("LANDING");
@@ -2842,24 +3085,48 @@
     }
 
     function backFromP2Time() {
+      if (isRouteFinalizeV2Enabled()) {
+        showLandingForArea(DEFAULT_LANDING_AREA);
+        showStep("LANDING");
+        return;
+      }
       if (isRouteStartPromptEnabled()) {
         state.afterRouteStartStep = "P2-TIME";
         showStep("ROUTE-START");
+        renderRouteFinalizeStep();
       } else {
         showLandingForArea(DEFAULT_LANDING_AREA);
         showStep("LANDING");
       }
     }
 
+    function backFromP2Plan() {
+      if (isRouteFinalizeV2Enabled() && isRouteStartPromptEnabled()) {
+        state.afterRouteStartStep = "P2-PLAN";
+        showStep("ROUTE-START");
+        renderRouteFinalizeStep();
+        return;
+      }
+      showStep("P2-TIME");
+    }
+
     function startPath1() {
       state.landingAreaId = DEFAULT_LANDING_AREA;
       state.pathContext = 'Choose Your Own Adventure';
-      goToRouteStartOr("A");
+      if (isRouteFinalizeV2Enabled()) {
+        showStep("A");
+      } else {
+        goToRouteStartOr("A");
+      }
     }
     function startPath2() {
       state.landingAreaId = DEFAULT_LANDING_AREA;
-      state.pathContext = 'See Pre-Built Plans';
-      goToRouteStartOr("P2-TIME");
+      state.pathContext = 'See My Suggested Routes';
+      if (isRouteFinalizeV2Enabled()) {
+        showStep("P2-TIME");
+      } else {
+        goToRouteStartOr("P2-TIME");
+      }
     }
     function startPath3() {
       state.landingAreaId = DEFAULT_LANDING_AREA;
@@ -3009,7 +3276,7 @@
       } else {
         if (state.userRanked) state.routeOrder = "manual";
         state.currentCategoryIndex = 0;
-        goTo('D');
+        goToRouteFinalizeOr('D');
       }
     }
 
@@ -3017,7 +3284,7 @@
     function selectRouteOrder(order) {
       state.routeOrder = order;
       state.currentCategoryIndex = 0;
-      goTo('D');
+      goToRouteFinalizeOr('D');
     }
 
     // --- STEP D ---
@@ -3285,13 +3552,14 @@
         state.currentCategoryIndex--;
         renderStepD();
         window.scrollTo(0, 0);
+      } else if (isRouteFinalizeV2Enabled() && isRouteStartPromptEnabled()) {
+        state.afterRouteStartStep = "D";
+        showStep("ROUTE-START");
+        renderRouteFinalizeStep();
+      } else if (!state.userRanked && state.selectedCategories.length > 1) {
+        goTo('C');
       } else {
-        // Go back to C or B
-        if (!state.userRanked && state.selectedCategories.length > 1) {
-          goTo('C');
-        } else {
-          goTo('B');
-        }
+        goTo('B');
       }
     }
 
@@ -3348,18 +3616,60 @@
       return plan?.routeMap === "start-north" ? { startAtFirstStop: true } : {};
     }
 
+    function normalizeMapOptions(mapOptions = {}) {
+      if (
+        mapOptions.startAtStation !== undefined ||
+        mapOptions.endAtStation !== undefined
+      ) {
+        return {
+          startAtStation: mapOptions.startAtStation !== false,
+          endAtStation: mapOptions.endAtStation !== false,
+        };
+      }
+      const startAtFirstStop = !!mapOptions.startAtFirstStop;
+      return {
+        startAtStation: !startAtFirstStop,
+        endAtStation: true,
+      };
+    }
+
+    function shouldShowStationOnMap(mapOptions = {}) {
+      if (isRouteFinalizeV2Enabled()) {
+        const opts = normalizeMapOptions(mapOptions);
+        return opts.startAtStation || opts.endAtStation;
+      }
+      return true;
+    }
+
     function getUserRouteMapOptions() {
-      if (!isRouteStartPromptEnabled() || state.routeStart !== "firstStop") return {};
-      return { startAtFirstStop: true };
+      if (!isRouteStartPromptEnabled()) {
+        return { startAtStation: true, endAtStation: true };
+      }
+      if (!isRouteFinalizeV2Enabled()) {
+        if (state.routeStart === "firstStop") return { startAtFirstStop: true };
+        return {};
+      }
+      applyDefaultRouteEndpointsIfMissing();
+      return {
+        startAtStation: state.routeStart === "station",
+        endAtStation: state.routeEnd === "station",
+      };
     }
 
     function getEffectiveMapOptions(plan) {
+      if (isRouteFinalizeV2Enabled()) return getUserRouteMapOptions();
       const user = getUserRouteMapOptions();
       if (Object.keys(user).length) return user;
       return getPlanMapOptions(plan);
     }
 
     function getTotalsStyleForMapOptions(mapOptions = {}) {
+      if (isRouteFinalizeV2Enabled()) {
+        const opts = normalizeMapOptions(mapOptions);
+        return opts.startAtStation && opts.endAtStation
+          ? "furthest-roundtrip"
+          : "linear";
+      }
       return mapOptions.startAtFirstStop ? "linear" : "furthest-roundtrip";
     }
 
@@ -3371,7 +3681,7 @@
       return getUserRouteMapOptions();
     }
 
-    function getRouteLegs(route, mapOptions = {}) {
+    function getRouteLegsLegacy(route, mapOptions = {}) {
       if (!route.length) return [];
       const legs = [];
       if (!mapOptions.startAtFirstStop) {
@@ -3394,6 +3704,48 @@
         label: `Back to ${STATION_WALK_LABEL}`,
       });
       return legs;
+    }
+
+    function getRouteLegsV2(route, mapOptions = {}) {
+      const opts = normalizeMapOptions(mapOptions);
+      if (!route.length) return [];
+      const legs = [];
+      if (opts.startAtStation) {
+        legs.push({
+          ...getWalkLeg(STATION_LAT, STATION_LNG, route[0].lat, route[0].lng),
+          label: `To ${route[0].name}`,
+          legKind: "stationToStop",
+          toStopIndex: 0,
+        });
+      }
+      for (let i = 0; i < route.length - 1; i++) {
+        const a = route[i];
+        const b = route[i + 1];
+        legs.push({
+          ...getWalkLeg(a.lat, a.lng, b.lat, b.lng),
+          label: `To ${b.name}`,
+          legKind: "stopToStop",
+          fromStopIndex: i,
+          toStopIndex: i + 1,
+        });
+      }
+      if (opts.endAtStation) {
+        const last = route[route.length - 1];
+        legs.push({
+          ...getWalkLeg(last.lat, last.lng, STATION_LAT, STATION_LNG),
+          label: `Back to ${STATION_WALK_LABEL}`,
+          legKind: "stopToStation",
+          fromStopIndex: route.length - 1,
+        });
+      }
+      return legs;
+    }
+
+    function getRouteLegs(route, mapOptions = {}) {
+      if (isRouteFinalizeV2Enabled()) {
+        return getRouteLegsV2(route, mapOptions);
+      }
+      return getRouteLegsLegacy(route, mapOptions);
     }
 
     function getRouteWalkTotals(route, mapOptions = {}) {
@@ -3479,6 +3831,8 @@
       bracketArm: 10,
       labelLeftX: 8,
       legDurationMs: 1000,
+      defaultViewBox: "0 0 340 600",
+      viewBoxPad: 24,
     };
 
     const MAP_LEG_COLORS_BASE = [
@@ -3682,18 +4036,20 @@
       });
     }
 
-    function getRouteMapLayout(route, mapOptions = {}) {
-      const station = { x: MAP.xCenter, y: MAP.yStation };
-      const routeLegs = getRouteLegs(route, mapOptions);
-      if (!route.length) {
-        return { station, points: [], legs: [], stopCount: 0 };
+    function separateNearbyMapPoints(points) {
+      for (let i = 1; i < points.length; i++) {
+        if (Math.abs(points[i].y - points[i - 1].y) < 6) {
+          points[i].y = points[i - 1].y - 8;
+        }
       }
+      return points;
+    }
 
+    function layoutRouteMapPointsFromStation(route) {
       const furthestDist = Math.max(
         ...route.map((s) => getStopWalkFromStation(s).km),
         0.0001
       );
-
       const points = route.map((stop, idx) => {
         const dist = getStopWalkFromStation(stop).km;
         const y = isStopSouthOfStation(stop)
@@ -3702,12 +4058,93 @@
         const x = getStopMapX(stop);
         return { stop, x, y, idx };
       });
+      return separateNearbyMapPoints(points);
+    }
 
-      for (let i = 1; i < points.length; i++) {
-        if (Math.abs(points[i].y - points[i - 1].y) < 6) {
-          points[i].y = points[i - 1].y - 8;
+    function layoutRouteMapPointsFromLat(route) {
+      const lats = route.map((s) => s.lat);
+      const minLat = Math.min(...lats);
+      const maxLat = Math.max(...lats);
+      const latSpan = maxLat - minLat || 1e-6;
+      const yMin = 70;
+      const yMax = 530;
+      const points = route.map((stop, idx) => {
+        const x = getStopMapX(stop);
+        let y;
+        if (route.length === 1) {
+          y = (yMin + yMax) / 2;
+        } else {
+          const t = (stop.lat - minLat) / latSpan;
+          y = yMax - t * (yMax - yMin);
         }
+        return { stop, x, y, idx };
+      });
+      return separateNearbyMapPoints(points);
+    }
+
+    function buildRouteMapPoints(route, mapOptions = {}) {
+      if (!route.length) return [];
+      return shouldShowStationOnMap(mapOptions)
+        ? layoutRouteMapPointsFromStation(route)
+        : layoutRouteMapPointsFromLat(route);
+    }
+
+    function getMapSpineBounds(points, showStation) {
+      if (showStation) {
+        return { y1: MAP.yNorth, y2: MAP.yStation };
       }
+      if (!points.length) {
+        return { y1: MAP.yNorth, y2: MAP.yStation };
+      }
+      const ys = points.map((p) => p.y);
+      const pad = 28;
+      return {
+        y1: Math.min(...ys) - pad,
+        y2: Math.max(...ys) + pad,
+      };
+    }
+
+    function computeMapViewBox(points, legs, showStation) {
+      const xs = [];
+      const ys = [];
+
+      points.forEach((p) => {
+        const east = isMapStopEastOffset(p.x);
+        xs.push(east ? p.x - 90 : p.x - 12, east ? p.x + 12 : p.x + 90);
+        ys.push(p.y - 14, p.y + 14);
+      });
+
+      if (showStation) {
+        xs.push(MAP.xCenter - 10, MAP.xCenter + 72);
+        ys.push(MAP.yStation - 10, MAP.yStation + 14);
+      }
+
+      legs.forEach((leg) => {
+        ys.push(leg.y1, leg.y2);
+        if (leg.x1 != null) xs.push(leg.x1, leg.x2);
+        xs.push(MAP.bracketLeftX - 4, MAP.labelLeftX + 130);
+      });
+
+      if (!xs.length) return MAP.defaultViewBox;
+
+      const pad = MAP.viewBoxPad;
+      const minX = Math.min(...xs) - pad;
+      const minY = Math.min(...ys) - pad;
+      const maxX = Math.max(...xs) + pad;
+      const maxY = Math.max(...ys) + pad;
+      const w = Math.max(maxX - minX, 120);
+      const h = Math.max(maxY - minY, 120);
+      return `${minX} ${minY} ${w} ${h}`;
+    }
+
+    function getRouteMapLayoutLegacy(route, mapOptions = {}) {
+      const station = { x: MAP.xCenter, y: MAP.yStation };
+      const routeLegs = getRouteLegsLegacy(route, mapOptions);
+      if (!route.length) {
+        return { station, points: [], legs: [], stopCount: 0 };
+      }
+
+      const points = buildRouteMapPoints(route, mapOptions);
 
       const legs = routeLegs.map((leg, i) => {
         let x1, y1, x2, y2;
@@ -3770,12 +4207,81 @@
       return { station, points, legs, stopCount: route.length };
     }
 
-    function renderMapStaticSvg() {
-      return `
-        <line class="map-line" x1="${MAP.xCenter}" y1="${MAP.yNorth}" x2="${MAP.xCenter}" y2="${MAP.yStation}" />
+    function getRouteMapLayoutV2(route, mapOptions = {}) {
+      const station = { x: MAP.xCenter, y: MAP.yStation };
+      const routeLegs = getRouteLegsV2(route, mapOptions);
+      if (!route.length) {
+        return { station, points: [], legs: [], stopCount: 0 };
+      }
+
+      const points = buildRouteMapPoints(route, mapOptions);
+
+      const legs = routeLegs.map((leg, i) => {
+        let x1, y1, x2, y2;
+        let fromStop = null;
+        let toStop = null;
+
+        if (leg.legKind === "stationToStop") {
+          const p = points[leg.toStopIndex];
+          x1 = station.x;
+          y1 = station.y;
+          x2 = p.x;
+          y2 = p.y;
+          toStop = p.stop;
+        } else if (leg.legKind === "stopToStop") {
+          const a = points[leg.fromStopIndex];
+          const b = points[leg.toStopIndex];
+          fromStop = a.stop;
+          toStop = b.stop;
+          x1 = a.x;
+          y1 = a.y;
+          x2 = b.x;
+          y2 = b.y;
+        } else if (leg.legKind === "stopToStation") {
+          const p = points[leg.fromStopIndex];
+          fromStop = p.stop;
+          x1 = p.x;
+          y1 = p.y;
+          x2 = station.x;
+          y2 = station.y;
+        }
+
+        const fromOffSpine = fromStop ? isStopOffSpine(fromStop) : false;
+        const toOffSpine = toStop ? isStopOffSpine(toStop) : false;
+        const isBackward = isMapLegBackward(y1, y2);
+        return {
+          ...leg,
+          x1,
+          y1,
+          x2,
+          y2,
+          pathD: getMapLegPathD(x1, y1, x2, y2, fromOffSpine, toOffSpine),
+          legIndex: i,
+          isBackward,
+        };
+      });
+
+      return { station, points, legs, stopCount: route.length };
+    }
+
+    function getRouteMapLayout(route, mapOptions = {}) {
+      if (isRouteFinalizeV2Enabled()) {
+        return getRouteMapLayoutV2(route, mapOptions);
+      }
+      return getRouteMapLayoutLegacy(route, mapOptions);
+    }
+
+    function renderMapStaticSvg(options = {}) {
+      const showStation = options.showStation !== false;
+      const spineY1 = options.spineY1 ?? MAP.yNorth;
+      const spineY2 = options.spineY2 ?? MAP.yStation;
+      let html = `<line class="map-line" x1="${MAP.xCenter}" y1="${spineY1}" x2="${MAP.xCenter}" y2="${spineY2}" />`;
+      if (showStation) {
+        html += `
         <circle cx="${MAP.xCenter}" cy="${MAP.yStation}" r="5" fill="var(--ink)"/>
-        <text class="map-text" x="${MAP.xCenter + 10}" y="${MAP.yStation + 5}">Station</text>
-      `;
+        <text class="map-text" x="${MAP.xCenter + 10}" y="${MAP.yStation + 5}">Station</text>`;
+      }
+      return html;
     }
 
     function renderMapLegBracketSvg(leg, legIndex) {
@@ -3814,13 +4320,30 @@
       return `<g class="map-legs-layer">${legs.map((leg, i) => renderMapLegBracketSvg(leg, i)).join("")}</g>`;
     }
 
-    function getMapStopIndexAfterLeg(legIndex, mapOptions, pointCount) {
+    function getMapStopIndexAfterLegLegacy(legIndex, mapOptions, pointCount) {
       if (mapOptions.startAtFirstStop) {
         if (legIndex < pointCount - 1) return legIndex + 1;
         return pointCount > 0 ? pointCount - 1 : null;
       }
       if (legIndex < pointCount) return legIndex;
       return null;
+    }
+
+    function getMapStopIndexAfterLegV2(legIndex, routeLegs) {
+      const leg = routeLegs[legIndex];
+      if (!leg) return null;
+      if (leg.legKind === "stationToStop" || leg.legKind === "stopToStop") {
+        return leg.toStopIndex;
+      }
+      if (leg.legKind === "stopToStation") return leg.fromStopIndex;
+      return null;
+    }
+
+    function getMapStopIndexAfterLeg(legIndex, mapOptions, pointCount, routeLegs) {
+      if (isRouteFinalizeV2Enabled() && routeLegs) {
+        return getMapStopIndexAfterLegV2(legIndex, routeLegs);
+      }
+      return getMapStopIndexAfterLegLegacy(legIndex, mapOptions, pointCount);
     }
 
     function animateMapPath(pathEl, options = {}) {
@@ -3869,21 +4392,36 @@
       const isStale = () => gen !== mapAnimationGeneration;
 
       const mapOptions = options.mapOptions || {};
+      const showStation = shouldShowStationOnMap(mapOptions);
       const layout = getRouteMapLayout(route, mapOptions);
       const { points, legs } = layout;
+      const routeLegs = isRouteFinalizeV2Enabled()
+        ? getRouteLegsV2(route, mapOptions)
+        : null;
       const legDuration = options.legDuration ?? MAP.legDurationMs;
+      const spine = getMapSpineBounds(points, showStation);
 
-      let html = renderMapStaticSvg();
+      let html = renderMapStaticSvg({
+        showStation,
+        spineY1: spine.y1,
+        spineY2: spine.y2,
+      });
       if (legs.length) {
         html += renderMapLegsLayerSvg(legs);
       }
       html += `<g class="map-route-layer"></g>`;
       svg.innerHTML = html;
+      svg.setAttribute(
+        "viewBox",
+        route.length && !showStation
+          ? computeMapViewBox(points, legs, showStation)
+          : MAP.defaultViewBox
+      );
 
       const routeLayer = svg.querySelector(".map-route-layer");
       const legsLayer = svg.querySelector(".map-legs-layer");
 
-      if (!route.length || !legs.length) {
+      if (!route.length) {
         options.onComplete?.();
         return;
       }
@@ -3902,6 +4440,12 @@
         routeLayer.insertAdjacentHTML("beforeend", renderMapStopSvg(points[stopIndex]));
         const g = routeLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
         requestAnimationFrame(() => g?.classList.remove("map-stop-group--hidden"));
+      }
+
+      if (!legs.length) {
+        points.forEach((_, idx) => revealStop(idx));
+        options.onComplete?.();
+        return;
       }
 
       function runLeg(legIndex) {
@@ -3930,7 +4474,8 @@
               const stopIdx = getMapStopIndexAfterLeg(
                 legIndex,
                 mapOptions,
-                points.length
+                points.length,
+                routeLegs
               );
               if (stopIdx != null) revealStop(stopIdx);
             } catch (err) {
@@ -3941,7 +4486,13 @@
         });
       }
 
-      if (mapOptions.startAtFirstStop && points.length) {
+      const mapOptsNorm = isRouteFinalizeV2Enabled()
+        ? normalizeMapOptions(mapOptions)
+        : null;
+      const revealFirstStopUpfront = isRouteFinalizeV2Enabled()
+        ? mapOptsNorm && !mapOptsNorm.startAtStation
+        : mapOptions.startAtFirstStop;
+      if (revealFirstStopUpfront && points.length) {
         revealStop(0);
       }
       runLeg(0);
@@ -4037,9 +4588,13 @@
         return;
       }
       const { totalKm, totalMin } = getRouteWalkTotals(route, mapOpts);
+      const opts = normalizeMapOptions(mapOpts);
+      const disclaimer = opts.endAtStation
+        ? "Straight-line estimates between stops in visit order, including return to the station. Does not include time spent at locations."
+        : "Straight-line estimates between stops in visit order. Does not include time spent at locations.";
       el.innerHTML = `
         <div>Total walking (your route order): ~${formatKm(totalKm)} km · ~${totalMin} min</div>
-        <p class="walk-disclaimer">Straight-line estimates between stops in visit order, including return to the station. Does not include time spent at locations.</p>
+        <p class="walk-disclaimer">${disclaimer}</p>
       `;
     }
 
@@ -4147,7 +4702,7 @@
       goTo('D');
     }
 
-    function openGoogleMaps(route, mapOptions) {
+    function openGoogleMapsLegacy(route, mapOptions) {
       const resolved = route || getFinalRoute();
       if (resolved.length === 0) return;
 
@@ -4178,6 +4733,58 @@
       window.open(url, "_blank");
     }
 
+    function openGoogleMapsV2(route, mapOptions) {
+      const resolved = route || getFinalRoute();
+      if (resolved.length === 0) return;
+
+      const opts = normalizeMapOptions(
+        mapOptions || resolveOpenGoogleMapsOptions()
+      );
+      const station = `${STATION_LAT},${STATION_LNG}`;
+      const first = `${resolved[0].lat},${resolved[0].lng}`;
+      const last = `${resolved[resolved.length - 1].lat},${resolved[resolved.length - 1].lng}`;
+
+      let origin;
+      let dest;
+      let waypointStops = [];
+
+      if (opts.startAtStation && opts.endAtStation) {
+        origin = station;
+        dest = station;
+        waypointStops = resolved;
+      } else if (opts.startAtStation && !opts.endAtStation) {
+        origin = station;
+        dest = last;
+        waypointStops = resolved.slice(0, -1);
+      } else if (!opts.startAtStation && opts.endAtStation) {
+        origin = first;
+        dest = station;
+        waypointStops = resolved.slice(1);
+      } else {
+        origin = first;
+        dest = last;
+        waypointStops = resolved.length > 2 ? resolved.slice(1, -1) : [];
+      }
+
+      let waypoints = "";
+      if (waypointStops.length) {
+        waypoints =
+          "&waypoints=" +
+          waypointStops.map((s) => `${s.lat},${s.lng}`).join("|");
+      }
+
+      const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}${waypoints}&travelmode=walking`;
+      window.open(url, "_blank");
+    }
+
+    function openGoogleMaps(route, mapOptions) {
+      if (isRouteFinalizeV2Enabled()) {
+        openGoogleMapsV2(route, mapOptions);
+      } else {
+        openGoogleMapsLegacy(route, mapOptions);
+      }
+    }
+
     function startOver() {
       resetState();
       showStep('LANDING');
@@ -4188,7 +4795,12 @@
       state.planTime = id;
       const plan = PLANS[id];
       state.p2CustomStopIds = plan?.stops ? [...plan.stops] : [];
-      showStep("P2-PLAN");
+      if (isRouteFinalizeV2Enabled()) {
+        applyPlanRouteFinalizeDefaults(plan);
+        goToRouteFinalizeOr("P2-PLAN");
+      } else {
+        showStep("P2-PLAN");
+      }
     }
 
     function getP2PlanStopIds() {
@@ -4696,9 +5308,18 @@
     function viewP3Route() {
       if (state.p3RouteIds.length === 0) return;
       state.expandedSpotId = null;
-      if (isRouteStartPromptEnabled() && state.routeStart == null) {
+      const needsFinalize =
+        isRouteStartPromptEnabled() &&
+        (state.routeStart == null ||
+          (isRouteFinalizeV2Enabled() && state.routeEnd == null));
+      if (needsFinalize) {
+        if (isRouteFinalizeV2Enabled()) {
+          if (!state.routeStart) state.routeStart = "station";
+          if (!state.routeEnd) state.routeEnd = "station";
+        }
         state.afterRouteStartStep = "E";
         showStep("ROUTE-START");
+        renderRouteFinalizeStep();
       } else {
         showStep("E");
       }
@@ -4712,7 +5333,7 @@
           ? `${route.length} stop${route.length === 1 ? "" : "s"} sorted north to south along the Drive for walking. Tap × on a stop to remove it.`
           : "Add spots from All Spots to build your route.";
       }
-      drawMap("route-map-p3", route);
+      drawMap("route-map-p3", route, { mapOptions: getUserRouteMapOptions() });
       renderRouteCards("route-cards-p3", route, {
         removable: true,
         removeHandler: "removeP3RouteStop",
