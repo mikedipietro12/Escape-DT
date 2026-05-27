@@ -585,6 +585,10 @@
       outline: 2px solid var(--ink);
       outline-offset: 2px;
     }
+    /* Finalize Route Plan: keep selection filled with the seasonal fade */
+    .route-finalize-card.selected {
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+    }
     .route-finalize-heading {
       font-size: 1.1rem;
       margin: 1.25rem 0 0.5rem;
@@ -3008,7 +3012,16 @@
     function continueFromRouteFinalize() {
       if (!state.routeStart || !state.routeEnd) return;
       const next = state.afterRouteStartStep || "A";
-      showStep(next);
+      // Let the selected state paint before navigating.
+      const btn = document.getElementById("btn-route-finalize-continue");
+      if (btn) btn.disabled = true;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          showStep(next);
+          // If the user navigates back here, re-enable via UI refresh.
+          if (btn) btn.disabled = false;
+        });
+      });
     }
 
     function goToRouteStartOr(nextStep) {
@@ -3041,7 +3054,8 @@
       state.routeStart = mode;
       if (isRouteFinalizeV2Enabled()) state.routeEnd = "station";
       const next = state.afterRouteStartStep || "A";
-      showStep(next);
+      // Let the "selected" visual state paint before navigating.
+      requestAnimationFrame(() => requestAnimationFrame(() => showStep(next)));
     }
 
     function backFromRouteStart() {
