@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "build": "node scripts/build-seo.mjs",
+    "test:data": "node scripts/validate-data.mjs",
     "test:seo": "node scripts/test-seo.mjs",
-    "dev": "node scripts/serve.mjs"
+    "dev": "node scripts/serve.mjs",
+    "enrich": "node scripts/enrich-from-google.mjs"
   }
 }

@@ -1,5 +1,11 @@
 # Escape DT — adding a location
 
+> **Roadmap / not yet built — Hastings-Sunrise area.** When the user is ready to add Hastings-Sunrise locations, build the feature and add the locations *simultaneously*. Two parts:
+> 1. **Horizontal (east-west) route map + single-area scoping** — full plan at `.cursor/plans/horizontal_route_map_+_single-area_725c1795.plan.md`. Commercial Drive's map is vertical (N-S); Hastings runs left-to-right (W-E). Single area at a time (no multi-area filtering).
+> 2. **18 geocoded draft stops** already prepared in `data/hastings-sunrise-draft.json` (via `npm run enrich`). Pending: descriptions, photos, real cross streets, and a category/cost review (East End Billiards should be `hangout`; trim long Google names). These are NOT yet in `data/stops.json`.
+>
+> Enrich tooling: `npm run enrich -- <csv> --neighborhood hastings-sunrise` (Google Places key in `.env`). `hastings-sunrise` is already a valid id in `data/neighborhoods.json`.
+
 **Source of truth:** `data/stops.json` (not inline data in `index.html`).
 
 **Photos (optional at add time):** Stops appear on the site without photos. Until files exist, **omit** `images` / `image` and set `placeholderColor` (6-char hex, no `#`). When photos are ready, save under `assets/stops/<slug>.jpg` (hero), optional `<slug>-2.jpg`, `<slug>-3.jpg`, … and reference in JSON as `"images": ["assets/stops/<slug>.jpg", ...]`. A lone `"image"` path still works (treated as a one-item gallery). Keep `slug` stable so filenames match later.
@@ -50,6 +56,8 @@ Logic lives in `js/season-theme.js` (loaded synchronously in `<head>` of `index.
 
 **Preview locally:** `http://localhost:3000/index.html?season=summer` — keys: `winter`, `thaw`, `spring`, `summer`, `autumn`, `late-fall`. Invalid values fall back to the date-based theme.
 
+**Hero mascot** on the landing page uses the same `?season=` override and half-month schedule. PNGs live in `assets/hero/` (`shy-winter`, `shy-spring`, `shy-summer`, `shy-fall`); `thaw` reuses winter, `late-fall` reuses fall until dedicated art exists. `season-theme.js` sets `data-hero-logo` on `<html>` before paint; the landing `<img id="hero-logo">` reads it via an inline script (no flash). Regenerate transparent PNGs from source art: `powershell -File scripts/process-hero-logos.ps1`.
+
 ---
 
 ## Home page areas
@@ -75,6 +83,19 @@ The landing screen in [`index.html`](index.html) is two levels:
 **Adding a new area (later):** append id to `areaOrder`, add an `areas` entry with its own `paths` array. When stops belong to multiple neighborhoods, tag stops (e.g. `neighborhood`) and filter in the app loader — not implemented yet; all stops/plans are Commercial Drive.
 
 **Stops and plans:** still in [`data/stops.json`](data/stops.json) and [`data/plans.json`](data/plans.json). New locations default to Commercial Drive (`neighborhood: "commercial"`) until multi-area filtering exists.
+
+### Neighborhood ids (data-only, UI unchanged for now)
+
+**Canonical list:** `data/neighborhoods.json`
+
+When you add stops outside Commercial Drive, set `neighborhood` to one of these ids:
+
+- `commercial`
+- `main-street`
+- `chinatown`
+- `hastings-sunrise` (Hastings-Sunrise / East Village)
+
+**Validation:** run `npm run test:data` to verify every stop’s `neighborhood` is in `data/neighborhoods.json`.
 
 ---
 

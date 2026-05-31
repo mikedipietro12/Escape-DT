@@ -1,0 +1,9 @@
+# Secrets — never commit
+.env
+.env.local
+
+# Node
+node_modules/
+
+# Enrich script working files
+data/_enriched-preview.json

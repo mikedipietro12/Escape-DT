@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="assets/favicon.png" type="image/png" sizes="64x64">
-  <title>Escape the Downtown | Commercial Drive</title>
+  <title>Explore East Van | Escape the Downtown · Seasons of East Van</title>
   <!-- build:seo-head -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0X33RPR7Q5"></script>
   <script>
@@ -13,18 +13,18 @@
     gtag('js', new Date());
     gtag('config', 'G-0X33RPR7Q5');
   </script>
-  <meta name="description" content="Curated Commercial Drive walks from Commercial–Broadway SkyTrain. Build your own route by time and vibe, or follow pre-built plans from a local guide.">
+  <meta name="description" content="Explore Commercial Drive with Seasons of East Van. Curated walks from Commercial–Broadway SkyTrain—build your own route or follow pre-built plans from a local guide.">
   <link rel="canonical" href="https://explore.seasonsofeastvan.com/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Escape the Downtown">
-  <meta property="og:title" content="Escape the Downtown | Commercial Drive">
-  <meta property="og:description" content="Curated Commercial Drive walks from Commercial–Broadway SkyTrain. Build your own route by time and vibe, or follow pre-built plans from a local guide.">
+  <meta property="og:title" content="Explore East Van | Escape the Downtown · Seasons of East Van">
+  <meta property="og:description" content="Explore Commercial Drive with Seasons of East Van. Curated walks from Commercial–Broadway SkyTrain—build your own route or follow pre-built plans from a local guide.">
   <meta property="og:url" content="https://explore.seasonsofeastvan.com/">
   <meta property="og:image" content="https://explore.seasonsofeastvan.com/assets/logo.png">
   <meta property="og:locale" content="en_CA">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Escape the Downtown | Commercial Drive">
-  <meta name="twitter:description" content="Curated Commercial Drive walks from Commercial–Broadway SkyTrain. Build your own route by time and vibe, or follow pre-built plans from a local guide.">
+  <meta name="twitter:title" content="Explore East Van | Escape the Downtown · Seasons of East Van">
+  <meta name="twitter:description" content="Explore Commercial Drive with Seasons of East Van. Curated walks from Commercial–Broadway SkyTrain—build your own route or follow pre-built plans from a local guide.">
   <meta name="twitter:image" content="https://explore.seasonsofeastvan.com/assets/logo.png">
   <script type="application/ld+json">[
   {
@@ -32,7 +32,7 @@
     "@type": "WebSite",
     "name": "Escape the Downtown",
     "url": "https://explore.seasonsofeastvan.com/",
-    "description": "Curated Commercial Drive walks from Commercial–Broadway SkyTrain. Build your own route by time and vibe, or follow pre-built plans from a local guide.",
+    "description": "Explore Commercial Drive with Seasons of East Van. Curated walks from Commercial–Broadway SkyTrain—build your own route or follow pre-built plans from a local guide.",
     "inLanguage": "en-CA",
     "publisher": {
       "@type": "Organization",
@@ -319,6 +319,7 @@
   }
 ]</script>
   <!-- /build:seo-head -->
+
 
 
 
@@ -1213,6 +1214,11 @@
       align-items: center;
       overflow: hidden;
     }
+    .route-card[role="button"] { cursor: pointer; }
+    .route-card:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 2px;
+    }
     .route-card img {
       width: 100px;
       height: 100px;
@@ -1222,6 +1228,42 @@
     .route-card .content { padding: 1rem; flex-grow: 1; }
     .route-card .meta { font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); opacity: 0.7; }
     .route-card--removable { position: relative; padding-right: 2.75rem; }
+    .route-card__details {
+      display: none;
+      padding: 0 1rem 1rem;
+      border-top: 1px solid rgba(0,0,0,0.2);
+    }
+    .route-card--expanded {
+      flex-wrap: wrap;
+      align-items: stretch;
+    }
+    .route-card--expanded img {
+      height: 100%;
+    }
+    .route-card--expanded .route-card__details {
+      display: block;
+      width: 100%;
+    }
+    .route-card__details .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.75rem 0 0.75rem;
+    }
+    .route-card__details .tag {
+      font-size: 0.65rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--ink);
+      opacity: 0.9;
+    }
+    .route-card__details .desc {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.35;
+      opacity: 0.9;
+    }
     .route-card-remove {
       position: absolute;
       top: 50%;
@@ -1862,7 +1904,8 @@
   <section id="step-LANDING" class="step active">
     <div class="hero-section">
       <div class="hero-content">
-        <img class="hero-logo" src="assets/logo.png" alt="Escape the Downtown logo" width="360" height="360">
+        <img class="hero-logo" id="hero-logo" alt="Escape the Downtown mascot" width="360" height="360" decoding="async">
+        <script>document.getElementById("hero-logo").src = document.documentElement.dataset.heroLogo;</script>
         <h1>Let&rsquo;s get you out of <span class="hero-location-wrap" aria-live="polite"><span class="hero-location" id="hero-location-word">downtown</span></span> and into &ldquo;East&nbsp;Vancouver&rdquo;<sup><a class="footnote-link" href="https://www.seasonsofeastvan.com/about" target="_blank" rel="noopener noreferrer" title="About East Vancouver">1</a></sup></h1>
         <p class="hero-subtitle">Whether you&rsquo;re here visiting for the first time, or have found yourself stuck in your regular routine, I am here to get you into some of our more eclectic east-end neighborhoods.</p>
         <p class="hero-about"><a class="hero-about-link" href="https://www.seasonsofeastvan.com/about" target="_blank" rel="noopener noreferrer">Who am I?</a></p>
@@ -4545,16 +4588,50 @@
         ? `<button type="button" class="route-card-remove" aria-label="Remove ${escapeHtml(s.name)} from route" ${canRemove ? `onclick="${options.removeHandler}('${s.id}')"` : "disabled"} title="${canRemove ? "Remove from route" : "Keep at least one stop"}">×</button>`
         : "";
       const cardClass = removable ? "route-card route-card--removable" : "route-card";
+      const tags = (s.tags || []).slice(0, 3);
+      const tagsHtml = tags.length
+        ? `<div class="tags">${tags
+            .map((t) => `<span class="tag">${escapeHtml(t)}</span>`)
+            .join("")}</div>`
+        : "";
+      const descHtml = s.description
+        ? `<p class="desc">${escapeHtml(String(s.description)).replace(/\n/g, "<br>")}</p>`
+        : "";
       return `
-        <div class="${cardClass}">
+        <div class="${cardClass}" role="button" tabindex="0" aria-expanded="false" data-stop-id="${escapeHtml(s.id)}"
+          onclick="toggleRouteCardExpanded(event)" onkeydown="routeCardKeydown(event)">
           <img src="${s.image}" alt="${escapeHtml(s.name)}">
           <div class="content">
             <h3 style="font-size: 1rem; text-transform:uppercase;">${idx + 1}. ${escapeHtml(s.name)}</h3>
             <div class="meta">${escapeHtml(s.crossStreet)}</div>
           </div>
+          <div class="route-card__details" aria-hidden="true">
+            ${tagsHtml}
+            ${descHtml}
+          </div>
           ${removeBtn}
         </div>
       `;
+    }
+
+    function routeCardKeydown(e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleRouteCardExpanded(e);
+      }
+    }
+
+    function toggleRouteCardExpanded(e) {
+      const target = e && e.target ? e.target : null;
+      if (target && target.closest && target.closest(".route-card-remove")) return;
+      const card = e && e.currentTarget ? e.currentTarget : null;
+      if (!card) return;
+
+      const isExpanded = card.classList.toggle("route-card--expanded");
+      card.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+
+      const details = card.querySelector(".route-card__details");
+      if (details) details.setAttribute("aria-hidden", isExpanded ? "false" : "true");
     }
 
     function renderNarrativeCardHtml(s, idx, options = {}) {

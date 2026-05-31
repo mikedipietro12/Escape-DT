@@ -1,0 +1,746 @@
+{
+  "_note": "DRAFT, not loaded by the app. 18 Hastings-Sunrise stops geocoded via npm run enrich. Pending: descriptions, photos, real cross streets, category/cost review (see _review per stop). See .cursor/plans horizontal_route_map plan and AGENTS.md roadmap.",
+  "stops": [
+    {
+      "id": "s46",
+      "slug": "yama-cafe",
+      "name": "Yama Cafe",
+      "categories": [
+        "coffee",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 258
+      },
+      "lat": 49.2814297,
+      "lng": -123.0633912,
+      "googlePlaceId": "ChIJAQDwKRhxhlQRR3vEBGao7Zw",
+      "placeholderColor": "4b8c57",
+      "_googleTypes": [
+        "cafe",
+        "point_of_interest",
+        "food",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s47",
+      "slug": "pallet-coffee-roasters-semlin-drive",
+      "name": "Pallet Coffee Roasters - Semlin Drive",
+      "categories": [
+        "coffee",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "Semlin Dr",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 256
+      },
+      "lat": 49.281730599999996,
+      "lng": -123.063905,
+      "googlePlaceId": "ChIJC8i4KhhxhlQR0dgyJ_6v3kg",
+      "placeholderColor": "fc7d18",
+      "_googleTypes": [
+        "cafe",
+        "point_of_interest",
+        "food",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s48",
+      "slug": "niwa-restaurant",
+      "name": "Niwa Restaurant",
+      "categories": [
+        "drinks",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "Powell St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 237
+      },
+      "lat": 49.28484590000001,
+      "lng": -123.0661357,
+      "googlePlaceId": "ChIJzeZiaABxhlQRdz6rzPbZNos",
+      "placeholderColor": "7dab77",
+      "_googleTypes": [
+        "restaurant",
+        "wine_bar",
+        "bar",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s49",
+      "slug": "parallel-49-brewing-company",
+      "name": "Parallel 49 Brewing Company",
+      "categories": [
+        "drinks",
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "Triumph St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 243
+      },
+      "lat": 49.283786400000004,
+      "lng": -123.06441099999999,
+      "googlePlaceId": "ChIJ4S1x8xlxhlQRE8HG0PL5H8Y",
+      "placeholderColor": "8813db",
+      "_googleTypes": [
+        "brewery",
+        "liquor_store",
+        "bar",
+        "manufacturer",
+        "service",
+        "restaurant",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s50",
+      "slug": "pandora-park",
+      "name": "Pandora Park",
+      "categories": [
+        "hangout"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Franklin St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 251
+      },
+      "lat": 49.28254,
+      "lng": -123.0581806,
+      "googlePlaceId": "ChIJEWq_7hhxhlQR_k-jUi4iX1I",
+      "placeholderColor": "dcbbe3",
+      "_googleTypes": [
+        "park",
+        "tourist_attraction",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s51",
+      "slug": "east-end-billiards",
+      "name": "East End Billiards",
+      "categories": [
+        "coffee",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 259
+      },
+      "lat": 49.281293299999994,
+      "lng": -123.05764099999999,
+      "googlePlaceId": "ChIJdQLQhhhxhlQRagNnCnRjLho",
+      "placeholderColor": "fd3420",
+      "_googleTypes": [
+        "sports_club",
+        "event_venue",
+        "cafe",
+        "sports_complex",
+        "sports_activity_location",
+        "association_or_organization",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s52",
+      "slug": "east-cafe",
+      "name": "East Café",
+      "categories": [
+        "coffee",
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 259
+      },
+      "lat": 49.281295500000006,
+      "lng": -123.05628790000002,
+      "googlePlaceId": "ChIJd874dSJxhlQRMOcBQRCYaCA",
+      "placeholderColor": "d62c29",
+      "_googleTypes": [
+        "cafe",
+        "coffee_shop",
+        "live_music_venue",
+        "event_venue",
+        "food_store",
+        "store",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s53",
+      "slug": "blind-rabbit",
+      "name": "Blind Rabbit",
+      "categories": [
+        "drinks",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 258
+      },
+      "lat": 49.2813448,
+      "lng": -123.05371819999999,
+      "googlePlaceId": "ChIJQ4SE6_dxhlQRqZ332oYOf4A",
+      "placeholderColor": "3bf595",
+      "_googleTypes": [
+        "bar",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s54",
+      "slug": "tamam-fine-palestinian-cuisine",
+      "name": "Tamam: Fine Palestinian Cuisine",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 260
+      },
+      "lat": 49.281009999999995,
+      "lng": -123.05155080000002,
+      "googlePlaceId": "ChIJV3TKkyFxhlQROWKHEU39DoM",
+      "placeholderColor": "105ac7",
+      "_googleTypes": [
+        "mediterranean_restaurant",
+        "middle_eastern_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s55",
+      "slug": "tacofino-commissary",
+      "name": "Tacofino Commissary",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 259
+      },
+      "lat": 49.2813051,
+      "lng": -123.05748249999999,
+      "googlePlaceId": "ChIJJTyDgxhxhlQRU6AygkdONkc",
+      "placeholderColor": "844d1a",
+      "_googleTypes": [
+        "taco_restaurant",
+        "mexican_restaurant",
+        "restaurant",
+        "point_of_interest",
+        "food",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s56",
+      "slug": "tall-shadow-bakery",
+      "name": "Tall Shadow Bakery",
+      "categories": [
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 261
+      },
+      "lat": 49.280943199999996,
+      "lng": -123.0552077,
+      "googlePlaceId": "ChIJLcL_xM9xhlQRgXXXZuvMFoA",
+      "placeholderColor": "6525c7",
+      "_googleTypes": [
+        "bakery",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s57",
+      "slug": "it-s-okay",
+      "name": "It's Okay",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 259
+      },
+      "lat": 49.2812846,
+      "lng": -123.05506439999999,
+      "googlePlaceId": "ChIJt75l9qBxhlQRjxZr01jMiMo",
+      "placeholderColor": "9d945e",
+      "_googleTypes": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s58",
+      "slug": "pantitlan",
+      "name": "Pantitlán",
+      "categories": [
+        "drinks",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 259
+      },
+      "lat": 49.2813173,
+      "lng": -123.05554389999999,
+      "googlePlaceId": "ChIJj70casJxhlQRT5WNycxFxYg",
+      "placeholderColor": "e6eb13",
+      "_googleTypes": [
+        "mexican_restaurant",
+        "cocktail_bar",
+        "taco_restaurant",
+        "bar",
+        "restaurant",
+        "point_of_interest",
+        "food",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s59",
+      "slug": "dachi-restaurant-and-natural-wine",
+      "name": "Dachi Restaurant and Natural Wine",
+      "categories": [
+        "drinks",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 258
+      },
+      "lat": 49.281388,
+      "lng": -123.0580444,
+      "googlePlaceId": "ChIJnXAbDwVxhlQRf21Mes_WxwE",
+      "placeholderColor": "284206",
+      "_googleTypes": [
+        "restaurant",
+        "wine_bar",
+        "cocktail_bar",
+        "bar",
+        "point_of_interest",
+        "food",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s60",
+      "slug": "doe-coffee-roasters",
+      "name": "Doe Coffee Roasters",
+      "categories": [
+        "coffee",
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 259
+      },
+      "lat": 49.281290999999996,
+      "lng": -123.0587182,
+      "googlePlaceId": "ChIJYwDNec5xhlQRVkHjirxG3jM",
+      "placeholderColor": "949444",
+      "_googleTypes": [
+        "cafe",
+        "pastry_shop",
+        "dessert_shop",
+        "confectionery",
+        "bakery",
+        "point_of_interest",
+        "food_store",
+        "food",
+        "store",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s61",
+      "slug": "jackalopes-neighbourhood-dive",
+      "name": "Jackalopes Neighbourhood Dive",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 259
+      },
+      "lat": 49.281287,
+      "lng": -123.05899419999999,
+      "googlePlaceId": "ChIJiRiHZBhxhlQRsXp6_kd3JnY",
+      "placeholderColor": "1667c3",
+      "_googleTypes": [
+        "restaurant",
+        "point_of_interest",
+        "food",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s62",
+      "slug": "obanhmi",
+      "name": "Obanhmi",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 260
+      },
+      "lat": 49.281013200000004,
+      "lng": -123.05911639999998,
+      "googlePlaceId": "ChIJoQrJiwtxhlQRdLwynLperNw",
+      "placeholderColor": "69d3b7",
+      "_googleTypes": [
+        "vietnamese_restaurant",
+        "restaurant",
+        "point_of_interest",
+        "food",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    },
+    {
+      "id": "s63",
+      "slug": "plain-jane-ice-cream",
+      "name": "Plain Jane Ice Cream",
+      "categories": [
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "hastings-sunrise",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "E Hastings St",
+      "walkFromStation": 0,
+      "coords": {
+        "y": 258
+      },
+      "lat": 49.2813543,
+      "lng": -123.0581509,
+      "googlePlaceId": "ChIJz1LEc_hxhlQRErUyFrDYXcQ",
+      "placeholderColor": "ec1e82",
+      "_googleTypes": [
+        "ice_cream_shop",
+        "dessert_shop",
+        "confectionery",
+        "food_store",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ]
+    }
+  ]
+}

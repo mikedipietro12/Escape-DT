@@ -24,6 +24,16 @@
     "late-fall": { top: FADE.red, bottom: FADE.blue },
   };
 
+  /** Hero mascot PNGs (transparent); reuse closest art when no dedicated asset. */
+  const HERO_LOGO = {
+    winter: "assets/hero/shy-winter.png",
+    thaw: "assets/hero/shy-winter.png",
+    spring: "assets/hero/shy-spring.png",
+    summer: "assets/hero/shy-summer.png",
+    autumn: "assets/hero/shy-fall.png",
+    "late-fall": "assets/hero/shy-fall.png",
+  };
+
   /** 0 = days 1–15, 1 = days 16–end */
   function halfMonthIndex(date) {
     return date.getMonth() * 2 + (date.getDate() >= 16 ? 1 : 0);
@@ -52,6 +62,7 @@
   const root = document.documentElement;
 
   root.dataset.season = key;
+  root.dataset.heroLogo = HERO_LOGO[key];
   root.style.setProperty("--fade-top", theme.top);
   root.style.setProperty("--fade-bottom", theme.bottom);
 })();
