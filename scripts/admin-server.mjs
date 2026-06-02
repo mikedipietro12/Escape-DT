@@ -15,7 +15,6 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const port = Number(process.argv[2]) || 3001;
-const host = "127.0.0.1";
 
 const STOPS = {
   source: "stops",
@@ -293,18 +292,30 @@ function readRawBody(req, limit = MAX_UPLOAD_BYTES) {
   return new Promise((resolve, reject) => {
     const chunks = [];
     let size = 0;
+    let settled = false;
+    const finish = (fn, value) => {
+      if (settled) return;
+      settled = true;
+      fn(value);
+    };
     req.on("data", (chunk) => {
       size += chunk.length;
       if (size > limit) {
-        reject(new Error("File too large (max 25 MB)"));
+        finish(reject, new Error(`File too large (max ${limit / (1024 * 1024)} MB)`));
         req.destroy();
         return;
       }
       chunks.push(chunk);
     });
-    req.on("end", () => resolve(Buffer.concat(chunks)));
-    req.on("error", reject);
+    req.on("end", () => finish(resolve, Buffer.concat(chunks)));
+    req.on("error", (err) => finish(reject, err));
+    req.on("aborted", () => finish(reject, new Error("Upload cancelled")));
   });
+}
+
+function isPathInsideDir(filePath, dirPath) {
+  const rel = path.relative(dirPath, filePath);
+  return rel !== "" && !rel.startsWith("..") && !path.isAbsolute(rel);
 }
 
 function handleListImages(res, query) {
@@ -344,7 +355,7 @@ async function handleUpload(req, res, query) {
   const index = nextImageIndex(slug);
   const filename = imageFilename(slug, index, ext);
   const dest = path.join(dir, filename);
-  if (!path.normalize(dest).startsWith(path.normalize(dir) + path.sep)) {
+  if (!isPathInsideDir(path.normalize(dest), path.normalize(dir))) {
     return sendJson(res, 400, { error: "Resolved path escapes the stops folder" });
   }
 
@@ -383,7 +394,7 @@ function serveStatic(req, res, urlPath) {
 }
 
 const server = http.createServer(async (req, res) => {
-  const parsedUrl = new URL(req.url || "/", `http://${host}:${port}`);
+  const parsedUrl = new URL(req.url || "/", `http://127.0.0.1:${port}`);
   const urlPath = parsedUrl.pathname;
   const query = parsedUrl.searchParams;
 
@@ -426,7 +437,12 @@ const server = http.createServer(async (req, res) => {
   serveStatic(req, res, urlPath);
 });
 
-server.listen(port, host, () => {
+server.on("clientError", (err, socket) => {
+  console.error("client error:", err.message);
+  if (!socket.destroyed) socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
+});
+
+server.listen(port, () => {
   console.log(`Escape DT stop editor: http://localhost:${port}/`);
   const draftList = DRAFTS.map((d) => `${d.rel} (${d.neighborhood} draft)`).join(" + ");
   console.log(`Editing: ${STOPS.rel} (live) + ${draftList}`);

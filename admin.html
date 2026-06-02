@@ -377,7 +377,7 @@
             <div class="upload-zone" id="upload-zone">
               <input type="file" id="image-file" accept="image/*" multiple hidden>
               <button type="button" id="upload-btn">Upload photos…</button>
-              <span class="hint" id="upload-hint">Drag &amp; drop or pick files — saved to assets/stops/ as &lt;slug&gt;.jpg, &lt;slug&gt;-2.jpg…</span>
+              <span class="hint" id="upload-hint">JPG, PNG, WebP, GIF, or AVIF — saved to assets/stops/ as &lt;slug&gt;.jpg, &lt;slug&gt;-2.jpg… (HEIC/iPhone RAW not supported; export as JPG first)</span>
             </div>
             <div class="thumbs" id="image-thumbs"></div>
           </div>
@@ -808,6 +808,30 @@
       });
     }
 
+    const UPLOAD_MAX_MB = 25;
+    const UPLOAD_MAX_BYTES = UPLOAD_MAX_MB * 1024 * 1024;
+
+    function uploadErrorMessage(err) {
+      const msg = String(err && err.message ? err.message : err);
+      if (msg === "Failed to fetch" || err instanceof TypeError) {
+        return "Upload couldn't reach the editor server. Run npm run admin and open http://localhost:3001/ (not port 3000 or a file:// tab).";
+      }
+      return msg;
+    }
+
+    async function parseUploadResponse(res) {
+      const text = await res.text();
+      try {
+        return { data: JSON.parse(text), text };
+      } catch {
+        throw new Error(
+          res.ok
+            ? "Server returned an invalid response"
+            : `Upload failed (${res.status}): ${text.slice(0, 120) || "no details"}`
+        );
+      }
+    }
+
     async function uploadImages(fileList) {
       const files = [...(fileList || [])].filter((f) => f && (f.type.startsWith("image/") || /\.(jpe?g|png|webp|gif|avif)$/i.test(f.name)));
       if (!files.length) { toast("No image files selected", true); return; }
@@ -823,21 +847,38 @@
       btn.disabled = true;
       const before = btn.textContent;
       const added = [];
+      const skipped = [];
       try {
         // Sequential so the server assigns non-colliding indexes.
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
+          if (/\.(heic|heif)$/i.test(file.name) || /heic|heif/i.test(file.type)) {
+            skipped.push(`${file.name}: HEIC/HEIF not supported — export as JPG or PNG first`);
+            continue;
+          }
+          if (file.size > UPLOAD_MAX_BYTES) {
+            skipped.push(`${file.name}: over ${UPLOAD_MAX_MB} MB`);
+            continue;
+          }
+          if (!file.size) {
+            skipped.push(`${file.name}: empty file (cloud placeholder? Open it locally first)`);
+            continue;
+          }
           btn.textContent = `Uploading ${i + 1}/${files.length}…`;
+          const ext = (file.name.match(/\.([^.]+)$/) || [])[1] || "";
           const qs = new URLSearchParams({ slug, filename: file.name });
+          if (ext) qs.set("ext", ext);
+          // Let the browser set Content-Type from the File (don't override manually).
           const res = await fetch(`/api/upload?${qs.toString()}`, {
             method: "POST",
-            headers: { "Content-Type": file.type || "application/octet-stream" },
             body: file,
           });
-          const data = await res.json();
+          const { data } = await parseUploadResponse(res);
           if (!res.ok) throw new Error(data.error || "Upload failed");
           added.push(data.path);
         }
+        if (skipped.length) toast(skipped.join("; "), true);
+        if (!added.length) return;
         const cur = imagePaths();
         for (const p of added) if (!cur.includes(p)) cur.push(p);
         setImagePaths(cur);
@@ -846,7 +887,7 @@
         renderThumbs();
         toast(`Uploaded ${added.length} photo${added.length > 1 ? "s" : ""} — remember to Save`);
       } catch (err) {
-        toast(err.message, true);
+        toast(uploadErrorMessage(err), true);
       } finally {
         btn.disabled = false;
         btn.textContent = before;

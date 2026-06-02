@@ -982,7 +982,7 @@
             ]
         },
         {
-            "crossStreet": "E 4th",
+            "crossStreet": "Commercial & E 4th",
             "id": "s27",
             "lat": 49.2668884,
             "cost": {
@@ -1009,6 +1009,10 @@
             "neighborhood": "commercial",
             "categories": [
                 "shopping"
+            ],
+            "images": [
+                "assets/stops/audiopile.jpg",
+                "assets/stops/audiopile-2.jpg"
             ]
         },
         {
@@ -1134,6 +1138,10 @@
             "neighborhood": "commercial",
             "categories": [
                 "hangout"
+            ],
+            "images": [
+                "assets/stops/book-section.jpg",
+                "assets/stops/book-section-2.jpg"
             ]
         },
         {
@@ -1203,7 +1211,7 @@
             "crossStreet": "Charles",
             "id": "s34",
             "lat": 49.2734896,
-            "cost": "free",
+            "cost": "",
             "tags": [
                 "playground",
                 "park",
@@ -1226,6 +1234,11 @@
             "neighborhood": "commercial",
             "categories": [
                 "hangout"
+            ],
+            "images": [
+                "assets/stops/grandview-park.jpg",
+                "assets/stops/grandview-park-2.jpg",
+                "assets/stops/grandview-park-3.jpg"
             ]
         },
         {
@@ -1468,13 +1481,16 @@
             "neighborhood": "commercial",
             "categories": [
                 "food"
+            ],
+            "images": [
+                "assets/stops/earnest.jpg"
             ]
         },
         {
             "crossStreet": "Woodland & Adanac",
             "id": "s42",
             "lat": 49.277689,
-            "cost": "free",
+            "cost": "",
             "tags": [
                 "playground",
                 "park",
@@ -1499,6 +1515,10 @@
             "neighborhood": "commercial",
             "categories": [
                 "hangout"
+            ],
+            "images": [
+                "assets/stops/woodland-park.jpg",
+                "assets/stops/woodland-park-2.jpg"
             ]
         },
         {
@@ -1632,6 +1652,36 @@
             "lat": 49.272939,
             "lng": -123.069784,
             "goto": "Shot of espresso in the morning, cold brew Manhattan at night."
+        },
+        {
+            "id": "s65",
+            "slug": "hackspace-mini-cinema",
+            "name": "Hackspace Vancouver (Mini Cinema)",
+            "neighborhood": "commercial",
+            "categories": [
+                "hangout"
+            ],
+            "tags": [
+                "activities",
+                "art gallery"
+            ],
+            "cost": "",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "A mini free cinema on the west wall at Vancouver Hack Space, push the button for curated short films, open 24/7. Find the fourth window from the alley along Woodland.",
+            "crossStreet": "Woodland & Venables",
+            "walkFromStation": 28,
+            "coords": {
+                "y": 228,
+                "x": 125
+            },
+            "lat": 49.276939,
+            "lng": -123.072586,
+            "placeholderColor": "2a6f97",
+            "images": [
+                "assets/stops/hackspace-mini-cinema.jpg"
+            ]
         }
     ]
 }
