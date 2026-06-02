@@ -3,11 +3,17 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 /*
- * Enrich new stops from a Google Maps saved-list CSV (Google Takeout).
+ * Enrich new stops from a list of place names (one per line) or a Google Maps
+ * saved-list CSV (Google Takeout). A plain .txt/.md list is the easy path:
+ * just the business names, and Google Places fills in the rest.
  *
  * Usage:
- *   node scripts/enrich-from-google.mjs <path-to-csv>           # dry run -> data/_enriched-preview.json
- *   node scripts/enrich-from-google.mjs <path-to-csv> --write   # append enriched stops to data/stops.json
+ *   node scripts/enrich-from-google.mjs <path-to-list>           # dry run -> data/_enriched-preview.json
+ *   node scripts/enrich-from-google.mjs <path-to-list> --write   # append enriched stops to the target file
+ *
+ *   <path-to-list> is either a .csv (with a Title/Name column) or a plain text
+ *   file with one place name per line (blank lines and lines starting with # are
+ *   ignored; leading list markers like "-", "*", "1." are stripped).
  *
  * Needs GOOGLE_MAPS_API_KEY in .env (Places API enabled, billing on).
  *
@@ -19,6 +25,15 @@ import { fileURLToPath } from "url";
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const stopsPath = path.join(root, "data", "stops.json");
 const previewPath = path.join(root, "data", "_enriched-preview.json");
+
+// Neighborhoods that are not yet live get staged in their own draft file (kept
+// out of data/stops.json, which the app loads wholesale). Enriching one of
+// these writes to its draft file instead of the live stops file.
+const DRAFT_FILES = {
+  "hastings-sunrise": { rel: path.join("data", "hastings-sunrise-draft.json"), indent: 2 },
+  "mount-pleasant": { rel: path.join("data", "mount-pleasant-draft.json"), indent: 2 },
+  chinatown: { rel: path.join("data", "chinatown-draft.json"), indent: 2 },
+};
 
 function loadEnv() {
   const envPath = path.join(root, ".env");
@@ -50,6 +65,30 @@ function parseCsv(text) {
   }
   if (field.length || cur.length) { cur.push(field); rows.push(cur); }
   return rows.filter((r) => r.some((c) => c.trim() !== ""));
+}
+
+// Plain list of place names: one per line. Ignores blank lines and # comments,
+// strips leading list markers ("- ", "* ", "1. ", "1) "). Returns { title } rows.
+function parseNameList(text) {
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim())
+    .filter((line) => line && !line.startsWith("#"))
+    .map((title) => ({ title, url: "" }));
+}
+
+// CSV path: pull the Title/Name and (optional) URL columns into { title, url }.
+function parseCsvEntries(text) {
+  const rows = parseCsv(text);
+  const header = rows.shift().map((h) => h.trim().toLowerCase());
+  const titleIdx = header.findIndex((h) => h === "title" || h.includes("name"));
+  const urlIdx = header.findIndex((h) => h === "url" || h.includes("link"));
+  if (titleIdx === -1) {
+    throw new Error(`Could not find a "Title" column in the CSV header: ${header.join(", ")}`);
+  }
+  return rows
+    .map((row) => ({ title: (row[titleIdx] || "").trim(), url: urlIdx >= 0 ? (row[urlIdx] || "").trim() : "" }))
+    .filter((e) => e.title);
 }
 
 function slugify(name) {
@@ -129,7 +168,7 @@ function crossStreetFrom(components = [], formatted = "") {
 // Geocoding bias center per neighborhood (helps disambiguate same-named places).
 const NEIGHBORHOOD_BIAS = {
   commercial: { latitude: 49.2634, longitude: -123.0694, radius: 3000 },
-  "main-street": { latitude: 49.2487, longitude: -123.1009, radius: 3500 },
+  "mount-pleasant": { latitude: 49.2647, longitude: -123.1009, radius: 2500 },
   chinatown: { latitude: 49.2796, longitude: -123.0992, radius: 2500 },
   "hastings-sunrise": { latitude: 49.281, longitude: -123.048, radius: 4500 },
 };
@@ -163,11 +202,12 @@ async function main() {
   const write = args.includes("--write");
   const nIdx = args.indexOf("--neighborhood");
   const neighborhood = nIdx >= 0 ? args[nIdx + 1] : "commercial";
-  const csvArg = args.find((a, i) => !a.startsWith("--") && args[i - 1] !== "--neighborhood");
+  const inputArg = args.find((a, i) => !a.startsWith("--") && args[i - 1] !== "--neighborhood");
   const key = process.env.GOOGLE_MAPS_API_KEY;
 
-  if (!csvArg) {
-    console.error("Usage: node scripts/enrich-from-google.mjs <path-to-csv> [--neighborhood <id>] [--write]");
+  if (!inputArg) {
+    console.error("Usage: node scripts/enrich-from-google.mjs <path-to-list> [--neighborhood <id>] [--write]");
+    console.error("  <path-to-list> is a .csv (Title/Name column) or a plain text file with one place name per line.");
     process.exit(1);
   }
 
@@ -182,27 +222,53 @@ async function main() {
     process.exit(1);
   }
 
-  const csvPath = path.isAbsolute(csvArg) ? csvArg : path.join(process.cwd(), csvArg);
-  if (!fs.existsSync(csvPath)) {
-    console.error("CSV not found:", csvPath);
+  const inputPath = path.isAbsolute(inputArg) ? inputArg : path.join(process.cwd(), inputArg);
+  if (!fs.existsSync(inputPath)) {
+    console.error("Input file not found:", inputPath);
     process.exit(1);
   }
 
-  const rows = parseCsv(fs.readFileSync(csvPath, "utf8"));
-  const header = rows.shift().map((h) => h.trim().toLowerCase());
-  const titleIdx = header.findIndex((h) => h === "title" || h.includes("name"));
-  const urlIdx = header.findIndex((h) => h === "url" || h.includes("link"));
-  if (titleIdx === -1) {
-    console.error('Could not find a "Title" column in the CSV header:', header.join(", "));
+  const inputText = fs.readFileSync(inputPath, "utf8");
+  const isCsv = path.extname(inputPath).toLowerCase() === ".csv";
+  let entries;
+  try {
+    entries = isCsv ? parseCsvEntries(inputText) : parseNameList(inputText);
+  } catch (err) {
+    console.error(err.message);
     process.exit(1);
   }
+  if (!entries.length) {
+    console.error("No place names found in", inputPath);
+    process.exit(1);
+  }
+
+  // Decide where enriched stops will be written: a draft file for not-yet-live
+  // neighborhoods, otherwise the live stops file.
+  const draftDef = DRAFT_FILES[neighborhood];
+  const targetPath = draftDef ? path.join(root, draftDef.rel) : stopsPath;
+  const targetIndent = draftDef ? draftDef.indent : 4;
 
   const data = JSON.parse(fs.readFileSync(stopsPath, "utf8"));
   const stops = data.stops;
-  const usedColors = new Set(stops.map((s) => s.placeholderColor).filter(Boolean));
-  const usedSlugs = new Set(stops.map((s) => s.slug));
+
+  // Gather every existing stop across the live file and all draft files so ids,
+  // slugs, and placeholder colours stay unique no matter which file we write to.
+  const allStops = [...stops];
+  for (const def of Object.values(DRAFT_FILES)) {
+    const abs = path.join(root, def.rel);
+    if (!fs.existsSync(abs)) continue;
+    try {
+      const parsed = JSON.parse(fs.readFileSync(abs, "utf8"));
+      if (Array.isArray(parsed.stops)) allStops.push(...parsed.stops);
+    } catch (err) {
+      console.warn(`Could not read ${def.rel}: ${err.message}`);
+    }
+  }
+
+  const usedColors = new Set(allStops.map((s) => s.placeholderColor).filter(Boolean));
+  const usedSlugs = new Set(allStops.map((s) => s.slug));
   const latToY = buildLatToYFit(stops);
-  let maxId = stops.reduce((m, s) => {
+  let maxId = allStops.reduce((m, s) => {
     const n = parseInt(String(s.id).replace(/^s/, ""), 10);
     return Number.isFinite(n) ? Math.max(m, n) : m;
   }, 0);
@@ -210,9 +276,9 @@ async function main() {
   const enriched = [];
   const failures = [];
 
-  for (const row of rows) {
-    const title = (row[titleIdx] || "").trim();
-    const url = urlIdx >= 0 ? (row[urlIdx] || "").trim() : "";
+  for (const entry of entries) {
+    const title = entry.title;
+    const url = entry.url || "";
     if (!title) continue;
     try {
       const d = await searchPlace(`${title} Vancouver`, key, bias);
@@ -266,15 +332,24 @@ async function main() {
   }
 
   if (write) {
+    // Drafts keep _review/_googleTypes so the admin editor can flag what's left
+    // to fill in; the live stops file stays clean.
+    const targetObj = targetPath === stopsPath
+      ? data
+      : JSON.parse(fs.readFileSync(targetPath, "utf8"));
+    if (!Array.isArray(targetObj.stops)) targetObj.stops = [];
     for (const e of enriched) {
-      const clean = { ...e };
-      delete clean._review;
-      delete clean._sourceUrl;
-      delete clean._googleTypes;
-      stops.push(clean);
+      const stop = { ...e };
+      delete stop._sourceUrl;
+      if (!draftDef) {
+        delete stop._review;
+        delete stop._googleTypes;
+      }
+      targetObj.stops.push(stop);
     }
-    fs.writeFileSync(stopsPath, JSON.stringify(data, null, 4) + "\n");
-    console.log(`\nWrote ${enriched.length} stops into data/stops.json. Fill in the blank descriptions, then review guessed fields.`);
+    fs.writeFileSync(targetPath, JSON.stringify(targetObj, null, targetIndent) + "\n");
+    const relTarget = path.relative(root, targetPath).replace(/\\/g, "/");
+    console.log(`\nWrote ${enriched.length} stops into ${relTarget}. Fill in the blank descriptions, then review guessed fields (npm run admin).`);
   } else {
     fs.writeFileSync(previewPath, JSON.stringify({ enriched, failures }, null, 2) + "\n");
     console.log(`\nDry run. ${enriched.length} enriched, ${failures.length} failed.`);

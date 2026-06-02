@@ -90,10 +90,12 @@ The landing screen in [`index.html`](index.html) is two levels:
 
 When you add stops outside Commercial Drive, set `neighborhood` to one of these ids:
 
-- `commercial`
-- `main-street`
-- `chinatown`
-- `hastings-sunrise` (Hastings-Sunrise / East Village)
+- `commercial` (live)
+- `hastings-sunrise` (Hastings-Sunrise / East Village — draft)
+- `mount-pleasant` (Mount Pleasant — draft)
+- `chinatown` (Chinatown — draft)
+
+Draft neighborhoods are staged in their own `data/<id>-draft.json` file (not loaded by the live app). Enrich them straight from a list of place names: `npm run enrich -- <list.txt> --neighborhood <id> --write`.
 
 **Validation:** run `npm run test:data` to verify every stop’s `neighborhood` is in `data/neighborhoods.json`.
 
@@ -137,6 +139,7 @@ Collect or infer each field below. Copy `data/stop-template.json` for structure.
 | `cost` | User | Single: `"$"`, `"$$"`, or `"$$$"`. Range: `{ "min": "$", "max": "$$$" }` or `["$", "$$$"]` (editorial, not Google) |
 | `timeOfDay` | User | `morning`, `afternoon`, `evening`, and/or `allday` |
 | `description` | User | Their voice — required |
+| `goto` | User | **Optional.** What you usually order/grab here. Rendered as a **My go-to:** line under the description (app cards + static spot pages). Bulk-fill existing stops with `npm run gotos`. |
 | `crossStreet` | User or Google | Map label on the illustrated route and cards. For **Victoria** (east of Commercial), include the word **Victoria** (e.g. `Victoria & Grant`) so the route map places the stop east of the spine — see **Victoria (off-Commercial)** below |
 | `images` | User (later) | **Optional at insert.** Add when photo files exist under `assets/stops/`. First path is the hero thumbnail. Legacy single `image` still supported. |
 | `lat`, `lng` | Google Maps link / Places API | From share URL or place search |
@@ -316,6 +319,50 @@ Optional: stay near station / less walking / etc.
 1. Save files as `assets/stops/<slug>.jpg` (and `-2`, `-3` if needed).
 2. Add to that stop in `data/stops.json`: `"images": ["assets/stops/<slug>.jpg", ...]`.
 3. `placeholderColor` can stay (fallback if a path breaks).
+
+---
+
+## Stop editor (local "back end" page)
+
+A friendly browser editor for stop data, instead of hand-editing JSON or running the CLI. **Local only — never deploy it** (it writes to disk).
+
+```bash
+npm run admin
+```
+
+Then open the printed `http://localhost:3001/`. It runs on its own port (3001) so it can coexist with `npm run dev` (3000).
+
+**What it edits:**
+
+- Loads `data/stops.json` (live) **plus every draft file** (`data/hastings-sunrise-draft.json`, `data/mount-pleasant-draft.json`, `data/chinatown-draft.json`) into one searchable list. Each stop is tagged `live` or `draft`.
+- Saves each stop back to **its own file**, routed by `neighborhood`: `hastings-sunrise` → Hastings draft, `mount-pleasant` → Mount Pleasant draft, `chinatown` → Chinatown draft; everything else → `stops.json`. (Changing a stop's neighborhood moves it between files automatically.) This keeps not-yet-live neighborhoods out of the app until the horizontal route-map / multi-area feature ships.
+- **Adding another draft neighborhood later:** create `data/<id>-draft.json` (`{ "_note": "…", "stops": [] }`) and add an entry to the `DRAFTS` array in `scripts/admin-server.mjs` (and `DRAFT_FILES` in `scripts/enrich-from-google.mjs`).
+- File formatting is preserved (`stops.json` 4-space, draft 2-space) and per-stop meta (`_review`, `_googleTypes`) plus top-level keys (`station`, `version`, `_note`) are kept intact.
+
+**Features:** search + neighborhood filter + a **Needs info** filter (flags empty description/tags, `walkFromStation` 0, or remaining `_review` items) so the 18 Hastings drafts are easy to work through; a full form for every editorial field (name, slug, categories, tags, cost single/range, time of day, description, `goto`, cross street, walk minutes, `coords`, lat/lng, placeholder color, image paths); a live card preview; and an **+ Add stop** button that assigns the next `sN` id.
+
+**Guided "Fill info" wizard:** a per-stop **Fill** button (and a header **Fill info** button that runs through the whole filtered list) opens a step-by-step modal that shows **only the fields still missing** for that stop — one at a time, in the order tags, cost, time of day, categories, cross street, walk, description, go-to, images. A field counts as "missing" if it is empty **or** still listed in the stop's `_review` array; saving removes reviewed items from `_review`. You can **Save** at any step, **Skip** a field, or **Back** up. Finishing a stop saves it and automatically advances to the next stop that still needs info, so you can rip through the whole Hastings backlog in one pass.
+
+**Photos:** the `images` field takes comma-separated paths, **and** the editor now has an uploader. Drag & drop (or pick) one or more image files in the **Upload photos…** zone under the Images field: each file is written to `assets/stops/` named after the stop's `slug` (`<slug>.jpg` hero, then `<slug>-2.jpg`, `<slug>-3.jpg`, … filling the next free slot), and the saved paths are appended to the `images` field. The uploader needs a `slug` (it derives one from the name if empty). Thumbnails show the current gallery; the **×** removes a path from the list (it does **not** delete the file on disk). Uploading writes the file immediately, but you still need to **Save** the stop to persist `images` into the JSON. You can also still drop files under `assets/stops/` by hand (see below).
+
+After editing, run `npm run build` if you want the static `/spots/<slug>/` pages refreshed. The `npm run gotos` CLI still exists but the editor supersedes it.
+
+---
+
+## "My go-to:" notes (what you usually order)
+
+Each stop can carry an optional **`goto`** string in `data/stops.json` — the thing you usually order or grab there. It renders as a bold **My go-to:** line under the description on the build-route tiles, expandable route cards, See-All-Spots detail, and static `/spots/<slug>/` pages. Leave it off to hide the line.
+
+**Bulk-fill across every stop (interactive):**
+
+```bash
+npm run gotos            # walk through all stops
+npm run gotos -- --missing   # only stops without a goto yet
+```
+
+Per stop: **Enter** keeps/skips, type text to set, `-` clears, `q` saves & quits. Progress saves to `data/stops.json` after each entry (`goto` is placed right after `description`).
+
+After filling them in, run `npm run build` to refresh the static spot pages.
 
 ---
 

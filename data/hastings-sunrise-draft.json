@@ -9,16 +9,19 @@
         "coffee",
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "baked goods",
+        "books"
+      ],
       "neighborhood": "hastings-sunrise",
-      "cost": "$$",
+      "cost": "$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
-      "walkFromStation": 0,
+      "description": "Cute little cafe on Hastings to get a quick snack and a coffee before heading down to see what else this neighborhood has in store.",
+      "crossStreet": "E Hastings St & Semlin",
+      "walkFromStation": 40,
       "coords": {
         "y": 258
       },
@@ -31,14 +34,6 @@
         "point_of_interest",
         "food",
         "establishment"
-      ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
       ]
     },
     {
@@ -500,15 +495,20 @@
         "drinks",
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "tacos",
+        "mexican",
+        "cocktails",
+        "bar"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
       "timeOfDay": [
         "evening"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
-      "walkFromStation": 0,
+      "description": "The newest, most popular taco spot in the city. If you don't mind waiting, this former hidden gem, tucked away behind a Mexican bakery, serves some authentic Mexican cocktails and tacos. ",
+      "crossStreet": "E Hastings St & Nanaimo",
+      "walkFromStation": 40,
       "coords": {
         "y": 259
       },
@@ -526,14 +526,7 @@
         "food",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "pastor and suedero with a marg and beer chaser."
     },
     {
       "id": "s59",
@@ -667,15 +660,19 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "grab and go",
+        "sandwiches",
+        "vegetarian"
+      ],
       "neighborhood": "hastings-sunrise",
-      "cost": "$$",
+      "cost": "$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
-      "walkFromStation": 0,
+      "description": "Obanmi has a few locations across the city, and although you can argue there is lots of good banh-mi for cheaper, the veggie option here is unmatched!",
+      "crossStreet": "E Hastings St & Templeton",
+      "walkFromStation": 40,
       "coords": {
         "y": 260
       },
@@ -697,25 +694,28 @@
         "crossStreet",
         "timeOfDay?",
         "tags"
-      ]
+      ],
+      "goto": "Tofu bahn-mi"
     },
     {
       "id": "s63",
       "slug": "plain-jane-ice-cream",
       "name": "Plain Jane Ice Cream",
       "categories": [
-        "food",
-        "shopping"
+        "food"
       ],
-      "tags": [],
+      "tags": [
+        "ice cream",
+        "soft serve"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
-      "walkFromStation": 0,
+      "description": "After a short hiatus, Plain Jane is back! This is ultimately the freshest ice cream you can buy. Made right in front of you with a specialized machine, you choose your berry and you get the best soft serve in the neighborhood.",
+      "crossStreet": "E Hastings St & Garden",
+      "walkFromStation": 40,
       "coords": {
         "y": 258
       },
@@ -740,7 +740,8 @@
         "crossStreet",
         "timeOfDay?",
         "tags"
-      ]
+      ],
+      "goto": "blueberry!"
     }
   ]
 }

@@ -2,9 +2,9 @@
   "version": 1,
   "neighborhoodOrder": [
     "commercial",
-    "main-street",
-    "chinatown",
-    "hastings-sunrise"
+    "hastings-sunrise",
+    "mount-pleasant",
+    "chinatown"
   ],
   "neighborhoods": {
     "commercial": {
@@ -12,20 +12,20 @@
       "title": "Commercial Drive",
       "aliases": ["commercial drive", "the drive"]
     },
-    "main-street": {
-      "id": "main-street",
-      "title": "Main Street",
-      "aliases": ["main", "main st", "main street"]
+    "hastings-sunrise": {
+      "id": "hastings-sunrise",
+      "title": "Hastings-Sunrise (East Village)",
+      "aliases": ["east village", "eastvillage", "hastings sunrise"]
+    },
+    "mount-pleasant": {
+      "id": "mount-pleasant",
+      "title": "Mount Pleasant",
+      "aliases": ["mount pleasant", "mt pleasant", "main street", "main st", "main"]
     },
     "chinatown": {
       "id": "chinatown",
       "title": "Chinatown",
       "aliases": []
-    },
-    "hastings-sunrise": {
-      "id": "hastings-sunrise",
-      "title": "Hastings-Sunrise (East Village)",
-      "aliases": ["east village", "eastvillage", "hastings sunrise"]
     }
   }
 }

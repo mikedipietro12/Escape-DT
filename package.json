@@ -6,6 +6,8 @@
     "test:data": "node scripts/validate-data.mjs",
     "test:seo": "node scripts/test-seo.mjs",
     "dev": "node scripts/serve.mjs",
-    "enrich": "node scripts/enrich-from-google.mjs"
+    "admin": "node scripts/admin-server.mjs",
+    "enrich": "node scripts/enrich-from-google.mjs",
+    "gotos": "node scripts/add-gotos.mjs"
   }
 }

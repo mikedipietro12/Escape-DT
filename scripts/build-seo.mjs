@@ -348,6 +348,11 @@ function buildSpotPage(stop, config) {
     ? `      <img src="../../${img}" alt="${escapeHtml(stop.name)} on Commercial Drive" width="800" height="600" style="max-width:100%;height:auto;border-radius:8px;">`
     : `      <div class="placeholder" style="background:#${stop.placeholderColor || "cccccc"};aspect-ratio:4/3;border-radius:8px;" aria-hidden="true"></div>`;
 
+  const gotoText = stop.goto ? String(stop.goto).trim() : "";
+  const gotoBlock = gotoText
+    ? `    <p class="goto"><strong>My go-to:</strong> ${escapeHtml(gotoText)}</p>\n`
+    : "";
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -384,6 +389,7 @@ ${buildGoogleAnalyticsTag(config.gaMeasurementId)}
     h1 { font-size: 1.75rem; text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
     .meta { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; margin-bottom: 1.25rem; }
     p { margin-bottom: 1rem; }
+    .goto strong { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.85em; }
     .cta {
       display: inline-block;
       margin-top: 1rem;
@@ -410,7 +416,7 @@ ${buildGoogleAnalyticsTag(config.gaMeasurementId)}
 ${imageBlock}
     </figure>
     <p>${escapeHtml(stop.description)}</p>
-    <a class="cta" href="${escapeHtml(guideUrl)}">Open interactive guide</a>
+${gotoBlock}    <a class="cta" href="${escapeHtml(guideUrl)}">Open interactive guide</a>
   </article>
   <p class="footnote">Part of <a href="${escapeHtml(guideUrl)}">${escapeHtml(siteName)}</a> · <a href="${escapeHtml(publisherUrl)}" rel="noopener noreferrer">Seasons of East Van</a></p>
 </body>

@@ -1,0 +1,4 @@
+{
+  "_note": "DRAFT, not loaded by the app. Mount Pleasant stops are staged here so they stay out of the live app until multi-area filtering / the horizontal route map ships. Add stops with `npm run enrich -- <list> --neighborhood mount-pleasant --write` (a plain list of place names works — no CSV needed) or the admin editor (npm run admin). Pending per stop: descriptions, photos, real cross streets, category/cost review (see _review per stop). See AGENTS.md roadmap.",
+  "stops": []
+}

@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stop Editor · Escape DT (local)</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png" sizes="64x64">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #6b6b6b;
+      --line: #e2e2e2;
+      --bg: #f6f6f4;
+      --panel: #ffffff;
+      --accent: #2563eb;
+      --accent-soft: #e8efff;
+      --warn: #b45309;
+      --warn-soft: #fff4e2;
+      --ok: #15803d;
+      --danger: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      font-size: 14px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1rem;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    header h1 { font-size: 1rem; margin: 0; font-weight: 700; }
+    header .badge-local {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: var(--warn-soft);
+      color: var(--warn);
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid #f1d9ad;
+    }
+    header .spacer { flex: 1; }
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 0.45rem 0.8rem;
+      border-radius: 7px;
+    }
+    button:hover { border-color: #c7c7c7; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    button.primary:hover { background: #1d4fd0; }
+    button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.ghost { background: transparent; }
+
+    .layout { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 49px); }
+    @media (max-width: 820px) { .layout { grid-template-columns: 1fr; height: auto; } }
+
+    /* ---- list panel ---- */
+    .list-panel {
+      border-right: 1px solid var(--line);
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .list-controls { padding: 0.7rem; border-bottom: 1px solid var(--line); display: grid; gap: 0.45rem; }
+    .list-controls input[type="search"], .list-controls select {
+      width: 100%;
+      padding: 0.4rem 0.5rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font: inherit;
+    }
+    .needs-toggle { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); font-size: 0.82rem; }
+    .list-scroll { overflow-y: auto; flex: 1; min-height: 0; }
+    .stop-row {
+      padding: 0.55rem 0.7rem;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      display: grid;
+      gap: 0.2rem;
+    }
+    .stop-row:hover { background: #fafafa; }
+    .stop-row.active { background: var(--accent-soft); border-left: 3px solid var(--accent); padding-left: calc(0.7rem - 3px); }
+    .stop-row .row-top { display: flex; align-items: baseline; gap: 0.4rem; }
+    .stop-row .row-name { font-weight: 600; }
+    .stop-row .row-id { color: var(--muted); font-size: 0.72rem; }
+    .stop-row .row-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
+    .pill { font-size: 0.66rem; padding: 0.08rem 0.4rem; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+    .pill.draft { background: var(--warn-soft); color: var(--warn); border-color: #f1d9ad; }
+    .pill.needs { background: #fdecec; color: var(--danger); border-color: #f3c0c0; }
+    .list-empty { padding: 1.5rem 0.7rem; color: var(--muted); text-align: center; }
+    .list-count { padding: 0.4rem 0.7rem; color: var(--muted); font-size: 0.75rem; border-bottom: 1px solid var(--line); }
+
+    /* ---- editor panel ---- */
+    .editor-panel { overflow-y: auto; min-height: 0; padding: 1rem 1.2rem 4rem; }
+    .editor-grid { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; max-width: 1100px; }
+    @media (max-width: 1100px) { .editor-grid { grid-template-columns: 1fr; } }
+    .placeholder-msg { color: var(--muted); padding: 3rem 1rem; text-align: center; }
+
+    .form-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .form-head h2 { margin: 0; font-size: 1.15rem; }
+    .field { margin-bottom: 0.9rem; }
+    .field > label { display: block; font-weight: 600; font-size: 0.8rem; margin-bottom: 0.25rem; }
+    .field .hint { font-weight: 400; color: var(--muted); font-size: 0.72rem; }
+    input[type="text"], input[type="number"], textarea, select {
+      width: 100%;
+      padding: 0.45rem 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font: inherit;
+      background: var(--panel);
+    }
+    textarea { resize: vertical; min-height: 70px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; }
+    .checks { display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; }
+    .checks label { display: flex; align-items: center; gap: 0.3rem; font-weight: 400; }
+    .cost-mode { display: flex; gap: 0.8rem; margin-bottom: 0.4rem; font-size: 0.8rem; }
+    .color-row { display: flex; align-items: center; gap: 0.5rem; }
+    .color-swatch { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--line); }
+
+    /* ---- image upload ---- */
+    .upload-zone {
+      margin-top: 0.5rem;
+      border: 1.5px dashed var(--line);
+      border-radius: 8px;
+      padding: 0.7rem 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      background: #fbfbf9;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .upload-zone.drag { border-color: var(--accent); background: var(--accent-soft); }
+    .upload-zone .hint { color: var(--muted); font-size: 0.72rem; }
+    .thumbs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+    .thumb { position: relative; width: 78px; height: 78px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); background: #eee; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb-x {
+      position: absolute; top: 2px; right: 2px;
+      width: 20px; height: 20px; line-height: 1; padding: 0;
+      border-radius: 999px; border: none;
+      background: rgba(0,0,0,0.6); color: #fff; font-size: 0.95rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .thumb-x:hover { background: rgba(0,0,0,0.85); }
+    .thumb-hero {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.04em;
+      text-align: center; background: rgba(37,99,235,0.85); color: #fff; padding: 0.05rem 0;
+    }
+
+    .meta-box { background: #fbfbf9; border: 1px solid var(--line); border-radius: 8px; padding: 0.7rem; margin-bottom: 0.9rem; }
+    .meta-box h4 { margin: 0 0 0.4rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .chip { font-size: 0.7rem; background: #eee; border-radius: 999px; padding: 0.1rem 0.45rem; color: #444; }
+    .review-list { margin: 0; padding-left: 1.1rem; color: var(--warn); font-size: 0.8rem; }
+
+    /* ---- preview ---- */
+    .preview-wrap { position: sticky; top: 0.5rem; }
+    .preview-wrap h3 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 0 0.5rem; }
+    .preview-card { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); }
+    .preview-photo { height: 120px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.85); font-size: 0.8rem; }
+    .preview-body { padding: 0.8rem; }
+    .preview-body h4 { margin: 0 0 0.4rem; font-size: 1rem; text-transform: uppercase; }
+    .preview-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.5rem; }
+    .preview-tag { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid var(--ink); padding: 0.1rem 0.35rem; border-radius: 4px; }
+    .preview-desc { font-size: 0.85rem; line-height: 1.45; margin: 0 0 0.4rem; }
+    .preview-goto { font-size: 0.85rem; line-height: 1.45; margin: 0.4rem 0 0; }
+    .preview-goto strong { text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.78em; }
+    .preview-meta { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .save-bar { position: sticky; bottom: 0; background: var(--panel); border-top: 1px solid var(--line); padding: 0.7rem 1.2rem; display: flex; align-items: center; gap: 0.8rem; margin: 1.5rem -1.2rem -4rem; }
+    .save-bar .dirty { color: var(--warn); font-size: 0.8rem; }
+    .save-bar .saved { color: var(--ok); font-size: 0.8rem; }
+
+    .row-fill { font-size: 0.7rem; padding: 0.1rem 0.5rem; border-radius: 6px; background: var(--accent-soft); border-color: #cdddfb; color: var(--accent); }
+    .row-fill:hover { background: #dbe8ff; }
+
+    /* ---- wizard ---- */
+    .wizard-overlay { position: fixed; inset: 0; background: rgba(20,20,25,0.45); display: flex; align-items: center; justify-content: center; z-index: 30; padding: 1rem; }
+    .wizard-overlay[hidden] { display: none; }
+    .wizard { background: var(--panel); border-radius: 14px; width: 100%; max-width: 520px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); display: flex; flex-direction: column; max-height: 90vh; overflow: hidden; }
+    .wizard-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 1rem 1.2rem 0.6rem; }
+    .wizard-place { font-size: 1.15rem; font-weight: 700; }
+    .wizard-progress { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
+    .wiz-close { border: none; background: transparent; font-size: 1.5rem; line-height: 1; padding: 0 0.3rem; color: var(--muted); }
+    .wizard-progressbar { height: 4px; background: var(--line); margin: 0 1.2rem; border-radius: 999px; overflow: hidden; }
+    .wizard-progressbar span { display: block; height: 100%; background: var(--accent); width: 0; transition: width 0.2s; }
+    .wizard-body { padding: 1.1rem 1.2rem; overflow-y: auto; }
+    .wizard-body .wiz-label { display: block; font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+    .wizard-body .wiz-label .hint { display: block; font-weight: 400; font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
+    .wizard-body input[type="text"], .wizard-body input[type="number"], .wizard-body textarea, .wizard-body select {
+      width: 100%; padding: 0.55rem 0.6rem; border: 1px solid var(--line); border-radius: 8px; font: inherit;
+    }
+    .wizard-body textarea { min-height: 110px; resize: vertical; }
+    .wizard-body .checks { gap: 0.5rem 1rem; }
+    .wizard-body .checks label { font-size: 0.95rem; }
+    .wiz-check { display: inline-flex; align-items: center; gap: 0.4rem; margin: 0.6rem 0 0; font-size: 0.9rem; }
+    .cost-btns { display: flex; gap: 0.5rem; margin-bottom: 0.3rem; }
+    .cost-btn { flex: 1; padding: 0.6rem; font-size: 1.05rem; border-radius: 8px; }
+    .cost-btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .chip.toggle { cursor: pointer; border: 1px solid var(--line); background: #f2f2f2; }
+    .chip.toggle.on { background: var(--accent); color: #fff; }
+    #wiz-tag-chips { margin-top: 0.6rem; max-height: 160px; overflow-y: auto; }
+    .wizard-foot { display: flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.2rem; border-top: 1px solid var(--line); }
+    .wiz-orig { font-size: 0.8rem; color: var(--muted); margin-top: 0.6rem; }
+
+    #toast { position: fixed; bottom: 1rem; right: 1rem; background: var(--ink); color: #fff; padding: 0.6rem 0.9rem; border-radius: 8px; opacity: 0; transform: translateY(8px); transition: 0.2s; pointer-events: none; z-index: 40; }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.error { background: var(--danger); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Stop Editor</h1>
+    <span class="badge-local">local only</span>
+    <div class="spacer"></div>
+    <button id="fill-run" class="primary">Fill info &#9654;</button>
+    <button id="add-new">+ Add stop</button>
+    <button id="reload" class="ghost">Reload</button>
+  </header>
+
+  <div class="layout">
+    <aside class="list-panel">
+      <div class="list-controls">
+        <input type="search" id="search" placeholder="Search name, slug, cross street…" autocomplete="off">
+        <select id="filter-neighborhood"><option value="">All neighborhoods</option></select>
+        <label class="needs-toggle"><input type="checkbox" id="filter-needs"> Needs info only</label>
+        <label class="needs-toggle"><input type="checkbox" id="filter-needs-photos"> Needs photos only</label>
+      </div>
+      <div class="list-count" id="list-count"></div>
+      <div class="list-scroll" id="list"></div>
+    </aside>
+
+    <main class="editor-panel">
+      <div id="editor-empty" class="placeholder-msg">Select a stop on the left, or add a new one.</div>
+      <form id="editor" class="editor-grid" style="display:none;" autocomplete="off">
+        <div class="form-fields">
+          <div class="form-head">
+            <h2 id="form-title">Stop</h2>
+            <span class="pill" id="form-source"></span>
+            <span class="pill" id="form-id"></span>
+          </div>
+
+          <div id="meta-review" class="meta-box" style="display:none;">
+            <h4>Still to review (from enrich)</h4>
+            <ul class="review-list" id="review-list"></ul>
+          </div>
+          <div id="meta-google" class="meta-box" style="display:none;">
+            <h4>Google place types (reference)</h4>
+            <div class="chips" id="google-chips"></div>
+          </div>
+
+          <div class="field">
+            <label>Name</label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label>Slug <span class="hint">(stable; used for photo filenames)</span></label>
+              <input type="text" name="slug">
+            </div>
+            <div class="field">
+              <label>Neighborhood</label>
+              <select name="neighborhood" id="neighborhood"></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Categories <span class="hint">(1–3 browse filters)</span></label>
+            <div class="checks" id="categories"></div>
+          </div>
+
+          <div class="field">
+            <label>Tags <span class="hint">(descriptive, comma-separated)</span></label>
+            <input type="text" name="tags" id="tags" placeholder="patio, grab and go, greek">
+            <div class="chips" id="tag-suggestions" style="margin-top:0.35rem;"></div>
+          </div>
+
+          <div class="field">
+            <label>Cost</label>
+            <div class="cost-mode">
+              <label><input type="radio" name="costMode" value="single" checked> Single</label>
+              <label><input type="radio" name="costMode" value="range"> Range</label>
+            </div>
+            <div id="cost-single">
+              <select name="costSingle"></select>
+            </div>
+            <div id="cost-range" class="row2" style="display:none;">
+              <select name="costMin"></select>
+              <select name="costMax"></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Time of day</label>
+            <div class="checks" id="timeOfDay"></div>
+          </div>
+
+          <div class="field">
+            <label>Description</label>
+            <textarea name="description" placeholder="Your 1–2 sentence recommendation."></textarea>
+          </div>
+
+          <div class="field">
+            <label>My go-to <span class="hint">(what you usually order; shows as "My go-to:")</span></label>
+            <textarea name="goto" placeholder="e.g. A shot of espresso and a chocolate chunk cookie."></textarea>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label>Cross street</label>
+              <input type="text" name="crossStreet">
+            </div>
+            <div class="field">
+              <label>Walk from station <span class="hint">(min)</span></label>
+              <input type="number" name="walkFromStation" min="0" step="1">
+            </div>
+          </div>
+
+          <div class="row3">
+            <div class="field">
+              <label>coords.x <span class="hint">(opt)</span></label>
+              <input type="number" name="coordsX" step="1" placeholder="150">
+            </div>
+            <div class="field">
+              <label>coords.y</label>
+              <input type="number" name="coordsY" step="1">
+            </div>
+            <div class="field">
+              <label>Placeholder color</label>
+              <div class="color-row">
+                <input type="text" name="placeholderColor" maxlength="6" placeholder="cccccc">
+                <span class="color-swatch" id="color-swatch"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Google Maps link <span class="hint">(paste to auto-fill lat/lng below — not saved)</span></label>
+            <div class="color-row">
+              <input type="text" id="maps-link" placeholder="https://www.google.com/maps/place/.../@49.27,-123.06,17z/..." style="flex:1;">
+              <button type="button" id="maps-fill-btn">Fill lat/lng</button>
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label>Latitude</label>
+              <input type="number" name="lat" step="any">
+            </div>
+            <div class="field">
+              <label>Longitude</label>
+              <input type="number" name="lng" step="any">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Images <span class="hint">(comma-separated paths; leave empty for placeholder)</span></label>
+            <input type="text" name="images" placeholder="assets/stops/my-place.jpg, assets/stops/my-place-2.jpg">
+            <div class="upload-zone" id="upload-zone">
+              <input type="file" id="image-file" accept="image/*" multiple hidden>
+              <button type="button" id="upload-btn">Upload photos…</button>
+              <span class="hint" id="upload-hint">Drag &amp; drop or pick files — saved to assets/stops/ as &lt;slug&gt;.jpg, &lt;slug&gt;-2.jpg…</span>
+            </div>
+            <div class="thumbs" id="image-thumbs"></div>
+          </div>
+        </div>
+
+        <div class="preview-col">
+          <div class="preview-wrap">
+            <h3>Card preview</h3>
+            <div class="preview-card">
+              <div class="preview-photo" id="preview-photo"></div>
+              <div class="preview-body">
+                <h4 id="preview-name">—</h4>
+                <div class="preview-tags" id="preview-tags"></div>
+                <p class="preview-desc" id="preview-desc"></p>
+                <p class="preview-goto" id="preview-goto" style="display:none;"></p>
+                <div class="preview-meta" id="preview-meta"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="save-bar" style="grid-column: 1 / -1;">
+          <button type="submit" class="primary" id="save-btn">Save</button>
+          <span id="dirty-flag" class="dirty" style="display:none;">Unsaved changes</span>
+          <span id="saved-flag" class="saved" style="display:none;">Saved</span>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <div id="wizard-overlay" class="wizard-overlay" hidden>
+    <div class="wizard" role="dialog" aria-modal="true" aria-labelledby="wiz-place">
+      <div class="wizard-head">
+        <div>
+          <div class="wizard-place" id="wiz-place">—</div>
+          <div class="wizard-progress" id="wiz-progress"></div>
+        </div>
+        <button class="wiz-close" id="wiz-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="wizard-progressbar"><span id="wiz-bar"></span></div>
+      <div class="wizard-body" id="wiz-body"></div>
+      <div class="wizard-foot">
+        <button id="wiz-back" class="ghost">&#9664; Back</button>
+        <button id="wiz-skip" class="ghost">Skip spot &#9654;</button>
+        <span class="spacer" style="flex:1"></span>
+        <button id="wiz-save">Save</button>
+        <button id="wiz-next" class="primary">Next &#9654;</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    const state = {
+      stops: [],
+      refs: { neighborhoods: { neighborhoods: {}, neighborhoodOrder: [] }, categories: [], timeOfDay: [], costs: [], tags: [], nextId: "s1" },
+      selectedId: null,
+      dirty: false,
+    };
+
+    const $ = (sel) => document.querySelector(sel);
+    const form = $("#editor");
+
+    function toast(msg, isError) {
+      const el = $("#toast");
+      el.textContent = msg;
+      el.className = "show" + (isError ? " error" : "");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => { el.className = ""; }, 2600);
+    }
+
+    function neighborhoodTitle(id) {
+      const n = state.refs.neighborhoods.neighborhoods || {};
+      return (n[id] && n[id].title) || id || "—";
+    }
+
+    // Any non-"stops" source is a draft file (hastings-draft, mount-pleasant-draft, …).
+    function isDraftSource(src) { return !!src && src !== "stops"; }
+    // Which file a stop should save to, by neighborhood. The server sends the
+    // draft routing map in refs.drafts so new draft neighborhoods just work.
+    function sourceForNeighborhood(nbh) {
+      const drafts = (state.refs && state.refs.drafts) || {};
+      return drafts[nbh] || "stops";
+    }
+    function sourceLabel(stop, src) {
+      return isDraftSource(src)
+        ? `${neighborhoodTitle(stop.neighborhood || "commercial")} draft`
+        : "live (stops.json)";
+    }
+
+    function isNeedsInfo(stop) {
+      if (!String(stop.description || "").trim()) return true;
+      if (!(stop.tags || []).length) return true;
+      if (!stop.walkFromStation) return true;
+      if (Array.isArray(stop._review) && stop._review.length) return true;
+      return false;
+    }
+
+    function needsPhotos(stop) { return !((stop.images || []).length || stop.image); }
+
+    // ---------- list ----------
+    function renderNeighborhoodFilter() {
+      const sel = $("#filter-neighborhood");
+      const order = state.refs.neighborhoods.neighborhoodOrder || [];
+      sel.innerHTML = '<option value="">All neighborhoods</option>' +
+        order.map((id) => `<option value="${id}">${neighborhoodTitle(id)}</option>`).join("");
+    }
+
+    function renderList() {
+      const q = $("#search").value.trim().toLowerCase();
+      const nbh = $("#filter-neighborhood").value;
+      const needsOnly = $("#filter-needs").checked;
+      const needsPhotosOnly = $("#filter-needs-photos").checked;
+      const list = $("#list");
+
+      const filtered = state.stops.filter((s) => {
+        if (nbh && (s.neighborhood || "commercial") !== nbh) return false;
+        if (needsOnly && !isNeedsInfo(s)) return false;
+        if (needsPhotosOnly && !needsPhotos(s)) return false;
+        if (q) {
+          const hay = `${s.name} ${s.slug} ${s.crossStreet} ${s.id}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      $("#list-count").textContent = `${filtered.length} of ${state.stops.length} stops`;
+
+      if (!filtered.length) {
+        list.innerHTML = '<div class="list-empty">No stops match.</div>';
+        return;
+      }
+      list.innerHTML = filtered.map((s) => {
+        const draft = isDraftSource(s._source);
+        const needs = isNeedsInfo(s);
+        return `
+          <div class="stop-row ${s.id === state.selectedId ? "active" : ""}" data-id="${s.id}">
+            <div class="row-top">
+              <span class="row-name">${escapeHtml(s.name)}</span>
+              <span class="row-id">${s.id}</span>
+              <span class="spacer" style="flex:1"></span>
+              ${needs ? `<button class="row-fill" data-fill="${s.id}" title="Guided fill">Fill</button>` : ""}
+            </div>
+            <div class="row-meta">
+              <span class="pill">${escapeHtml(neighborhoodTitle(s.neighborhood || "commercial"))}</span>
+              ${draft ? '<span class="pill draft">draft</span>' : ""}
+              ${needs ? '<span class="pill needs">needs info</span>' : ""}
+            </div>
+          </div>`;
+      }).join("");
+
+      list.querySelectorAll(".stop-row").forEach((row) => {
+        row.addEventListener("click", () => selectStop(row.dataset.id));
+      });
+      list.querySelectorAll("[data-fill]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          openWizard(btn.dataset.fill);
+        });
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str == null ? "" : str)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // ---------- form ----------
+    function buildChecks(containerId, values, namePrefix) {
+      $(containerId).innerHTML = values.map((v) =>
+        `<label><input type="checkbox" value="${v}" data-group="${namePrefix}"> ${v}</label>`
+      ).join("");
+    }
+
+    function buildCostOptions() {
+      const opts = '<option value=""></option>' + state.refs.costs.map((c) => `<option value="${c}">${c}</option>`).join("");
+      form.costSingle.innerHTML = opts;
+      form.costMin.innerHTML = opts;
+      form.costMax.innerHTML = opts;
+    }
+
+    function renderTagSuggestions() {
+      $("#tag-suggestions").innerHTML = state.refs.tags.slice(0, 40)
+        .map((t) => `<span class="chip" data-tag="${escapeHtml(t)}" style="cursor:pointer;">+ ${escapeHtml(t)}</span>`).join("");
+      $("#tag-suggestions").querySelectorAll("[data-tag]").forEach((el) => {
+        el.addEventListener("click", () => {
+          const cur = form.tags.value.split(",").map((s) => s.trim()).filter(Boolean);
+          const t = el.dataset.tag;
+          if (!cur.includes(t)) cur.push(t);
+          form.tags.value = cur.join(", ");
+          onInput();
+        });
+      });
+    }
+
+    function selectStop(id) {
+      if (state.dirty && !confirm("Discard unsaved changes?")) return;
+      const stop = state.stops.find((s) => s.id === id);
+      if (!stop) return;
+      state.selectedId = id;
+      populateForm(stop);
+      setDirty(false);
+      renderList();
+    }
+
+    function setCostMode(mode) {
+      form.querySelector('input[name="costMode"][value="' + mode + '"]').checked = true;
+      $("#cost-single").style.display = mode === "single" ? "" : "none";
+      $("#cost-range").style.display = mode === "range" ? "" : "none";
+    }
+
+    function populateForm(stop) {
+      $("#editor-empty").style.display = "none";
+      form.style.display = "";
+      $("#form-title").textContent = stop.name || "Stop";
+      $("#form-id").textContent = stop.id;
+      $("#form-source").textContent = sourceLabel(stop, stop._source);
+      $("#form-source").className = "pill" + (isDraftSource(stop._source) ? " draft" : "");
+
+      form.name.value = stop.name || "";
+      form.slug.value = stop.slug || "";
+      form.neighborhood.value = stop.neighborhood || "commercial";
+      form.tags.value = (stop.tags || []).join(", ");
+      form.description.value = stop.description || "";
+      form.goto.value = stop.goto || "";
+      form.crossStreet.value = stop.crossStreet || "";
+      form.walkFromStation.value = stop.walkFromStation != null ? stop.walkFromStation : "";
+      form.coordsX.value = stop.coords && stop.coords.x != null ? stop.coords.x : "";
+      form.coordsY.value = stop.coords && stop.coords.y != null ? stop.coords.y : "";
+      form.placeholderColor.value = stop.placeholderColor || "";
+      form.lat.value = stop.lat != null ? stop.lat : "";
+      form.lng.value = stop.lng != null ? stop.lng : "";
+      $("#maps-link").value = "";
+      form.images.value = (stop.images || (stop.image ? [stop.image] : [])).join(", ");
+
+      // categories
+      const cats = stop.categories || [];
+      $("#categories").querySelectorAll("input").forEach((cb) => { cb.checked = cats.includes(cb.value); });
+      // timeOfDay
+      const tod = stop.timeOfDay || [];
+      $("#timeOfDay").querySelectorAll("input").forEach((cb) => { cb.checked = tod.includes(cb.value); });
+
+      // cost
+      const cost = stop.cost;
+      if (cost && typeof cost === "object") {
+        const min = Array.isArray(cost) ? cost[0] : cost.min;
+        const max = Array.isArray(cost) ? cost[cost.length - 1] : cost.max;
+        setCostMode("range");
+        form.costMin.value = min || "";
+        form.costMax.value = max || "";
+        form.costSingle.value = "";
+      } else {
+        setCostMode("single");
+        form.costSingle.value = cost || "";
+        form.costMin.value = "";
+        form.costMax.value = "";
+      }
+
+      // meta hints
+      renderReviewBox(stop);
+      if (Array.isArray(stop._googleTypes) && stop._googleTypes.length) {
+        $("#meta-google").style.display = "";
+        $("#google-chips").innerHTML = stop._googleTypes.map((t) => `<span class="chip">${escapeHtml(t)}</span>`).join("");
+      } else {
+        $("#meta-google").style.display = "none";
+      }
+
+      updatePreview();
+      renderThumbs();
+    }
+
+    function collectChecks(containerId) {
+      return [...$(containerId).querySelectorAll("input:checked")].map((cb) => cb.value);
+    }
+
+    function buildStopFromForm() {
+      const original = state.stops.find((s) => s.id === state.selectedId) || {};
+      const stop = JSON.parse(JSON.stringify(original));
+      delete stop._source;
+
+      // New stops aren't added to state.stops until saved, so carry the id
+      // from the current selection (otherwise it's lost and the save fails).
+      stop.id = stop.id || state.selectedId;
+
+      stop.name = form.name.value.trim();
+      const slug = form.slug.value.trim();
+      if (slug) stop.slug = slug; else delete stop.slug;
+      stop.neighborhood = form.neighborhood.value;
+      stop.categories = collectChecks("#categories");
+      const tags = form.tags.value.split(",").map((s) => s.trim()).filter(Boolean);
+      stop.tags = tags;
+      stop.timeOfDay = collectChecks("#timeOfDay");
+
+      // cost
+      const mode = form.querySelector('input[name="costMode"]:checked').value;
+      if (mode === "range") {
+        const min = form.costMin.value, max = form.costMax.value;
+        if (min && max && min !== max) stop.cost = { min, max };
+        else stop.cost = min || max || "";
+      } else {
+        stop.cost = form.costSingle.value || "";
+      }
+
+      stop.description = form.description.value.trim();
+      const goto = form.goto.value.trim();
+      if (goto) stop.goto = goto; else delete stop.goto;
+      stop.crossStreet = form.crossStreet.value.trim();
+
+      const walk = form.walkFromStation.value;
+      stop.walkFromStation = walk === "" ? 0 : Number(walk);
+
+      const cx = form.coordsX.value, cy = form.coordsY.value;
+      stop.coords = stop.coords && typeof stop.coords === "object" ? { ...stop.coords } : {};
+      if (cy !== "") stop.coords.y = Number(cy); else delete stop.coords.y;
+      if (cx !== "") stop.coords.x = Number(cx); else delete stop.coords.x;
+
+      const color = form.placeholderColor.value.trim().replace(/^#/, "");
+      if (color) stop.placeholderColor = color; else delete stop.placeholderColor;
+
+      if (form.lat.value !== "") stop.lat = Number(form.lat.value);
+      if (form.lng.value !== "") stop.lng = Number(form.lng.value);
+
+      const images = form.images.value.split(",").map((s) => s.trim()).filter(Boolean);
+      if (images.length) { stop.images = images; delete stop.image; } else { delete stop.images; }
+
+      // Route file by neighborhood (draft neighborhoods stay in their draft file).
+      stop._source = sourceForNeighborhood(stop.neighborhood);
+      return stop;
+    }
+
+    // ---------- preview ----------
+    function updatePreview() {
+      const stop = buildStopFromForm();
+      $("#preview-name").textContent = stop.name || "—";
+      const color = stop.placeholderColor || "cccccc";
+      const photo = $("#preview-photo");
+      const imgs = stop.images || [];
+      if (imgs.length) {
+        photo.style.background = "#222";
+        photo.textContent = imgs[0];
+      } else {
+        photo.style.background = "#" + color;
+        photo.textContent = "placeholder #" + color;
+      }
+      const costLabel = formatCost(stop.cost);
+      const tags = [...(stop.tags || [])];
+      $("#preview-tags").innerHTML = tags.concat(costLabel ? [costLabel] : [])
+        .map((t) => `<span class="preview-tag">${escapeHtml(t)}</span>`).join("");
+      $("#preview-desc").textContent = stop.description || "";
+      const gotoEl = $("#preview-goto");
+      if (stop.goto) {
+        gotoEl.style.display = "";
+        gotoEl.innerHTML = '<strong>My go-to:</strong> ' + escapeHtml(stop.goto);
+      } else {
+        gotoEl.style.display = "none";
+      }
+      const walk = stop.walkFromStation ? `${stop.walkFromStation} min walk` : "";
+      $("#preview-meta").textContent = [stop.crossStreet, walk].filter(Boolean).join(" · ");
+    }
+
+    function formatCost(cost) {
+      if (cost == null || cost === "") return "";
+      if (typeof cost === "string") return cost;
+      if (Array.isArray(cost)) {
+        const min = cost[0], max = cost[cost.length - 1];
+        if (!min) return ""; if (!max || min === max) return min; return `${min}\u2013${max}`;
+      }
+      if (typeof cost === "object") {
+        const { min, max } = cost;
+        if (min != null && max != null && min !== max) return `${min}\u2013${max}`;
+        return min || max || "";
+      }
+      return String(cost);
+    }
+
+    // ---------- dirty / save ----------
+    function setDirty(d) {
+      state.dirty = d;
+      $("#dirty-flag").style.display = d ? "" : "none";
+      if (d) $("#saved-flag").style.display = "none";
+    }
+
+    function onInput() {
+      setDirty(true);
+      $("#color-swatch").style.background = "#" + (form.placeholderColor.value.trim().replace(/^#/, "") || "cccccc");
+      updatePreview();
+      renderThumbs();
+    }
+
+    // ---------- image upload ----------
+    function slugify(str) {
+      return String(str || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    function imagePaths() {
+      return form.images.value.split(",").map((s) => s.trim()).filter(Boolean);
+    }
+
+    function setImagePaths(paths) {
+      form.images.value = paths.join(", ");
+    }
+
+    function renderThumbs() {
+      const wrap = $("#image-thumbs");
+      if (!wrap) return;
+      const paths = imagePaths();
+      wrap.innerHTML = paths.map((p, i) =>
+        `<div class="thumb">
+           <img src="/${encodeURI(p)}" alt="" loading="lazy" onerror="this.style.opacity=0.15">
+           <button type="button" class="thumb-x" data-i="${i}" title="Remove from list (does not delete the file)">&times;</button>
+           ${i === 0 ? '<span class="thumb-hero">hero</span>' : ""}
+         </div>`).join("");
+      wrap.querySelectorAll(".thumb-x").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const paths2 = imagePaths();
+          paths2.splice(Number(btn.dataset.i), 1);
+          setImagePaths(paths2);
+          setDirty(true);
+          updatePreview();
+          renderThumbs();
+        });
+      });
+    }
+
+    async function uploadImages(fileList) {
+      const files = [...(fileList || [])].filter((f) => f && (f.type.startsWith("image/") || /\.(jpe?g|png|webp|gif|avif)$/i.test(f.name)));
+      if (!files.length) { toast("No image files selected", true); return; }
+
+      let slug = form.slug.value.trim();
+      if (!slug) {
+        slug = slugify(form.name.value);
+        if (slug) { form.slug.value = slug; setDirty(true); }
+      }
+      if (!slug) { toast("Set a name or slug first — it names the file", true); return; }
+
+      const btn = $("#upload-btn");
+      btn.disabled = true;
+      const before = btn.textContent;
+      const added = [];
+      try {
+        // Sequential so the server assigns non-colliding indexes.
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          btn.textContent = `Uploading ${i + 1}/${files.length}…`;
+          const qs = new URLSearchParams({ slug, filename: file.name });
+          const res = await fetch(`/api/upload?${qs.toString()}`, {
+            method: "POST",
+            headers: { "Content-Type": file.type || "application/octet-stream" },
+            body: file,
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Upload failed");
+          added.push(data.path);
+        }
+        const cur = imagePaths();
+        for (const p of added) if (!cur.includes(p)) cur.push(p);
+        setImagePaths(cur);
+        setDirty(true);
+        updatePreview();
+        renderThumbs();
+        toast(`Uploaded ${added.length} photo${added.length > 1 ? "s" : ""} — remember to Save`);
+      } catch (err) {
+        toast(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = before;
+        $("#image-file").value = "";
+      }
+    }
+
+    async function saveStop(e) {
+      e.preventDefault();
+      const stop = buildStopFromForm();
+      if (!stop.name) { toast("Name is required", true); return; }
+      // Clear "Still to review" items for fields that now have a value.
+      pruneReview(stop);
+      $("#save-btn").disabled = true;
+      try {
+        const res = await fetch(`/api/stop/${encodeURIComponent(stop.id)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(stop),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Save failed");
+        // update local cache
+        const saved = { ...stop, _source: data.source };
+        const i = state.stops.findIndex((s) => s.id === stop.id);
+        if (i >= 0) state.stops[i] = saved; else state.stops.push(saved);
+        setDirty(false);
+        $("#saved-flag").style.display = "";
+        $("#form-source").textContent = sourceLabel(stop, data.source);
+        $("#form-source").className = "pill" + (isDraftSource(data.source) ? " draft" : "");
+        $("#form-title").textContent = stop.name;
+        renderReviewBox(stop);
+        renderList();
+        toast("Saved " + stop.id);
+      } catch (err) {
+        toast(err.message, true);
+      } finally {
+        $("#save-btn").disabled = false;
+      }
+    }
+
+    // ---------- guided fill wizard ----------
+    const WIZARD_ORDER = ["tags", "cost", "timeOfDay", "categories", "crossStreet", "walkFromStation", "description", "goto", "images"];
+    const FIELD_DEFS = {
+      tags: { label: "Tags", hint: "Descriptive vibes / cuisine / service. Click to toggle or type your own." },
+      cost: { label: "Cost", hint: "Pick one, or tick price range." },
+      timeOfDay: { label: "Time of day", hint: "When is this spot good for?" },
+      categories: { label: "Categories", hint: "1\u20133 browse filters." },
+      crossStreet: { label: "Cross street", hint: "Nearest corner (include \u201CVictoria\u201D for Victoria-side spots)." },
+      walkFromStation: { label: "Walk from station (min)", hint: "Walking minutes from the SkyTrain." },
+      description: { label: "Description", hint: "Your 1\u20132 sentence recommendation." },
+      goto: { label: "My go-to", hint: "What you usually order / grab here." },
+      images: { label: "Images", hint: "Comma-separated paths under assets/stops/ (optional)." },
+    };
+
+    const wizard = { stop: null, originalId: null, steps: [], index: 0, reviewed: new Set(), dirty: false, run: false };
+
+    function fieldIsEmpty(field, stop) {
+      switch (field) {
+        case "tags": return !(stop.tags || []).length;
+        case "categories": return !(stop.categories || []).length;
+        case "timeOfDay": return !(stop.timeOfDay || []).length;
+        case "cost": return !formatCost(stop.cost);
+        case "crossStreet": return !String(stop.crossStreet || "").trim();
+        case "walkFromStation": return !stop.walkFromStation;
+        case "description": return !String(stop.description || "").trim();
+        case "goto": return !String(stop.goto || "").trim();
+        case "images": return !((stop.images || []).length || stop.image);
+        default: return false;
+      }
+    }
+    function inReview(field, stop) {
+      if (!Array.isArray(stop._review)) return false;
+      return stop._review.some((t) => t.replace(/\?$/, "") === field);
+    }
+    // Drop "Still to review" items the user has addressed: on save, any entry
+    // whose field now has a value is cleared (covers fields the enrich script
+    // pre-filled and flagged with "?" for verification, e.g. "categories?").
+    // Items still left blank stay on the list.
+    function pruneReview(stop) {
+      if (!Array.isArray(stop._review) || !stop._review.length) return;
+      stop._review = stop._review.filter((entry) => fieldIsEmpty(entry.replace(/\?$/, ""), stop));
+      if (!stop._review.length) delete stop._review;
+    }
+    function renderReviewBox(stop) {
+      if (Array.isArray(stop._review) && stop._review.length) {
+        $("#meta-review").style.display = "";
+        $("#review-list").innerHTML = stop._review.map((r) => `<li>${escapeHtml(r)}</li>`).join("");
+      } else {
+        $("#meta-review").style.display = "none";
+      }
+    }
+    function needsAttention(field, stop) { return fieldIsEmpty(field, stop) || inReview(field, stop); }
+    function needsAnyInfo(stop) { return WIZARD_ORDER.some((f) => needsAttention(f, stop)); }
+
+    // Walk the (neighborhood-filtered) list FORWARD from just after `afterId`, so
+    // the guided run visits each stop once in order and reaches every stop that
+    // needs info. Using a plain find() here looped on the earliest stops that
+    // can't be completed yet (e.g. ones only missing photos) and never advanced
+    // to the ones missing descriptions/tags. Pass a falsy `afterId` to start at
+    // the top.
+    function nextNeedsInfoStop(afterId) {
+      const nbh = $("#filter-neighborhood").value;
+      const list = state.stops.filter((s) => !nbh || (s.neighborhood || "commercial") === nbh);
+      const fromIdx = afterId ? list.findIndex((s) => s.id === afterId) + 1 : 0;
+      for (let i = Math.max(0, fromIdx); i < list.length; i++) {
+        if (needsAnyInfo(list[i])) return list[i];
+      }
+      return null;
+    }
+
+    function costOpts(sel) {
+      return ["", "$", "$$", "$$$"].map((v) => `<option value="${v}" ${v === sel ? "selected" : ""}>${v || "\u2014"}</option>`).join("");
+    }
+
+    function openWizard(id, opts = {}) {
+      const stop = state.stops.find((s) => s.id === id);
+      if (!stop) return;
+      const steps = WIZARD_ORDER.filter((f) => needsAttention(f, stop));
+      if (!steps.length) {
+        toast(`${stop.name}: nothing left to fill`);
+        if (opts.run) { const nxt = nextNeedsInfoStop(id); if (nxt) return openWizard(nxt.id, { run: true }); }
+        return;
+      }
+      wizard.stop = JSON.parse(JSON.stringify(stop));
+      delete wizard.stop._source;
+      wizard.originalId = id;
+      wizard.steps = steps;
+      wizard.index = 0;
+      wizard.reviewed = new Set();
+      wizard.dirty = false;
+      wizard.run = !!opts.run;
+      $("#wizard-overlay").hidden = false;
+      renderWizard();
+    }
+
+    function renderWizard() {
+      const field = wizard.steps[wizard.index];
+      const def = FIELD_DEFS[field];
+      $("#wiz-place").textContent = wizard.stop.name || wizard.originalId;
+      $("#wiz-progress").textContent = `Step ${wizard.index + 1} of ${wizard.steps.length} \u00b7 ${def.label}`;
+      $("#wiz-bar").style.width = `${((wizard.index) / wizard.steps.length) * 100}%`;
+      $("#wiz-body").innerHTML = renderStepControl(field, def);
+      wireStepControl(field);
+      $("#wiz-back").disabled = wizard.index === 0;
+      $("#wiz-next").innerHTML = wizard.index === wizard.steps.length - 1 ? "Save &amp; next place &#9654;" : "Next &#9654;";
+    }
+
+    function origValueText(field) {
+      const orig = state.stops.find((s) => s.id === wizard.originalId) || {};
+      let v = orig[field];
+      if (Array.isArray(v)) v = v.join(", ");
+      else if (field === "cost") v = formatCost(orig.cost);
+      else if (field === "images") v = (orig.images || (orig.image ? [orig.image] : [])).join(", ");
+      v = v == null ? "" : String(v);
+      return v ? `<div class="wiz-orig">Current: ${escapeHtml(v)}</div>` : "";
+    }
+
+    function renderStepControl(field, def) {
+      const stop = wizard.stop;
+      const head = `<label class="wiz-label">${def.label}<span class="hint">${def.hint}</span></label>`;
+      if (field === "tags") {
+        const cur = stop.tags || [];
+        return head +
+          `<input type="text" id="wiz-tags" value="${escapeHtml(cur.join(", "))}" placeholder="patio, grab and go">` +
+          `<div class="chips" id="wiz-tag-chips">${state.refs.tags.map((t) =>
+            `<span class="chip toggle ${cur.includes(t) ? "on" : ""}" data-t="${escapeHtml(t)}">${escapeHtml(t)}</span>`).join("")}</div>`;
+      }
+      if (field === "cost") {
+        const c = stop.cost;
+        const isRange = c && typeof c === "object";
+        const single = !isRange ? (c || "") : "";
+        const min = isRange ? (Array.isArray(c) ? c[0] : c.min) : "";
+        const max = isRange ? (Array.isArray(c) ? c[c.length - 1] : c.max) : "";
+        return head +
+          `<div class="cost-btns" id="wiz-cost-btns">${["$", "$$", "$$$"].map((v) =>
+            `<button type="button" class="cost-btn ${(!isRange && single === v) ? "on" : ""}" data-c="${v}">${v}</button>`).join("")}</div>` +
+          `<label class="wiz-check"><input type="checkbox" id="wiz-cost-range" ${isRange ? "checked" : ""}> Price range</label>` +
+          `<div id="wiz-cost-range-row" class="row2" style="margin-top:0.4rem;${isRange ? "" : "display:none;"}">` +
+            `<select id="wiz-cost-min">${costOpts(min)}</select><select id="wiz-cost-max">${costOpts(max)}</select></div>` +
+          origValueText(field);
+      }
+      if (field === "timeOfDay" || field === "categories") {
+        const opts = field === "timeOfDay" ? state.refs.timeOfDay : state.refs.categories;
+        const cur = stop[field] || [];
+        return head + `<div class="checks">${opts.map((o) =>
+          `<label><input type="checkbox" data-v="${o}" ${cur.includes(o) ? "checked" : ""}> ${o}</label>`).join("")}</div>` + origValueText(field);
+      }
+      if (field === "description" || field === "goto") {
+        return head + `<textarea id="wiz-input">${escapeHtml(stop[field] || "")}</textarea>`;
+      }
+      if (field === "walkFromStation") {
+        return head + `<input type="number" id="wiz-input" min="0" step="1" value="${stop.walkFromStation != null ? stop.walkFromStation : ""}">` + origValueText(field);
+      }
+      if (field === "images") {
+        const v = (stop.images || (stop.image ? [stop.image] : [])).join(", ");
+        return head + `<input type="text" id="wiz-input" value="${escapeHtml(v)}" placeholder="assets/stops/slug.jpg">`;
+      }
+      // crossStreet + any text
+      return head + `<input type="text" id="wiz-input" value="${escapeHtml(stop[field] || "")}">` + origValueText(field);
+    }
+
+    function wireStepControl(field) {
+      const mark = () => { wizard.reviewed.add(field); wizard.dirty = true; };
+      if (field === "tags") {
+        const input = $("#wiz-tags");
+        const syncChips = () => {
+          const cur = wizard.stop.tags || [];
+          $("#wiz-tag-chips").querySelectorAll(".chip").forEach((ch) => ch.classList.toggle("on", cur.includes(ch.dataset.t)));
+        };
+        input.addEventListener("input", () => {
+          wizard.stop.tags = input.value.split(",").map((s) => s.trim()).filter(Boolean);
+          mark(); syncChips();
+        });
+        $("#wiz-tag-chips").querySelectorAll(".chip").forEach((ch) => {
+          ch.addEventListener("click", () => {
+            const cur = wizard.stop.tags || [];
+            const t = ch.dataset.t;
+            const i = cur.indexOf(t);
+            if (i >= 0) cur.splice(i, 1); else cur.push(t);
+            wizard.stop.tags = cur;
+            input.value = cur.join(", ");
+            mark(); syncChips();
+          });
+        });
+        input.focus();
+        return;
+      }
+      if (field === "cost") {
+        const setActive = (v) => $("#wiz-cost-btns").querySelectorAll(".cost-btn").forEach((b) => b.classList.toggle("on", b.dataset.c === v));
+        $("#wiz-cost-btns").querySelectorAll(".cost-btn").forEach((b) => {
+          b.addEventListener("click", () => {
+            $("#wiz-cost-range").checked = false;
+            $("#wiz-cost-range-row").style.display = "none";
+            wizard.stop.cost = b.dataset.c;
+            setActive(b.dataset.c); mark();
+          });
+        });
+        const rangeRow = $("#wiz-cost-range-row");
+        const applyRange = () => {
+          const min = $("#wiz-cost-min").value, max = $("#wiz-cost-max").value;
+          if (min && max && min !== max) wizard.stop.cost = { min, max };
+          else wizard.stop.cost = min || max || "";
+          mark();
+        };
+        $("#wiz-cost-range").addEventListener("change", (e) => {
+          if (e.target.checked) { rangeRow.style.display = ""; setActive(null); applyRange(); }
+          else { rangeRow.style.display = "none"; }
+          mark();
+        });
+        $("#wiz-cost-min").addEventListener("change", applyRange);
+        $("#wiz-cost-max").addEventListener("change", applyRange);
+        return;
+      }
+      if (field === "timeOfDay" || field === "categories") {
+        $("#wiz-body").querySelectorAll('.checks input[type="checkbox"]').forEach((cb) => {
+          cb.addEventListener("change", () => {
+            wizard.stop[field] = [...$("#wiz-body").querySelectorAll('.checks input:checked')].map((c) => c.dataset.v);
+            mark();
+          });
+        });
+        return;
+      }
+      const input = $("#wiz-input");
+      if (!input) return;
+      input.addEventListener("input", () => {
+        if (field === "walkFromStation") wizard.stop.walkFromStation = input.value === "" ? 0 : Number(input.value);
+        else if (field === "images") wizard.stop.images = input.value.split(",").map((s) => s.trim()).filter(Boolean);
+        else wizard.stop[field] = input.value;
+        mark();
+      });
+      input.focus();
+    }
+
+    function pruneReview(stop) {
+      if (!Array.isArray(stop._review)) return;
+      stop._review = stop._review.filter((t) => !wizard.reviewed.has(t.replace(/\?$/, "")));
+      if (!stop._review.length) delete stop._review;
+    }
+
+    async function saveWizard() {
+      const stop = wizard.stop;
+      if (!String(stop.name || "").trim()) { toast("Name is required (open the stop in the form to set it)", true); return false; }
+      pruneReview(stop);
+      if ((stop.images || []).length) delete stop.image; else delete stop.images;
+      stop._source = sourceForNeighborhood(stop.neighborhood);
+      try {
+        const res = await fetch(`/api/stop/${encodeURIComponent(stop.id)}`, {
+          method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(stop),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Save failed");
+        const saved = { ...JSON.parse(JSON.stringify(stop)), _source: data.source };
+        const i = state.stops.findIndex((s) => s.id === stop.id);
+        if (i >= 0) state.stops[i] = saved; else state.stops.push(saved);
+        wizard.dirty = false;
+        renderList();
+        if (state.selectedId === stop.id) { populateForm(saved); setDirty(false); }
+        return true;
+      } catch (err) {
+        toast(err.message, true);
+        return false;
+      }
+    }
+
+    function wizardBack() { if (wizard.index > 0) { wizard.index--; renderWizard(); } }
+    // Skip the whole current spot (discarding its unsaved edits) and jump to the
+    // next spot that needs info, continuing the guided run.
+    function wizardSkip() {
+      const nxt = nextNeedsInfoStop(wizard.originalId);
+      if (nxt) { openWizard(nxt.id, { run: true }); toast("Skipped \u2014 next: " + nxt.name); }
+      else { closeWizard(true); toast("Nothing else needs info"); }
+    }
+    async function wizardNext() {
+      wizard.reviewed.add(wizard.steps[wizard.index]);
+      if (wizard.index < wizard.steps.length - 1) { wizard.index++; renderWizard(); return; }
+      // last step -> save & advance to next place
+      const ok = await saveWizard();
+      if (!ok) return;
+      const nxt = nextNeedsInfoStop(wizard.originalId);
+      if (nxt) { openWizard(nxt.id, { run: true }); toast("Saved \u2014 next: " + nxt.name); }
+      else { closeWizard(true); toast("All caught up \u2014 nothing left to fill!"); }
+    }
+    function closeWizard(force) {
+      if (!force && wizard.dirty && !confirm("Close without saving this stop's changes?")) return;
+      $("#wizard-overlay").hidden = true;
+      wizard.stop = null;
+    }
+
+    $("#wiz-back").addEventListener("click", wizardBack);
+    $("#wiz-skip").addEventListener("click", wizardSkip);
+    $("#wiz-next").addEventListener("click", wizardNext);
+    $("#wiz-save").addEventListener("click", async () => { if (await saveWizard()) toast("Saved " + wizard.stop.id); });
+    $("#wiz-close").addEventListener("click", () => closeWizard(false));
+    $("#wizard-overlay").addEventListener("click", (e) => { if (e.target.id === "wizard-overlay") closeWizard(false); });
+    document.addEventListener("keydown", (e) => {
+      if ($("#wizard-overlay").hidden) return;
+      if (e.key === "Escape") closeWizard(false);
+    });
+
+    function startFillRun() {
+      const first = nextNeedsInfoStop(null);
+      if (!first) { toast("Nothing needs info in this view!"); return; }
+      openWizard(first.id, { run: true });
+    }
+
+    // ---------- add new ----------
+    // Random but pleasant placeholder color (mid lightness/saturation), as 6-char hex.
+    // Avoids near-duplicates of colors already in use.
+    function randomPlaceholderColor() {
+      const used = new Set(
+        state.stops.map((s) => String(s.placeholderColor || "").toLowerCase()).filter(Boolean)
+      );
+      const hslToHex = (h, s, l) => {
+        const a = s * Math.min(l, 1 - l);
+        const f = (n) => {
+          const k = (n + h / 30) % 12;
+          const c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+          return Math.round(255 * c).toString(16).padStart(2, "0");
+        };
+        return f(0) + f(8) + f(4);
+      };
+      let hex = "cccccc";
+      for (let i = 0; i < 12; i++) {
+        const h = Math.floor(Math.random() * 360);
+        const s = 0.45 + Math.random() * 0.25; // 45–70%
+        const l = 0.55 + Math.random() * 0.2;  // 55–75%
+        hex = hslToHex(h, s, l);
+        if (!used.has(hex)) break;
+      }
+      return hex;
+    }
+
+    function addNewStop() {
+      if (state.dirty && !confirm("Discard unsaved changes?")) return;
+      const id = state.refs.nextId || "s1";
+      const blank = {
+        id, slug: "", name: "", categories: [], tags: [],
+        neighborhood: "commercial", cost: "", timeOfDay: [],
+        description: "", crossStreet: "", walkFromStation: 0,
+        coords: { y: 300 }, placeholderColor: randomPlaceholderColor(),
+        _source: "stops", _isNew: true,
+      };
+      // don't push into state.stops until saved; just populate
+      state.selectedId = id;
+      populateForm(blank);
+      setDirty(true);
+      // bump nextId locally so a second add doesn't collide before reload
+      const n = /^s(\d+)$/.exec(id);
+      if (n) state.refs.nextId = "s" + (Number(n[1]) + 1);
+      toast("New stop " + id + " — fill in and Save");
+    }
+
+    // ---------- load ----------
+    async function load() {
+      const res = await fetch("/api/stops");
+      const data = await res.json();
+      state.stops = data.stops || [];
+      state.refs = data.refs || state.refs;
+
+      renderNeighborhoodFilter();
+      $("#neighborhood").innerHTML = (state.refs.neighborhoods.neighborhoodOrder || [])
+        .map((id) => `<option value="${id}">${neighborhoodTitle(id)}</option>`).join("");
+      buildChecks("#categories", state.refs.categories, "cat");
+      buildChecks("#timeOfDay", state.refs.timeOfDay, "tod");
+      buildCostOptions();
+      renderTagSuggestions();
+      renderList();
+
+      if (state.selectedId) {
+        const still = state.stops.find((s) => s.id === state.selectedId);
+        if (still) populateForm(still);
+      }
+    }
+
+    // ---------- google maps link -> lat/lng ----------
+    // Parses coordinates locally (no API call) from a pasted Google Maps URL.
+    // Prefers the actual place pin (!3d<lat>!4d<lng>) over the map center (@lat,lng)
+    // or a q=lat,lng query. Returns { lat, lng } or null.
+    function parseLatLngFromMapsLink(raw) {
+      const url = String(raw || "").trim();
+      if (!url) return null;
+      const num = "(-?\\d{1,3}\\.\\d+)";
+      // 1. Place pin: ...!3d49.2701!4d-123.0689
+      let m = url.match(new RegExp("!3d" + num + "!4d" + num));
+      if (m) return { lat: Number(m[1]), lng: Number(m[2]) };
+      // 2. Map center: .../@49.2701,-123.0689,17z/
+      m = url.match(new RegExp("@" + num + "," + num));
+      if (m) return { lat: Number(m[1]), lng: Number(m[2]) };
+      // 3. Query: ?q=49.2701,-123.0689 (optionally q=loc:lat,lng)
+      m = url.match(new RegExp("[?&]q=(?:loc:)?" + num + "," + num));
+      if (m) return { lat: Number(m[1]), lng: Number(m[2]) };
+      return null;
+    }
+
+    function fillLatLngFromMapsLink() {
+      const raw = $("#maps-link").value;
+      if (!raw.trim()) { toast("Paste a Google Maps link first", true); return; }
+      if (/goo\.gl|maps\.app\.goo\.gl/i.test(raw)) {
+        toast("Short links can't be read locally — open it in Maps, then copy the full URL", true);
+        return;
+      }
+      const coords = parseLatLngFromMapsLink(raw);
+      if (!coords) {
+        toast("Couldn't find coordinates in that link — use the full maps.google.com URL", true);
+        return;
+      }
+      form.lat.value = coords.lat;
+      form.lng.value = coords.lng;
+      onInput();
+      toast(`Filled ${coords.lat}, ${coords.lng}`);
+    }
+
+    // ---------- events ----------
+    $("#maps-fill-btn").addEventListener("click", fillLatLngFromMapsLink);
+    $("#maps-link").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); fillLatLngFromMapsLink(); }
+    });
+    $("#search").addEventListener("input", renderList);
+    $("#filter-neighborhood").addEventListener("change", renderList);
+    $("#filter-needs").addEventListener("change", renderList);
+    $("#filter-needs-photos").addEventListener("change", renderList);
+    $("#fill-run").addEventListener("click", startFillRun);
+    $("#add-new").addEventListener("click", addNewStop);
+
+    // image upload controls
+    $("#upload-btn").addEventListener("click", () => $("#image-file").click());
+    $("#image-file").addEventListener("change", (e) => uploadImages(e.target.files));
+    (() => {
+      const zone = $("#upload-zone");
+      ["dragenter", "dragover"].forEach((ev) =>
+        zone.addEventListener(ev, (e) => { e.preventDefault(); zone.classList.add("drag"); }));
+      ["dragleave", "dragend"].forEach((ev) =>
+        zone.addEventListener(ev, (e) => { e.preventDefault(); zone.classList.remove("drag"); }));
+      zone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        zone.classList.remove("drag");
+        uploadImages(e.dataTransfer.files);
+      });
+    })();
+    $("#reload").addEventListener("click", () => {
+      if (state.dirty && !confirm("Discard unsaved changes and reload?")) return;
+      setDirty(false);
+      load();
+    });
+    form.addEventListener("submit", saveStop);
+    form.addEventListener("input", onInput);
+    form.querySelectorAll('input[name="costMode"]').forEach((r) =>
+      r.addEventListener("change", () => setCostMode(r.value)));
+    window.addEventListener("beforeunload", (e) => {
+      if (state.dirty) { e.preventDefault(); e.returnValue = ""; }
+    });
+
+    load().catch((err) => toast("Load failed: " + err.message, true));
+  </script>
+</body>
+</html>

@@ -1803,6 +1803,16 @@
       line-height: 1.45;
       margin-bottom: 0.65rem;
     }
+    .goto {
+      font-size: 0.85rem;
+      line-height: 1.45;
+      margin-top: 0.4rem;
+    }
+    .goto strong {
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      font-size: 0.78em;
+    }
     .p3-card__expand-meta {
       font-size: 0.65rem;
       letter-spacing: var(--tracking-wide);
@@ -2281,6 +2291,12 @@
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
+    }
+
+    function gotoHtml(spot) {
+      const value = spot && spot.goto ? String(spot.goto).trim() : "";
+      if (!value) return "";
+      return `<p class="goto"><strong>My go-to:</strong> ${escapeHtml(value).replace(/\n/g, "<br>")}</p>`;
     }
 
     function resolveStopImages(stop) {
@@ -3458,6 +3474,7 @@
                 <span class="tag">${spot.walkFromStation} min walk</span>
               </div>
               <p>${spot.description}</p>
+              ${gotoHtml(spot)}
             </div>
           </div>
         `;
@@ -4608,6 +4625,7 @@
           <div class="route-card__details" aria-hidden="true">
             ${tagsHtml}
             ${descHtml}
+            ${gotoHtml(s)}
           </div>
           ${removeBtn}
         </div>
@@ -5379,6 +5397,7 @@
           <div class="p3-card__expand-body">
             <div class="tags">${renderP3Tags(spot)}</div>
             <p class="description">${escapeHtml(spot.description)}</p>
+            ${gotoHtml(spot)}
             ${renderP3DetailMeta(spot)}
           </div>
           <div class="p3-card__actions">

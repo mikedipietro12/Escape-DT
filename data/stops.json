@@ -24,6 +24,7 @@
                 "x": 145
             },
             "description": "Local legend cafe. Home of my favorite chocolate chip cookie. Local meet up spot with decent little patio in the back, great drinks and an excellent roast of espresso.",
+            "goto": "A shot of espresso and a chocolate chunk cookie or a krispie oatmeal raising cookie.",
             "walkFromStation": 3,
             "placeholderColor": "6f4e37",
             "slug": "jj-bean",
@@ -55,6 +56,7 @@
                 "x": 155
             },
             "description": "Your favorite Indian dishes, wrapped up in a delicious package to go. Both meat and veggie options.",
+            "goto": "Chicken Tikka roll",
             "walkFromStation": 3,
             "placeholderColor": "e07a5f",
             "slug": "rollzzy",
@@ -90,6 +92,7 @@
                 "x": 148
             },
             "description": "Locally owned coffee shop with great coffee and some unique, hearty baked goods. Great spot to sit on the corner and people watch.",
+            "goto": "An americano and a \"cookie with no name\" sitting outside on the south facing bench.",
             "walkFromStation": 7,
             "placeholderColor": "c9a66b",
             "slug": "prado-cafe",
@@ -131,6 +134,7 @@
                 "x": 142
             },
             "description": "Newer locally owned spot with super authentic Souvlaki. Big share plates or personal portions.",
+            "goto": "Lamb gyro wrap.",
             "walkFromStation": 10,
             "placeholderColor": "e9c46a",
             "slug": "skewers-souvlaki-pita-bar",
@@ -141,6 +145,9 @@
             "neighborhood": "commercial",
             "categories": [
                 "food"
+            ],
+            "images": [
+                "assets/stops/skewers-souvlaki-pita-bar.jpg"
             ]
         },
         {
@@ -160,6 +167,7 @@
                 "x": 158
             },
             "description": "Classic Italian Deli with a delicious sandwich counter and quick stop for European groceries.",
+            "goto": "I mostly go here for hard-to-find Italian groceries, but everyone loves the make your own sandwich bar.",
             "walkFromStation": 10,
             "placeholderColor": "cad2c5",
             "slug": "la-grotta-del-formaggio",
@@ -197,6 +205,7 @@
                 "x": 150
             },
             "description": "Newest pizza place to hit Commercial. Their dough is super high quality with a unique flavor, they cook it to perfection with a simple menu that has me coming back for more. The late night vibe is worth checking out as their playlists are always on point and the drinks somehow always keep on flowing.",
+            "goto": "The Fennel Sausage or Hawaiian pizza would be my first choices, with a glass of lambrusco.",
             "walkFromStation": 12,
             "placeholderColor": "d62828",
             "slug": "belli-pizza",
@@ -235,6 +244,7 @@
                 "x": 145
             },
             "description": "One of the oldest vintage sellers in the city. Amazing selection of all types of vintage, from one of a kind dresses, to ratty band tees, beloved sports jackets, rocks and gems, reworks, and so much more. Worth a look even if you're not shopping for anything.",
+            "goto": "I often go in here to check out the jackets and sweaters in the back right corner.",
             "walkFromStation": 15,
             "placeholderColor": "bc6c25",
             "slug": "mintage",
@@ -272,6 +282,7 @@
                 "x": 155
             },
             "description": "Upscale Greek dishes with authentic flavors. Great cocktails and a fun evening vibe if you're into staying late. Check out the backroom for more cocktails.",
+            "goto": "The dips and octops are usually my starter and ifI'm feelin hungry, I'll usualy go with the paidakia (lamb chops)",
             "walkFromStation": 15,
             "placeholderColor": "7209b7",
             "slug": "loulas",
@@ -310,6 +321,7 @@
                 "x": 148
             },
             "description": "Good late afternoon - late night Italian snacks and cocktails. Cute little patio on the sidewalk with a good mix of wine and cocktails on the menu.",
+            "goto": "A cocktail and an order of meatballs on the patio on a warm summer evening.",
             "walkFromStation": 17,
             "placeholderColor": "8d99ae",
             "slug": "bar-corso",
@@ -348,6 +360,7 @@
                 "x": 152
             },
             "description": "A neighborhood staple that takes in all walks of life. A big sidewalk facing patio where you can catch some evening sun, a cold beer, some wings, and potentially some live jazz. Inside has screens for all your sport-viewing needs and often has a good crew of locals kicking around.",
+            "goto": "Wing night is usually when you'll find me at the Charlatan, with a pint of guiness, some friends, and too many orders of wings.",
             "walkFromStation": 20,
             "placeholderColor": "2a9d8f",
             "slug": "the-charlatan",
@@ -385,6 +398,7 @@
                 "x": 158
             },
             "description": "My goto sushi spot on Commercial. A bit more expensive compared to some of the other options, but I've never been disappointed in the quality of their fish and their Japanese dishes.",
+            "goto": "Salmon oshi, inari negiri",
             "walkFromStation": 20,
             "placeholderColor": "457b9d",
             "slug": "cozen-japanese-cuisine",
@@ -424,6 +438,7 @@
                 "x": 150
             },
             "description": "Alterior is a local clothing manufacturer specializing in denim goods. They carry a bunch of specially curated brands, have tonnes of pop-ups, and hidden corners of the shop include Book Section upstairs. This space is part clothing store, part manufacturing studio, part art space. A great place to meet locals and learn about the neighborhood.",
+            "goto": "DENIM.",
             "walkFromStation": 28,
             "slug": "alterior",
             "images": [
@@ -458,6 +473,7 @@
                 "x": 155
             },
             "description": "Hidden inside Alterior, Vintage Sponsor is the legendary vintage dealer whose collection is always growing and changing. I buy something almost every time I am in this shop. He has a wide range of styles from different eras and his eye for quality pieces is unlike any other shop in the city. With occasional pop-up events, and a wealth of knowledge, it's always worth popping in to see what's new.",
+            "goto": "T-shirts, dress shirts, polos",
             "walkFromStation": 28,
             "slug": "vintage-sponsor",
             "images": [
@@ -500,6 +516,7 @@
                 "x": 148
             },
             "description": "One of the cutest coffee shops in the neighborhood. Great patio with an amazing piazza next door where you can sit with your take out if the restaurant is too busy (it usually is!). Amazing baked goods made in house every day, a great place for a coffee, a treat, lunch, or to take home some bread.",
+            "goto": "Breakfast sandwich with mortadella and an americano",
             "walkFromStation": 15,
             "placeholderColor": "f4a261",
             "slug": "livia-forno-e-vino",
@@ -537,6 +554,7 @@
                 "x": 150
             },
             "description": "A great place to stop to get some Mediterranean groceries or a quick snack.",
+            "goto": "feta dip and a baked pie to go.",
             "walkFromStation": 10,
             "placeholderColor": "264653",
             "slug": "mediterranean-specialty-foods-turkish-market",
@@ -572,6 +590,7 @@
                 "x": 152
             },
             "description": "With multiple locations in the city, it's no secret that this is some of the best Indian food you can get. I've tried many of the dishes and always find myself coming back for more!",
+            "goto": "Share platter to start, then some dal makhani, saag paneer, butter chicken and lamb vindaloo.",
             "walkFromStation": 20,
             "placeholderColor": "e76f51",
             "slug": "sula-indian-restaurant",
@@ -610,6 +629,7 @@
                 "x": 150
             },
             "description": "A newer Izakaya on the block, this location has some of the best cocktails in the city. Some serious chemistry going on in here to get some wild cocktails. Their super sharable plates are awesome for dining with 2-6 people, make a reso, this place fills up fast!",
+            "goto": "Wagyu sliders and a tonka cocktail",
             "walkFromStation": 17,
             "placeholderColor": "6a4c93",
             "slug": "nomo-nomo",
@@ -647,6 +667,7 @@
                 "x": 150
             },
             "description": "One of the most in demand restaurants in the city. Unrivaled hand-made pasta that truly provides a unique tasting-menu experience. The team there is super knowledgeable and always a great time. Get in line by 4:30 if you want to be in the first round of seating!",
+            "goto": "Tasting menu.",
             "walkFromStation": 17,
             "placeholderColor": "118ab2",
             "slug": "magari-by-oca",
@@ -681,6 +702,7 @@
                 "x": 148
             },
             "description": "A great local spot to grab a slice, a shot of espresso, and catch a game. One of the best slices in the city hands down and one of my go-tos for a quick bite. Authentic NY slice in the heart of little Italy.",
+            "goto": "Daily special slice or just a simple slice of pepperoni.",
             "walkFromStation": 15,
             "placeholderColor": "4a7c59",
             "slug": "dont-argue-pizza",
@@ -718,6 +740,7 @@
                 "x": 148
             },
             "description": "A long-standing Commercial drive staple. This is part restaurant part grocery shop. My go to here is a Potato Pea fried Samosa and Chocolate Macaroon cookie to go. Large selection of natural foods, drinks, vitamins, and much more. The other side of the shop is a sit-down restaurant with some super tasty traditional dishes.",
+            "goto": "Spinach feta fried samosa or potato pea.",
             "walkFromStation": 20,
             "placeholderColor": "9b5de5",
             "slug": "sweet-cherubim",
@@ -756,6 +779,7 @@
                 "x": 150
             },
             "description": "Korean Fried chicken on a bowl of rice with pickles. Enough said.",
+            "goto": "Fried chicken on rice bowl.",
             "walkFromStation": 22,
             "placeholderColor": "00b4d8",
             "slug": "mogu-fried-chicken",
@@ -790,6 +814,7 @@
                 "x": 152
             },
             "description": "A local favorite, Downlow always serves amazing southern style fried chicken. I usually go for the mild options, but if you're feeling spicy, there is a ton of options to get your sweat on.",
+            "goto": "I always go for the chicken tenders, sometimes spicy, sometimes plain",
             "walkFromStation": 30,
             "placeholderColor": "ff6b6b",
             "slug": "downlow-chicken-shack",
@@ -825,6 +850,7 @@
                 "x": 152
             },
             "description": "Wonderful, cozy, Thai restaurant with some amazing curries and pad-thai dishes. Menu changes frequently and I love checking in at least once a year to see whats new.",
+            "goto": "Stir fry pork belly",
             "walkFromStation": 30,
             "placeholderColor": "a8dadc",
             "slug": "kin-kao",
@@ -863,6 +889,7 @@
                 "x": 155
             },
             "description": "One of my forever favorite Cafes in the city. Their lunch is always fantastic, stop for a coffee and a quick bite with rotating pastas, salads, and sandwiches to satisfy any taste for any time of day.",
+            "goto": "I am a regular buyer of their big bag of coffee, I love the roast. If I'm there and hungry I usually go for the kale salad and breakfast sandwich.",
             "walkFromStation": 35,
             "placeholderColor": "606c38",
             "slug": "caffe-la-tana",
@@ -894,6 +921,7 @@
                 "x": 153
             },
             "description": "One of the newest Vintage shops in the neighborhood by two OG vintage pickers in the city. You can find anything your vintage heart desires from super accessible collectables and clothes all the way up to rare t-shirts that have back stories that will make your head spin.",
+            "goto": "Puruse the toys with my daughter, hear a story from Kirby or Andy, and look through all the t-shirts!",
             "walkFromStation": 30,
             "placeholderColor": "2b2d42",
             "slug": "fun-haus",
@@ -936,6 +964,7 @@
                 "x": 154
             },
             "description": "Part art-gallery, part shop, part co-working space, photo booth, part vintage shop this place has it all. It is a must stop if you make it to Venables from the skytrain, there is truly something for everyone. Local gifts made by local artists of all shapes and sizes.",
+            "goto": "Look through the stickers, art books, head to the vintage shop, then photo booth before taking in what's in the gallery that week.",
             "walkFromStation": 30,
             "placeholderColor": "073b4c",
             "slug": "slice-of-life-art-gallery",
@@ -1066,6 +1095,7 @@
                 "x": 150
             },
             "description": "An eccelectic little coffee shop at the end of the drive with the only clover coffee machine in the neighborhood. They also have other flavored drinks, if that's your vibe!",
+            "goto": "Clover coffee and a reese pieces cookie",
             "walkFromStation": 30,
             "placeholderColor": "556b2f",
             "slug": "bump-n-grind",
@@ -1127,6 +1157,7 @@
                 "y": 362
             },
             "description": "One block east of Commercial, Mah is a great place to grab a coffee and light lunch, or some unique groceries and sit on their little patio, or head across the street into the park to enjoy your purchases.",
+            "goto": "Morning glory muffin",
             "walkFromStation": 20,
             "placeholderColor": "d4a373",
             "slug": "mah",
@@ -1216,6 +1247,7 @@
                 "x": 150
             },
             "description": "One of the best patios in the neighborhood, lots of space and great people watching. Food is good, drinks are cold, and vibes are high.",
+            "goto": "Pitcher of sangria or margs on the patio. Cubano or fish tacos if you're hungry.",
             "walkFromStation": 20,
             "placeholderColor": "cb997e",
             "slug": "havana",
@@ -1248,6 +1280,7 @@
                 "x": 150
             },
             "description": "My go to stop for a quick drink, snack, or just to say hi to the gentleman who work there!",
+            "goto": "Only spot on the drive that has sugar free orangina!",
             "walkFromStation": 12,
             "placeholderColor": "ff9f1c",
             "slug": "easy-shop",
@@ -1283,6 +1316,7 @@
                 "x": 150
             },
             "description": "If you're looking for latinx snacks, this is your go to stop! This shop is filled with authentic groceries from all over North, Central, and South America. The best part is, in the back corner, are cheap and delicious tacos. One of the best kept secrets in the neighborhood (you're lucky I'm tellin you!).",
+            "goto": "Tacos in the back!",
             "walkFromStation": 20,
             "placeholderColor": "06d6a0",
             "slug": "mi-tierra",
@@ -1320,6 +1354,7 @@
                 "x": 150
             },
             "description": "My wifes favorite cinnamon bun in the city, great sausage roll and cookies too!",
+            "goto": "Sausage roll (and/or)  cookie (and/or) cinnamon bun.",
             "walkFromStation": 12,
             "placeholderColor": "b08968",
             "slug": "bench",
@@ -1360,6 +1395,7 @@
                 "x": 150
             },
             "description": "A great spot for coffee, snacks, or a full lunch. Some of the best sourdough in the city and a great spot to sit in the sun. It's further South from the Skytrain than the main Commercial Drive area, but it's definitely worth a visit.",
+            "goto": "Coffee, cookie, daily quiche or beans on toast.",
             "walkFromStation": 12,
             "placeholderColor": "f72585",
             "slug": "flourist",
@@ -1421,6 +1457,7 @@
                 "y": 178
             },
             "description": "Top 3 Ice cream in the city hands down. I could go for a scoop of Cookies & Cream any day. A bit off the beaten path, but close to a big park with a playground and a large open field where locals tend to picnic.",
+            "goto": "Sample everything but get a kids cone of cookies and cream.",
             "walkFromStation": 30,
             "placeholderColor": "ffb703",
             "slug": "earnest",
@@ -1517,6 +1554,7 @@
                 "y": 168
             },
             "description": "One of my favorite breweries in the city. Some of the freshest beers you can find, with lots of rotating taps, off sales, and a great kitchen serving up more than just \"pub food\".",
+            "goto": "ICY COOL or NITRO STOUT",
             "walkFromStation": 32,
             "placeholderColor": "7f5539",
             "slug": "superflux",
@@ -1565,6 +1603,35 @@
             "categories": [
                 "drinks"
             ]
+        },
+        {
+            "id": "s64",
+            "name": "Mums the Word",
+            "slug": "mums",
+            "neighborhood": "commercial",
+            "categories": [
+                "coffee",
+                "drinks"
+            ],
+            "tags": [
+                "patio",
+                "coffee",
+                "cocktails"
+            ],
+            "timeOfDay": [
+                "allday"
+            ],
+            "cost": "$$",
+            "description": "This place has a south facing patio that keeps you nice and shaded in the hot summer months while still being able to people watch with a mountain view. Coffee and cocktails to either start or end your day!",
+            "crossStreet": "Commercial & Charles",
+            "walkFromStation": 0,
+            "coords": {
+                "y": 300
+            },
+            "placeholderColor": "cccccc",
+            "lat": 49.272939,
+            "lng": -123.069784,
+            "goto": "Shot of espresso in the morning, cold brew Manhattan at night."
         }
     ]
 }
