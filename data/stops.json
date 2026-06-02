@@ -38,7 +38,11 @@
             ],
             "images": [
                 "assets/stops/jj-bean.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 44
+            }
         },
         {
             "crossStreet": "6th & Commercial",
@@ -70,7 +74,11 @@
             ],
             "images": [
                 "assets/stops/rollzzy.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 37
+            }
         },
         {
             "crossStreet": "E 4th Ave",
@@ -111,7 +119,11 @@
                 "assets/stops/prado-cafe-3.jpg",
                 "assets/stops/prado-cafe-4.jpg",
                 "assets/stops/prado-cafe-5.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 64
+            }
         },
         {
             "crossStreet": "E 2nd Ave",
@@ -182,7 +194,11 @@
             ],
             "images": [
                 "assets/stops/la-grotta-del-formaggio.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 42
+            }
         },
         {
             "crossStreet": "E 2nd",
@@ -223,17 +239,18 @@
                 "assets/stops/belli-pizza.jpg",
                 "assets/stops/belli-pizza-2.jpg",
                 "assets/stops/belli-pizza-3.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 81
+            }
         },
         {
             "crossStreet": "E 1st",
             "id": "s7",
             "lat": 49.2693101,
             "googlePlaceId": "ChIJZw7gbUdxhlQR1inpfufueaE",
-            "cost": {
-                "min": "$",
-                "max": "$$$$"
-            },
+            "cost": "$",
             "tags": [
                 "vintage",
                 "unisex"
@@ -261,7 +278,11 @@
                 "assets/stops/mintage-2.jpg",
                 "assets/stops/mintage-3.jpg",
                 "assets/stops/mintage-4.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 86
+            }
         },
         {
             "crossStreet": "Graveley",
@@ -299,7 +320,11 @@
                 "assets/stops/loulas.jpg",
                 "assets/stops/loulas-2.jpg",
                 "assets/stops/loulas-3.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 20
+            }
         },
         {
             "crossStreet": "Grant",
@@ -413,7 +438,11 @@
             ],
             "images": [
                 "assets/stops/cozen-japanese-cuisine.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 11
+            }
         },
         {
             "crossStreet": "Venables St",
@@ -453,7 +482,11 @@
             "categories": [
                 "shopping",
                 "hangout"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 41
+            }
         },
         {
             "crossStreet": "Venables & Commercial",
@@ -477,10 +510,10 @@
             "walkFromStation": 28,
             "slug": "vintage-sponsor",
             "images": [
+                "assets/stops/vintage-sponsor-4.jpg",
                 "assets/stops/vintage-sponsor.jpg",
                 "assets/stops/vintage-sponsor-2.jpg",
-                "assets/stops/vintage-sponsor-3.jpg",
-                "assets/stops/vintage-sponsor-4.jpg"
+                "assets/stops/vintage-sponsor-3.jpg"
             ],
             "lng": -123.0703,
             "timeOfDay": [
@@ -490,7 +523,11 @@
             "neighborhood": "commercial",
             "categories": [
                 "shopping"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 46
+            }
         },
         {
             "crossStreet": "Kitchener",
@@ -532,8 +569,13 @@
                 "food"
             ],
             "images": [
+                "assets/stops/livia-forno-e-vino-3.jpg",
                 "assets/stops/livia-forno-e-vino.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 67
+            }
         },
         {
             "crossStreet": "E 2nd",
@@ -567,10 +609,14 @@
                 "groceries"
             ],
             "images": [
-                "assets/stops/mediterranean-specialty-foods-turkish-market.jpg",
                 "assets/stops/mediterranean-specialty-foods-turkish-market-2.jpg",
+                "assets/stops/mediterranean-specialty-foods-turkish-market.jpg",
                 "assets/stops/mediterranean-specialty-foods-turkish-market-3.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 82
+            }
         },
         {
             "crossStreet": "William St",
@@ -604,17 +650,18 @@
             ],
             "images": [
                 "assets/stops/sula-indian-restaurant.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 29
+            }
         },
         {
             "crossStreet": "Commercial Dr",
             "id": "s17",
             "lat": 49.273343,
             "googlePlaceId": "ChIJacVfweBxhlQRJSijA6JfJSI",
-            "cost": {
-                "min": "$$$",
-                "max": "$$$$"
-            },
+            "cost": "$$$",
             "tags": [
                 "cocktails",
                 "izakaya",
@@ -639,8 +686,13 @@
             ],
             "neighborhood": "commercial",
             "categories": [
-                "drinks",
-                "food"
+                "food",
+                "drinks"
+            ],
+            "images": [
+                "assets/stops/nomo-nomo.jpg",
+                "assets/stops/nomo-nomo-3.jpg",
+                "assets/stops/nomo-nomo-2.jpg"
             ]
         },
         {
@@ -648,10 +700,7 @@
             "id": "s18",
             "lat": 49.2733751,
             "googlePlaceId": "ChIJG8_wk4dxhlQRM-VxydVoPp0",
-            "cost": {
-                "min": "$$$",
-                "max": "$$$$"
-            },
+            "cost": "$$$",
             "tags": [
                 "wine",
                 "pasta",
@@ -679,7 +728,18 @@
             "categories": [
                 "food",
                 "drinks"
-            ]
+            ],
+            "images": [
+                "assets/stops/magari-by-oca-3.jpg",
+                "assets/stops/magari-by-oca.jpg",
+                "assets/stops/magari-by-oca-2.jpg",
+                "assets/stops/magari-by-oca-4.jpg",
+                "assets/stops/magari-by-oca-5.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 55
+            }
         },
         {
             "crossStreet": "Kitchener",
@@ -712,13 +772,18 @@
             ],
             "neighborhood": "commercial",
             "categories": [
-                "food",
-                "coffee"
+                "coffee",
+                "food"
             ],
             "images": [
-                "assets/stops/dont-argue-pizza.jpg",
-                "assets/stops/dont-argue-pizza-2.jpg"
-            ]
+                "assets/stops/dont-argue-pizza-3.jpg",
+                "assets/stops/dont-argue-pizza-2.jpg",
+                "assets/stops/dont-argue-pizza.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 61
+            }
         },
         {
             "crossStreet": "Napier",
@@ -750,13 +815,17 @@
             ],
             "neighborhood": "commercial",
             "categories": [
-                "groceries",
-                "food"
+                "food",
+                "groceries"
             ],
             "images": [
                 "assets/stops/sweet-cherubim.jpg",
                 "assets/stops/sweet-cherubim-2.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 25
+            }
         },
         {
             "crossStreet": "Parker",
@@ -828,7 +897,11 @@
             ],
             "images": [
                 "assets/stops/downlow-chicken-shack.jpg"
-            ]
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 73
+            }
         },
         {
             "crossStreet": "Venables",
@@ -934,8 +1007,13 @@
                 "shopping"
             ],
             "images": [
-                "assets/stops/fun-haus.jpg"
-            ]
+                "assets/stops/fun-haus-2.jpg",
+                "assets/stops/fun-haus-3.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 35
+            }
         },
         {
             "crossStreet": "Venables",
@@ -978,8 +1056,13 @@
                 "hangout"
             ],
             "images": [
-                "assets/stops/slice-of-life-art-gallery.jpg"
-            ]
+                "assets/stops/slice-of-life-art-gallery.jpg",
+                "assets/stops/slice-of-life-art-gallery-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 25
+            }
         },
         {
             "crossStreet": "Commercial & E 4th",
@@ -1042,7 +1125,15 @@
             "neighborhood": "commercial",
             "categories": [
                 "shopping"
-            ]
+            ],
+            "images": [
+                "assets/stops/canterbury.jpg",
+                "assets/stops/canterbury-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 100
+            }
         },
         {
             "crossStreet": "E 4th",
@@ -1110,7 +1201,14 @@
             "neighborhood": "commercial",
             "categories": [
                 "coffee"
-            ]
+            ],
+            "images": [
+                "assets/stops/bump-n-grind.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 25
+            }
         },
         {
             "crossStreet": "Venables",
@@ -1176,15 +1274,18 @@
             "neighborhood": "commercial",
             "categories": [
                 "coffee",
-                "groceries",
-                "food"
+                "food",
+                "groceries"
+            ],
+            "images": [
+                "assets/stops/mah.jpg"
             ]
         },
         {
             "crossStreet": "Victoria & Grant",
             "id": "s33",
             "lat": 49.27174,
-            "cost": "free",
+            "cost": "",
             "tags": [
                 "playground",
                 "park",
@@ -1205,7 +1306,15 @@
             "neighborhood": "commercial",
             "categories": [
                 "hangout"
-            ]
+            ],
+            "images": [
+                "assets/stops/victoria-park-2.jpg",
+                "assets/stops/victoria-park.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 95
+            }
         },
         {
             "crossStreet": "Charles",
@@ -1644,7 +1753,7 @@
             "cost": "$$",
             "description": "This place has a south facing patio that keeps you nice and shaded in the hot summer months while still being able to people watch with a mountain view. Coffee and cocktails to either start or end your day!",
             "crossStreet": "Commercial & Charles",
-            "walkFromStation": 0,
+            "walkFromStation": 20,
             "coords": {
                 "y": 300
             },
@@ -1682,6 +1791,130 @@
             "images": [
                 "assets/stops/hackspace-mini-cinema.jpg"
             ]
+        },
+        {
+            "crossStreet": "Commercial & 12th",
+            "id": "s66",
+            "lat": 49.2597798,
+            "googlePlaceId": "ChIJ1ZqN1P9xhlQRtJ_2k147k6k",
+            "cost": "$$",
+            "tags": [
+                "mexican",
+                "vegetarian",
+                "sit down",
+                "brunch",
+                "lunch",
+                "dinner",
+                "cocktails"
+            ],
+            "name": "The Burrow",
+            "coords": {
+                "y": 330,
+                "x": 150
+            },
+            "description": "East Van's go-to for vegetarian and vegan Mexican — tacos, burritos, nachos, and a standout weekend brunch in a warm, neighbourhood-room kind of space. Same kitchen you may remember as Bandidas, with a name that fits the community vibe.",
+            "walkFromStation": 9,
+            "placeholderColor": "5e548e",
+            "slug": "the-burrow",
+            "lng": -123.070054,
+            "timeOfDay": [
+                "morning",
+                "afternoon",
+                "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food"
+            ],
+            "images": [
+                "assets/stops/the-burrow.jpg"
+            ]
+        },
+        {
+            "crossStreet": "Commercial & 7th",
+            "id": "s67",
+            "lat": 49.2637918,
+            "cost": "$$",
+            "tags": [
+                "sit down",
+                "patio",
+                "beer",
+                "craft beer",
+                "tvs",
+                "pub",
+                "lunch",
+                "dinner",
+                "cocktails"
+            ],
+            "name": "St. Augustine's",
+            "coords": {
+                "y": 522,
+                "x": 150
+            },
+            "description": "If you're wanting to stay close to the skytrain and taste a bunch of local beer's this is your spot. The pizza and nachos are good too!",
+            "walkFromStation": 2,
+            "placeholderColor": "1b4965",
+            "slug": "st-augustines",
+            "lng": -123.0695485,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "food",
+                "drinks"
+            ],
+            "goto": "Stout and nachos",
+            "images": [
+                "assets/stops/st-augustines-2.jpg",
+                "assets/stops/st-augustines.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 34
+            }
+        },
+        {
+            "crossStreet": "William St",
+            "id": "s68",
+            "lat": 49.274336,
+            "cost": {
+                "min": "$$",
+                "max": "$$$"
+            },
+            "tags": [
+                "clothing",
+                "houseware",
+                "gifts",
+                "shops"
+            ],
+            "name": "Gatley",
+            "coords": {
+                "y": 283,
+                "x": 150
+            },
+            "description": "A neighborhood lifestyle shop since 2012 with women's clothing, household goods, and everyday objects. Locally owned and great stop for gifts!",
+            "walkFromStation": 20,
+            "placeholderColor": "8e6b5a",
+            "slug": "gatley",
+            "lng": -123.069216,
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "shopping"
+            ],
+            "goto": "Bagu bags, soaps, and my book!",
+            "images": [
+                "assets/stops/gatley.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 51
+            }
         }
     ]
 }

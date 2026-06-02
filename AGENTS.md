@@ -37,7 +37,7 @@ Page backgrounds use a vertical fade: `linear-gradient(to bottom, var(--bg-top),
 | Red | `rgb(253, 105, 108)` | `#fd696c` |
 | Blue | `rgb(142, 220, 238)` | `#8edcee` |
 | Orange | `rgb(255, 175, 100)` | `#ffaf64` |
-| White | (winter fade end) | `#ffffff` |
+| White | | `#ffffff` |
 
 **CSS variables:** `--fade-top` and `--fade-bottom` on `:root` (set before paint by [`js/season-theme.js`](js/season-theme.js)). Gradients and `body.landing-active` use these vars; the lightest route-map leg colour follows `--fade-top`.
 
@@ -45,7 +45,7 @@ Page backgrounds use a vertical fade: `linear-gradient(to bottom, var(--bg-top),
 
 | Calendar label | Half-month window | Fade (top → bottom) | `?season=` |
 |----------------|-------------------|---------------------|------------|
-| Dec – Feb | Dec 16 – Feb 15 | Blue → white | `winter` |
+| Dec – Feb | Dec 16 – Feb 15 | White → blue | `winter` |
 | Feb – Apr | Feb 16 – Apr 15 | Blue → green | `thaw` |
 | Apr – Jun | Apr 16 – Jun 15 | Green → yellow | `spring` |
 | Jun – Sept | Jun 16 – Sep 15 | Yellow → orange | `summer` |
@@ -123,6 +123,25 @@ This runs `scripts/build-seo.mjs` and:
 **Adding more static spot pages:** append the new stop’s `slug` to `pilotSpotSlugs` in `seo.config.json` (currently all stops in `data/stops.json`), then `npm run build`. The interactive app (`index.html`) is unchanged unless you add deep links later.
 
 **Adding a crawlable pre-built plan page:** add the plan to `data/plans.json`, append its key to `seoPlanSlugs`, then `npm run build` → `/plans/<plan-key>/` (story + stop list; links to `/spots/<slug>/` when the stop is in `pilotSpotSlugs`).
+
+---
+
+## Shared route links (in-app)
+
+After **Finalize** on Step E (or on a pre-built plan), **Share with a friend** copies or shares a URL that reopens the same visit order in the interactive app.
+
+**Query parameters** (on `index.html`):
+
+| Param | Meaning |
+|--------|---------|
+| `route` | Comma-separated stop ids in visit order (required), e.g. `route=s1,s4,s19` |
+| `rs` | Route start: omit or `station` (default); `first` = start at first stop |
+| `re` | Route end: omit or `station` (default); `last` = end at last stop |
+| `plan` | Optional pre-built plan key when sharing a customized Path 2 route, e.g. `plan=world-cup-day` |
+
+Example: `https://explore.seasonsofeastvan.com/?route=s3,s1,s19&rs=station&re=station`
+
+**Notes:** Links break if a stop id is removed from `data/stops.json`. Renaming stops does not change ids (`s1`, `s2`, …). **Save as PDF** opens a compact one-page print layout (map + numbered stop list side by side) via the browser print dialog — choose Save as PDF there.
 
 ---
 

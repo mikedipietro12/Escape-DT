@@ -44,6 +44,18 @@ function heroImage(stop) {
   return null;
 }
 
+function heroFocusObjectPosition(stop) {
+  const raw = stop?.heroFocus;
+  if (!raw || typeof raw !== "object") return "";
+  const x = Number(raw.x);
+  const y = Number(raw.y);
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return "";
+  const cx = Math.min(100, Math.max(0, x));
+  const cy = Math.min(100, Math.max(0, y));
+  if (cx === 50 && cy === 50) return "";
+  return `object-position:${cx}% ${cy}%;`;
+}
+
 function buildGoogleAnalyticsTag(measurementId) {
   if (!measurementId) return "";
   const id = escapeHtml(measurementId);
@@ -344,8 +356,9 @@ function buildSpotPage(stop, config) {
 
   const jsonLd = JSON.stringify(localBusiness, null, 2).replace(/</g, "\\u003c");
 
+  const heroFocusCss = heroFocusObjectPosition(stop);
   const imageBlock = img
-    ? `      <img src="../../${img}" alt="${escapeHtml(stop.name)} on Commercial Drive" width="800" height="600" style="max-width:100%;height:auto;border-radius:8px;">`
+    ? `      <img src="../../${img}" alt="${escapeHtml(stop.name)} on Commercial Drive" width="800" height="600" style="max-width:100%;height:auto;border-radius:8px;object-fit:cover;${heroFocusCss}">`
     : `      <div class="placeholder" style="background:#${stop.placeholderColor || "cccccc"};aspect-ratio:4/3;border-radius:8px;" aria-hidden="true"></div>`;
 
   const gotoText = stop.goto ? String(stop.goto).trim() : "";

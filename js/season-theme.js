@@ -16,7 +16,7 @@
 
   /** @type {Record<string, { top: string, bottom: string }>} */
   const THEMES = {
-    winter: { top: FADE.blue, bottom: FADE.white },
+    winter: { top: FADE.white, bottom: FADE.blue },
     thaw: { top: FADE.blue, bottom: FADE.green },
     spring: { top: FADE.green, bottom: FADE.yellow },
     summer: { top: FADE.yellow, bottom: FADE.orange },

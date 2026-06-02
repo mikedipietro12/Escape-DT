@@ -149,8 +149,14 @@
     .upload-zone.drag { border-color: var(--accent); background: var(--accent-soft); }
     .upload-zone .hint { color: var(--muted); font-size: 0.72rem; }
     .thumbs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
-    .thumb { position: relative; width: 78px; height: 78px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); background: #eee; }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb {
+      position: relative; width: 78px; height: 78px; border-radius: 8px; overflow: hidden;
+      border: 1px solid var(--line); background: #eee; cursor: grab;
+    }
+    .thumb:active { cursor: grabbing; }
+    .thumb.dragging { opacity: 0.4; cursor: grabbing; }
+    .thumb.drag-over { box-shadow: 0 0 0 2px var(--accent); border-color: var(--accent); }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
     .thumb-x {
       position: absolute; top: 2px; right: 2px;
       width: 20px; height: 20px; line-height: 1; padding: 0;
@@ -159,11 +165,18 @@
       display: flex; align-items: center; justify-content: center;
     }
     .thumb-x:hover { background: rgba(0,0,0,0.85); }
+    .thumb.is-hero { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
     .thumb-hero {
       position: absolute; bottom: 0; left: 0; right: 0;
       font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.04em;
-      text-align: center; background: rgba(37,99,235,0.85); color: #fff; padding: 0.05rem 0;
+      text-align: center; padding: 0.12rem 0.1rem; line-height: 1.2;
+      background: rgba(37,99,235,0.9); color: #fff; pointer-events: none;
     }
+    .upload-hero-opt {
+      display: flex; align-items: center; gap: 0.35rem;
+      font-size: 0.78rem; font-weight: 400; color: var(--muted); width: 100%;
+    }
+    .upload-hero-opt input { margin: 0; }
 
     .meta-box { background: #fbfbf9; border: 1px solid var(--line); border-radius: 8px; padding: 0.7rem; margin-bottom: 0.9rem; }
     .meta-box h4 { margin: 0 0 0.4rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
@@ -175,7 +188,10 @@
     .preview-wrap { position: sticky; top: 0.5rem; }
     .preview-wrap h3 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 0 0.5rem; }
     .preview-card { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); }
-    .preview-photo { height: 120px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.85); font-size: 0.8rem; }
+    .preview-photo { height: 120px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.85); font-size: 0.8rem; user-select: none; }
+    .preview-photo.is-draggable { cursor: grab; touch-action: none; }
+    .preview-photo.is-draggable.is-dragging { cursor: grabbing; }
+    .preview-focus-hint { font-size: 0.68rem; color: var(--muted); margin: 0.35rem 0 0; line-height: 1.35; }
     .preview-body { padding: 0.8rem; }
     .preview-body h4 { margin: 0 0 0.4rem; font-size: 1rem; text-transform: uppercase; }
     .preview-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.5rem; }
@@ -187,7 +203,10 @@
 
     .save-bar { position: sticky; bottom: 0; background: var(--panel); border-top: 1px solid var(--line); padding: 0.7rem 1.2rem; display: flex; align-items: center; gap: 0.8rem; margin: 1.5rem -1.2rem -4rem; }
     .save-bar .dirty { color: var(--warn); font-size: 0.8rem; }
+    .save-bar .dirty.is-saving { color: var(--muted); }
     .save-bar .saved { color: var(--ok); font-size: 0.8rem; }
+    .save-bar__nav { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
+    .save-bar__nav-pos { font-size: 0.75rem; color: var(--muted); min-width: 4.5rem; text-align: center; }
 
     .row-fill { font-size: 0.7rem; padding: 0.1rem 0.5rem; border-radius: 6px; background: var(--accent-soft); border-color: #cdddfb; color: var(--accent); }
     .row-fill:hover { background: #dbe8ff; }
@@ -372,11 +391,12 @@
           </div>
 
           <div class="field">
-            <label>Images <span class="hint">(comma-separated paths; leave empty for placeholder)</span></label>
+            <label>Images <span class="hint">(drag thumbnails — first = hero)</span></label>
             <input type="text" name="images" placeholder="assets/stops/my-place.jpg, assets/stops/my-place-2.jpg">
             <div class="upload-zone" id="upload-zone">
               <input type="file" id="image-file" accept="image/*" multiple hidden>
               <button type="button" id="upload-btn">Upload photos…</button>
+              <label class="upload-hero-opt"><input type="checkbox" id="upload-as-hero"> New uploads become hero (first in list)</label>
               <span class="hint" id="upload-hint">JPG, PNG, WebP, GIF, or AVIF — saved to assets/stops/ as &lt;slug&gt;.jpg, &lt;slug&gt;-2.jpg… (HEIC/iPhone RAW not supported; export as JPG first)</span>
             </div>
             <div class="thumbs" id="image-thumbs"></div>
@@ -387,7 +407,10 @@
           <div class="preview-wrap">
             <h3>Card preview</h3>
             <div class="preview-card">
-              <div class="preview-photo" id="preview-photo"></div>
+              <div class="preview-photo" id="preview-photo" title=""></div>
+              <input type="hidden" name="heroFocusX" value="50">
+              <input type="hidden" name="heroFocusY" value="50">
+              <p class="preview-focus-hint" id="preview-focus-hint" hidden>Drag the photo to choose what shows in the crop. Double-click to reset.</p>
               <div class="preview-body">
                 <h4 id="preview-name">—</h4>
                 <div class="preview-tags" id="preview-tags"></div>
@@ -401,8 +424,13 @@
 
         <div class="save-bar" style="grid-column: 1 / -1;">
           <button type="submit" class="primary" id="save-btn">Save</button>
-          <span id="dirty-flag" class="dirty" style="display:none;">Unsaved changes</span>
+          <span id="dirty-flag" class="dirty" style="display:none;" aria-live="polite"></span>
           <span id="saved-flag" class="saved" style="display:none;">Saved</span>
+          <div class="save-bar__nav">
+            <button type="button" id="nav-prev" class="ghost" disabled>Previous spot</button>
+            <span class="save-bar__nav-pos" id="nav-position" hidden aria-live="polite"></span>
+            <button type="button" id="nav-next" class="ghost" disabled>Next spot</button>
+          </div>
         </div>
       </form>
     </main>
@@ -479,6 +507,41 @@
 
     function needsPhotos(stop) { return !((stop.images || []).length || stop.image); }
 
+    const DEFAULT_HERO_FOCUS = { x: 50, y: 50 };
+
+    function clampHeroFocus(n) {
+      return Math.min(100, Math.max(0, Math.round(n)));
+    }
+
+    function normalizeHeroFocus(raw) {
+      if (!raw || typeof raw !== "object") return { ...DEFAULT_HERO_FOCUS };
+      const x = Number(raw.x);
+      const y = Number(raw.y);
+      return {
+        x: Number.isFinite(x) ? clampHeroFocus(x) : DEFAULT_HERO_FOCUS.x,
+        y: Number.isFinite(y) ? clampHeroFocus(y) : DEFAULT_HERO_FOCUS.y,
+      };
+    }
+
+    function heroFocusFromForm() {
+      return normalizeHeroFocus({
+        x: form.heroFocusX.value,
+        y: form.heroFocusY.value,
+      });
+    }
+
+    function setHeroFocusOnForm(focus) {
+      const f = normalizeHeroFocus(focus);
+      form.heroFocusX.value = String(f.x);
+      form.heroFocusY.value = String(f.y);
+      return f;
+    }
+
+    function isDefaultHeroFocus(focus) {
+      const f = normalizeHeroFocus(focus);
+      return f.x === DEFAULT_HERO_FOCUS.x && f.y === DEFAULT_HERO_FOCUS.y;
+    }
+
     // ---------- list ----------
     function renderNeighborhoodFilter() {
       const sel = $("#filter-neighborhood");
@@ -487,14 +550,12 @@
         order.map((id) => `<option value="${id}">${neighborhoodTitle(id)}</option>`).join("");
     }
 
-    function renderList() {
+    function getFilteredStops() {
       const q = $("#search").value.trim().toLowerCase();
       const nbh = $("#filter-neighborhood").value;
       const needsOnly = $("#filter-needs").checked;
       const needsPhotosOnly = $("#filter-needs-photos").checked;
-      const list = $("#list");
-
-      const filtered = state.stops.filter((s) => {
+      return state.stops.filter((s) => {
         if (nbh && (s.neighborhood || "commercial") !== nbh) return false;
         if (needsOnly && !isNeedsInfo(s)) return false;
         if (needsPhotosOnly && !needsPhotos(s)) return false;
@@ -504,6 +565,43 @@
         }
         return true;
       });
+    }
+
+    function updateSaveBarNav() {
+      const prevBtn = $("#nav-prev");
+      const nextBtn = $("#nav-next");
+      const posEl = $("#nav-position");
+      const filtered = getFilteredStops();
+      const idx = state.selectedId ? filtered.findIndex((s) => s.id === state.selectedId) : -1;
+      const hasSelection = idx >= 0;
+      const editorOpen = form.style.display !== "none";
+
+      prevBtn.disabled = !hasSelection || !editorOpen || idx <= 0;
+      nextBtn.disabled = !hasSelection || !editorOpen || idx < 0 || idx >= filtered.length - 1;
+
+      if (hasSelection && editorOpen && filtered.length > 1) {
+        posEl.hidden = false;
+        posEl.textContent = `${idx + 1} / ${filtered.length}`;
+      } else {
+        posEl.hidden = true;
+        posEl.textContent = "";
+      }
+    }
+
+    async function navigateStop(delta) {
+      const filtered = getFilteredStops();
+      const idx = filtered.findIndex((s) => s.id === state.selectedId);
+      if (idx < 0) return;
+      const next = filtered[idx + delta];
+      if (!next) return;
+      await selectStop(next.id);
+      const row = document.querySelector(`.stop-row[data-id="${next.id}"]`);
+      if (row) row.scrollIntoView({ block: "nearest" });
+    }
+
+    function renderList() {
+      const list = $("#list");
+      const filtered = getFilteredStops();
 
       $("#list-count").textContent = `${filtered.length} of ${state.stops.length} stops`;
 
@@ -539,6 +637,7 @@
           openWizard(btn.dataset.fill);
         });
       });
+      updateSaveBarNav();
     }
 
     function escapeHtml(str) {
@@ -575,8 +674,8 @@
       });
     }
 
-    function selectStop(id) {
-      if (state.dirty && !confirm("Discard unsaved changes?")) return;
+    async function selectStop(id) {
+      if (!(await leaveCurrentStop())) return;
       const stop = state.stops.find((s) => s.id === id);
       if (!stop) return;
       state.selectedId = id;
@@ -614,6 +713,7 @@
       form.lng.value = stop.lng != null ? stop.lng : "";
       $("#maps-link").value = "";
       form.images.value = (stop.images || (stop.image ? [stop.image] : [])).join(", ");
+      setHeroFocusOnForm(stop.heroFocus || DEFAULT_HERO_FOCUS);
 
       // categories
       const cats = stop.categories || [];
@@ -649,6 +749,7 @@
 
       updatePreview();
       renderThumbs();
+      updateSaveBarNav();
     }
 
     function collectChecks(containerId) {
@@ -705,6 +806,10 @@
       const images = form.images.value.split(",").map((s) => s.trim()).filter(Boolean);
       if (images.length) { stop.images = images; delete stop.image; } else { delete stop.images; }
 
+      const heroFocus = heroFocusFromForm();
+      if (!isDefaultHeroFocus(heroFocus)) stop.heroFocus = heroFocus;
+      else delete stop.heroFocus;
+
       // Route file by neighborhood (draft neighborhoods stay in their draft file).
       stop._source = sourceForNeighborhood(stop.neighborhood);
       return stop;
@@ -716,11 +821,19 @@
       $("#preview-name").textContent = stop.name || "—";
       const color = stop.placeholderColor || "cccccc";
       const photo = $("#preview-photo");
+      const focusHint = $("#preview-focus-hint");
       const imgs = stop.images || [];
       if (imgs.length) {
-        photo.style.background = "#222";
-        photo.textContent = imgs[0];
+        const hf = heroFocusFromForm();
+        photo.classList.add("is-draggable");
+        photo.title = "Drag to reposition · double-click to reset";
+        focusHint.hidden = false;
+        photo.style.background = "#222 url(/" + encodeURI(imgs[0]) + ") " + hf.x + "% " + hf.y + "% / cover no-repeat";
+        photo.textContent = "";
       } else {
+        photo.classList.remove("is-draggable", "is-dragging");
+        photo.title = "";
+        focusHint.hidden = true;
         photo.style.background = "#" + color;
         photo.textContent = "placeholder #" + color;
       }
@@ -755,18 +868,145 @@
       return String(cost);
     }
 
-    // ---------- dirty / save ----------
-    function setDirty(d) {
+    // ---------- auto-save ----------
+    const AUTO_SAVE_MS = 700;
+    let autoSaveTimer = null;
+    let autoSavePromise = null;
+    let savedFlagTimer = null;
+
+    function setDirty(d, message) {
       state.dirty = d;
-      $("#dirty-flag").style.display = d ? "" : "none";
-      if (d) $("#saved-flag").style.display = "none";
+      const flag = $("#dirty-flag");
+      if (d) {
+        flag.style.display = "";
+        flag.textContent = message || "Unsaved changes";
+        flag.classList.toggle("is-saving", message === "Saving…");
+        $("#saved-flag").style.display = "none";
+      } else {
+        flag.style.display = "none";
+        flag.textContent = "";
+        flag.classList.remove("is-saving");
+      }
+    }
+
+    function flashSaved() {
+      $("#saved-flag").style.display = "";
+      clearTimeout(savedFlagTimer);
+      savedFlagTimer = setTimeout(() => {
+        if (!state.dirty) $("#saved-flag").style.display = "none";
+      }, 2200);
+    }
+
+    function scheduleAutoSave() {
+      if (!state.selectedId || form.style.display === "none") return;
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        autoSaveTimer = null;
+        runAutoSave();
+      }, AUTO_SAVE_MS);
+      setDirty(true);
+    }
+
+    function applySavedStop(stop, data) {
+      const saved = { ...stop, _source: data.source };
+      delete saved._isNew;
+      const i = state.stops.findIndex((s) => s.id === stop.id);
+      if (i >= 0) state.stops[i] = saved;
+      else state.stops.push(saved);
+      $("#form-source").textContent = sourceLabel(saved, data.source);
+      $("#form-source").className = "pill" + (isDraftSource(data.source) ? " draft" : "");
+      $("#form-title").textContent = stop.name;
+      renderReviewBox(saved);
+      renderList();
+    }
+
+    async function runAutoSave({ quiet = true } = {}) {
+      if (!state.selectedId || form.style.display === "none") return false;
+      const stop = buildStopFromForm();
+      if (!String(stop.name || "").trim()) return false;
+
+      if (autoSavePromise) return autoSavePromise;
+
+      setDirty(true, "Saving…");
+      $("#save-btn").disabled = true;
+
+      autoSavePromise = (async () => {
+        try {
+          pruneReview(stop);
+          const res = await fetch(`/api/stop/${encodeURIComponent(stop.id)}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(stop),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Save failed");
+          applySavedStop(stop, data);
+          setDirty(false);
+          flashSaved();
+          if (!quiet) toast("Saved " + stop.id);
+          return true;
+        } catch (err) {
+          setDirty(true, "Save failed — try Save");
+          if (!quiet) toast(err.message, true);
+          throw err;
+        } finally {
+          autoSavePromise = null;
+          $("#save-btn").disabled = false;
+        }
+      })();
+
+      return autoSavePromise;
+    }
+
+    async function flushAutoSave() {
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = null;
+      if (autoSavePromise) {
+        try {
+          await autoSavePromise;
+        } catch {
+          /* leave dirty */
+        }
+      }
+      if (!state.dirty) return true;
+      const stop = buildStopFromForm();
+      if (!String(stop.name || "").trim()) return false;
+      try {
+        await runAutoSave({ quiet: true });
+        return !state.dirty;
+      } catch {
+        return false;
+      }
+    }
+
+    async function leaveCurrentStop() {
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = null;
+      if (autoSavePromise) {
+        try {
+          await autoSavePromise;
+        } catch {
+          return false;
+        }
+      }
+      if (!state.dirty) return true;
+      const stop = buildStopFromForm();
+      if (String(stop.name || "").trim()) {
+        try {
+          await runAutoSave({ quiet: true });
+          return !state.dirty;
+        } catch {
+          return false;
+        }
+      }
+      return confirm("Discard unsaved changes?");
     }
 
     function onInput() {
-      setDirty(true);
       $("#color-swatch").style.background = "#" + (form.placeholderColor.value.trim().replace(/^#/, "") || "cccccc");
       updatePreview();
       renderThumbs();
+      scheduleAutoSave();
     }
 
     // ---------- image upload ----------
@@ -786,24 +1026,105 @@
       form.images.value = paths.join(", ");
     }
 
+    function reorderImagePaths(from, to) {
+      const paths = imagePaths();
+      const f = Number(from);
+      const t = Number(to);
+      if (!Number.isFinite(f) || !Number.isFinite(t) || f < 0 || t < 0 || f >= paths.length || t >= paths.length || f === t) {
+        return;
+      }
+      const [item] = paths.splice(f, 1);
+      paths.splice(t, 0, item);
+      setImagePaths(paths);
+      onInput();
+    }
+
+    function mergeUploadedPaths(cur, added, asHero) {
+      const next = [...cur];
+      const fresh = added.filter((p) => !next.includes(p));
+      if (!fresh.length) return next;
+      if (asHero) {
+        for (let i = fresh.length - 1; i >= 0; i--) next.unshift(fresh[i]);
+      } else {
+        for (const p of fresh) next.push(p);
+      }
+      return next;
+    }
+
+    let thumbDragFrom = null;
+
+    function initThumbDrag() {
+      const wrap = $("#image-thumbs");
+      if (!wrap || wrap.dataset.dragBound) return;
+      wrap.dataset.dragBound = "1";
+
+      wrap.addEventListener("dragstart", (e) => {
+        if (e.target.closest(".thumb-x")) {
+          e.preventDefault();
+          return;
+        }
+        const thumb = e.target.closest(".thumb");
+        if (!thumb) return;
+        thumbDragFrom = Number(thumb.dataset.i);
+        thumb.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", String(thumbDragFrom));
+      });
+
+      wrap.addEventListener("dragend", () => {
+        thumbDragFrom = null;
+        wrap.querySelectorAll(".thumb").forEach((t) => {
+          t.classList.remove("dragging", "drag-over");
+        });
+      });
+
+      wrap.addEventListener("dragover", (e) => {
+        const thumb = e.target.closest(".thumb");
+        if (!thumb) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        wrap.querySelectorAll(".thumb.drag-over").forEach((t) => {
+          if (t !== thumb) t.classList.remove("drag-over");
+        });
+        thumb.classList.add("drag-over");
+      });
+
+      wrap.addEventListener("dragleave", (e) => {
+        const thumb = e.target.closest(".thumb");
+        if (!thumb) return;
+        const related = e.relatedTarget && e.relatedTarget.closest(".thumb");
+        if (related === thumb) return;
+        thumb.classList.remove("drag-over");
+      });
+
+      wrap.addEventListener("drop", (e) => {
+        const thumb = e.target.closest(".thumb");
+        if (!thumb) return;
+        e.preventDefault();
+        thumb.classList.remove("drag-over");
+        const from = thumbDragFrom ?? Number(e.dataTransfer.getData("text/plain"));
+        const to = Number(thumb.dataset.i);
+        reorderImagePaths(from, to);
+      });
+    }
+
     function renderThumbs() {
       const wrap = $("#image-thumbs");
       if (!wrap) return;
       const paths = imagePaths();
       wrap.innerHTML = paths.map((p, i) =>
-        `<div class="thumb">
+        `<div class="thumb${i === 0 ? " is-hero" : ""}" data-i="${i}" draggable="true" title="Drag to reorder — first is hero">
            <img src="/${encodeURI(p)}" alt="" loading="lazy" onerror="this.style.opacity=0.15">
-           <button type="button" class="thumb-x" data-i="${i}" title="Remove from list (does not delete the file)">&times;</button>
+           <button type="button" class="thumb-x" data-i="${i}" draggable="false" title="Remove from list (does not delete the file)">&times;</button>
            ${i === 0 ? '<span class="thumb-hero">hero</span>' : ""}
          </div>`).join("");
       wrap.querySelectorAll(".thumb-x").forEach((btn) => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
           const paths2 = imagePaths();
           paths2.splice(Number(btn.dataset.i), 1);
           setImagePaths(paths2);
-          setDirty(true);
-          updatePreview();
-          renderThumbs();
+          onInput();
         });
       });
     }
@@ -839,7 +1160,7 @@
       let slug = form.slug.value.trim();
       if (!slug) {
         slug = slugify(form.name.value);
-        if (slug) { form.slug.value = slug; setDirty(true); }
+        if (slug) { form.slug.value = slug; scheduleAutoSave(); }
       }
       if (!slug) { toast("Set a name or slug first — it names the file", true); return; }
 
@@ -879,13 +1200,10 @@
         }
         if (skipped.length) toast(skipped.join("; "), true);
         if (!added.length) return;
-        const cur = imagePaths();
-        for (const p of added) if (!cur.includes(p)) cur.push(p);
-        setImagePaths(cur);
-        setDirty(true);
-        updatePreview();
-        renderThumbs();
-        toast(`Uploaded ${added.length} photo${added.length > 1 ? "s" : ""} — remember to Save`);
+        const asHero = $("#upload-as-hero")?.checked;
+        setImagePaths(mergeUploadedPaths(imagePaths(), added, asHero));
+        onInput();
+        toast(`Uploaded ${added.length} photo${added.length > 1 ? "s" : ""}`);
       } catch (err) {
         toast(uploadErrorMessage(err), true);
       } finally {
@@ -897,35 +1215,14 @@
 
     async function saveStop(e) {
       e.preventDefault();
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = null;
       const stop = buildStopFromForm();
       if (!stop.name) { toast("Name is required", true); return; }
-      // Clear "Still to review" items for fields that now have a value.
-      pruneReview(stop);
-      $("#save-btn").disabled = true;
       try {
-        const res = await fetch(`/api/stop/${encodeURIComponent(stop.id)}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(stop),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Save failed");
-        // update local cache
-        const saved = { ...stop, _source: data.source };
-        const i = state.stops.findIndex((s) => s.id === stop.id);
-        if (i >= 0) state.stops[i] = saved; else state.stops.push(saved);
-        setDirty(false);
-        $("#saved-flag").style.display = "";
-        $("#form-source").textContent = sourceLabel(stop, data.source);
-        $("#form-source").className = "pill" + (isDraftSource(data.source) ? " draft" : "");
-        $("#form-title").textContent = stop.name;
-        renderReviewBox(stop);
-        renderList();
-        toast("Saved " + stop.id);
-      } catch (err) {
-        toast(err.message, true);
-      } finally {
-        $("#save-btn").disabled = false;
+        await runAutoSave({ quiet: false });
+      } catch {
+        /* toast shown in runAutoSave */
       }
     }
 
@@ -1261,8 +1558,8 @@
       return hex;
     }
 
-    function addNewStop() {
-      if (state.dirty && !confirm("Discard unsaved changes?")) return;
+    async function addNewStop() {
+      if (!(await leaveCurrentStop())) return;
       const id = state.refs.nextId || "s1";
       const blank = {
         id, slug: "", name: "", categories: [], tags: [],
@@ -1274,7 +1571,7 @@
       // don't push into state.stops until saved; just populate
       state.selectedId = id;
       populateForm(blank);
-      setDirty(true);
+      setDirty(false);
       // bump nextId locally so a second add doesn't collide before reload
       const n = /^s(\d+)$/.exec(id);
       if (n) state.refs.nextId = "s" + (Number(n[1]) + 1);
@@ -1341,6 +1638,66 @@
       toast(`Filled ${coords.lat}, ${coords.lng}`);
     }
 
+    // ---------- preview photo drag (hero focal point) ----------
+    function initPreviewPhotoDrag() {
+      const photo = $("#preview-photo");
+      let drag = null;
+      let dragMoved = false;
+
+      function hasHeroImage() {
+        return imagePaths().length > 0;
+      }
+
+      photo.addEventListener("pointerdown", (e) => {
+        if (!hasHeroImage() || e.button !== 0) return;
+        const f = heroFocusFromForm();
+        dragMoved = false;
+        drag = { startX: e.clientX, startY: e.clientY, focusX: f.x, focusY: f.y };
+        photo.classList.add("is-dragging");
+        photo.setPointerCapture(e.pointerId);
+        e.preventDefault();
+      });
+
+      photo.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        const rect = photo.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const dx = e.clientX - drag.startX;
+        const dy = e.clientY - drag.startY;
+        const next = setHeroFocusOnForm({
+          x: drag.focusX - (dx / rect.width) * 100,
+          y: drag.focusY - (dy / rect.height) * 100,
+        });
+        drag.startX = e.clientX;
+        drag.startY = e.clientY;
+        drag.focusX = next.x;
+        drag.focusY = next.y;
+        dragMoved = true;
+        updatePreview();
+      });
+
+      function endDrag(e) {
+        if (!drag) return;
+        const moved = dragMoved;
+        drag = null;
+        dragMoved = false;
+        photo.classList.remove("is-dragging");
+        if (e.pointerId != null && photo.hasPointerCapture(e.pointerId)) {
+          photo.releasePointerCapture(e.pointerId);
+        }
+        if (moved) scheduleAutoSave();
+      }
+
+      photo.addEventListener("pointerup", endDrag);
+      photo.addEventListener("pointercancel", endDrag);
+
+      photo.addEventListener("dblclick", () => {
+        if (!hasHeroImage()) return;
+        setHeroFocusOnForm(DEFAULT_HERO_FOCUS);
+        onInput();
+      });
+    }
+
     // ---------- events ----------
     $("#maps-fill-btn").addEventListener("click", fillLatLngFromMapsLink);
     $("#maps-link").addEventListener("keydown", (e) => {
@@ -1352,6 +1709,8 @@
     $("#filter-needs-photos").addEventListener("change", renderList);
     $("#fill-run").addEventListener("click", startFillRun);
     $("#add-new").addEventListener("click", addNewStop);
+    $("#nav-prev").addEventListener("click", () => navigateStop(-1));
+    $("#nav-next").addEventListener("click", () => navigateStop(1));
 
     // image upload controls
     $("#upload-btn").addEventListener("click", () => $("#image-file").click());
@@ -1368,17 +1727,23 @@
         uploadImages(e.dataTransfer.files);
       });
     })();
-    $("#reload").addEventListener("click", () => {
-      if (state.dirty && !confirm("Discard unsaved changes and reload?")) return;
+    initThumbDrag();
+    initPreviewPhotoDrag();
+    $("#reload").addEventListener("click", async () => {
+      if (!(await leaveCurrentStop())) return;
       setDirty(false);
       load();
     });
     form.addEventListener("submit", saveStop);
     form.addEventListener("input", onInput);
+    form.addEventListener("change", onInput);
     form.querySelectorAll('input[name="costMode"]').forEach((r) =>
-      r.addEventListener("change", () => setCostMode(r.value)));
+      r.addEventListener("change", () => { setCostMode(r.value); onInput(); }));
     window.addEventListener("beforeunload", (e) => {
-      if (state.dirty) { e.preventDefault(); e.returnValue = ""; }
+      if (autoSaveTimer || autoSavePromise || state.dirty) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
     });
 
     load().catch((err) => toast("Load failed: " + err.message, true));

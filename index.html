@@ -334,7 +334,7 @@
       --fade-top: #b2fdb5;
       --fade-bottom: #ffeea1;
       --bg-top: #FFFFFF;
-      --bg-bottom: #FFFFFF;
+      --bg-bottom: var(--fade-bottom);
       --ink: #000000;
       --ink-muted: #2A2A2A;
       --ink-navy: #1a2744;
@@ -374,6 +374,19 @@
     h2 { font-size: var(--type-heading); margin-bottom: 0.5rem; }
     p { font-size: var(--type-body); margin-bottom: 1rem; }
     .label { font-size: var(--type-label); letter-spacing: var(--tracking-wide); text-transform: uppercase; font-weight: 500; }
+    .choice-title {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+    }
+    .choice-desc {
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: normal;
+      font-size: var(--type-body);
+      display: block;
+      color: var(--ink-muted);
+    }
 
     /* Layout */
     .container {
@@ -409,8 +422,36 @@
       font-size: 1rem;
       color: var(--ink);
     }
-    nav.progress span { opacity: 0.3; transition: opacity 0.3s; }
-    nav.progress span.active { opacity: 1; }
+    nav.progress .progress-dot {
+      opacity: 0.3;
+      transition: opacity 0.3s;
+      line-height: 1;
+      min-width: 1.25em;
+      text-align: center;
+    }
+    nav.progress .progress-dot.active { opacity: 1; }
+    nav.progress button.progress-dot {
+      font-family: inherit;
+      background: none;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      text-transform: none;
+      letter-spacing: normal;
+      font-size: inherit;
+      color: inherit;
+    }
+    nav.progress button.progress-dot:hover:not(:disabled) {
+      opacity: 0.75;
+      background: none;
+      color: inherit;
+    }
+    nav.progress button.progress-dot:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
+    }
 
     /* UI Elements */
     button {
@@ -624,6 +665,19 @@
       align-items: center;
       transition: background 0.35s ease;
     }
+    .cat-tile .choice-title {
+      font-size: var(--type-label);
+    }
+    .cat-tile .choice-desc {
+      font-size: 0.65rem;
+      color: var(--ink-muted);
+    }
+    .cat-tile.selected .choice-desc {
+      color: var(--ink-muted);
+    }
+    .spot-tile .content h2.choice-title {
+      margin-bottom: 0.5rem;
+    }
     .cat-tile.selected {
       background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
       color: var(--ink);
@@ -772,23 +826,31 @@
       top: 50%;
       transform: translateY(-50%);
       z-index: 2;
-      width: 2rem;
-      height: 2rem;
-      padding: 0;
-      border: 1px solid var(--ink);
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.92);
-      color: var(--ink);
-      font-size: 1.25rem;
+      width: auto;
+      height: auto;
+      min-width: 2.75rem;
+      min-height: 2.75rem;
+      padding: 0 0.35rem;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: #fff;
+      font-size: 1.65rem;
       line-height: 1;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+      transition: opacity 0.2s ease;
     }
-    .photo-gallery__arrow:hover { background: #fff; }
-    .photo-gallery__arrow--prev { left: 0.5rem; }
-    .photo-gallery__arrow--next { right: 0.5rem; }
+    .photo-gallery__arrow:hover {
+      background: transparent;
+      color: #fff;
+      opacity: 0.85;
+    }
+    .photo-gallery__arrow--prev { left: 0.25rem; }
+    .photo-gallery__arrow--next { right: 0.25rem; }
     .photo-gallery__dots {
       position: absolute;
       bottom: 0.5rem;
@@ -1025,16 +1087,6 @@
       display: none;
     }
     @media (max-width: 767px) {
-      .route-review.route-phase-summary .map-container::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 2.5rem;
-        pointer-events: none;
-        background: linear-gradient(to bottom, transparent, var(--bg-top));
-      }
       .route-review.route-phase-summary .route-scroll-hint--visible {
         display: flex;
         flex-direction: column;
@@ -1135,27 +1187,184 @@
       min-height: 4.5rem;
       box-sizing: border-box;
     }
+    #step-P2-PLAN .plan-narrative__stops .route-card--narrative.route-card--removable .content {
+      padding-right: 1.85rem;
+    }
     #step-P2-PLAN .plan-narrative__stops .route-card--narrative .content h3 {
       font-size: 0.8rem;
       line-height: 1.25;
       margin: 0;
     }
-    #step-P2-PLAN .plan-narrative__stops .route-card--narrative.route-card--removable {
-      padding-right: 2.35rem;
+    #step-P2-PLAN .plan-narrative__stops .route-card--narrative .route-card-remove,
+    #step-P2-PLAN .plan-narrative__stops .route-card--narrative .route-card-restore {
+      top: 0.2rem;
+      right: 0.2rem;
+      min-width: 1.5rem;
+      min-height: 1.5rem;
+      font-size: 0.85rem;
     }
-    #step-P2-PLAN .p2-plan-picker-desc {
+    #step-P2-PLAN .plan-narrative__stops .route-card--narrative.route-card--removed img {
+      opacity: 0.45;
+      filter: grayscale(0.4);
+    }
+    #step-P2-PLAN .plan-narrative__stops .route-card--narrative.route-card--removed .content h3 {
+      opacity: 0.5;
+    }
+    #step-P2-TIME .p2-plan-picker-desc,
+    .card .p2-plan-picker-desc {
       margin: 0.5rem 0 0;
       font-size: 0.95rem;
       line-height: 1.5;
-      font-weight: 400;
-      text-transform: none;
-      letter-spacing: normal;
-      color: var(--ink-muted);
     }
-    #step-E .nav-buttons .btn-google-maps {
+    #step-E .nav-buttons .btn-google-maps,
+    #step-P2-PLAN .route-export-actions .btn-google-maps {
       flex: 1 1 100%;
       width: 100%;
       font-size: 1.2rem;
+    }
+    .route-export-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      width: 100%;
+      flex: 1 1 100%;
+    }
+    .route-export-actions[hidden] {
+      display: none !important;
+    }
+    #step-E .nav-buttons,
+    #step-P2-PLAN .nav-buttons {
+      flex-wrap: wrap;
+    }
+    .route-export-actions__secondary {
+      display: flex;
+      gap: 1rem;
+      width: 100%;
+    }
+    .route-export-actions__secondary button {
+      flex: 1;
+    }
+    .route-export-hint {
+      margin: 0;
+      width: 100%;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      text-align: center;
+      color: var(--ink-muted);
+    }
+    .shared-route-banner {
+      margin: 0 0 1.25rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--ink);
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+    .share-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10000;
+      padding: 0.65rem 1.25rem;
+      background: var(--ink);
+      color: #fff;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .share-toast.is-visible {
+      opacity: 1;
+    }
+    #route-print-sheet {
+      display: none;
+    }
+    @media print {
+      @page {
+        size: letter;
+        margin: 0.45in;
+      }
+      body.route-print-mode #landing,
+      body.route-print-mode #main-container,
+      body.route-print-mode .data-load-error,
+      body.route-print-mode #share-toast {
+        display: none !important;
+      }
+      body.route-print-mode #route-print-sheet {
+        display: block !important;
+      }
+      .route-print-sheet__inner {
+        font-family: inherit;
+        color: #000;
+      }
+      .route-print-sheet__title {
+        margin: 0 0 0.35rem;
+        font-size: 11pt;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        line-height: 1.2;
+      }
+      .route-print-sheet__row {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 0.65rem;
+      }
+      .route-print-sheet__map {
+        width: 42%;
+        flex-shrink: 0;
+      }
+      .route-print-sheet__map svg {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: 4.75in;
+      }
+      .route-print-sheet__stops {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: 8.5pt;
+        line-height: 1.3;
+      }
+      .route-print-sheet__stops li {
+        margin: 0 0 0.2rem;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .route-print-stop__num {
+        font-weight: 700;
+      }
+      .route-print-stop__name {
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .route-print-stop__street {
+        display: block;
+        font-size: 7.5pt;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        opacity: 0.85;
+      }
+      .route-print-sheet__walk {
+        margin: 0.35rem 0 0;
+        font-size: 8pt;
+        line-height: 1.35;
+      }
+      .route-print-sheet__footer {
+        margin: 0.3rem 0 0;
+        font-size: 7pt;
+        text-align: center;
+        opacity: 0.75;
+      }
+    }
+    .route-print-footer {
+      display: none;
     }
     
     .map-container svg {
@@ -1226,8 +1435,11 @@
       border-right: 1px solid var(--ink);
     }
     .route-card .content { padding: 1rem; flex-grow: 1; }
+    .route-card--removable .content {
+      padding-right: 2.35rem;
+    }
     .route-card .meta { font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); opacity: 0.7; }
-    .route-card--removable { position: relative; padding-right: 2.75rem; }
+    .route-card--removable { position: relative; }
     .route-card__details {
       display: none;
       padding: 0 1rem 1rem;
@@ -1264,35 +1476,63 @@
       line-height: 1.35;
       opacity: 0.9;
     }
-    .route-card-remove {
+    .route-card-remove,
+    .route-card-restore {
       position: absolute;
-      top: 50%;
-      right: 0.75rem;
-      transform: translateY(-50%);
-      width: 2rem;
-      height: 2rem;
+      top: 0.35rem;
+      right: 0.35rem;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.75rem;
+      min-height: 1.75rem;
       padding: 0;
-      border: 1px solid var(--ink);
-      border-radius: 50%;
-      background: var(--bg-top);
+      border: none;
+      border-radius: var(--tile-radius);
+      background: transparent;
       font-family: inherit;
-      font-size: 1.25rem;
+      font-size: 0.95rem;
       line-height: 1;
       cursor: pointer;
       color: var(--ink);
+      opacity: 0.55;
       -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s ease;
     }
-    .route-card-remove:hover {
-      background: var(--ink);
-      color: var(--bg-top);
+    .route-card-remove::before,
+    .route-card-restore::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid transparent;
+      border-radius: inherit;
+      background: transparent;
+      pointer-events: none;
+      transition: border-color 0.15s ease;
+      z-index: 0;
+    }
+    .route-card-restore {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .route-card-remove:hover:not(:disabled),
+    .route-card-restore:hover {
+      opacity: 1;
+    }
+    .route-card-remove:hover:not(:disabled)::before,
+    .route-card-restore:hover::before {
+      border-color: var(--ink);
     }
     .route-card-remove:disabled {
-      opacity: 0.35;
+      opacity: 0.25;
       cursor: not-allowed;
     }
     .route-card-remove:disabled:hover {
-      background: var(--bg-top);
-      color: var(--ink);
+      opacity: 0.25;
+    }
+    .route-card-remove:disabled:hover::before {
+      border-color: transparent;
     }
     
     .totals {
@@ -1450,25 +1690,21 @@
       border: 1px solid var(--ink);
       color: var(--ink);
     }
-    .landing-options .card h2 {
+    .landing-options .card .choice-title {
       color: var(--ink);
-      text-transform: none;
       font-size: 1.35rem;
+      margin-bottom: 0;
     }
-    .landing-options .card .label {
-      color: var(--ink-muted);
-      display: block;
+    .landing-options .card .choice-desc {
       margin-top: 0.35rem;
-      text-transform: none;
-      letter-spacing: 0.02em;
     }
     .landing-options .card:hover {
       background: var(--ink);
       border-color: var(--ink);
       color: #fff;
     }
-    .landing-options .card:hover h2,
-    .landing-options .card:hover .label {
+    .landing-options .card:hover .choice-title,
+    .landing-options .card:hover .choice-desc {
       color: #fff;
     }
 
@@ -1561,10 +1797,11 @@
     .p3-card.is-expanded {
       grid-column: 1 / -1;
       background: #fff;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
       cursor: pointer;
-      overflow: visible;
+      overflow: hidden;
       align-self: start;
+      z-index: 1;
     }
     .p3-card.is-in-route:not(.is-expanded) {
       background: rgba(255, 255, 255, 0.35);
@@ -1578,6 +1815,15 @@
       display: flex;
       flex-direction: column;
     }
+    .p3-card:not(.is-expanded) .p3-card__summary {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .p3-card.is-expanded .p3-card__summary {
+      flex-direction: row;
+      align-items: stretch;
+      border-bottom: 1px solid var(--ink);
+    }
     .p3-card__thumb {
       width: 100%;
       aspect-ratio: 1;
@@ -1585,31 +1831,87 @@
       border-bottom: 1px solid var(--ink);
       display: block;
     }
+    .p3-card:not(.is-expanded) .p3-card__thumb {
+      width: 5.25rem;
+      min-width: 5.25rem;
+      flex-shrink: 0;
+      aspect-ratio: auto;
+      align-self: stretch;
+      min-height: 5.25rem;
+      border-bottom: none;
+      border-right: 1px solid var(--ink);
+    }
     .p3-card.is-expanded .p3-card__summary .p3-card__thumb {
       display: none;
     }
+    .p3-card.is-expanded .p3-card__body {
+      padding: 0.75rem 1.85rem 0.65rem 1rem;
+    }
     .p3-card__body {
-      padding: 0.6rem 0.65rem 0.75rem;
+      position: relative;
+      padding: 0.6rem 1.85rem 0.75rem 0.65rem;
       flex-grow: 1;
       min-width: 0;
     }
-    .p3-card.is-expanded .p3-card__body {
-      padding-bottom: 0.5rem;
+    .p3-add-btn {
+      position: absolute;
+      top: 0.45rem;
+      right: 0.45rem;
+      z-index: 2;
+      width: auto;
+      height: auto;
+      min-width: 0;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: none;
+      cursor: pointer;
+      display: block;
+      flex-shrink: 0;
     }
-    .p3-card__body h3 {
+    .p3-add-btn:hover {
+      background: transparent;
+      color: var(--ink);
+      opacity: 0.65;
+    }
+    .p3-add-btn.is-added {
+      background: transparent;
+      color: var(--ink);
+      font-size: 0.85rem;
+    }
+    .p3-card__body h3.choice-title {
       font-size: 0.72rem;
-      text-transform: uppercase;
       margin-bottom: 0.25rem;
       line-height: 1.2;
     }
-    .p3-card.is-expanded .p3-card__body h3 {
-      font-size: 0.95rem;
+    .p3-card.is-expanded .p3-card__body h3.choice-title {
+      font-size: 1.05rem;
     }
-    .p3-card .meta {
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-wide);
-      opacity: 0.7;
+    .p3-card .meta.choice-desc {
+      font-size: 0.65rem;
+      opacity: 0.85;
+      margin-bottom: 0.15rem;
+    }
+    .p3-card__grid-desc {
+      font-size: 0.68rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+    .p3-card:not(.is-expanded) .p3-card__grid-desc {
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .p3-card.is-expanded .p3-card__grid-desc,
+    .p3-card.is-expanded .p3-card__summary .meta.choice-desc {
+      display: none;
     }
     .p3-card__expand-panel {
       display: none;
@@ -1626,8 +1928,8 @@
       position: relative;
       width: 100%;
       aspect-ratio: 3 / 2;
-      min-height: 14rem;
-      max-height: min(52vh, 26rem);
+      min-height: 9rem;
+      max-height: min(34vh, 16rem);
       flex-shrink: 0;
       overflow: hidden;
       isolation: isolate;
@@ -1733,23 +2035,31 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 2.25rem;
-      height: 2.25rem;
-      padding: 0;
-      border: 1px solid rgba(255, 255, 255, 0.85);
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.92);
-      color: var(--ink);
-      font-size: 1.35rem;
+      width: auto;
+      height: auto;
+      min-width: 2.75rem;
+      min-height: 2.75rem;
+      padding: 0 0.35rem;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: #fff;
+      font-size: 1.75rem;
       line-height: 1;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+      transition: opacity 0.2s ease;
     }
-    .photo-lightbox__arrow:hover { background: #fff; }
-    .photo-lightbox__arrow--prev { left: -0.25rem; }
-    .photo-lightbox__arrow--next { right: -0.25rem; }
+    .photo-lightbox__arrow:hover {
+      background: transparent;
+      color: #fff;
+      opacity: 0.85;
+    }
+    .photo-lightbox__arrow--prev { left: 0.5rem; }
+    .photo-lightbox__arrow--next { right: 0.5rem; }
     .photo-lightbox__arrow[hidden] { display: none; }
     .photo-lightbox__caption {
       color: #fff;
@@ -1782,14 +2092,14 @@
       position: relative;
       z-index: 1;
       flex-shrink: 0;
-      padding: 0.85rem 1rem 0.5rem;
+      padding: 0.85rem 1rem 0.55rem;
       background: #fff;
     }
     .p3-card__expand-body .tags {
       display: flex;
       flex-wrap: wrap;
       gap: 0.4rem;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.65rem;
     }
     .p3-card__expand-body .tag {
       font-size: 0.6rem;
@@ -1799,9 +2109,9 @@
       border: 1px solid var(--ink);
     }
     .p3-card__expand-body .description {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       line-height: 1.45;
-      margin-bottom: 0.65rem;
+      margin-bottom: 0.55rem;
     }
     .goto {
       font-size: 0.85rem;
@@ -1826,28 +2136,22 @@
       opacity: 0.9;
       margin-bottom: 0;
     }
-    .p3-card.is-expanded .p3-card__actions {
-      position: sticky;
-      bottom: 0;
-      z-index: 2;
-      box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.08);
-    }
     .p3-card__actions {
       position: relative;
       z-index: 1;
       flex-shrink: 0;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.6rem;
-      padding: 0.75rem 1rem 1rem;
+      gap: 0.55rem;
+      padding: 0.65rem 1rem 0.85rem;
       border-top: 1px solid var(--ink);
       background: #fff;
     }
     .p3-card__actions button {
       flex: 1;
-      min-width: 8rem;
-      padding: 0.6rem 0.75rem;
-      font-size: 0.6rem;
+      min-width: 7rem;
+      padding: 0.55rem 0.65rem;
+      font-size: 0.58rem;
     }
     .p3-card__actions button.p3-route-btn.is-added {
       background: var(--ink);
@@ -1948,14 +2252,14 @@
         <div class="card" role="button" tabindex="0"
           onclick="selectRouteStart('station')"
           onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRouteStart('station'); }">
-          <h2>Start me at the SkyTrain</h2>
-          <span class="label">Walk from Commercial&ndash;Broadway station to your first stop</span>
+          <h2 class="choice-title">Start me at the SkyTrain</h2>
+          <span class="choice-desc">Walk from Commercial&ndash;Broadway station to your first stop</span>
         </div>
         <div class="card" role="button" tabindex="0"
           onclick="selectRouteStart('firstStop')"
           onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRouteStart('firstStop'); }">
-          <h2>Start me at my first location</h2>
-          <span class="label">Your first stop on the route is already where you are; directions end at the station</span>
+          <h2 class="choice-title">Start me at my first location</h2>
+          <span class="choice-desc">Your first stop on the route is already where you are; directions end at the station</span>
         </div>
         <div class="nav-buttons">
           <button type="button" onclick="backFromRouteStart()">Back</button>
@@ -1971,14 +2275,14 @@
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="start" data-value="station"
             onclick="selectRouteFinalizeChoice('start', 'station')"
             onkeydown="routeFinalizeCardKeydown(event, 'start', 'station')">
-            <h2>Commercial-Broadway Skytrain</h2>
-            <span class="label">I will take the skytrain over to Commercial</span>
+            <h2 class="choice-title">Commercial-Broadway Skytrain</h2>
+            <span class="choice-desc">I will take the skytrain over to Commercial</span>
           </div>
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="start" data-value="firstStop"
             onclick="selectRouteFinalizeChoice('start', 'firstStop')"
             onkeydown="routeFinalizeCardKeydown(event, 'start', 'firstStop')">
-            <h2>Start me at my first location</h2>
-            <span class="label">I will find my way to my first spot</span>
+            <h2 class="choice-title">Start me at my first location</h2>
+            <span class="choice-desc">I will find my way to my first spot</span>
           </div>
         </div>
 
@@ -1987,19 +2291,19 @@
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="end" data-value="station"
             onclick="selectRouteFinalizeChoice('end', 'station')"
             onkeydown="routeFinalizeCardKeydown(event, 'end', 'station')">
-            <h2>Bring me back to the Skytrain</h2>
+            <h2 class="choice-title">Bring me back to the Skytrain</h2>
           </div>
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="end" data-value="lastStop"
             onclick="selectRouteFinalizeChoice('end', 'lastStop')"
             onkeydown="routeFinalizeCardKeydown(event, 'end', 'lastStop')">
-            <h2>I will leave from the last location</h2>
-            <span class="label">Or keep exploring!</span>
+            <h2 class="choice-title">I will leave from the last location</h2>
+            <span class="choice-desc">Or keep exploring!</span>
           </div>
         </div>
 
         <div class="nav-buttons">
           <button type="button" onclick="backFromRouteStart()">Back</button>
-          <button type="button" class="primary" id="btn-route-finalize-continue" onclick="continueFromRouteFinalize()" disabled>Continue</button>
+          <button type="button" class="primary" id="btn-route-finalize-next" onclick="continueFromRouteFinalize()" disabled>Next</button>
         </div>
       </div>
     </section>
@@ -2007,19 +2311,15 @@
     <!-- STEP A: TIME -->
     <section id="step-A" class="step">
       <h1>How much time do you have?</h1>
-      <p>Build a trip based on how far you want to walk from the skytrain.</p>
-      
+
       <div class="card" onclick="selectTime('1hr')">
-        <h2>About an hour</h2>
-        <span class="label">≤ 15 min walk from station</span>
+        <h2 class="choice-title">About an hour</h2>
       </div>
       <div class="card" onclick="selectTime('halfday')">
-        <h2>Half a day</h2>
-        <span class="label">≤ 25 min walk from station</span>
+        <h2 class="choice-title">Half a day</h2>
       </div>
       <div class="card" onclick="selectTime('fullday')">
-        <h2>Full day</h2>
-        <span class="label">Explore it all</span>
+        <h2 class="choice-title">Full day</h2>
       </div>
 
       <div class="nav-buttons">
@@ -2053,12 +2353,12 @@
       <p>You selected multiple vibes. We can follow your priority, or optimize for the least walking.</p>
 
       <div class="card" onclick="selectRouteOrder('manual')">
-        <h2>Use my priority order</h2>
-        <span class="label">Visit spots in the exact order you ranked them</span>
+        <h2 class="choice-title">Use my priority order</h2>
+        <span class="choice-desc">Visit spots in the exact order you ranked them</span>
       </div>
       <div class="card" onclick="selectRouteOrder('geographic')">
-        <h2>Optimize geographically</h2>
-        <span class="label">Minimize backtracking along the drive</span>
+        <h2 class="choice-title">Optimize geographically</h2>
+        <span class="choice-desc">Minimize backtracking along the drive</span>
       </div>
 
       <div class="nav-buttons">
@@ -2088,6 +2388,7 @@
     <!-- STEP E: ROUTE REVIEW (map animation → summary → finalize → Google Maps) -->
     <section id="step-E" class="step">
       <h1>Your Route</h1>
+      <p id="shared-route-banner" class="shared-route-banner" hidden></p>
 
       <div id="route-review" class="route-review route-phase-map">
         <div class="map-container">
@@ -2103,12 +2404,21 @@
           <p id="route-export-summary" class="label route-export-summary">YOUR COMMERCIAL DRIVE ROUTE — N STOPS</p>
           <div id="route-cards"></div>
           <div class="totals" id="route-totals"></div>
+          <p class="route-print-footer">Escape the Downtown · explore.seasonsofeastvan.com</p>
         </div>
       </div>
 
       <div class="nav-buttons">
         <button type="button" id="btn-edit-route" onclick="editSpots()" hidden>Edit Spots</button>
         <button type="button" id="btn-route-finalize" class="primary" onclick="handleRouteFinalize()" hidden>Finalize</button>
+        <div id="route-export-actions" class="route-export-actions" hidden>
+          <button type="button" class="btn-google-maps" id="btn-route-maps" onclick="openRouteMapsFromExport()">Add to Google Maps</button>
+          <div class="route-export-actions__secondary">
+            <button type="button" id="btn-route-share" onclick="shareRouteWithFriend()">Share with a friend</button>
+            <button type="button" id="btn-route-pdf" onclick="exportRouteAsPdf()">Save as PDF</button>
+          </div>
+          <p class="route-export-hint" id="route-export-hint" hidden>Save as PDF opens print — choose Save as PDF in the dialog.</p>
+        </div>
       </div>
       <nav id="route-connect" class="connect-links" aria-label="Stay in touch" hidden>
         <div class="connect-icons">
@@ -2135,6 +2445,7 @@
     <!-- PATH 2: PLAN -->
     <section id="step-P2-PLAN" class="step">
       <h1 id="p2-plan-title">Your Plan</h1>
+      <p id="p2-shared-route-banner" class="shared-route-banner" hidden></p>
       <div class="plan-detail-header">
         <p id="p2-plan-meta" class="plan-detail-meta label" hidden></p>
         <p id="p2-plan-customize-hint" class="plan-customize-hint" hidden>Read through my pre-built plan and remove any stops that don't interest you to customize your route.</p>
@@ -2153,12 +2464,20 @@
           <p id="p2-route-export-summary" class="label route-export-summary">YOUR PLAN — N STOPS</p>
           <div id="route-cards-p2"></div>
           <div class="totals" id="route-totals-p2"></div>
+          <p class="route-print-footer">Escape the Downtown · explore.seasonsofeastvan.com</p>
         </div>
       </div>
 
       <div class="nav-buttons">
         <button type="button" onclick="backFromP2Plan()">Back</button>
-        <button class="primary" id="p2-open-maps" style="display: none;" onclick="openGoogleMaps(getPlanRoute())">Open in Google Maps</button>
+        <div id="p2-export-actions" class="route-export-actions" hidden>
+          <button type="button" class="btn-google-maps" id="btn-p2-maps" onclick="openRouteMapsFromExport()">Add to Google Maps</button>
+          <div class="route-export-actions__secondary">
+            <button type="button" id="btn-p2-share" onclick="shareRouteWithFriend()">Share with a friend</button>
+            <button type="button" id="btn-p2-pdf" onclick="exportRouteAsPdf()">Save as PDF</button>
+          </div>
+          <p class="route-export-hint" id="p2-export-hint" hidden>Save as PDF opens print — choose Save as PDF in the dialog.</p>
+        </div>
       </div>
       <nav id="p2-connect" class="connect-links" aria-label="Stay in touch" hidden>
         <div class="connect-icons">
@@ -2245,6 +2564,18 @@
     Then open <code>/index.html</code>. See AGENTS.md.
     <span data-error-detail style="display:block;margin-top:0.5rem;font-size:0.85em;"></span>
   </div>
+  <div id="share-toast" class="share-toast" role="status" aria-live="polite"></div>
+  <div id="route-print-sheet" class="route-print-sheet" hidden aria-hidden="true">
+    <div class="route-print-sheet__inner">
+      <h2 id="route-print-title" class="route-print-sheet__title"></h2>
+      <div class="route-print-sheet__row">
+        <div id="route-print-map" class="route-print-sheet__map"></div>
+        <ol id="route-print-stops" class="route-print-sheet__stops"></ol>
+      </div>
+      <p id="route-print-walk" class="route-print-sheet__walk"></p>
+      <p class="route-print-sheet__footer">Escape the Downtown · explore.seasonsofeastvan.com</p>
+    </div>
+  </div>
 
   <script>
     /**
@@ -2311,6 +2642,22 @@
       return { images, image: images[0] };
     }
 
+    function normalizeHeroFocus(raw) {
+      if (!raw || typeof raw !== "object") return null;
+      const x = Number(raw.x);
+      const y = Number(raw.y);
+      if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+      const cx = Math.min(100, Math.max(0, x));
+      const cy = Math.min(100, Math.max(0, y));
+      if (cx === 50 && cy === 50) return null;
+      return { x: cx, y: cy };
+    }
+
+    function heroFocusStyleAttr(spot) {
+      const f = normalizeHeroFocus(spot && spot.heroFocus);
+      return f ? ` style="object-position:${f.x}% ${f.y}%"` : "";
+    }
+
     const CANONICAL_CATEGORIES = ["coffee", "food", "drinks", "shopping", "hangout", "groceries"];
 
     function getStopCategories(stop) {
@@ -2331,16 +2678,17 @@
     }
 
     function renderPhotoHero(spot) {
-      return `<img src="${spot.image}" alt="${escapeHtml(spot.name)}">`;
+      return `<img src="${spot.image}" alt="${escapeHtml(spot.name)}"${heroFocusStyleAttr(spot)}>`;
     }
 
     function renderPhotoGallery(spot, galleryId) {
       if (spot.images.length <= 1) {
         return renderPhotoHero(spot);
       }
+      const focusAttr = heroFocusStyleAttr(spot);
       const slides = spot.images.map((src, i) => `
         <div class="photo-gallery__slide">
-          <img src="${src}" alt="${escapeHtml(spot.name)} — photo ${i + 1}" loading="${i === 0 ? "eager" : "lazy"}">
+          <img src="${src}" alt="${escapeHtml(spot.name)} — photo ${i + 1}" loading="${i === 0 ? "eager" : "lazy"}"${focusAttr}>
         </div>
       `).join("");
       const dots = spot.images.map((_, i) =>
@@ -2486,19 +2834,23 @@
 
     function initP3GalleryLightbox(root) {
       if (!root) return;
-      root.querySelectorAll(".p3-card.is-expanded .p3-card__gallery").forEach((gallery) => {
-        const spotId = gallery.closest(".p3-card")?.dataset?.spotId;
+      root.querySelectorAll(".p3-card.is-expanded").forEach((card) => {
+        const spotId = card.dataset?.spotId;
         if (!spotId) return;
-        gallery.querySelectorAll("img").forEach((img) => {
+        const bindLightbox = (img) => {
           img.addEventListener("click", (e) => {
             e.stopPropagation();
-            const inlineGallery = gallery.querySelector(".photo-gallery");
+            const gallery = img.closest(".p3-card__gallery");
+            const inlineGallery = gallery?.querySelector(".photo-gallery");
             const index = inlineGallery
               ? getP3InlineGalleryIndex(inlineGallery)
               : 0;
             openP3PhotoLightbox(spotId, index);
           });
-        });
+        };
+        card.querySelectorAll(".p3-card__gallery img").forEach(bindLightbox);
+        const thumb = card.querySelector(".p3-card__thumb");
+        if (thumb) bindLightbox(thumb);
       });
     }
 
@@ -2570,8 +2922,8 @@
             <div class="card" role="button" tabindex="0" data-area-id="${escapeHtml(id)}"
               onclick="openLandingArea('${escapeJsString(id)}')"
               onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLandingArea('${escapeJsString(id)}'); }">
-              <h2>${escapeHtml(area.title)}</h2>
-              <span class="label">${escapeHtml(area.label || "")}</span>
+              <h2 class="choice-title">${escapeHtml(area.title)}</h2>
+              <span class="choice-desc">${escapeHtml(area.label || "")}</span>
             </div>`;
         })
         .join("");
@@ -2594,8 +2946,8 @@
             <div class="card" role="button" tabindex="0"
               onclick="${handler}()"
               onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); ${handler}(); }">
-              <h2>${escapeHtml(path.title)}</h2>
-              <span class="label">${escapeHtml(path.label || "")}</span>
+              <h2 class="choice-title">${escapeHtml(path.title)}</h2>
+              <span class="choice-desc">${escapeHtml(path.label || "")}</span>
             </div>`;
         })
         .join("");
@@ -2869,6 +3221,9 @@
       p3RouteIds: [],
       p2CustomStopIds: [],
       routeReviewFinalized: false,
+      sharedRouteIds: null,
+      sharedRouteBanner: false,
+      sharedRouteSkipped: 0,
       routeStart: null,
       routeEnd: null,
       afterRouteStartStep: null,
@@ -2899,6 +3254,9 @@
         p3RouteIds: [],
         p2CustomStopIds: [],
         routeReviewFinalized: false,
+        sharedRouteIds: null,
+        sharedRouteBanner: false,
+        sharedRouteSkipped: 0,
         routeStart: null,
         routeEnd: null,
         afterRouteStartStep: null,
@@ -2909,15 +3267,69 @@
 
     // --- NAVIGATION ---
 
+    function getVisibleProgressSteps() {
+      return getPath1Steps().filter((s) => !(s === "C" && state.userRanked));
+    }
+
+    function progressStepAriaLabel(stepId) {
+      const labels = {
+        A: "Time",
+        B: "Activities",
+        C: "Route order",
+        "ROUTE-START": "Finalize route",
+        D: "Choose spots",
+        E: "Your route",
+      };
+      return labels[stepId] || stepId;
+    }
+
+    function canGoToProgressStep(targetStep) {
+      const steps = getVisibleProgressSteps();
+      const currentIdx = steps.indexOf(state.currentStep);
+      const targetIdx = steps.indexOf(targetStep);
+      if (targetIdx < 0 || currentIdx < 0) return false;
+      return targetIdx <= currentIdx;
+    }
+
+    function goToProgressStep(targetStep) {
+      if (!canGoToProgressStep(targetStep)) return;
+      if (targetStep === state.currentStep) {
+        window.scrollTo(0, 0);
+        return;
+      }
+      if (targetStep === "ROUTE-START") {
+        state.afterRouteStartStep = "D";
+        showStep("ROUTE-START");
+        renderRouteFinalizeStep();
+        return;
+      }
+      if (targetStep === "D") {
+        state.currentCategoryIndex = 0;
+      }
+      showStep(targetStep);
+    }
+
     function updateProgress(step) {
       const nav = document.getElementById("progress-bar");
-      const steps = getPath1Steps();
-      nav.innerHTML = steps.map(s => {
-        if (s === "C" && state.userRanked) return "";
-        const isActive = s === step;
-        const isPast = steps.indexOf(s) < steps.indexOf(step);
-        return `<span class="${isActive || isPast ? 'active' : ''}">${isActive || isPast ? '●' : '○'}</span>`;
-      }).join('');
+      const steps = getVisibleProgressSteps();
+      const currentIdx = steps.indexOf(step);
+      nav.innerHTML = steps
+        .map((s, i) => {
+          const isActive = s === step;
+          const isPast = i < currentIdx;
+          const isFuture = i > currentIdx;
+          const classes = ["progress-dot", isActive || isPast ? "active" : ""]
+            .filter(Boolean)
+            .join(" ");
+          const symbol = isActive || isPast ? "●" : "○";
+          if (isFuture) {
+            return `<span class="${classes}" aria-hidden="true">${symbol}</span>`;
+          }
+          const label = escapeHtml(progressStepAriaLabel(s));
+          const ariaCurrent = isActive ? ' aria-current="step"' : "";
+          return `<button type="button" class="${classes}" onclick="goToProgressStep('${s}')" aria-label="${label}"${ariaCurrent}>${symbol}</button>`;
+        })
+        .join("");
     }
 
     function getPathContextConfig() {
@@ -3049,7 +3461,7 @@
         card.classList.toggle("selected", selected);
         card.setAttribute("aria-pressed", selected ? "true" : "false");
       });
-      const btn = document.getElementById("btn-route-finalize-continue");
+      const btn = document.getElementById("btn-route-finalize-next");
       if (btn) {
         btn.disabled = !(state.routeStart && state.routeEnd);
       }
@@ -3072,7 +3484,7 @@
       if (!state.routeStart || !state.routeEnd) return;
       const next = state.afterRouteStartStep || "A";
       // Let the selected state paint before navigating.
-      const btn = document.getElementById("btn-route-finalize-continue");
+      const btn = document.getElementById("btn-route-finalize-next");
       if (btn) btn.disabled = true;
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -3226,8 +3638,8 @@
         const isSelected = state.selectedCategories.includes(c.id);
         return `
           <div class="cat-tile ${isSelected ? 'selected' : ''}" onclick="toggleCategory('${c.id}')">
-            <span class="label">${c.label}</span>
-            <span class="label desc" style="font-size: 0.65rem; text-transform:none;">${c.desc}</span>
+            <span class="choice-title">${c.label}</span>
+            <span class="choice-desc" style="font-size: 0.65rem;">${c.desc}</span>
             <span class="label">${isSelected ? '✓' : '+'}</span>
           </div>
         `;
@@ -3467,7 +3879,7 @@
             </div>
             ${isSelected ? '<div class="checkmark">✓</div>' : ''}
             <div class="content">
-              <h2>${spot.name}</h2>
+              <h2 class="choice-title">${spot.name}</h2>
               <div class="tags">
                 ${spot.tags.map(t => `<span class="tag">${t}</span>`).join('')}
                 <span class="tag">${spot.costLabel}</span>
@@ -3891,6 +4303,11 @@
     }
 
     function getFinalRoute() {
+      if (state.sharedRouteIds?.length) {
+        return state.sharedRouteIds
+          .map((id) => STOPS.find((s) => s.id === id))
+          .filter(Boolean);
+      }
       if (state.pathContext === "See All Spots" && state.p3RouteIds.length > 0) {
         return sortStopsGeographic(getP3BuiltRoute());
       }
@@ -4115,6 +4532,7 @@
         mapSvgId,
         route,
         onMapComplete,
+        skipAnimation,
       } = config;
 
       teardownRouteScrollHint(config.scrollHintEl);
@@ -4127,12 +4545,15 @@
       const cardsEl = document.getElementById(config.cardsId);
       if (cardsEl) cardsEl.innerHTML = "";
 
+      const onMapDone = () => {
+        revealRouteReviewSummary(config);
+        onMapComplete?.();
+      };
+
       drawMap(mapSvgId, route, {
         mapOptions: config.mapOptions,
-        onComplete: () => {
-          revealRouteReviewSummary(config);
-          onMapComplete?.();
-        },
+        legDuration: skipAnimation ? 0 : undefined,
+        onComplete: onMapDone,
       });
     }
 
@@ -4617,7 +5038,7 @@
       return `
         <div class="${cardClass}" role="button" tabindex="0" aria-expanded="false" data-stop-id="${escapeHtml(s.id)}"
           onclick="toggleRouteCardExpanded(event)" onkeydown="routeCardKeydown(event)">
-          <img src="${s.image}" alt="${escapeHtml(s.name)}">
+          <img src="${s.image}" alt="${escapeHtml(s.name)}"${heroFocusStyleAttr(s)}>
           <div class="content">
             <h3 style="font-size: 1rem; text-transform:uppercase;">${idx + 1}. ${escapeHtml(s.name)}</h3>
             <div class="meta">${escapeHtml(s.crossStreet)}</div>
@@ -4653,25 +5074,35 @@
     }
 
     function renderNarrativeCardHtml(s, idx, options = {}) {
-      const removable = options.removable && options.removeHandler;
+      const isRemoved = options.removed === true;
+      const removable = options.removable && options.removeHandler && !isRemoved;
       const canRemove = removable && options.routeLength !== 1;
-      const removeBtn = removable
-        ? `<button type="button" class="route-card-remove" aria-label="Remove ${escapeHtml(s.name)} from route" ${canRemove ? `onclick="${options.removeHandler}('${s.id}')"` : "disabled"} title="${canRemove ? "Remove from route" : "Keep at least one stop"}">×</button>`
-        : "";
-      const cardClass = removable
-        ? "route-card route-card--narrative route-card--removable"
-        : "route-card route-card--narrative";
+      const canRestore = isRemoved && options.addHandler;
+      let actionBtn = "";
+      if (canRestore) {
+        actionBtn = `<button type="button" class="route-card-restore" aria-label="Add ${escapeHtml(s.name)} back to route" onclick="${options.addHandler}('${s.id}')" title="Add back to route">+</button>`;
+      } else if (removable) {
+        actionBtn = `<button type="button" class="route-card-remove" aria-label="Remove ${escapeHtml(s.name)} from route" ${canRemove ? `onclick="${options.removeHandler}('${s.id}')"` : "disabled"} title="${canRemove ? "Remove from route" : "Keep at least one stop"}">×</button>`;
+      }
+      const cardClass = [
+        "route-card",
+        "route-card--narrative",
+        isRemoved ? "route-card--removed" : "",
+        removable || canRestore ? "route-card--removable" : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
       const label =
-        typeof idx === "number" && idx >= 0
+        !isRemoved && typeof idx === "number" && idx >= 0
           ? `${idx + 1}. ${escapeHtml(s.name)}`
           : escapeHtml(s.name);
       return `
         <div class="${cardClass}">
-          <img src="${s.image}" alt="${escapeHtml(s.name)}">
+          <img src="${s.image}" alt="${escapeHtml(s.name)}"${heroFocusStyleAttr(s)}>
           <div class="content">
             <h3 style="text-transform:uppercase;">${label}</h3>
           </div>
-          ${removeBtn}
+          ${actionBtn}
         </div>
       `;
     }
@@ -4733,21 +5164,367 @@
       `;
     }
 
-    function renderStepE() {
-      const route = getFinalRoute();
+    function getStepERouteCardOptions() {
+      if (state.pathContext === "See All Spots" && state.p3RouteIds.length > 0) {
+        return { removable: true, removeHandler: "removeP3RouteStop" };
+      }
+      if (state.pathContext === "Choose Your Own Adventure") {
+        return { removable: true, removeHandler: "removePath1RouteStop" };
+      }
+      return undefined;
+    }
+
+    function setRouteExportActionsVisible(visible) {
+      const exportActions = document.getElementById("route-export-actions");
+      const finalizeBtn = document.getElementById("btn-route-finalize");
+      if (exportActions) exportActions.hidden = !visible;
+      if (finalizeBtn && visible) finalizeBtn.hidden = true;
+    }
+
+    function setP2ExportActionsVisible(visible) {
+      const exportActions = document.getElementById("p2-export-actions");
+      if (exportActions) exportActions.hidden = !visible;
+      if (!visible) {
+        const pdfHint = document.getElementById("p2-export-hint");
+        if (pdfHint) pdfHint.hidden = true;
+      }
+    }
+
+    function resetStepEExportUi() {
       state.routeReviewFinalized = false;
+      setRouteExportActionsVisible(false);
       setRouteConnectVisible(false);
+      const pdfHint = document.getElementById("route-export-hint");
+      if (pdfHint) pdfHint.hidden = true;
+      const finalizeBtn = document.getElementById("btn-route-finalize");
+      if (finalizeBtn) {
+        finalizeBtn.hidden = true;
+        finalizeBtn.textContent = "Finalize";
+        finalizeBtn.className = "primary";
+        finalizeBtn.disabled = false;
+      }
+    }
+
+    function showStepEExportAfterFinalize() {
+      state.routeReviewFinalized = true;
+      setRouteExportActionsVisible(true);
+      setRouteConnectVisible(true);
+    }
+
+    function updateSharedRouteBanner() {
+      const stepBanner = document.getElementById("shared-route-banner");
+      const p2Banner = document.getElementById("p2-shared-route-banner");
+      if (stepBanner) stepBanner.hidden = true;
+      if (p2Banner) p2Banner.hidden = true;
+      if (!state.sharedRouteBanner) return;
+      const route = getFinalRoute();
+      let text = `You're viewing a shared route (${route.length} stop${route.length === 1 ? "" : "s"}).`;
+      if (state.sharedRouteSkipped > 0) {
+        text += ` ${state.sharedRouteSkipped} stop(s) from the link are no longer available.`;
+      }
+      const target =
+        state.currentStep === "P2-PLAN" && p2Banner ? p2Banner : stepBanner;
+      if (target) {
+        target.textContent = text;
+        target.hidden = false;
+      }
+    }
+
+    function showShareToast(message) {
+      const toast = document.getElementById("share-toast");
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      clearTimeout(showShareToast._timer);
+      showShareToast._timer = setTimeout(() => {
+        toast.classList.remove("is-visible");
+      }, 2600);
+    }
+
+    function copyShareUrl(url) {
+      const done = () =>
+        showShareToast("Link Copied - Paste in an email or message");
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(url).then(done).catch(() => {
+          fallbackCopyShareUrl(url);
+          done();
+        });
+      } else {
+        fallbackCopyShareUrl(url);
+        done();
+      }
+    }
+
+    function fallbackCopyShareUrl(url) {
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+      } catch (_) {
+        /* ignore */
+      }
+      document.body.removeChild(ta);
+    }
+
+    function getRouteExportContext() {
+      let route;
+      let mapOptions;
+      let title;
+      let planKey = null;
+      if (state.currentStep === "P2-PLAN" && state.planTime) {
+        const plan = PLANS[state.planTime] || { title: "Your Plan" };
+        route = getPlanRoute();
+        mapOptions = getEffectiveMapOptions(plan);
+        title = plan.title;
+        planKey = state.planTime;
+      } else {
+        route = getFinalRoute();
+        mapOptions = getUserRouteMapOptions();
+        if (state.pathContext === "Shared route") {
+          title = "Shared Commercial Drive route";
+        } else if (state.pathContext === "See All Spots") {
+          title = "Commercial Drive visit list";
+        } else {
+          title = "Commercial Drive route";
+        }
+      }
+      return {
+        route,
+        mapOptions,
+        title,
+        planKey,
+        mapsUrl: buildGoogleMapsUrl(route, mapOptions),
+      };
+    }
+
+    function buildRouteShareUrl(route, mapOptions, options = {}) {
+      const params = new URLSearchParams();
+      params.set("route", route.map((s) => s.id).join(","));
+      const opts = normalizeMapOptions(mapOptions);
+      if (!opts.startAtStation) params.set("rs", "first");
+      if (!opts.endAtStation) params.set("re", "last");
+      if (options.planKey) params.set("plan", options.planKey);
+      const base = `${window.location.origin}${window.location.pathname}`;
+      return `${base}?${params.toString()}`;
+    }
+
+    function shareRouteWithFriend() {
+      const ctx = getRouteExportContext();
+      if (!ctx.route.length) return;
+      const url = buildRouteShareUrl(ctx.route, ctx.mapOptions, {
+        planKey: ctx.planKey || undefined,
+      });
+      const shareTitle = `${ctx.title} — Escape DT`;
+      const shareText = `A ${ctx.route.length}-stop Commercial Drive route from Escape DT`;
+      if (navigator.share) {
+        navigator
+          .share({ title: shareTitle, text: shareText, url })
+          .catch((err) => {
+            if (err?.name !== "AbortError") copyShareUrl(url);
+          });
+      } else {
+        copyShareUrl(url);
+      }
+    }
+
+    function openRouteMapsFromExport() {
+      const ctx = getRouteExportContext();
+      if (!ctx.route.length || !ctx.mapsUrl) return;
+      window.open(ctx.mapsUrl, "_blank");
+    }
+
+    function getRoutePrintMapSvgId() {
+      return state.currentStep === "P2-PLAN" ? "route-map-p2" : "route-map";
+    }
+
+    function routePrintMapHasContent(svgEl) {
+      if (!svgEl) return false;
+      return !!(
+        svgEl.querySelector(".map-route-layer path") ||
+        svgEl.querySelector(".map-stop-group") ||
+        svgEl.querySelector(".map-legs-layer")
+      );
+    }
+
+    function formatRoutePrintWalkLine(route, mapOptions) {
+      const style = getTotalsStyleForMapOptions(mapOptions);
+      if (style === "furthest-roundtrip") {
+        const { km: furthestKm, min: furthestMin } = getRouteWalkToFurthestTotals(
+          route,
+          mapOptions
+        );
+        const { totalKm, totalMin } = getRouteWalkTotals(route, mapOptions);
+        return `~${formatKm(furthestKm)} km to furthest · ~${furthestMin} min · round trip ~${formatKm(totalKm)} km · ~${totalMin} min (walking estimates)`;
+      }
+      const { totalKm, totalMin } = getRouteWalkTotals(route, mapOptions);
+      return `~${formatKm(totalKm)} km · ~${totalMin} min walking (estimates)`;
+    }
+
+    function buildRoutePrintSheet() {
+      const ctx = getRouteExportContext();
+      if (!ctx.route.length) return false;
+
+      const titleEl = document.getElementById("route-print-title");
+      const mapEl = document.getElementById("route-print-map");
+      const stopsEl = document.getElementById("route-print-stops");
+      const walkEl = document.getElementById("route-print-walk");
+
+      if (titleEl) {
+        titleEl.textContent = `${ctx.title} — ${ctx.route.length} stop${ctx.route.length === 1 ? "" : "s"}`;
+      }
+
+      const svgSrc = document.getElementById(getRoutePrintMapSvgId());
+      if (mapEl) {
+        mapEl.innerHTML = "";
+        if (svgSrc) {
+          const clone = svgSrc.cloneNode(true);
+          clone.removeAttribute("id");
+          mapEl.appendChild(clone);
+        }
+      }
+
+      if (stopsEl) {
+        stopsEl.innerHTML = ctx.route
+          .map(
+            (s, i) => `
+          <li>
+            <span class="route-print-stop__num">${i + 1}.</span>
+            <span class="route-print-stop__name">${escapeHtml(s.name)}</span>
+            <span class="route-print-stop__street">${escapeHtml(s.crossStreet || "")}</span>
+          </li>`
+          )
+          .join("");
+      }
+
+      if (walkEl) {
+        walkEl.textContent = formatRoutePrintWalkLine(ctx.route, ctx.mapOptions);
+      }
+      return true;
+    }
+
+    function launchRoutePrint() {
+      const sheet = document.getElementById("route-print-sheet");
+      if (!buildRoutePrintSheet() || !sheet) return;
+      sheet.hidden = false;
+      sheet.setAttribute("aria-hidden", "false");
+      document.body.classList.add("route-print-mode");
+      const cleanup = () => {
+        document.body.classList.remove("route-print-mode");
+        sheet.hidden = true;
+        sheet.setAttribute("aria-hidden", "true");
+      };
+      window.addEventListener("afterprint", cleanup, { once: true });
+      window.print();
+    }
+
+    function revealRouteExportPdfHint() {
+      const hint =
+        state.currentStep === "P2-PLAN"
+          ? document.getElementById("p2-export-hint")
+          : document.getElementById("route-export-hint");
+      if (hint) hint.hidden = false;
+    }
+
+    function exportRouteAsPdf() {
+      const step = state.currentStep;
+      if (step !== "E" && step !== "P2-PLAN") return;
+
+      revealRouteExportPdfHint();
+
+      if (step === "P2-PLAN") {
+        ensureP2RouteSummaryVisible();
+      } else {
+        const reviewEl = document.getElementById("route-review");
+        const summaryPanelEl = document.getElementById("route-summary-panel");
+        if (reviewEl && summaryPanelEl) {
+          reviewEl.classList.remove("route-phase-map");
+          reviewEl.classList.add("route-phase-summary");
+          summaryPanelEl.hidden = false;
+        }
+      }
+
+      const mapSvgId = getRoutePrintMapSvgId();
+      const svgEl = document.getElementById(mapSvgId);
+      if (!routePrintMapHasContent(svgEl)) {
+        const ctx = getRouteExportContext();
+        drawMap(mapSvgId, ctx.route, {
+          mapOptions: ctx.mapOptions,
+          legDuration: 0,
+          onComplete: launchRoutePrint,
+        });
+        return;
+      }
+      launchRoutePrint();
+    }
+
+    function applySharedRouteFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const routeParam = params.get("route");
+      if (!routeParam) return null;
+
+      const requestedIds = routeParam
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean);
+      const resolved = [];
+      let skipped = 0;
+      requestedIds.forEach((id) => {
+        const stop = STOPS.find((s) => s.id === id);
+        if (stop) resolved.push(stop);
+        else skipped += 1;
+      });
+      if (!resolved.length) return null;
+
+      state.sharedRouteIds = resolved.map((s) => s.id);
+      state.sharedRouteBanner = true;
+      state.sharedRouteSkipped = skipped;
+
+      const rs = params.get("rs");
+      const re = params.get("re");
+      state.routeStart = rs === "first" ? "firstStop" : "station";
+      state.routeEnd = re === "last" ? "lastStop" : "station";
+
+      const planKey = params.get("plan");
+      if (planKey && PLANS[planKey]) {
+        state.planTime = planKey;
+        state.p2CustomStopIds = [...state.sharedRouteIds];
+        state.pathContext = "See My Suggested Routes";
+        if (window.history?.replaceState) {
+          window.history.replaceState(null, "", window.location.pathname);
+        }
+        return { step: "P2-PLAN" };
+      }
+
+      state.pathContext = "Shared route";
+      if (window.history?.replaceState) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+      return { step: "E" };
+    }
+
+    function renderStepE(options = {}) {
+      const route = getFinalRoute();
+      if (!options.preserveFinalized) {
+        resetStepEExportUi();
+      }
 
       const editBtn = document.getElementById("btn-edit-route");
       const finalizeBtn = document.getElementById("btn-route-finalize");
       editBtn.hidden = true;
-      finalizeBtn.hidden = true;
-      finalizeBtn.textContent = "Finalize";
-      finalizeBtn.className = "primary";
-      finalizeBtn.disabled = false;
+      if (!options.preserveFinalized) {
+        finalizeBtn.hidden = true;
+      }
 
-      const fromP3 =
-        state.pathContext === "See All Spots" && state.p3RouteIds.length > 0;
+      const summaryTitle =
+        state.pathContext === "Shared route"
+          ? `SHARED ROUTE — ${route.length} STOP${route.length === 1 ? "" : "S"}`
+          : `YOUR COMMERCIAL DRIVE ROUTE — ${route.length} STOPS`;
+
       const mapOptions = getUserRouteMapOptions();
       initRouteReviewAnimation({
         reviewEl: document.getElementById("route-review"),
@@ -4757,20 +5534,38 @@
         totalsId: "route-totals",
         scrollHintEl: document.getElementById("route-scroll-hint"),
         exportSummaryEl: document.getElementById("route-export-summary"),
-        exportSummaryText: `YOUR COMMERCIAL DRIVE ROUTE — ${route.length} STOPS`,
+        exportSummaryText: summaryTitle,
         reviewSelector: "#route-review",
-        observeEl: finalizeBtn,
+        observeEl: options.preserveFinalized
+          ? document.getElementById("route-export-actions")
+          : finalizeBtn,
         route,
         mapOptions,
+        skipAnimation: !!options.skipAnimation,
         totalsStyle: getTotalsStyleForMapOptions(mapOptions),
-        routeCardOptions: fromP3
-          ? { removable: true, removeHandler: "removeP3RouteStop" }
-          : undefined,
+        routeCardOptions: getStepERouteCardOptions(),
         onMapComplete: () => {
           editBtn.hidden = false;
-          finalizeBtn.hidden = false;
+          if (options.preserveFinalized) {
+            showStepEExportAfterFinalize();
+          } else {
+            finalizeBtn.hidden = false;
+          }
+          updateSharedRouteBanner();
         },
       });
+    }
+
+    function removePath1RouteStop(stopId) {
+      if (getFinalRoute().length <= 1) return;
+      Object.keys(state.selectedStops).forEach((catId) => {
+        const ids = state.selectedStops[catId];
+        if (!ids) return;
+        state.selectedStops[catId] = ids.filter((id) => id !== stopId);
+      });
+      if (state.currentStep === "E") {
+        refreshStepERouteAfterEdit();
+      }
     }
 
     function removeP3RouteStop(stopId) {
@@ -4791,8 +5586,14 @@
       if (route.length === 0) {
         state.routeReviewFinalized = false;
         state.expandedSpotId = null;
-        showStep("P3");
-        renderP3();
+        if (state.pathContext === "See All Spots") {
+          showStep("P3");
+          renderP3();
+        } else {
+          state.currentCategoryIndex = 0;
+          showStep("D");
+          renderStepD();
+        }
         return;
       }
       const mapOptions = getUserRouteMapOptions();
@@ -4806,28 +5607,25 @@
         mapOptions,
         totalsStyle: getTotalsStyleForMapOptions(mapOptions),
         route,
-        routeCardOptions: {
-          removable: true,
-          removeHandler: "removeP3RouteStop",
-        },
+        routeCardOptions: getStepERouteCardOptions(),
       });
-      if (finalizeBtn) finalizeBtn.hidden = false;
-      if (state.routeReviewFinalized) setRouteConnectVisible(true);
+      if (finalizeBtn && !state.routeReviewFinalized) finalizeBtn.hidden = false;
+      if (state.routeReviewFinalized) showStepEExportAfterFinalize();
     }
 
     function handleRouteFinalize() {
-      if (state.routeReviewFinalized) {
-        openGoogleMaps();
-        return;
-      }
-      state.routeReviewFinalized = true;
-      const btn = document.getElementById("btn-route-finalize");
-      btn.textContent = "Add to Google Maps";
-      btn.className = "btn-google-maps";
-      setRouteConnectVisible(true);
+      showStepEExportAfterFinalize();
     }
 
     function editSpots() {
+      state.sharedRouteIds = null;
+      state.sharedRouteBanner = false;
+      state.sharedRouteSkipped = 0;
+      const stepBanner = document.getElementById("shared-route-banner");
+      if (stepBanner) stepBanner.hidden = true;
+      if (state.pathContext === "Shared route") {
+        state.pathContext = "Choose Your Own Adventure";
+      }
       if (state.pathContext === "See All Spots" && state.p3RouteIds.length > 0) {
         state.expandedSpotId = null;
         goTo("P3");
@@ -4837,9 +5635,9 @@
       goTo('D');
     }
 
-    function openGoogleMapsLegacy(route, mapOptions) {
+    function buildGoogleMapsUrlLegacy(route, mapOptions) {
       const resolved = route || getFinalRoute();
-      if (resolved.length === 0) return;
+      if (resolved.length === 0) return "";
 
       const opts = resolveOpenGoogleMapsOptions(mapOptions);
 
@@ -4864,13 +5662,12 @@
           waypointStops.map((s) => `${s.lat},${s.lng}`).join("|");
       }
 
-      const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}${waypoints}&travelmode=walking`;
-      window.open(url, "_blank");
+      return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}${waypoints}&travelmode=walking`;
     }
 
-    function openGoogleMapsV2(route, mapOptions) {
+    function buildGoogleMapsUrlV2(route, mapOptions) {
       const resolved = route || getFinalRoute();
-      if (resolved.length === 0) return;
+      if (resolved.length === 0) return "";
 
       const opts = normalizeMapOptions(
         mapOptions || resolveOpenGoogleMapsOptions()
@@ -4908,16 +5705,19 @@
           waypointStops.map((s) => `${s.lat},${s.lng}`).join("|");
       }
 
-      const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}${waypoints}&travelmode=walking`;
-      window.open(url, "_blank");
+      return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}${waypoints}&travelmode=walking`;
+    }
+
+    function buildGoogleMapsUrl(route, mapOptions) {
+      if (isRouteFinalizeV2Enabled()) {
+        return buildGoogleMapsUrlV2(route, mapOptions);
+      }
+      return buildGoogleMapsUrlLegacy(route, mapOptions);
     }
 
     function openGoogleMaps(route, mapOptions) {
-      if (isRouteFinalizeV2Enabled()) {
-        openGoogleMapsV2(route, mapOptions);
-      } else {
-        openGoogleMapsLegacy(route, mapOptions);
-      }
+      const url = buildGoogleMapsUrl(route, mapOptions);
+      if (url) window.open(url, "_blank");
     }
 
     function startOver() {
@@ -4954,6 +5754,19 @@
       refreshP2RouteAfterEdit();
     }
 
+    function addP2Stop(stopId) {
+      const plan = PLANS[state.planTime];
+      const ids = getP2PlanStopIds();
+      if (ids.includes(stopId)) return;
+      const order = plan?.stops;
+      if (Array.isArray(order) && order.includes(stopId)) {
+        state.p2CustomStopIds = order.filter((id) => ids.includes(id) || id === stopId);
+      } else {
+        state.p2CustomStopIds = [...ids, stopId];
+      }
+      refreshP2RouteAfterEdit();
+    }
+
     function ensureP2RouteSummaryVisible() {
       const reviewEl = document.getElementById("p2-route-review");
       const summaryPanelEl = document.getElementById("p2-route-summary-panel");
@@ -4966,11 +5779,9 @@
     function refreshP2RouteAfterEdit() {
       if (state.currentStep !== "P2-PLAN") return;
       const plan = PLANS[state.planTime] || { title: "Your Plan" };
-      const duration = plan.duration || "";
       const route = getPlanRoute();
-      const mapsBtn = document.getElementById("p2-open-maps");
       updateP2PlanHeader(plan, route);
-      if (mapsBtn) mapsBtn.style.display = route.length ? "" : "none";
+      setP2ExportActionsVisible(route.length > 0);
       setP2ConnectVisible(route.length > 0);
       const mapOptions = getEffectiveMapOptions(plan);
       updateRouteReviewSummary({
@@ -5006,12 +5817,12 @@
         const plan = PLANS[id];
         const duration = plan.duration || "";
         const teaser = plan.description
-          ? `<p class="label p2-plan-picker-desc">${escapeHtml(plan.description)}</p>`
+          ? `<p class="choice-desc p2-plan-picker-desc">${escapeHtml(plan.description)}</p>`
           : "";
         return `
           <div class="card" onclick="selectPlan('${id}')">
-            <h2>${escapeHtml(plan.title)}</h2>
-            <span class="label">${escapeHtml(duration)}</span>
+            <h2 class="choice-title">${escapeHtml(plan.title)}</h2>
+            ${duration ? `<span class="choice-desc">${escapeHtml(duration)}</span>` : ""}
             ${teaser}
           </div>
         `;
@@ -5061,6 +5872,7 @@
       const cardOptions = {
         removable: true,
         removeHandler: "removeP2Stop",
+        addHandler: "addP2Stop",
         routeLength: route.length,
       };
       const parts = ['<div class="plan-narrative">'];
@@ -5073,22 +5885,21 @@
           return;
         }
         if (segment.type === "stops" && Array.isArray(segment.ids)) {
-          const cards = segment.ids
-            .filter((id) => activeIds.has(id))
+          const stops = segment.ids
             .map((id) => STOPS.find((s) => s.id === id))
-            .filter(Boolean)
-            .map((stop) =>
-              renderNarrativeCardHtml(
-                stop,
-                routeIndexById.get(stop.id),
-                cardOptions
-              )
+            .filter(Boolean);
+          if (!stops.length) return;
+          const cards = stops.map((stop) => {
+            const isActive = activeIds.has(stop.id);
+            return renderNarrativeCardHtml(
+              stop,
+              isActive ? routeIndexById.get(stop.id) : -1,
+              { ...cardOptions, removed: !isActive }
             );
-          if (cards.length) {
-            parts.push(
-              `<div class="plan-narrative__stops">${cards.join("")}</div>`
-            );
-          }
+          });
+          parts.push(
+            `<div class="plan-narrative__stops">${cards.join("")}</div>`
+          );
         }
       });
       parts.push("</div>");
@@ -5101,12 +5912,12 @@
       return ids.map((id) => STOPS.find((s) => s.id === id)).filter(Boolean);
     }
 
-    function renderP2Plan() {
+    function renderP2Plan(options = {}) {
       const key = state.planTime;
       const plan = PLANS[key] || { title: "Your Plan", stops: [] };
       const duration = plan.duration || "";
       const route = getPlanRoute();
-      const mapsBtn = document.getElementById("p2-open-maps");
+      const exportActions = document.getElementById("p2-export-actions");
       const metaEl = document.getElementById("p2-plan-meta");
       const introEl = document.getElementById("p2-plan-intro");
       const review = document.getElementById("p2-route-review");
@@ -5131,8 +5942,10 @@
         }
         teardownRouteScrollHint(document.getElementById("p2-route-scroll-hint"));
         if (review) review.hidden = true;
-        if (mapsBtn) mapsBtn.style.display = "none";
+        setP2ExportActionsVisible(false);
         setP2ConnectVisible(false);
+        const p2Banner = document.getElementById("p2-shared-route-banner");
+        if (p2Banner) p2Banner.hidden = true;
         return;
       }
 
@@ -5140,8 +5953,8 @@
 
       updateP2PlanHeader(plan, route);
       renderP2PlanNarrative(plan);
-      if (mapsBtn) mapsBtn.style.display = "";
-      setP2ConnectVisible(true);
+      setP2ExportActionsVisible(false);
+      setP2ConnectVisible(false);
 
       const mapOptions = getEffectiveMapOptions(plan);
       initRouteReviewAnimation({
@@ -5154,13 +5967,19 @@
         exportSummaryEl: document.getElementById("p2-route-export-summary"),
         exportSummaryText: `${plan.title.toUpperCase()} — ${route.length} STOPS`,
         reviewSelector: "#p2-route-review",
-        observeEl: mapsBtn,
+        observeEl: exportActions || undefined,
         route,
         mapOptions,
+        skipAnimation: !!options.skipAnimation,
         totalsStyle: getTotalsStyleForMapOptions(mapOptions),
         routeCardOptions: {
           removable: true,
           removeHandler: "removeP2Stop",
+        },
+        onMapComplete: () => {
+          setP2ExportActionsVisible(true);
+          setP2ConnectVisible(true);
+          updateSharedRouteBanner();
         },
       });
     }
@@ -5375,7 +6194,13 @@
     }
 
     function renderP3GridMeta(spot) {
-      return `<div class="meta">${escapeHtml(spot.crossStreet)}</div>`;
+      const cross = spot.crossStreet
+        ? `<div class="meta choice-desc">${escapeHtml(spot.crossStreet)}</div>`
+        : "";
+      const desc = spot.description
+        ? `<p class="p3-card__grid-desc">${escapeHtml(spot.description)}</p>`
+        : "";
+      return cross + desc;
     }
 
     function renderP3DetailMeta(spot) {
@@ -5385,6 +6210,14 @@
         <div class="p3-card__expand-meta">${escapeHtml(spot.crossStreet)}</div>
         <div class="p3-card__expand-meta walk-line">${costPart}~${formatKm(km)} km · ~${minutes} min from ${STATION_WALK_LABEL}</div>
       `;
+    }
+
+    function renderP3AddBtn(spot) {
+      const inRoute = state.p3RouteIds.includes(spot.id);
+      if (inRoute) {
+        return `<button type="button" class="p3-add-btn is-added" aria-label="Remove from route" onclick="event.stopPropagation(); addP3ToRoute('${spot.id}')">✓</button>`;
+      }
+      return `<button type="button" class="p3-add-btn" aria-label="Add to route" onclick="event.stopPropagation(); addP3ToRoute('${spot.id}')">+</button>`;
     }
 
     function renderP3ExpandPanel(spot) {
@@ -5492,7 +6325,7 @@
         desc.textContent =
           filterNote +
           routeNote +
-          "Tap a spot to expand or collapse — add stops to your route from there.";
+          "Tap a spot to expand — use + to add stops to your route.";
       }
 
       const grid = document.getElementById("p3-grid");
@@ -5512,9 +6345,10 @@
           return `
           <div class="p3-card${testClass}${expandedClass}${routeClass}" data-spot-id="${spot.id}" onclick="toggleP3Spot('${spot.id}')">
             <div class="p3-card__summary">
-              <img class="p3-card__thumb" src="${spot.image}" alt="${escapeHtml(spot.name)}" loading="lazy">
+              <img class="p3-card__thumb" src="${spot.image}" alt="${escapeHtml(spot.name)}" loading="lazy"${heroFocusStyleAttr(spot)}>
               <div class="p3-card__body">
-                <h3>${escapeHtml(spot.name)}</h3>
+                ${renderP3AddBtn(spot)}
+                <h3 class="choice-title">${escapeHtml(spot.name)}</h3>
                 ${renderP3GridMeta(spot)}
               </div>
             </div>
@@ -5581,7 +6415,19 @@
 
     // Init — data/stops.json + data/plans.json (see AGENTS.md)
     loadAppData().then((ok) => {
-      if (ok) showStep("LANDING");
+      if (!ok) return;
+      const shared = applySharedRouteFromUrl();
+      if (shared?.step === "P2-PLAN") {
+        renderP2Plan({ skipAnimation: true, showExportActions: true });
+        showStep("P2-PLAN");
+        return;
+      }
+      if (shared?.step === "E") {
+        renderStepE({ preserveFinalized: true, skipAnimation: true });
+        showStep("E");
+        return;
+      }
+      showStep("LANDING");
     });
   </script>
 </body>
