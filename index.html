@@ -943,12 +943,9 @@
       cursor: pointer;
       transition: background 0.35s ease;
     }
-    .p3-filter-toggle:hover {
-      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
-    }
     .p3-filter-toggle.active {
-      background: var(--ink);
-      color: #fff;
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+      color: var(--ink);
     }
     .p3-filter-clear {
       font-size: 0.65rem;
@@ -959,6 +956,11 @@
       text-decoration: underline;
       padding: 0;
       cursor: pointer;
+    }
+    .p3-filter-clear:hover {
+      background: none;
+      color: var(--ink);
+      border: none;
     }
     .p3-filter-panel,
     .p3-sort-panel {
@@ -980,12 +982,9 @@
       cursor: pointer;
       transition: background 0.35s ease;
     }
-    .p3-sort-option:hover {
-      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
-    }
     .p3-sort-option.active {
-      background: var(--ink);
-      color: #fff;
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+      color: var(--ink);
     }
     .p3-sort-option__title {
       display: block;
@@ -1021,12 +1020,16 @@
       cursor: pointer;
       transition: background 0.35s ease;
     }
-    .p3-cat-chip:hover {
-      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
-    }
     .p3-cat-chip.active {
-      background: var(--ink);
-      color: #fff;
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+      color: var(--ink);
+    }
+    /* Override global button:hover (white text) — fade only, ink stays black */
+    .p3-filters button:not(.p3-filter-clear):hover,
+    .p3-filters button:not(.p3-filter-clear).active {
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+      color: var(--ink);
+      border-color: var(--ink);
     }
     .p3-filters .p3-tag-filters {
       margin-top: 0.75rem;
@@ -2252,14 +2255,14 @@
         <div class="card" role="button" tabindex="0"
           onclick="selectRouteStart('station')"
           onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRouteStart('station'); }">
-          <h2 class="choice-title">Start me at the SkyTrain</h2>
-          <span class="choice-desc">Walk from Commercial&ndash;Broadway station to your first stop</span>
+          <h2 class="choice-title">Start me at Commercial-Broadway Skytrain station</h2>
+          <span class="choice-desc">Walk from Commercial-Broadway Skytrain station to your first stop</span>
         </div>
         <div class="card" role="button" tabindex="0"
           onclick="selectRouteStart('firstStop')"
           onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRouteStart('firstStop'); }">
           <h2 class="choice-title">Start me at my first location</h2>
-          <span class="choice-desc">Your first stop on the route is already where you are; directions end at the station</span>
+          <span class="choice-desc">Your first stop on the route is already where you are; directions end at Commercial-Broadway Skytrain station</span>
         </div>
         <div class="nav-buttons">
           <button type="button" onclick="backFromRouteStart()">Back</button>
@@ -2275,8 +2278,8 @@
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="start" data-value="station"
             onclick="selectRouteFinalizeChoice('start', 'station')"
             onkeydown="routeFinalizeCardKeydown(event, 'start', 'station')">
-            <h2 class="choice-title">Commercial-Broadway Skytrain</h2>
-            <span class="choice-desc">I will take the skytrain over to Commercial</span>
+            <h2 class="choice-title">Commercial-Broadway Skytrain station</h2>
+            <span class="choice-desc">I'll take the Skytrain and start walking from there</span>
           </div>
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="start" data-value="firstStop"
             onclick="selectRouteFinalizeChoice('start', 'firstStop')"
@@ -2291,7 +2294,7 @@
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="end" data-value="station"
             onclick="selectRouteFinalizeChoice('end', 'station')"
             onkeydown="routeFinalizeCardKeydown(event, 'end', 'station')">
-            <h2 class="choice-title">Bring me back to the Skytrain</h2>
+            <h2 class="choice-title">Bring me back to Commercial-Broadway Skytrain station</h2>
           </div>
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="end" data-value="lastStop"
             onclick="selectRouteFinalizeChoice('end', 'lastStop')"
@@ -2369,7 +2372,7 @@
     <!-- STEP D: SPOT SELECTION -->
     <section id="step-D" class="step">
       <h1 id="step-d-title">Choose your spot</h1>
-      <p id="step-d-desc">Select one or two stops for this category, locations appear in geographic distance from the Skytrain</p>
+      <p id="step-d-desc">Select one or two stops for this category, locations appear in geographic distance from Commercial-Broadway Skytrain station</p>
 
       <div id="step-d-filters" class="step-d-filters" style="display: none;" aria-label="Filter spots"></div>
 
@@ -3776,7 +3779,7 @@
 
     // --- STEP D ---
     const STEP_D_DESC =
-      "Select one or two stops for this category, locations appear in geographic distance from the Skytrain";
+      "Select one or two stops for this category, locations appear in geographic distance from Commercial-Broadway Skytrain station";
 
     function countCategoryStopsWithTag(catId, tag) {
       return getCategoryStops(catId).filter((s) => stopHasTag(s, tag)).length;
@@ -4076,7 +4079,8 @@
     }
 
     // --- STEP E ---
-    const STATION_WALK_LABEL = "Commercial Skytrain";
+    const STATION_DISPLAY_NAME = "Commercial-Broadway Skytrain station";
+    const STATION_WALK_LABEL = STATION_DISPLAY_NAME;
     const WALK_SPEED_KMH = 5;
 
     function haversineKm(lat1, lng1, lat2, lng2) {
@@ -4800,7 +4804,10 @@
       if (showStation) {
         html += `
         <circle cx="${MAP.xCenter}" cy="${MAP.yStation}" r="5" fill="var(--ink)"/>
-        <text class="map-text" x="${MAP.xCenter + 10}" y="${MAP.yStation + 5}">Station</text>`;
+        <text class="map-text" x="${MAP.xCenter + 10}" y="${MAP.yStation + 1}">
+          <tspan x="${MAP.xCenter + 10}" dy="0">Commercial-Broadway</tspan>
+          <tspan x="${MAP.xCenter + 10}" dy="11">Skytrain station</tspan>
+        </text>`;
       }
       return html;
     }
@@ -5156,7 +5163,7 @@
       const { totalKm, totalMin } = getRouteWalkTotals(route, mapOpts);
       const opts = normalizeMapOptions(mapOpts);
       const disclaimer = opts.endAtStation
-        ? "Straight-line estimates between stops in visit order, including return to the station. Does not include time spent at locations."
+        ? `Straight-line estimates between stops in visit order, including return to ${STATION_DISPLAY_NAME}. Does not include time spent at locations.`
         : "Straight-line estimates between stops in visit order. Does not include time spent at locations.";
       el.innerHTML = `
         <div>Total walking (your route order): ~${formatKm(totalKm)} km · ~${totalMin} min</div>

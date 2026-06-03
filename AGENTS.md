@@ -58,6 +58,21 @@ Logic lives in `js/season-theme.js` (loaded synchronously in `<head>` of `index.
 
 **Hero mascot** on the landing page uses the same `?season=` override and half-month schedule. PNGs live in `assets/hero/` (`shy-winter`, `shy-spring`, `shy-summer`, `shy-fall`); `thaw` reuses winter, `late-fall` reuses fall until dedicated art exists. `season-theme.js` sets `data-hero-logo` on `<html>` before paint; the landing `<img id="hero-logo">` reads it via an inline script (no flash). Regenerate transparent PNGs from source art: `powershell -File scripts/process-hero-logos.ps1`.
 
+### Hero speech bubble (prototype — not on landing yet)
+
+Interactive prototype: `demo/hero-speech-bubble.html` (`npm run dev` → `/demo/hero-speech-bubble.html`). Assets: `demo/hero-speech-bubble.css`, `demo/hero-speech-bubble.js`.
+
+**Approved tuning** (copy into landing CSS/JS when implementing): [`demo/hero-speech-bubble-tuning.json`](demo/hero-speech-bubble-tuning.json)
+
+| Setting | Value | CSS variable |
+|---------|-------|----------------|
+| Tail Y (points at mouth) | `46px` | `--tail-y` |
+| Bubble vertical offset | `18px` | `--bubble-offset-y` |
+| Gap to mascot | `-12px` | `--bubble-gap` |
+| White background opacity | `0.15` | `--bubble-bg-opacity` |
+
+The demo also persists slider tweaks in `localStorage` (`hero-speech-bubble-tuning`); **Reset tuning** restores the approved JSON defaults above.
+
 ---
 
 ## Home page areas

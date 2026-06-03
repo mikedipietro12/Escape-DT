@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero speech bubble — demo</title>
+  <link rel="stylesheet" href="hero-speech-bubble.css">
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through the dev server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>/demo/hero-speech-bubble.html</code>.
+  </p>
+
+  <header class="demo-header">
+    <h1>Speech bubble prototype</h1>
+    <p>Bubble grows out to the right of the mascot — lava swell, then settles into a rounded rectangle.</p>
+  </header>
+
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="svg-defs">
+    <defs>
+      <filter id="goo" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10"
+          result="goo"
+        />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="hero-mascot-wrap">
+    <div class="hero-stage">
+      <div class="hero-figure">
+        <img
+          class="hero-logo"
+          id="hero-logo"
+          src="/assets/hero/shy-spring.png"
+          alt="Escape the Downtown mascot"
+          width="360"
+          height="360"
+          decoding="async"
+        >
+        <p class="hero-img-error">Hero image failed to load. Use <code>npm run dev</code> and check <code>/assets/hero/shy-spring.png</code>.</p>
+      </div>
+      <div class="speech-bubble-wrap is-animating" id="speech-wrap">
+        <div class="speech-bubble" id="speech-anchor" aria-live="polite">
+          <svg class="speech-frame" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path class="speech-frame-fill" vector-effect="non-scaling-stroke" />
+            <path class="speech-frame-stroke" vector-effect="non-scaling-stroke" />
+          </svg>
+          <svg class="speech-tail" viewBox="0 0 14 22" aria-hidden="true" focusable="false">
+            <path class="speech-tail-fill" d="M14 0 L1.75 11 L14 22 Z" />
+          </svg>
+          <p class="speech-line speech-line--intro">
+            10 years, hundreds of kilometres, one East Van. I'm a local photographer who's walked every block of these neighbourhoods. These are the places I keep coming back to, and now I want to share them with you.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-controls">
+    <section aria-label="Actions">
+      <h2>Actions</h2>
+      <div class="btn-row">
+        <button type="button" id="replay-btn">Replay bubble</button>
+        <button type="button" id="reset-tuning-btn">Reset tuning</button>
+      </div>
+      <p class="tuning-readout" id="tuning-readout" aria-live="polite"></p>
+    </section>
+
+    <section aria-label="Tail alignment">
+      <h2>Tail alignment</h2>
+      <label>
+        Tail Y (points at mouth)
+        <input type="range" id="tail-y" min="20" max="72" value="46" step="1">
+        <output id="tail-y-out">46px</output>
+      </label>
+      <label>
+        Bubble vertical offset
+        <input type="range" id="bubble-offset-y" min="0" max="48" value="18" step="1">
+        <output id="bubble-offset-y-out">18px</output>
+      </label>
+      <label>
+        Gap to mascot
+        <input type="range" id="bubble-gap" min="-28" max="8" value="-12" step="1">
+        <output id="bubble-gap-out">-12px</output>
+      </label>
+    </section>
+
+    <section aria-label="Hero season">
+      <h2>Hero PNG</h2>
+      <div class="btn-row">
+        <button type="button" data-season-btn="winter">Winter</button>
+        <button type="button" data-season-btn="spring" class="is-active">Spring</button>
+        <button type="button" data-season-btn="summer">Summer</button>
+        <button type="button" data-season-btn="fall">Fall</button>
+      </div>
+    </section>
+
+    <section aria-label="Appearance">
+      <h2>Appearance</h2>
+      <label>
+        White background opacity
+        <input type="range" id="bg-opacity" min="0" max="1" value="0.15" step="0.05">
+        <output id="bg-opacity-out">0.15</output>
+      </label>
+      <label>
+        <input type="checkbox" id="force-motion">
+        Force grow animation (ignore reduced motion)
+      </label>
+    </section>
+  </div>
+
+  <p class="demo-note">
+    Landing intro copy (~230 characters). Tune tail Y so the triangle points at the mouth. If it feels cramped, widen <code>--bubble-max-width</code> (default 300px) or trim a sentence.
+  </p>
+
+  <script src="hero-speech-bubble.js"></script>
+</body>
+</html>

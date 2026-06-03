@@ -1,0 +1,15 @@
+{
+  "_note": "Approved hero speech bubble tuning (demo validated). Use these when wiring the landing hero. Prototype: demo/hero-speech-bubble.html",
+  "approved": "2026-06-02",
+  "tailY": "46",
+  "bubbleOffsetY": "18",
+  "bubbleGap": "-12",
+  "bgOpacity": "0.15",
+  "forceMotion": false,
+  "css": {
+    "--tail-y": "46px",
+    "--bubble-offset-y": "18px",
+    "--bubble-gap": "-12px",
+    "--bubble-bg-opacity": "0.15"
+  }
+}
