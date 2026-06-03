@@ -504,10 +504,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.85rem;
+      gap: 0.75rem;
       width: 100%;
       max-width: 20rem;
-      margin: 1.25rem auto 0;
+      margin: 1rem auto 0;
       padding: 0;
     }
     .connect-links[hidden] {
@@ -551,31 +551,42 @@
       height: 1.25rem;
       display: block;
     }
-    .connect-btn__mark {
-      font-size: 1.2rem;
-      font-weight: 700;
-      line-height: 1;
+    .connect-btn--text {
+      width: auto;
+      min-width: 3.35rem;
+      padding: 0 0.35rem;
     }
-    .connect-tour-btn {
-      display: block;
-      width: 100%;
+    .connect-btn__label {
+      font-size: 0.5rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      line-height: 1;
+      text-transform: lowercase;
+    }
+    .route-export-tour.connect-tour-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
       box-sizing: border-box;
-      padding: 0.65rem 1.25rem;
+      padding: 1rem 0.75rem;
       border: 1px solid var(--ink);
-      border-radius: 0.5rem;
-      background: rgba(255, 255, 255, 0.35);
+      border-radius: var(--tile-radius);
+      background: transparent;
       color: var(--ink);
       text-decoration: none;
       text-align: center;
-      font-size: 0.95rem;
-      font-weight: 600;
-      text-transform: none;
-      letter-spacing: 0.02em;
-      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      font-family: inherit;
+      font-size: var(--type-label);
+      font-weight: inherit;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      line-height: 1.2;
+      transition: background 0.35s ease, color 0.2s, border-color 0.2s;
     }
-    .connect-tour-btn:hover {
-      background: var(--ink);
-      color: #fff;
+    .route-export-tour.connect-tour-btn:hover {
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+      color: var(--ink);
       border-color: var(--ink);
     }
 
@@ -1219,33 +1230,45 @@
       font-size: 0.95rem;
       line-height: 1.5;
     }
-    #step-E .nav-buttons .btn-google-maps,
-    #step-P2-PLAN .route-export-actions .btn-google-maps {
-      flex: 1 1 100%;
-      width: 100%;
-      font-size: 1.2rem;
-    }
-    .route-export-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      width: 100%;
-      flex: 1 1 100%;
-    }
     .route-export-actions[hidden] {
       display: none !important;
     }
-    #step-E .nav-buttons,
-    #step-P2-PLAN .nav-buttons {
+    #step-E .nav-buttons:has(#route-export-actions:not([hidden])),
+    #step-P2-PLAN .nav-buttons:has(#p2-export-actions:not([hidden])) {
       flex-wrap: wrap;
+      align-items: stretch;
+    }
+    #step-E .nav-buttons:has(#route-export-actions:not([hidden])) .route-export-actions,
+    #step-P2-PLAN .nav-buttons:has(#p2-export-actions:not([hidden])) .route-export-actions {
+      display: contents;
+    }
+    #step-E .nav-buttons:has(#route-export-actions:not([hidden])) > #btn-edit-route,
+    #step-P2-PLAN .nav-buttons:has(#p2-export-actions:not([hidden])) > button:first-of-type,
+    #step-E .nav-buttons:has(#route-export-actions:not([hidden])) .btn-google-maps,
+    #step-P2-PLAN .nav-buttons:has(#p2-export-actions:not([hidden])) .btn-google-maps {
+      flex: 1 1 calc(50% - 0.5rem);
+      width: auto;
+      min-width: 0;
+    }
+    #step-E .nav-buttons:has(#route-export-actions:not([hidden])) .btn-google-maps,
+    #step-P2-PLAN .nav-buttons:has(#p2-export-actions:not([hidden])) .btn-google-maps {
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
     }
     .route-export-actions__secondary {
       display: flex;
-      gap: 1rem;
+      flex: 1 1 100%;
+      gap: 0.75rem;
       width: 100%;
     }
-    .route-export-actions__secondary button {
+    .route-export-actions__secondary button,
+    .route-export-actions__secondary .route-export-tour {
       flex: 1;
+      min-width: 0;
+    }
+    #step-E .nav-buttons:has(#route-export-actions:not([hidden])) .route-export-hint,
+    #step-P2-PLAN .nav-buttons:has(#p2-export-actions:not([hidden])) .route-export-hint {
+      flex: 1 1 100%;
     }
     .route-export-hint {
       margin: 0;
@@ -1392,23 +1415,6 @@
       transition: r 0.2s;
     }
     .map-stop:hover { r: 8; cursor: pointer; }
-    .map-leg {
-      opacity: 0;
-      transition: opacity 0.35s ease;
-    }
-    .map-leg.is-visible {
-      opacity: 1;
-    }
-    .map-leg-bracket {
-      stroke-width: 2;
-      fill: none;
-    }
-    .map-leg-label {
-      font-family: inherit;
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-wide);
-    }
     .map-stop-group {
       opacity: 1;
       transition: opacity 0.35s ease;
@@ -1629,17 +1635,66 @@
       line-height: 1.2;
       letter-spacing: -0.02em;
     }
-    .hero-content h1 .footnote-link {
+    .hero-content h1 .footnote-wrap {
+      position: relative;
       font-size: 0.5em;
-      text-decoration: none;
-      color: inherit;
       font-weight: 600;
       vertical-align: super;
       line-height: 0;
       margin-left: 0.05em;
     }
-    .hero-content h1 .footnote-link:hover {
-      text-decoration: underline;
+    .hero-content h1 .footnote-trigger {
+      font: inherit;
+      font-size: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: help;
+      vertical-align: baseline;
+      line-height: inherit;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .hero-content h1 .footnote-trigger:hover,
+      .hero-content h1 .footnote-trigger:focus-visible {
+        text-decoration: underline;
+      }
+    }
+    .hero-content h1 .footnote-tooltip {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 0.5rem);
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: min(22rem, calc(100vw - 2rem));
+      padding: 0.65rem 0.85rem;
+      font-size: 0.8125rem;
+      font-weight: 400;
+      line-height: 1.45;
+      text-transform: none;
+      letter-spacing: normal;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      z-index: 10;
+      transition: opacity 0.15s ease, visibility 0.15s ease;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .hero-content h1 .footnote-wrap:hover .footnote-tooltip,
+      .hero-content h1 .footnote-wrap:focus-within .footnote-tooltip {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    .hero-content h1 .footnote-wrap.is-open .footnote-tooltip {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
     }
     .hero-location-wrap {
       display: inline-block;
@@ -2223,8 +2278,8 @@
       <div class="hero-content">
         <img class="hero-logo" id="hero-logo" alt="Escape the Downtown mascot" width="360" height="360" decoding="async" src="assets/hero/shy-spring.png" onerror="this.onerror=null;this.src='assets/hero/shy-spring.png';">
         <script>(function(){var img=document.getElementById("hero-logo");var logo=document.documentElement.dataset.heroLogo;if(logo&&logo!==img.getAttribute("src"))img.src=logo;})();</script>
-        <h1>Let&rsquo;s get you out of <span class="hero-location-wrap" aria-live="polite"><span class="hero-location" id="hero-location-word">downtown</span></span> and into &ldquo;East&nbsp;Vancouver&rdquo;<sup><a class="footnote-link" href="https://www.seasonsofeastvan.com/about" target="_blank" rel="noopener noreferrer" title="About East Vancouver">1</a></sup></h1>
-        <p class="hero-subtitle">Whether you&rsquo;re here visiting for the first time, or have found yourself stuck in your regular routine, I am here to get you into some of our more eclectic east-end neighborhoods.</p>
+        <h1>Let&rsquo;s get you out of <span class="hero-location-wrap" aria-live="polite"><span class="hero-location" id="hero-location-word">downtown</span></span> and into &ldquo;East&nbsp;Vancouver&rdquo;<sup class="footnote-wrap"><button type="button" class="footnote-trigger" aria-expanded="false" aria-describedby="footnote-territory">1</button><span id="footnote-territory" class="footnote-tooltip" role="tooltip">This takes place on the unceded territory of the Coast Salish Peoples, including the territories of the xʷməθkwəy̓əm (Musqueam), Skwxw&uacute;7mesh (Squamish), and Səl̓&iacute;lwətaʔ/Selilwitulh (Tsleil-Waututh) Nations.</span></sup></h1>
+        <p class="hero-subtitle" id="hero-subtitle">Whether you&rsquo;re here visiting for the first time, or have found yourself stuck in your regular routine, I am here to get you into some of our more eclectic east-end neighborhoods.</p>
         <p class="hero-about"><a class="hero-about-link" href="https://www.seasonsofeastvan.com/about" target="_blank" rel="noopener noreferrer">Who am I?</a></p>
         <div class="landing-options">
           <div id="landing-areas" class="landing-panel" aria-label="Explore neighborhoods"></div>
@@ -2419,6 +2474,7 @@
           <div class="route-export-actions__secondary">
             <button type="button" id="btn-route-share" onclick="shareRouteWithFriend()">Share with a friend</button>
             <button type="button" id="btn-route-pdf" onclick="exportRouteAsPdf()">Save as PDF</button>
+            <a class="route-export-tour connect-tour-btn" href="mailto:seasonsofeastvan@gmail.com?subject=Book%20a%20tour" aria-label="Book a tour — email Seasons of East Van">Book a tour</a>
           </div>
           <p class="route-export-hint" id="route-export-hint" hidden>Save as PDF opens print — choose Save as PDF in the dialog.</p>
         </div>
@@ -2429,9 +2485,8 @@
           <a class="connect-btn" href="https://www.instagram.com/seasonsofeastvan" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg>
           </a>
-          <a class="connect-btn" href="https://buymeacoffee.com/soev" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee"><span class="connect-btn__mark" aria-hidden="true">$</span></a>
+          <a class="connect-btn connect-btn--text" href="https://buymeacoffee.com/soev" target="_blank" rel="noopener noreferrer" aria-label="Support Seasons of East Van"><span class="connect-btn__label" aria-hidden="true">support</span></a>
         </div>
-        <a class="connect-tour-btn" href="mailto:seasonsofeastvan@gmail.com?subject=Book%20a%20tour" aria-label="Book a tour — email Seasons of East Van">Book a tour</a>
       </nav>
     </section>
 
@@ -2478,6 +2533,7 @@
           <div class="route-export-actions__secondary">
             <button type="button" id="btn-p2-share" onclick="shareRouteWithFriend()">Share with a friend</button>
             <button type="button" id="btn-p2-pdf" onclick="exportRouteAsPdf()">Save as PDF</button>
+            <a class="route-export-tour connect-tour-btn" href="mailto:seasonsofeastvan@gmail.com?subject=Book%20a%20tour" aria-label="Book a tour — email Seasons of East Van">Book a tour</a>
           </div>
           <p class="route-export-hint" id="p2-export-hint" hidden>Save as PDF opens print — choose Save as PDF in the dialog.</p>
         </div>
@@ -2488,9 +2544,8 @@
           <a class="connect-btn" href="https://www.instagram.com/seasonsofeastvan" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg>
           </a>
-          <a class="connect-btn" href="https://buymeacoffee.com/soev" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee"><span class="connect-btn__mark" aria-hidden="true">$</span></a>
+          <a class="connect-btn connect-btn--text" href="https://buymeacoffee.com/soev" target="_blank" rel="noopener noreferrer" aria-label="Support Seasons of East Van"><span class="connect-btn__label" aria-hidden="true">support</span></a>
         </div>
-        <a class="connect-tour-btn" href="mailto:seasonsofeastvan@gmail.com?subject=Book%20a%20tour" aria-label="Book a tour — email Seasons of East Van">Book a tour</a>
       </nav>
     </section>
 
@@ -2888,6 +2943,8 @@
     let AREAS = {};
     let AREA_ORDER = [];
     const DEFAULT_LANDING_AREA = "commercial-drive";
+    const LANDING_SUBTITLE =
+      "Whether you're here visiting for the first time, or have found yourself stuck in your regular routine, I am here to get you into some of our more eclectic east-end neighborhoods.";
 
     const FALLBACK_AREAS = {
       version: 1,
@@ -2897,6 +2954,7 @@
           id: DEFAULT_LANDING_AREA,
           title: "Explore Commercial Drive",
           label: "Build a route, follow a plan, or browse every spot on the Drive.",
+          pathsIntro: "Choose one of the following options and end up with a personalized route to explore the neighborhood.",
           paths: [
             { start: "path2", title: "See My Suggested Routes", label: "Curated based on my own tastes and experience." },
             { start: "path1", title: "Choose Your Own Adventure", label: "Build a route based on your time, starting location, and what you'd like to explore" },
@@ -2959,10 +3017,19 @@
     function applyLandingView() {
       const areasEl = document.getElementById("landing-areas");
       const pathsEl = document.getElementById("landing-paths");
+      const subtitleEl = document.getElementById("hero-subtitle");
       if (!areasEl || !pathsEl) return;
       const showPaths = state.landingView === "paths" && state.landingAreaId;
       areasEl.hidden = !!showPaths;
       pathsEl.hidden = !showPaths;
+      if (subtitleEl) {
+        if (showPaths) {
+          const area = AREAS[state.landingAreaId];
+          subtitleEl.textContent = area?.pathsIntro || LANDING_SUBTITLE;
+        } else {
+          subtitleEl.textContent = LANDING_SUBTITLE;
+        }
+      }
       if (showPaths) renderLandingPaths(state.landingAreaId);
       else renderLandingAreas();
     }
@@ -4348,9 +4415,6 @@
       yStation: 550,
       ySpan: 500,
       ySouthSpan: 90,
-      bracketLeftX: 130,
-      bracketArm: 10,
-      labelLeftX: 8,
       legDurationMs: 1000,
       defaultViewBox: "0 0 340 600",
       viewBoxPad: 24,
@@ -4647,7 +4711,6 @@
       legs.forEach((leg) => {
         ys.push(leg.y1, leg.y2);
         if (leg.x1 != null) xs.push(leg.x1, leg.x2);
-        xs.push(MAP.bracketLeftX - 4, MAP.labelLeftX + 130);
       });
 
       if (!xs.length) return MAP.defaultViewBox;
@@ -4812,24 +4875,6 @@
       return html;
     }
 
-    function renderMapLegBracketSvg(leg, legIndex) {
-      const color = getMapLegColor(leg);
-      const yTop = Math.min(leg.y1, leg.y2);
-      const yBot = Math.max(leg.y1, leg.y2);
-      const midY = (yTop + yBot) / 2;
-      const arm = MAP.bracketArm;
-      const label = `~${formatKm(leg.km)} km · ~${leg.minutes} min`;
-      const bx = MAP.bracketLeftX;
-      const d = `M ${bx} ${yTop} L ${bx} ${yBot} M ${bx} ${yTop} L ${bx + arm} ${yTop} M ${bx} ${yBot} L ${bx + arm} ${yBot}`;
-      const legClass = leg.isBackward ? "map-leg--backward" : "map-leg--outbound";
-      return `
-        <g class="map-leg ${legClass}" data-leg-index="${legIndex}" data-leg-color="${color}">
-          <path class="map-leg-bracket" d="${d}" style="stroke:${color}"/>
-          <text class="map-leg-label" x="${MAP.labelLeftX}" y="${midY}" text-anchor="start" style="fill:${color}">${label}</text>
-        </g>
-      `;
-    }
-
     function renderMapStopSvg(point) {
       const s = point.stop;
       const idx = point.idx;
@@ -4842,10 +4887,6 @@
           <text class="map-text" x="${labelX}" y="${point.y + 4}" text-anchor="${labelAnchor}">${idx + 1}. ${escapeHtml(s.crossStreet)}</text>
         </g>
       `;
-    }
-
-    function renderMapLegsLayerSvg(legs) {
-      return `<g class="map-legs-layer">${legs.map((leg, i) => renderMapLegBracketSvg(leg, i)).join("")}</g>`;
     }
 
     function getMapStopIndexAfterLegLegacy(legIndex, mapOptions, pointCount) {
@@ -4934,9 +4975,6 @@
         spineY1: spine.y1,
         spineY2: spine.y2,
       });
-      if (legs.length) {
-        html += renderMapLegsLayerSvg(legs);
-      }
       html += `<g class="map-route-layer"></g>`;
       svg.innerHTML = html;
       svg.setAttribute(
@@ -4947,16 +4985,10 @@
       );
 
       const routeLayer = svg.querySelector(".map-route-layer");
-      const legsLayer = svg.querySelector(".map-legs-layer");
 
       if (!route.length) {
         options.onComplete?.();
         return;
-      }
-
-      function revealBracket(legIndex) {
-        const g = legsLayer?.querySelector(`[data-leg-index="${legIndex}"]`);
-        if (g) g.classList.add("is-visible");
       }
 
       function revealStop(stopIndex) {
@@ -4998,7 +5030,6 @@
           onComplete: () => {
             if (isStale()) return;
             try {
-              revealBracket(legIndex);
               const stopIdx = getMapStopIndexAfterLeg(
                 legIndex,
                 mapOptions,
@@ -5353,8 +5384,7 @@
       if (!svgEl) return false;
       return !!(
         svgEl.querySelector(".map-route-layer path") ||
-        svgEl.querySelector(".map-stop-group") ||
-        svgEl.querySelector(".map-legs-layer")
+        svgEl.querySelector(".map-stop-group")
       );
     }
 
@@ -6417,7 +6447,43 @@
       }, HERO_LOCATION_MS);
     }
 
+    function initFootnoteTooltip() {
+      const wrap = document.querySelector(".footnote-wrap");
+      if (!wrap) return;
+      const trigger = wrap.querySelector(".footnote-trigger");
+      if (!trigger) return;
+
+      const finePointer =
+        typeof matchMedia === "function" &&
+        matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+      function setOpen(open) {
+        wrap.classList.toggle("is-open", open);
+        trigger.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+
+      trigger.addEventListener("click", (e) => {
+        if (finePointer) return;
+        e.preventDefault();
+        setOpen(!wrap.classList.contains("is-open"));
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!wrap.classList.contains("is-open")) return;
+        if (wrap.contains(e.target)) return;
+        setOpen(false);
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && wrap.classList.contains("is-open")) {
+          setOpen(false);
+          trigger.focus();
+        }
+      });
+    }
+
     initHeroLocationCycle();
+    initFootnoteTooltip();
     initConnectLinks();
 
     // Init — data/stops.json + data/plans.json (see AGENTS.md)
