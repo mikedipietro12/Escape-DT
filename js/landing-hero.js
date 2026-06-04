@@ -11,6 +11,7 @@
  */
 (function () {
   const GROW_MS = 1400;
+  const GROW_EASING = "cubic-bezier(0.22, 0.85, 0.25, 1)";
   const TAIL_NOTCH_HALF = 11;
   const TAIL_TIP_X = -12.25;
   const TAIL_FRAME_PAD = 14;
@@ -31,10 +32,10 @@
     return;
   }
 
-  const heroImg = document.getElementById("hero-logo");
-  const wrap = document.getElementById("speech-wrap");
-
+  let heroImg = document.getElementById("hero-logo");
+  let wrap = document.getElementById("speech-wrap");
   let settleTimer = null;
+  let started = false;
 
   function tailYpx() {
     const wrapEl = document.querySelector(".hero-mascot-wrap");
@@ -108,12 +109,17 @@
     speechWrap.classList.add("is-settled");
     const bubble = speechWrap.querySelector(".speech-bubble");
     if (bubble) {
-      requestAnimationFrame(() => syncSpeechFrame(bubble));
+      bubble.style.removeProperty("animation");
+      requestAnimationFrame(() => {
+        syncSpeechFrame(bubble);
+        observeSpeechBubble(bubble);
+      });
     }
   }
 
   function resetGrowAnimation(bubble) {
     if (!bubble) return;
+    bubble.getAnimations?.().forEach((anim) => anim.cancel());
     bubble.style.animation = "none";
     void bubble.offsetWidth;
     bubble.style.removeProperty("animation");
@@ -123,10 +129,17 @@
   function resetPseudoAnimations(bubble) {
     if (!bubble) return;
     const tail = bubble.querySelector(".speech-tail");
+    const line = bubble.querySelector(".speech-line");
     bubble.classList.add("reset-pseudos");
     if (tail) {
+      tail.getAnimations?.().forEach((anim) => anim.cancel());
       tail.style.animation = "none";
       tail.style.opacity = "0";
+    }
+    if (line) {
+      line.getAnimations?.().forEach((anim) => anim.cancel());
+      line.style.animation = "none";
+      line.style.opacity = "0";
     }
     void bubble.offsetWidth;
     bubble.classList.remove("reset-pseudos");
@@ -134,6 +147,15 @@
       tail.style.removeProperty("animation");
       tail.style.removeProperty("opacity");
     }
+    if (line) {
+      line.style.removeProperty("animation");
+      line.style.removeProperty("opacity");
+    }
+  }
+
+  function applyGrowAnimation(bubble) {
+    bubble.style.animation = `bubble-lava-grow ${GROW_MS}ms ${GROW_EASING} forwards`;
+    void bubble.offsetWidth;
   }
 
   function startGrow(speechWrap) {
@@ -141,34 +163,30 @@
     clearGrowTimers();
 
     const bubble = speechWrap.querySelector(".speech-bubble");
-    const line = speechWrap.querySelector(".speech-line");
     if (!bubble) return;
 
     speechWrap.classList.remove("is-settled", "is-animating", "is-goo-on");
     resetGrowAnimation(bubble);
     resetPseudoAnimations(bubble);
-    if (line) {
-      line.style.animation = "none";
-      line.style.opacity = "0";
-      void line.offsetWidth;
-      line.style.removeProperty("animation");
-      line.style.removeProperty("opacity");
-    }
 
     void speechWrap.offsetWidth;
     speechWrap.classList.add("is-animating");
     speechWrap.classList.toggle("is-goo-on", BUBBLE_BG_OPACITY >= 0.99);
 
+    applyGrowAnimation(bubble);
+
     bubble.removeEventListener("animationend", onBubbleGrowEnd);
     bubble.addEventListener("animationend", onBubbleGrowEnd);
 
-    settleTimer = setTimeout(() => finishGrow(speechWrap), GROW_MS);
+    settleTimer = setTimeout(() => finishGrow(speechWrap), GROW_MS + 80);
   }
 
   function onBubbleGrowEnd(e) {
-    if (e.animationName !== "bubble-lava-grow") return;
+    if (e.target !== e.currentTarget) return;
+    const name = e.animationName;
+    if (name && name !== "bubble-lava-grow") return;
     clearGrowTimers();
-    finishGrow(e.target.closest(".speech-bubble-wrap"));
+    finishGrow(e.currentTarget.closest(".speech-bubble-wrap"));
   }
 
   function shouldAnimate() {
@@ -176,39 +194,52 @@
     return !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
-  function init() {
-    const bubbleEl = document.querySelector(".speech-bubble");
-    if (bubbleEl) {
-      observeSpeechBubble(bubbleEl);
-    }
-
-    if (wrap) {
-      if (shouldAnimate()) {
-        startGrow(wrap);
-      } else {
-        finishGrow(wrap);
-      }
-    }
-
-    if (heroImg) {
-      heroImg.addEventListener("error", () => {
-        heroImg.classList.add("hero-logo--missing");
-      });
-      heroImg.addEventListener("load", () => {
-        heroImg.classList.remove("hero-logo--missing");
-      });
-    }
+  function bindHeroImg() {
+    if (!heroImg) return;
+    heroImg.addEventListener("error", () => {
+      heroImg.classList.add("hero-logo--missing");
+    });
+    heroImg.addEventListener("load", () => {
+      heroImg.classList.remove("hero-logo--missing");
+    });
   }
 
-  function scheduleInit() {
-    requestAnimationFrame(() => requestAnimationFrame(init));
+  function init(replay) {
+    if (!wrap) {
+      wrap = document.getElementById("speech-wrap");
+    }
+    if (!wrap) return;
+    if (started && !replay) return;
+    started = true;
+
+    if (shouldAnimate()) {
+      startGrow(wrap);
+    } else {
+      finishGrow(wrap);
+    }
+
+    bindHeroImg();
+  }
+
+  function scheduleInit(replay) {
+    const run = () => requestAnimationFrame(() => requestAnimationFrame(() => init(replay)));
+    if (document.readyState === "complete") {
+      run();
+    } else {
+      window.addEventListener("load", () => run(), { once: true });
+    }
   }
 
   if (wrap) {
-    scheduleInit();
-  } else if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", scheduleInit);
+    scheduleInit(false);
   } else {
-    scheduleInit();
+    document.addEventListener("DOMContentLoaded", () => scheduleInit(false), { once: true });
   }
+
+  window.addEventListener("pageshow", (e) => {
+    if (e.persisted) {
+      started = false;
+      scheduleInit(true);
+    }
+  });
 })();
