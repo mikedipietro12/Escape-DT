@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-hero-bubble="on">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1719,22 +1719,6 @@
       max-width: 38rem;
       margin-bottom: 0;
     }
-    .hero-about {
-      margin: 0.75rem 0 0;
-      width: 100%;
-      text-align: right;
-    }
-    .hero-about-link {
-      font-size: clamp(0.88rem, 2.2vw, 0.95rem);
-      color: var(--ink-muted);
-      text-decoration: underline;
-      text-underline-offset: 0.2em;
-      font-weight: 500;
-    }
-    .hero-about-link:hover {
-      color: var(--ink);
-    }
-
     .landing-options {
       width: 100%;
       margin-top: 2.5rem;
@@ -2265,6 +2249,8 @@
     }
   </style>
   <script src="js/season-theme.js"></script>
+  <!-- Animated hero: set data-hero-bubble="off" on <html> or ?hero=static to revert; remove link + js/landing-hero.js to remove entirely -->
+  <link rel="stylesheet" href="css/landing-hero.css">
 </head>
 <body class="landing-active">
 
@@ -2276,11 +2262,42 @@
   <section id="step-LANDING" class="step active">
     <div class="hero-section">
       <div class="hero-content">
+        <!-- Static fallback (restore this block and remove hero-mascot-wrap to fully revert):
         <img class="hero-logo" id="hero-logo" alt="Escape the Downtown mascot" width="360" height="360" decoding="async" src="assets/hero/shy-spring.png" onerror="this.onerror=null;this.src='assets/hero/shy-spring.png';">
+        -->
+        <div class="hero-mascot-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="svg-defs">
+            <defs>
+              <filter id="goo" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="goo" />
+              </filter>
+            </defs>
+          </svg>
+          <div class="hero-stage">
+            <div class="hero-figure">
+              <img class="hero-logo" id="hero-logo" alt="Escape the Downtown mascot" width="360" height="360" decoding="async" src="assets/hero/shy-spring.png" onerror="this.onerror=null;this.src='assets/hero/shy-spring.png';">
+            </div>
+            <div class="speech-bubble-wrap" id="speech-wrap">
+              <div class="speech-bubble" aria-live="polite">
+                <svg class="speech-frame" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <path class="speech-frame-fill" vector-effect="non-scaling-stroke" />
+                  <path class="speech-frame-stroke" vector-effect="non-scaling-stroke" />
+                </svg>
+                <svg class="speech-tail" viewBox="0 0 14 22" aria-hidden="true" focusable="false">
+                  <path class="speech-tail-fill" d="M14 0 L1.75 11 L14 22 Z" />
+                </svg>
+                <p class="speech-line">
+                  10 years, hundreds of kilometres, one East Van. I&rsquo;m a local photographer who&rsquo;s walked every block of these neighbourhoods. Here are the places I keep coming back to, and now I want to share them with you.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <script>(function(){var img=document.getElementById("hero-logo");var logo=document.documentElement.dataset.heroLogo;if(logo&&logo!==img.getAttribute("src"))img.src=logo;})();</script>
+        <script src="js/landing-hero.js"></script>
         <h1>Let&rsquo;s get you out of <span class="hero-location-wrap" aria-live="polite"><span class="hero-location" id="hero-location-word">downtown</span></span> and into &ldquo;East&nbsp;Vancouver&rdquo;<sup class="footnote-wrap"><button type="button" class="footnote-trigger" aria-expanded="false" aria-describedby="footnote-territory">1</button><span id="footnote-territory" class="footnote-tooltip" role="tooltip">This takes place on the unceded territory of the Coast Salish Peoples, including the territories of the xʷməθkwəy̓əm (Musqueam), Skwxw&uacute;7mesh (Squamish), and Səl̓&iacute;lwətaʔ/Selilwitulh (Tsleil-Waututh) Nations.</span></sup></h1>
         <p class="hero-subtitle" id="hero-subtitle">Whether you&rsquo;re here visiting for the first time, or have found yourself stuck in your regular routine, I am here to get you into some of our more eclectic east-end neighborhoods.</p>
-        <p class="hero-about"><a class="hero-about-link" href="https://www.seasonsofeastvan.com/about" target="_blank" rel="noopener noreferrer">Who am I?</a></p>
         <div class="landing-options">
           <div id="landing-areas" class="landing-panel" aria-label="Explore neighborhoods"></div>
           <div id="landing-paths" class="landing-panel" hidden aria-label="Ways to explore this neighborhood">
@@ -2653,6 +2670,7 @@
     const placeholderImg = (color) => `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='100%25' height='100%25' fill='%23${color}'/%3E%3C/svg%3E`;
 
     let STOPS = [];
+    let NEIGHBORHOODS = {};
     let STATION_LAT = 49.2634;
     let STATION_LNG = -123.0694;
 
@@ -3059,10 +3077,11 @@
     async function loadAppData() {
       const banner = document.getElementById("data-load-error");
       try {
-        const [stopsRes, plansRes, areasRes] = await Promise.all([
+        const [stopsRes, plansRes, areasRes, neighborhoodsRes] = await Promise.all([
           fetch("data/stops.json", { cache: "no-store" }),
           fetch("data/plans.json", { cache: "no-store" }),
           fetch("data/areas.json", { cache: "no-store" }),
+          fetch("data/neighborhoods.json", { cache: "no-store" }),
         ]);
         if (!stopsRes.ok) throw new Error(`stops.json HTTP ${stopsRes.status}`);
         if (!plansRes.ok) throw new Error(`plans.json HTTP ${plansRes.status}`);
@@ -3073,6 +3092,13 @@
         } else {
           console.warn("areas.json not loaded, using fallback");
           hydrateAreas(FALLBACK_AREAS);
+        }
+        if (neighborhoodsRes.ok) {
+          const neighborhoodsData = await neighborhoodsRes.json();
+          NEIGHBORHOODS = neighborhoodsData?.neighborhoods || {};
+        } else {
+          console.warn("neighborhoods.json not loaded");
+          NEIGHBORHOODS = {};
         }
         STOPS = hydrateStops(stopsData.stops || []);
         if (stopsData.station) {
@@ -3177,6 +3203,7 @@
     }
 
     function isRouteStartPromptEnabled() {
+      if (!activeAreaUsesSkytrain()) return false;
       if (!ENABLE_ROUTE_START_PROMPT) return false;
       try {
         if (new URLSearchParams(window.location.search).get("routeStartPrompt") === "0") {
@@ -3187,6 +3214,11 @@
     }
 
     function applyDefaultRouteEndpointsIfMissing() {
+      if (!activeAreaUsesSkytrain()) {
+        if (!state.routeStart) state.routeStart = "firstStop";
+        if (isRouteFinalizeV2Enabled() && !state.routeEnd) state.routeEnd = "lastStop";
+        return;
+      }
       if (!state.routeStart) state.routeStart = "station";
       if (isRouteFinalizeV2Enabled() && !state.routeEnd) state.routeEnd = "station";
     }
@@ -3899,9 +3931,13 @@
     }
 
     function getCategoryStops(catId) {
-      return STOPS
-        .filter((s) => stopMatchesCategory(s, catId))
-        .sort((a, b) => a.walkFromStation - b.walkFromStation);
+      const list = STOPS.filter((s) => stopMatchesCategory(s, catId));
+      if (!activeAreaUsesSkytrain()) {
+        return list.sort(
+          (a, b) => (b.coords?.y ?? b.lat) - (a.coords?.y ?? a.lat)
+        );
+      }
+      return list.sort((a, b) => a.walkFromStation - b.walkFromStation);
     }
 
     function applyStepDFilters(stops, catId) {
@@ -3919,6 +3955,9 @@
     }
 
     function partitionByWalkRadius(stops) {
+      if (!activeAreaUsesSkytrain()) {
+        return { within: stops, outside: [] };
+      }
       const maxWalk = getMaxWalkMinutes();
       if (!Number.isFinite(maxWalk)) {
         return { within: stops, outside: [] };
@@ -3953,7 +3992,7 @@
               <div class="tags">
                 ${spot.tags.map(t => `<span class="tag">${t}</span>`).join('')}
                 <span class="tag">${spot.costLabel}</span>
-                <span class="tag">${spot.walkFromStation} min walk</span>
+                ${usesSkytrainStation(spot.neighborhood) && spot.walkFromStation != null ? `<span class="tag">${spot.walkFromStation} min walk</span>` : ""}
               </div>
               <p>${spot.description}</p>
               ${gotoHtml(spot)}
@@ -4150,6 +4189,23 @@
     const STATION_WALK_LABEL = STATION_DISPLAY_NAME;
     const WALK_SPEED_KMH = 5;
 
+    function usesSkytrainStation(nbh) {
+      const id = String(nbh || "commercial").toLowerCase();
+      const meta = NEIGHBORHOODS[id];
+      return meta?.usesSkytrainStation !== false;
+    }
+
+    function activeAreaNeighborhood() {
+      const area = AREAS[state.landingAreaId || DEFAULT_LANDING_AREA];
+      return area?.neighborhood || "commercial";
+    }
+
+    function activeAreaUsesSkytrain() {
+      const area = AREAS[state.landingAreaId || DEFAULT_LANDING_AREA];
+      if (area && area.usesSkytrainStation === false) return false;
+      return usesSkytrainStation(activeAreaNeighborhood());
+    }
+
     function haversineKm(lat1, lng1, lat2, lng2) {
       const R = 6371;
       const toRad = (d) => (d * Math.PI) / 180;
@@ -4217,6 +4273,7 @@
     }
 
     function shouldShowStationOnMap(mapOptions = {}) {
+      if (!activeAreaUsesSkytrain()) return false;
       if (isRouteFinalizeV2Enabled()) {
         const opts = normalizeMapOptions(mapOptions);
         return opts.startAtStation || opts.endAtStation;
@@ -4225,6 +4282,9 @@
     }
 
     function getUserRouteMapOptions() {
+      if (!activeAreaUsesSkytrain()) {
+        return { startAtStation: false, endAtStation: false };
+      }
       if (!isRouteStartPromptEnabled()) {
         return { startAtStation: true, endAtStation: true };
       }
@@ -6241,11 +6301,18 @@
     }
 
     function renderP3DetailMeta(spot) {
-      const { km, minutes } = getStopWalkFromStation(spot);
       const costPart = spot.costLabel ? `${escapeHtml(spot.costLabel)} · ` : "";
+      const walkLine = usesSkytrainStation(spot.neighborhood)
+        ? (() => {
+            const { km, minutes } = getStopWalkFromStation(spot);
+            return `<div class="p3-card__expand-meta walk-line">${costPart}~${formatKm(km)} km · ~${minutes} min from ${STATION_WALK_LABEL}</div>`;
+          })()
+        : spot.costLabel
+          ? `<div class="p3-card__expand-meta walk-line">${escapeHtml(spot.costLabel)}</div>`
+          : "";
       return `
         <div class="p3-card__expand-meta">${escapeHtml(spot.crossStreet)}</div>
-        <div class="p3-card__expand-meta walk-line">${costPart}~${formatKm(km)} km · ~${minutes} min from ${STATION_WALK_LABEL}</div>
+        ${walkLine}
       `;
     }
 
@@ -6285,10 +6352,12 @@
       if (spot.costLabel) {
         tags.push(`<span class="tag">${escapeHtml(spot.costLabel)}</span>`);
       }
-      const { minutes } = getStopWalkFromStation(spot);
-      tags.push(
-        `<span class="tag">${minutes} min from ${STATION_WALK_LABEL}</span>`
-      );
+      if (usesSkytrainStation(spot.neighborhood)) {
+        const { minutes } = getStopWalkFromStation(spot);
+        tags.push(
+          `<span class="tag">${minutes} min from ${STATION_WALK_LABEL}</span>`
+        );
+      }
       return tags.join("");
     }
 

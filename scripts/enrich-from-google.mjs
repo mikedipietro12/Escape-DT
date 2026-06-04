@@ -217,6 +217,8 @@ async function main() {
     process.exit(1);
   }
   const bias = NEIGHBORHOOD_BIAS[neighborhood] || NEIGHBORHOOD_BIAS.commercial;
+  const usesSkytrain =
+    neighborhoodsData.neighborhoods[neighborhood]?.usesSkytrainStation !== false;
   if (!key || key === "your-key-here") {
     console.error("Missing GOOGLE_MAPS_API_KEY in .env");
     process.exit(1);
@@ -303,7 +305,7 @@ async function main() {
       if (cs.review) review.push("crossStreet");
 
       maxId += 1;
-      enriched.push({
+      const stop = {
         id: `s${maxId}`,
         slug,
         name,
@@ -314,7 +316,6 @@ async function main() {
         timeOfDay: timeOfDayGuess(types),
         description: "",
         crossStreet: cs.value,
-        walkFromStation: 0,
         coords: { y: latToY(lat) },
         lat,
         lng,
@@ -323,7 +324,9 @@ async function main() {
         _sourceUrl: url || undefined,
         _googleTypes: types,
         _review: [...new Set([...review, "timeOfDay?", "tags"])],
-      });
+      };
+      if (usesSkytrain) stop.walkFromStation = 0;
+      enriched.push(stop);
       console.log(`ok   ${title}  ->  ${name}  [${categories.join(", ") || "no category"}]`);
     } catch (err) {
       failures.push({ title, error: err.message });

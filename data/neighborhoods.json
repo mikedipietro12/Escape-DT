@@ -15,7 +15,8 @@
     "hastings-sunrise": {
       "id": "hastings-sunrise",
       "title": "Hastings-Sunrise (East Village)",
-      "aliases": ["east village", "eastvillage", "hastings sunrise"]
+      "aliases": ["east village", "eastvillage", "hastings sunrise"],
+      "usesSkytrainStation": false
     },
     "mount-pleasant": {
       "id": "mount-pleasant",

@@ -95,7 +95,7 @@ The landing screen in [`index.html`](index.html) is two levels:
 
 **Navigation:** **Start Over** returns to the area list. **Back** from a path’s first step (or Path 3) returns to that area’s path menu, not the area list.
 
-**Adding a new area (later):** append id to `areaOrder`, add an `areas` entry with its own `paths` array. When stops belong to multiple neighborhoods, tag stops (e.g. `neighborhood`) and filter in the app loader — not implemented yet; all stops/plans are Commercial Drive.
+**Adding a new area (later):** append id to `areaOrder`, add an `areas` entry with its own `paths` array. Set `areas[id].neighborhood` to the matching id in `data/neighborhoods.json` (e.g. `hastings-sunrise`) so the app can filter stops and respect `usesSkytrainStation: false` (no SkyTrain walk minutes, no station on the route map, no “start/end at station” prompts). When stops belong to multiple neighborhoods, tag stops (e.g. `neighborhood`) and filter in the app loader — not implemented yet; all stops/plans are Commercial Drive.
 
 **Stops and plans:** still in [`data/stops.json`](data/stops.json) and [`data/plans.json`](data/plans.json). New locations default to Commercial Drive (`neighborhood: "commercial"`) until multi-area filtering exists.
 
@@ -111,6 +111,8 @@ When you add stops outside Commercial Drive, set `neighborhood` to one of these 
 - `chinatown` (Chinatown — draft)
 
 Draft neighborhoods are staged in their own `data/<id>-draft.json` file (not loaded by the live app). Enrich them straight from a list of place names: `npm run enrich -- <list.txt> --neighborhood <id> --write`.
+
+**SkyTrain distance:** `data/neighborhoods.json` may set `"usesSkytrainStation": false` (Hastings-Sunrise does). Those stops **omit** `walkFromStation`; the admin editor hides the field and the live app must not show “min from Commercial-Broadway Skytrain” on cards or use station-based route start/end when that area ships. Commercial Drive keeps `walkFromStation` and station anchors.
 
 **Validation:** run `npm run test:data` to verify every stop’s `neighborhood` is in `data/neighborhoods.json`.
 
@@ -162,6 +164,8 @@ Example: `https://explore.seasonsofeastvan.com/?route=s3,s1,s19&rs=station&re=st
 
 ## When the user says "add a new location"
 
+**Descriptions:** Leave `description` empty (`""` or omit the field). Do **not** invent or paste marketing copy — the user writes descriptions in their own voice (admin **Fill info** wizard, or later). If they paste a description in the request, use it; otherwise skip the field.
+
 Collect or infer each field below. Copy `data/stop-template.json` for structure.
 
 | Field | Who provides | Notes |
@@ -172,13 +176,13 @@ Collect or infer each field below. Copy `data/stop-template.json` for structure.
 | `tags` | User | **Descriptive only** — cuisine, vibes, service style (`sit down`, `grab and go`, `take out`, `vintage`, `patio`, …). Shown as chips on cards; Path 1 Step D filters (see below) and Path 3 style/vintage filters. **Do not** put canonical category values here — use `categories` instead. |
 | `cost` | User | Single: `"$"`, `"$$"`, or `"$$$"`. Range: `{ "min": "$", "max": "$$$" }` or `["$", "$$$"]` (editorial, not Google) |
 | `timeOfDay` | User | `morning`, `afternoon`, `evening`, and/or `allday` |
-| `description` | User | Their voice — required |
+| `description` | User only | **Agent leaves empty** unless the user supplied copy in the request |
 | `goto` | User | **Optional.** What you usually order/grab here. Rendered as a **My go-to:** line under the description (app cards + static spot pages). Bulk-fill existing stops with `npm run gotos`. |
 | `crossStreet` | User or Google | Map label on the illustrated route and cards. For **Victoria** (east of Commercial), include the word **Victoria** (e.g. `Victoria & Grant`) so the route map places the stop east of the spine — see **Victoria (off-Commercial)** below |
 | `images` | User (later) | **Optional at insert.** Add when photo files exist under `assets/stops/`. First path is the hero thumbnail. Legacy single `image` still supported. |
 | `lat`, `lng` | Google Maps link / Places API | From share URL or place search |
 | `googlePlaceId` | Google | Optional; for future enrich script |
-| `walkFromStation` | Google Directions (later) or estimate | Minutes walking from station |
+| `walkFromStation` | Google Directions (later) or estimate | Minutes walking from station. **Omit** when the stop’s neighborhood has `usesSkytrainStation: false` (e.g. Hastings-Sunrise) |
 | `coords.x` | Usually `150` | Optional. **Route map** east–west: `150` = Commercial spine; `~175` = east (Victoria). If omitted and `crossStreet` contains `Victoria`, the app uses the east column automatically |
 | `coords.y` | You | **Browse / geographic sort** only (not route-map north–south). Higher y = closer to station (see existing stops). Route map **Y** uses `walkFromStation` |
 | `id` | You | Next `sN` id (read highest in `data/stops.json`) |
@@ -227,7 +231,7 @@ Use when the user pastes many locations at once (no photos yet). Fill-in templat
 | 1 | User | Build a doc using the bulk block format below; include a Google Maps link per stop |
 | 2 | User | Paste the full doc in chat (or attach `.md` / `.txt`) |
 | 3 | Agent | Read `data/stops.json`; assign sequential `id`s after the highest `sN` |
-| 4 | Agent | Per entry: valid JSON object, `slug` (kebab-case, stable for future photos), `lat`/`lng` from Maps link, `coords.y` from latitude band (~195 south to ~535 north). `coords.x` usually `150` on Commercial; omit or `~175` for Victoria if `crossStreet` includes `Victoria`. Unique `placeholderColor` |
+| 4 | Agent | Per entry: valid JSON object, `slug` (kebab-case, stable for future photos), `lat`/`lng` from Maps link, `coords.y` from latitude band (~195 south to ~535 north). `coords.x` usually `150` on Commercial; omit or `~175` for Victoria if `crossStreet` includes `Victoria`. Unique `placeholderColor`. **Omit or `""` for `description`** unless the user provided text in that block |
 | 5 | Agent | **Do not** add `images` / `image` until files exist in `assets/stops/` |
 | 6 | User | Preview via `npx serve .` → Explore Commercial Drive → See All Spots |
 | 7 | Later | Add JPGs + `"images": ["assets/stops/<slug>.jpg", ...]` when ready |
@@ -244,12 +248,12 @@ Tags (optional): patio, grab and go
 Cost: $$
 Time of day: morning, afternoon
 Cross street: E 8th Ave
-Description: [1-2 sentences]
+Description: [optional — you fill in later]
 Optional: walk minutes from station
 ---
 ```
 
-**Per stop minimum from user:** Maps link, name, **categories** (1–3), cost, time of day, description, cross street. **Optional:** descriptive tags, walk minutes. **Agent fills:** `id`, `coords`, `placeholderColor`, `slug` if omitted. **Skip until later:** `images`, photo files, `googlePlaceId`.
+**Per stop minimum from user:** Maps link, name, **categories** (1–3), cost, time of day, cross street. **Optional:** descriptive tags, walk minutes, description (if provided, use it; otherwise leave empty). **Agent fills:** `id`, `coords`, `placeholderColor`, `slug` if omitted. **Agent does not fill:** `description` (unless user supplied). **Skip until later:** `images`, photo files, `googlePlaceId`.
 
 ---
 
@@ -373,7 +377,7 @@ Then open the printed `http://localhost:3001/`. It runs on its own port (3001) s
 - **Adding another draft neighborhood later:** create `data/<id>-draft.json` (`{ "_note": "…", "stops": [] }`) and add an entry to the `DRAFTS` array in `scripts/admin-server.mjs` (and `DRAFT_FILES` in `scripts/enrich-from-google.mjs`).
 - File formatting is preserved (`stops.json` 4-space, draft 2-space) and per-stop meta (`_review`, `_googleTypes`) plus top-level keys (`station`, `version`, `_note`) are kept intact.
 
-**Features:** search + neighborhood filter + a **Needs info** filter (flags empty description/tags, `walkFromStation` 0, or remaining `_review` items) so the 18 Hastings drafts are easy to work through; a full form for every editorial field (name, slug, categories, tags, cost single/range, time of day, description, `goto`, cross street, walk minutes, `coords`, lat/lng, placeholder color, image paths); a live card preview; and an **+ Add stop** button that assigns the next `sN` id.
+**Features:** search + neighborhood filter + a **Needs info** filter (flags empty description/tags, missing `walkFromStation` on SkyTrain neighborhoods only, or remaining `_review` items) so the 18 Hastings drafts are easy to work through; a full form for every editorial field (name, slug, categories, tags, cost single/range, time of day, description, `goto`, cross street, walk minutes when applicable, `coords`, lat/lng, placeholder color, image paths); a live card preview; and an **+ Add stop** button that assigns the next `sN` id.
 
 **Guided "Fill info" wizard:** a per-stop **Fill** button (and a header **Fill info** button that runs through the whole filtered list) opens a step-by-step modal that shows **only the fields still missing** for that stop — one at a time, in the order tags, cost, time of day, categories, cross street, walk, description, go-to, images. A field counts as "missing" if it is empty **or** still listed in the stop's `_review` array; saving removes reviewed items from `_review`. You can **Save** at any step, **Skip** a field, or **Back** up. Finishing a stop saves it and automatically advances to the next stop that still needs info, so you can rip through the whole Hastings backlog in one pass.
 
@@ -416,7 +420,7 @@ My details:
 - Cost: $$
 - Time of day: morning, afternoon
 - Cross street label: E 8th Ave
-- Description: [your 1-2 sentences]
+- Description: [optional — add when ready]
 
 Optional: walking minutes from station if you know it.
 ```
@@ -435,7 +439,7 @@ Tags: patio, grab and go
 Cost: $$
 Time of day: morning, afternoon
 Cross street: E 8th Ave
-Description: [1-2 sentences]
+Description: [optional — add when ready]
 Optional: walk minutes from station
 ---
 (repeat for each stop)
@@ -446,7 +450,7 @@ Optional: walk minutes from station
 ## Checklist for the agent
 
 1. Read `data/stops.json` and pick the next `id` (`s15`, `s16`, … after the highest existing).
-2. Add new object(s) to the `stops` array (valid JSON) with **`categories`** (1–3) and optional descriptive **`tags`**.
+2. Add new object(s) to the `stops` array (valid JSON) with **`categories`** (1–3) and optional descriptive **`tags`**. **Do not** set `description` unless the user included it in the request (otherwise omit or `""`).
 3. **Photos:**
    - **(A) Placeholder only (bulk or no photos yet):** set `placeholderColor` only; omit `images` / `image`. Do not reference files that do not exist.
    - **(B) Photos ready:** save file(s) to `assets/stops/<slug>.jpg` (and `-2`, … if multiple); set `images` (or legacy `image`).

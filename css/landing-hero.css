@@ -1,0 +1,348 @@
+/**
+ * Animated landing hero (mascot + speech bubble).
+ *
+ * Revert without deleting files:
+ *   - Set data-hero-bubble="off" on <html>, or open ?hero=static
+ *
+ * Preview grow animation when OS "reduce motion" is on: ?hero=motion
+ *
+ * Full removal: remove the landing-hero.css / landing-hero.js tags from index.html
+ * and restore the static <img class="hero-logo"> block (see index.html comment).
+ */
+
+html[data-hero-bubble="off"] .hero-mascot-wrap .speech-bubble-wrap {
+  display: none;
+}
+
+html[data-hero-bubble="off"] .hero-mascot-wrap .hero-stage {
+  display: block;
+}
+
+html[data-hero-bubble="off"] .hero-mascot-wrap .hero-logo {
+  width: min(180px, 42vw);
+  margin: 0 auto 1.25rem;
+}
+
+html[data-hero-bubble="on"] .hero-mascot-wrap {
+  --tail-y: 46px;
+  --bubble-gap: -12px;
+  --bubble-bg-opacity: 0.15;
+  --bubble-max-width: 300px;
+}
+
+.hero-mascot-wrap {
+  width: 100%;
+  margin: 0 auto 1.25rem;
+  container-type: inline-size;
+  container-name: hero-mascot;
+}
+
+.hero-mascot-wrap .svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.hero-mascot-wrap .hero-stage {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+}
+
+.hero-mascot-wrap .hero-figure {
+  flex: 0 0 auto;
+  width: min(200px, 40vw);
+  position: relative;
+}
+
+html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.speech-bubble-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: var(--bubble-max-width);
+  margin-top: 0;
+  margin-left: var(--bubble-gap);
+  align-self: center;
+}
+
+.speech-bubble-wrap.is-animating.is-goo-on {
+  filter: url(#goo);
+}
+
+.speech-bubble-wrap.is-settled {
+  filter: none;
+}
+
+.speech-bubble {
+  --border-teal: rgba(61, 214, 200, 0.7);
+  --tail-bg: rgb(255 255 255 / var(--bubble-bg-opacity));
+  position: relative;
+  width: 100%;
+  padding: 0.85rem 1rem 0.95rem;
+  border: 2px solid var(--border-teal);
+  border-left-width: 0;
+  border-radius: 1.15rem;
+  background-color: var(--tail-bg);
+  box-shadow: none;
+  transform-origin: left var(--tail-y);
+  transform: scale(0.12, 0.45);
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.speech-bubble-wrap.is-animating .speech-bubble {
+  visibility: visible;
+  will-change: transform, border-radius;
+  animation: bubble-lava-grow 1.4s cubic-bezier(0.22, 0.85, 0.25, 1) forwards;
+}
+
+.speech-bubble-wrap.is-settled .speech-bubble {
+  visibility: visible;
+  overflow: visible;
+  transform: scale(1, 1);
+  border-radius: 1.15rem;
+}
+
+.speech-tail {
+  position: absolute;
+  left: -14px;
+  top: var(--tail-y);
+  z-index: 0;
+  width: 14px;
+  height: 22px;
+  transform: translateY(-50%);
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.speech-tail-fill {
+  fill: var(--tail-bg);
+  stroke: none;
+}
+
+.speech-frame {
+  position: absolute;
+  left: -14px;
+  top: 0;
+  width: calc(100% + 14px);
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
+  display: none;
+}
+
+.speech-frame-fill {
+  fill: var(--tail-bg);
+  stroke: none;
+}
+
+.speech-frame-stroke {
+  fill: none;
+  stroke: var(--border-teal);
+  stroke-width: 2;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+.speech-bubble-wrap.is-settled .speech-frame {
+  display: block;
+}
+
+.speech-bubble-wrap.is-settled .speech-bubble {
+  border-color: transparent;
+  background-color: transparent;
+  animation: none;
+  border-radius: 1.15rem;
+}
+
+.speech-bubble-wrap.is-settled .speech-tail {
+  display: none;
+}
+
+.speech-bubble.reset-pseudos .speech-tail {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+.speech-bubble-wrap.is-animating .speech-tail {
+  animation: tail-fade-in 1.4s cubic-bezier(0.22, 0.85, 0.25, 1) forwards;
+}
+
+.speech-line {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(0.76rem, 2.65vw, 0.9rem);
+  font-weight: 500;
+  line-height: 1.42;
+  letter-spacing: -0.01em;
+  text-align: left;
+  hyphens: auto;
+  opacity: 0;
+}
+
+.speech-bubble-wrap.is-animating .speech-line {
+  animation: text-fade-in 1.4s cubic-bezier(0.22, 0.85, 0.25, 1) forwards;
+}
+
+.speech-bubble-wrap.is-settled .speech-line {
+  opacity: 1;
+}
+
+@keyframes bubble-lava-grow {
+  0% {
+    transform: scale(0.06, 0.52);
+    border-radius: 50% 50% 48% 52% / 54% 46% 50% 50%;
+  }
+  92% {
+    transform: scale(1.012, 1.006);
+    border-radius: 1.12rem;
+  }
+  100% {
+    transform: scale(1, 1);
+    border-radius: 1.15rem;
+  }
+}
+
+@keyframes tail-fade-in {
+  0%,
+  72% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes text-fade-in {
+  0%,
+  78% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@container hero-mascot (max-width: 520px) {
+  .hero-mascot-wrap .hero-figure {
+    width: min(168px, 34vw);
+  }
+
+  .hero-mascot-wrap {
+    --bubble-max-width: min(300px, 56vw);
+  }
+
+  .speech-line {
+    font-size: clamp(0.72rem, 2.4vw, 0.86rem);
+  }
+}
+
+@container hero-mascot (max-width: 380px) {
+  .hero-mascot-wrap .hero-stage {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .speech-bubble-wrap {
+    max-width: min(var(--bubble-max-width), 92vw);
+    margin-top: 0.5rem;
+    margin-left: 0;
+    align-self: center;
+  }
+
+  .speech-frame {
+    display: none !important;
+  }
+
+  .speech-bubble-wrap.is-settled .speech-bubble {
+    border-color: var(--border-teal);
+    border-left-width: 2px;
+  }
+
+  .speech-bubble-wrap.is-settled .speech-tail {
+    display: block;
+  }
+
+  .speech-tail {
+    left: 50%;
+    top: -12px;
+    transform: translateX(-50%) rotate(-90deg);
+    transform-origin: center bottom;
+  }
+}
+
+/* Fallback when container queries are unavailable */
+@media (max-width: 380px) {
+  @supports not (container-type: inline-size) {
+    .hero-mascot-wrap .hero-stage {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .speech-bubble-wrap {
+      max-width: min(var(--bubble-max-width), 92vw);
+      margin-top: 0.5rem;
+      margin-left: 0;
+    }
+
+    .speech-frame {
+      display: none !important;
+    }
+
+    .speech-bubble-wrap.is-settled .speech-bubble {
+      border-color: var(--border-teal);
+      border-left-width: 2px;
+    }
+
+    .speech-bubble-wrap.is-settled .speech-tail {
+      display: block;
+    }
+
+    .speech-tail {
+      left: 50%;
+      top: -12px;
+      transform: translateX(-50%) rotate(-90deg);
+      transform-origin: center bottom;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.force-motion) .speech-bubble-wrap {
+    filter: none;
+  }
+
+  html:not(.force-motion) .speech-bubble-wrap.is-animating .speech-bubble {
+    animation: none !important;
+  }
+
+  html:not(.force-motion) .speech-bubble {
+    visibility: visible;
+    transform: scale(1, 1);
+    border-radius: 1.15rem;
+    overflow: visible;
+  }
+
+  html:not(.force-motion) .speech-tail,
+  html:not(.force-motion) .speech-line {
+    animation: none !important;
+    opacity: 1;
+  }
+}

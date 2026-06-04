@@ -1096,7 +1096,8 @@
             "images": [
                 "assets/stops/audiopile.jpg",
                 "assets/stops/audiopile-2.jpg"
-            ]
+            ],
+            "goto": "Flip through the previously owned section!"
         },
         {
             "crossStreet": "E 4th",
@@ -1133,7 +1134,8 @@
             "heroFocus": {
                 "x": 50,
                 "y": 100
-            }
+            },
+            "goto": "Wander around the front to see the new suggested books."
         },
         {
             "crossStreet": "E 4th",
@@ -1168,7 +1170,8 @@
             ],
             "images": [
                 "assets/stops/the-drive-skateshop.jpg"
-            ]
+            ],
+            "goto": "Chat with the local skaters who work there and check out whats new on the deck wall in the back."
         },
         {
             "crossStreet": "Venables",
@@ -1240,7 +1243,8 @@
             "images": [
                 "assets/stops/book-section.jpg",
                 "assets/stops/book-section-2.jpg"
-            ]
+            ],
+            "goto": "Flip through whatever magazines/books Donnel has put up under the window."
         },
         {
             "crossStreet": "Victoria & Grant",
@@ -1285,7 +1289,7 @@
             "crossStreet": "Victoria & Grant",
             "id": "s33",
             "lat": 49.27174,
-            "cost": "",
+            "cost": "free",
             "tags": [
                 "playground",
                 "park",
@@ -1314,13 +1318,14 @@
             "heroFocus": {
                 "x": 50,
                 "y": 95
-            }
+            },
+            "goto": "Grab a coffee and treat from Mah and set up at the playground with my kiddo or on the grass near the lavendar."
         },
         {
             "crossStreet": "Charles",
             "id": "s34",
             "lat": 49.2734896,
-            "cost": "",
+            "cost": "free",
             "tags": [
                 "playground",
                 "park",
@@ -1348,7 +1353,8 @@
                 "assets/stops/grandview-park.jpg",
                 "assets/stops/grandview-park-2.jpg",
                 "assets/stops/grandview-park-3.jpg"
-            ]
+            ],
+            "goto": "Grab a samosa or slice of pizza and watch the sunset."
         },
         {
             "crossStreet": "Charles",
@@ -1561,7 +1567,8 @@
             "neighborhood": "commercial",
             "categories": [
                 "hangout"
-            ]
+            ],
+            "goto": "Grab a coffee from Flourist and head over to walk through the gallery."
         },
         {
             "crossStreet": "Frances & Woodland",
@@ -1599,7 +1606,7 @@
             "crossStreet": "Woodland & Adanac",
             "id": "s42",
             "lat": 49.277689,
-            "cost": "",
+            "cost": "free",
             "tags": [
                 "playground",
                 "park",
@@ -1628,7 +1635,8 @@
             "images": [
                 "assets/stops/woodland-park.jpg",
                 "assets/stops/woodland-park-2.jpg"
-            ]
+            ],
+            "goto": "Cool off in the concrete wading pool in the summer. Grab a six-pack from Bomber and chill on the benches. Great spot to eat your cone form Earnest."
         },
         {
             "crossStreet": "Adanac & Maclean",
@@ -1660,7 +1668,8 @@
             "neighborhood": "commercial",
             "categories": [
                 "drinks"
-            ]
+            ],
+            "goto": "Pack of courts water and a six pack of lager and head to the park with a blanket."
         },
         {
             "crossStreet": "Frances & Clark",
@@ -1731,7 +1740,8 @@
             "neighborhood": "commercial",
             "categories": [
                 "drinks"
-            ]
+            ],
+            "goto": "A dark beer and some bar snacks in the winter."
         },
         {
             "id": "s64",
@@ -1774,7 +1784,7 @@
                 "activities",
                 "art gallery"
             ],
-            "cost": "",
+            "cost": "free",
             "timeOfDay": [
                 "allday"
             ],
@@ -1790,7 +1800,8 @@
             "placeholderColor": "2a6f97",
             "images": [
                 "assets/stops/hackspace-mini-cinema.jpg"
-            ]
+            ],
+            "goto": "Check out the mini cinema to see what's playing."
         },
         {
             "crossStreet": "Commercial & 12th",
@@ -1828,7 +1839,8 @@
             ],
             "images": [
                 "assets/stops/the-burrow.jpg"
-            ]
+            ],
+            "goto": "Burrow breakfast burrito."
         },
         {
             "crossStreet": "Commercial & 7th",
@@ -1914,6 +1926,42 @@
             "heroFocus": {
                 "x": 50,
                 "y": 51
+            }
+        },
+        {
+            "crossStreet": "Frances & Napier",
+            "id": "s69",
+            "lat": 49.2759585,
+            "cost": "",
+            "tags": [
+                "park",
+                "activities",
+                "skateboarding"
+            ],
+            "name": "The Courts",
+            "coords": {
+                "y": 236,
+                "x": 125
+            },
+            "description": "The local legend DIY skateboard spot. Come by here at any time of day to see locals of all skill levels skating. A welcoming atmosphere, with community events sprinkled throughout the year.",
+            "walkFromStation": 28,
+            "placeholderColor": "a7c957",
+            "slug": "the-courts",
+            "lng": -123.0736384,
+            "timeOfDay": [
+                "allday"
+            ],
+            "neighborhood": "commercial",
+            "categories": [
+                "hangout"
+            ],
+            "goto": "Early mornings with a coffee and spine sessions.",
+            "images": [
+                "assets/stops/the-courts.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 92
             }
         }
     ]

@@ -1,5 +1,5 @@
 {
-  "_note": "DRAFT, not loaded by the app. 18 Hastings-Sunrise stops geocoded via npm run enrich. Pending: descriptions, photos, real cross streets, category/cost review (see _review per stop). See .cursor/plans horizontal_route_map plan and AGENTS.md roadmap.",
+  "_note": "DRAFT, not loaded by the app. 19 Hastings-Sunrise stops geocoded via npm run enrich. Pending: descriptions, photos, real cross streets, category/cost review (see _review per stop). See .cursor/plans horizontal_route_map plan and AGENTS.md roadmap.",
   "stops": [
     {
       "id": "s46",
@@ -34,7 +34,8 @@
         "point_of_interest",
         "food",
         "establishment"
-      ]
+      ],
+      "goto": "A coffee and a couple moffins."
     },
     {
       "id": "s47",
@@ -44,16 +45,19 @@
         "coffee",
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "patio",
+        "grab and go"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "Semlin Dr",
-      "walkFromStation": 0,
+      "description": "Pallet is a local roaster with a stellar line-up. They always have great offerings and the patio is a nice place to stop before heading further into the neighborhood.",
+      "crossStreet": "Semlin Dr & Hastings",
+      "walkFromStation": 40,
       "coords": {
         "y": 256
       },
@@ -67,13 +71,7 @@
         "food",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "Some of the best roasts in the city."
     },
     {
       "id": "s48",
@@ -83,14 +81,18 @@
         "drinks",
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "japanese",
+        "cocktails",
+        "sake bar"
+      ],
       "neighborhood": "hastings-sunrise",
-      "cost": "$$",
+      "cost": "$$$",
       "timeOfDay": [
         "evening"
       ],
-      "description": "",
-      "crossStreet": "Powell St",
+      "description": "A farm to table restaurant from a legendary local. If you are looking for a refined dining experience, this is your stop. Great selection of wine, sake, and unique cocktails. Super fresh dishes and an amazing \"chefs selection\" dining option.",
+      "crossStreet": "Powell St & Victoria",
       "walkFromStation": 0,
       "coords": {
         "y": 237
@@ -107,32 +109,32 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "Chefs selection, always."
     },
     {
       "id": "s49",
       "slug": "parallel-49-brewing-company",
       "name": "Parallel 49 Brewing Company",
       "categories": [
-        "drinks",
         "food",
-        "shopping"
+        "drinks"
       ],
-      "tags": [],
+      "tags": [
+        "patio",
+        "beer",
+        "sit down",
+        "grab and go"
+      ],
       "neighborhood": "hastings-sunrise",
-      "cost": "$$",
+      "cost": {
+        "min": "$",
+        "max": "$$"
+      },
       "timeOfDay": [
-        "evening"
+        "allday"
       ],
-      "description": "",
-      "crossStreet": "Triumph St",
+      "description": "P49 is a fun and accessible brewery that offers lots of patio seating, great beers, and fun bar food. They have live music in the summer and plenty of seating for large groups. Tons of great beers to try as well.",
+      "crossStreet": "Triumph St & Victoria",
       "walkFromStation": 0,
       "coords": {
         "y": 243
@@ -153,14 +155,7 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "Trash panda, nitro stout, waffle fries."
     },
     {
       "id": "s50",
@@ -169,14 +164,21 @@
       "categories": [
         "hangout"
       ],
-      "tags": [],
+      "tags": [
+        "park",
+        "splash pad",
+        "tennis",
+        "pickleball",
+        "basketball",
+        "hangout"
+      ],
       "neighborhood": "hastings-sunrise",
-      "cost": "$$",
+      "cost": "free",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "Franklin St",
+      "description": "Activities for adults and kids Pandora is steps away from E Hastings and has lots to offer.",
+      "crossStreet": "Franklin St & Nanaimo",
       "walkFromStation": 0,
       "coords": {
         "y": 251
@@ -191,32 +193,27 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "Grab lunch or ice cream from a spot on Hastings and hang out."
     },
     {
       "id": "s51",
       "slug": "east-end-billiards",
       "name": "East End Billiards",
       "categories": [
-        "coffee",
-        "food"
+        "hangout"
       ],
-      "tags": [],
+      "tags": [
+        "billiards",
+        "hang out",
+        "late night"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$",
       "timeOfDay": [
-        "morning",
-        "afternoon"
+        "allday"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
+      "description": "An old school billiards hall. You'll find some real locals in this spot. ",
+      "crossStreet": "E Hastings St & Nanaimo",
       "walkFromStation": 0,
       "coords": {
         "y": 259
@@ -235,13 +232,6 @@
         "food",
         "point_of_interest",
         "establishment"
-      ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
       ]
     },
     {
@@ -251,17 +241,23 @@
       "categories": [
         "coffee",
         "food",
-        "shopping"
+        "shopping",
+        "hangout"
       ],
-      "tags": [],
+      "tags": [
+        "grab and go",
+        "sit down",
+        "coffee",
+        "baked goods"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
+      "description": "Describing themselves as a \"true third place\", the East Cafe prides themselves on being a welcoming, grounding, and creative place to hang out in the neighborhood. ",
+      "crossStreet": "E Hastings St & Nanaimo",
       "walkFromStation": 0,
       "coords": {
         "y": 259
@@ -282,30 +278,29 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "Coffee and check out the art."
     },
     {
       "id": "s53",
       "slug": "blind-rabbit",
       "name": "Blind Rabbit",
       "categories": [
-        "drinks",
-        "food"
+        "food",
+        "drinks"
       ],
-      "tags": [],
+      "tags": [
+        "bar",
+        "beer",
+        "hang out",
+        "cocktails"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
       "timeOfDay": [
         "evening"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
+      "description": "A unique local bar that specializes in gin cocktails and charcuterie boards.",
+      "crossStreet": "E Hastings St & Kamloops",
       "walkFromStation": 0,
       "coords": {
         "y": 258
@@ -321,13 +316,7 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "Dirty gin martini and a couple of snacks."
     },
     {
       "id": "s54",
@@ -336,14 +325,20 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "middle eastern",
+        "palestinian",
+        "sit down",
+        "share plates",
+        "vegetarian"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
+      "description": "Authentic Palestinian food with amazing flavors. Lots of veggie and meat options on the menu to satisfy any needs.",
+      "crossStreet": "E Hastings St & Penticton",
       "walkFromStation": 0,
       "coords": {
         "y": 260
@@ -360,13 +355,7 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "Lam roast with mujaddarah."
     },
     {
       "id": "s55",
@@ -375,14 +364,19 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "tacos",
+        "sit down",
+        "grab and go",
+        "mexican"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
+      "description": "One of many Tacofino locations, the commissary offers some of the usual Tacofino options with a few local specific options as well.",
+      "crossStreet": "E Hastings St & Garden dr",
       "walkFromStation": 0,
       "coords": {
         "y": 259
@@ -399,13 +393,7 @@
         "food",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "Love taking advantage of the burrito-to-bowl option when I am dining in."
     },
     {
       "id": "s56",
@@ -413,17 +401,20 @@
       "name": "Tall Shadow Bakery",
       "categories": [
         "food",
-        "shopping"
+        "groceries"
       ],
-      "tags": [],
+      "tags": [
+        "baked goods",
+        "bread"
+      ],
       "neighborhood": "hastings-sunrise",
-      "cost": "$$",
+      "cost": "$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
+      "description": "A local bakery specializing in sourdough baked goods. With daily (Weds-Sun) offerings and daily specific offerings, there is always something great to grab from this spot.",
+      "crossStreet": "E Hastings St & Kamloops st.",
       "walkFromStation": 0,
       "coords": {
         "y": 261
@@ -440,31 +431,35 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "Jalapeno & Cheddar sourdough (Fridays!)."
     },
     {
       "id": "s57",
       "slug": "it-s-okay",
       "name": "It's Okay",
       "categories": [
-        "food"
+        "food",
+        "drinks",
+        "hangout"
       ],
-      "tags": [],
+      "tags": [
+        "breakfast",
+        "food",
+        "bar",
+        "late night",
+        "burgers",
+        "happy hour",
+        "beer",
+        "cocktails",
+        "wine"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
-      "walkFromStation": 0,
+      "description": "A fun spot to grab a cocktail and a burger and hang out with friends. Good vibes and good drinks.",
+      "crossStreet": "E Hastings St & Kamloops st.",
       "coords": {
         "y": 259
       },
@@ -478,14 +473,7 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "It's okay bar mix, pickles, and a pina colada."
     },
     {
       "id": "s58",
@@ -508,7 +496,6 @@
       ],
       "description": "The newest, most popular taco spot in the city. If you don't mind waiting, this former hidden gem, tucked away behind a Mexican bakery, serves some authentic Mexican cocktails and tacos. ",
       "crossStreet": "E Hastings St & Nanaimo",
-      "walkFromStation": 40,
       "coords": {
         "y": 259
       },
@@ -533,18 +520,27 @@
       "slug": "dachi-restaurant-and-natural-wine",
       "name": "Dachi Restaurant and Natural Wine",
       "categories": [
-        "drinks",
-        "food"
+        "food",
+        "drinks"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "bar",
+        "restaurant",
+        "farm to table",
+        "natural wine",
+        "patio",
+        "sake",
+        "cocktails",
+        "wine"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
       "timeOfDay": [
         "evening"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
-      "walkFromStation": 0,
+      "description": "An intimate dining experience with super knowledgable staff, unique dishes, and great selection of natural wine and sake.",
+      "crossStreet": "E Hastings St & Nanaimo st.",
       "coords": {
         "y": 258
       },
@@ -561,13 +557,7 @@
         "food",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": ""
     },
     {
       "id": "s60",
@@ -575,19 +565,21 @@
       "name": "Doe Coffee Roasters",
       "categories": [
         "coffee",
-        "food",
-        "shopping"
+        "food"
       ],
-      "tags": [],
+      "tags": [
+        "cookies",
+        "coffee",
+        "baked goods"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
-      "walkFromStation": 0,
+      "description": "Doe is a newer coffee roaster in the neighborhood. They offer an \"all you can drink\" membership option which is quite unique. Their baked goods are exceptional and their service is always friendly.",
+      "crossStreet": "E Hastings St & Garden Dr.",
       "coords": {
         "y": 259
       },
@@ -607,31 +599,32 @@
         "store",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": "Muffin and a coffee."
     },
     {
       "id": "s61",
       "slug": "jackalopes-neighbourhood-dive",
       "name": "Jackalopes Neighbourhood Dive",
       "categories": [
-        "food"
+        "food",
+        "drinks",
+        "hangout"
       ],
-      "tags": [],
+      "tags": [
+        "dive bar",
+        "bar",
+        "sit down",
+        "beer",
+        "happy hour",
+        "cocktails"
+      ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "E Hastings St",
-      "walkFromStation": 0,
+      "description": "Your neighborhood dive bar. Metalheads, punks, and locals can be seen hanging in the dark drinking a pint at any time of day.",
+      "crossStreet": "E Hastings St & Templeton",
       "coords": {
         "y": 259
       },
@@ -645,13 +638,7 @@
         "food",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ]
+      "goto": ""
     },
     {
       "id": "s62",
@@ -663,7 +650,8 @@
       "tags": [
         "grab and go",
         "sandwiches",
-        "vegetarian"
+        "vegetarian",
+        "vietnamese"
       ],
       "neighborhood": "hastings-sunrise",
       "cost": "$",
@@ -672,7 +660,6 @@
       ],
       "description": "Obanmi has a few locations across the city, and although you can argue there is lots of good banh-mi for cheaper, the veggie option here is unmatched!",
       "crossStreet": "E Hastings St & Templeton",
-      "walkFromStation": 40,
       "coords": {
         "y": 260
       },
@@ -686,14 +673,6 @@
         "point_of_interest",
         "food",
         "establishment"
-      ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
       ],
       "goto": "Tofu bahn-mi"
     },
@@ -715,7 +694,6 @@
       ],
       "description": "After a short hiatus, Plain Jane is back! This is ultimately the freshest ice cream you can buy. Made right in front of you with a specialized machine, you choose your berry and you get the best soft serve in the neighborhood.",
       "crossStreet": "E Hastings St & Garden",
-      "walkFromStation": 40,
       "coords": {
         "y": 258
       },
@@ -732,14 +710,6 @@
         "point_of_interest",
         "store",
         "establishment"
-      ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
       ],
       "goto": "blueberry!"
     }

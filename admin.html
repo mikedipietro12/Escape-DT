@@ -347,7 +347,7 @@
               <label>Cross street</label>
               <input type="text" name="crossStreet">
             </div>
-            <div class="field">
+            <div class="field" id="walk-field" hidden>
               <label>Walk from station <span class="hint">(min)</span></label>
               <input type="number" name="walkFromStation" min="0" step="1">
             </div>
@@ -483,6 +483,25 @@
       return (n[id] && n[id].title) || id || "—";
     }
 
+    function usesSkytrainStation(nbh) {
+      const id = String(nbh || "commercial").toLowerCase();
+      const meta = (state.refs.neighborhoods.neighborhoods || {})[id];
+      return meta?.usesSkytrainStation !== false;
+    }
+
+    function wizardOrderFor(stop) {
+      const nbh = stop?.neighborhood || "commercial";
+      return usesSkytrainStation(nbh)
+        ? WIZARD_ORDER
+        : WIZARD_ORDER.filter((f) => f !== "walkFromStation");
+    }
+
+    function syncWalkFieldVisibility(nbh) {
+      const show = usesSkytrainStation(nbh);
+      const field = $("#walk-field");
+      if (field) field.hidden = !show;
+    }
+
     // Any non-"stops" source is a draft file (hastings-draft, mount-pleasant-draft, …).
     function isDraftSource(src) { return !!src && src !== "stops"; }
     // Which file a stop should save to, by neighborhood. The server sends the
@@ -500,7 +519,7 @@
     function isNeedsInfo(stop) {
       if (!String(stop.description || "").trim()) return true;
       if (!(stop.tags || []).length) return true;
-      if (!stop.walkFromStation) return true;
+      if (usesSkytrainStation(stop.neighborhood) && !stop.walkFromStation) return true;
       if (Array.isArray(stop._review) && stop._review.length) return true;
       return false;
     }
@@ -701,6 +720,7 @@
       form.name.value = stop.name || "";
       form.slug.value = stop.slug || "";
       form.neighborhood.value = stop.neighborhood || "commercial";
+      syncWalkFieldVisibility(form.neighborhood.value);
       form.tags.value = (stop.tags || []).join(", ");
       form.description.value = stop.description || "";
       form.goto.value = stop.goto || "";
@@ -789,8 +809,12 @@
       if (goto) stop.goto = goto; else delete stop.goto;
       stop.crossStreet = form.crossStreet.value.trim();
 
-      const walk = form.walkFromStation.value;
-      stop.walkFromStation = walk === "" ? 0 : Number(walk);
+      if (usesSkytrainStation(stop.neighborhood)) {
+        const walk = form.walkFromStation.value;
+        stop.walkFromStation = walk === "" ? 0 : Number(walk);
+      } else {
+        delete stop.walkFromStation;
+      }
 
       const cx = form.coordsX.value, cy = form.coordsY.value;
       stop.coords = stop.coords && typeof stop.coords === "object" ? { ...stop.coords } : {};
@@ -849,7 +873,10 @@
       } else {
         gotoEl.style.display = "none";
       }
-      const walk = stop.walkFromStation ? `${stop.walkFromStation} min walk` : "";
+      const walk =
+        usesSkytrainStation(stop.neighborhood) && stop.walkFromStation
+          ? `${stop.walkFromStation} min walk`
+          : "";
       $("#preview-meta").textContent = [stop.crossStreet, walk].filter(Boolean).join(" · ");
     }
 
@@ -932,7 +959,7 @@
 
       autoSavePromise = (async () => {
         try {
-          pruneReview(stop);
+          pruneReviewWhenFilled(stop);
           const res = await fetch(`/api/stop/${encodeURIComponent(stop.id)}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -1230,7 +1257,7 @@
     const WIZARD_ORDER = ["tags", "cost", "timeOfDay", "categories", "crossStreet", "walkFromStation", "description", "goto", "images"];
     const FIELD_DEFS = {
       tags: { label: "Tags", hint: "Descriptive vibes / cuisine / service. Click to toggle or type your own." },
-      cost: { label: "Cost", hint: "Pick one, or tick price range." },
+      cost: { label: "Cost", hint: "Pick free, a price tier, or tick price range." },
       timeOfDay: { label: "Time of day", hint: "When is this spot good for?" },
       categories: { label: "Categories", hint: "1\u20133 browse filters." },
       crossStreet: { label: "Cross street", hint: "Nearest corner (include \u201CVictoria\u201D for Victoria-side spots)." },
@@ -1264,7 +1291,7 @@
     // whose field now has a value is cleared (covers fields the enrich script
     // pre-filled and flagged with "?" for verification, e.g. "categories?").
     // Items still left blank stay on the list.
-    function pruneReview(stop) {
+    function pruneReviewWhenFilled(stop) {
       if (!Array.isArray(stop._review) || !stop._review.length) return;
       stop._review = stop._review.filter((entry) => fieldIsEmpty(entry.replace(/\?$/, ""), stop));
       if (!stop._review.length) delete stop._review;
@@ -1278,7 +1305,7 @@
       }
     }
     function needsAttention(field, stop) { return fieldIsEmpty(field, stop) || inReview(field, stop); }
-    function needsAnyInfo(stop) { return WIZARD_ORDER.some((f) => needsAttention(f, stop)); }
+    function needsAnyInfo(stop) { return wizardOrderFor(stop).some((f) => needsAttention(f, stop)); }
 
     // Walk the (neighborhood-filtered) list FORWARD from just after `afterId`, so
     // the guided run visits each stop once in order and reaches every stop that
@@ -1296,14 +1323,16 @@
       return null;
     }
 
+    const WIZ_COST_BUTTONS = ["free", "$", "$$", "$$$"];
+
     function costOpts(sel) {
-      return ["", "$", "$$", "$$$"].map((v) => `<option value="${v}" ${v === sel ? "selected" : ""}>${v || "\u2014"}</option>`).join("");
+      return ["", ...WIZ_COST_BUTTONS].map((v) => `<option value="${v}" ${v === sel ? "selected" : ""}>${v || "\u2014"}</option>`).join("");
     }
 
     function openWizard(id, opts = {}) {
       const stop = state.stops.find((s) => s.id === id);
       if (!stop) return;
-      const steps = WIZARD_ORDER.filter((f) => needsAttention(f, stop));
+      const steps = wizardOrderFor(stop).filter((f) => needsAttention(f, stop));
       if (!steps.length) {
         toast(`${stop.name}: nothing left to fill`);
         if (opts.run) { const nxt = nextNeedsInfoStop(id); if (nxt) return openWizard(nxt.id, { run: true }); }
@@ -1360,7 +1389,7 @@
         const min = isRange ? (Array.isArray(c) ? c[0] : c.min) : "";
         const max = isRange ? (Array.isArray(c) ? c[c.length - 1] : c.max) : "";
         return head +
-          `<div class="cost-btns" id="wiz-cost-btns">${["$", "$$", "$$$"].map((v) =>
+          `<div class="cost-btns" id="wiz-cost-btns">${WIZ_COST_BUTTONS.map((v) =>
             `<button type="button" class="cost-btn ${(!isRange && single === v) ? "on" : ""}" data-c="${v}">${v}</button>`).join("")}</div>` +
           `<label class="wiz-check"><input type="checkbox" id="wiz-cost-range" ${isRange ? "checked" : ""}> Price range</label>` +
           `<div id="wiz-cost-range-row" class="row2" style="margin-top:0.4rem;${isRange ? "" : "display:none;"}">` +
@@ -1459,7 +1488,40 @@
       input.focus();
     }
 
-    function pruneReview(stop) {
+    /** Copy the active wizard step from the DOM into wizard.stop (Next must call this). */
+    function applyWizardStepFromDom() {
+      if (!wizard.stop || wizard.index < 0 || wizard.index >= wizard.steps.length) return;
+      const field = wizard.steps[wizard.index];
+      const stop = wizard.stop;
+      wizard.reviewed.add(field);
+
+      if (field === "tags") {
+        const input = $("#wiz-tags");
+        if (input) stop.tags = input.value.split(",").map((s) => s.trim()).filter(Boolean);
+      } else if (field === "cost") {
+        const rangeOn = $("#wiz-cost-range")?.checked;
+        if (rangeOn) {
+          const min = $("#wiz-cost-min")?.value || "";
+          const max = $("#wiz-cost-max")?.value || "";
+          if (min && max && min !== max) stop.cost = { min, max };
+          else stop.cost = min || max || "";
+        } else {
+          const on = $("#wiz-cost-btns")?.querySelector(".cost-btn.on");
+          stop.cost = on ? on.dataset.c : "";
+        }
+      } else if (field === "timeOfDay" || field === "categories") {
+        stop[field] = [...$("#wiz-body").querySelectorAll('.checks input:checked')].map((c) => c.dataset.v);
+      } else {
+        const input = $("#wiz-input");
+        if (!input) return;
+        if (field === "walkFromStation") stop.walkFromStation = input.value === "" ? 0 : Number(input.value);
+        else if (field === "images") stop.images = input.value.split(",").map((s) => s.trim()).filter(Boolean);
+        else stop[field] = input.value;
+      }
+      wizard.dirty = true;
+    }
+
+    function pruneWizardReview(stop) {
       if (!Array.isArray(stop._review)) return;
       stop._review = stop._review.filter((t) => !wizard.reviewed.has(t.replace(/\?$/, "")));
       if (!stop._review.length) delete stop._review;
@@ -1468,7 +1530,8 @@
     async function saveWizard() {
       const stop = wizard.stop;
       if (!String(stop.name || "").trim()) { toast("Name is required (open the stop in the form to set it)", true); return false; }
-      pruneReview(stop);
+      pruneWizardReview(stop);
+      pruneReviewWhenFilled(stop);
       if ((stop.images || []).length) delete stop.image; else delete stop.images;
       stop._source = sourceForNeighborhood(stop.neighborhood);
       try {
@@ -1490,7 +1553,12 @@
       }
     }
 
-    function wizardBack() { if (wizard.index > 0) { wizard.index--; renderWizard(); } }
+    function wizardBack() {
+      if (wizard.index <= 0) return;
+      applyWizardStepFromDom();
+      wizard.index--;
+      renderWizard();
+    }
     // Skip the whole current spot (discarding its unsaved edits) and jump to the
     // next spot that needs info, continuing the guided run.
     function wizardSkip() {
@@ -1498,15 +1566,30 @@
       if (nxt) { openWizard(nxt.id, { run: true }); toast("Skipped \u2014 next: " + nxt.name); }
       else { closeWizard(true); toast("Nothing else needs info"); }
     }
+    let wizardSaving = false;
     async function wizardNext() {
-      wizard.reviewed.add(wizard.steps[wizard.index]);
-      if (wizard.index < wizard.steps.length - 1) { wizard.index++; renderWizard(); return; }
-      // last step -> save & advance to next place
-      const ok = await saveWizard();
-      if (!ok) return;
-      const nxt = nextNeedsInfoStop(wizard.originalId);
-      if (nxt) { openWizard(nxt.id, { run: true }); toast("Saved \u2014 next: " + nxt.name); }
-      else { closeWizard(true); toast("All caught up \u2014 nothing left to fill!"); }
+      if (wizardSaving) return;
+      applyWizardStepFromDom();
+      const isLast = wizard.index >= wizard.steps.length - 1;
+      wizardSaving = true;
+      $("#wiz-next").disabled = true;
+      $("#wiz-save").disabled = true;
+      try {
+        const ok = await saveWizard();
+        if (!ok) return;
+        if (!isLast) {
+          wizard.index++;
+          renderWizard();
+          return;
+        }
+        const nxt = nextNeedsInfoStop(wizard.originalId);
+        if (nxt) { openWizard(nxt.id, { run: true }); toast("Saved \u2014 next: " + nxt.name); }
+        else { closeWizard(true); toast("All caught up \u2014 nothing left to fill!"); }
+      } finally {
+        wizardSaving = false;
+        $("#wiz-next").disabled = false;
+        $("#wiz-save").disabled = false;
+      }
     }
     function closeWizard(force) {
       if (!force && wizard.dirty && !confirm("Close without saving this stop's changes?")) return;
@@ -1517,7 +1600,10 @@
     $("#wiz-back").addEventListener("click", wizardBack);
     $("#wiz-skip").addEventListener("click", wizardSkip);
     $("#wiz-next").addEventListener("click", wizardNext);
-    $("#wiz-save").addEventListener("click", async () => { if (await saveWizard()) toast("Saved " + wizard.stop.id); });
+    $("#wiz-save").addEventListener("click", async () => {
+      applyWizardStepFromDom();
+      if (await saveWizard()) toast("Saved " + wizard.stop.id);
+    });
     $("#wiz-close").addEventListener("click", () => closeWizard(false));
     $("#wizard-overlay").addEventListener("click", (e) => { if (e.target.id === "wizard-overlay") closeWizard(false); });
     document.addEventListener("keydown", (e) => {
@@ -1705,6 +1791,11 @@
     });
     $("#search").addEventListener("input", renderList);
     $("#filter-neighborhood").addEventListener("change", renderList);
+    $("#neighborhood").addEventListener("change", () => {
+      syncWalkFieldVisibility(form.neighborhood.value);
+      updatePreview();
+      onInput();
+    });
     $("#filter-needs").addEventListener("change", renderList);
     $("#filter-needs-photos").addEventListener("change", renderList);
     $("#fill-run").addEventListener("click", startFillRun);
