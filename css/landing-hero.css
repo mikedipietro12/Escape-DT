@@ -47,8 +47,20 @@ html[data-hero-bubble="on"] .hero-mascot-wrap {
 .hero-mascot-link {
   display: block;
   color: inherit;
-  text-decoration: none;
+  text-decoration: none !important;
+  -webkit-text-decoration: none;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-mascot-link:hover,
+.hero-mascot-link:focus,
+.hero-mascot-link:focus-visible,
+.hero-mascot-link:visited,
+.hero-mascot-link .speech-line {
+  color: inherit;
+  text-decoration: none !important;
+  -webkit-text-decoration: none;
 }
 
 html[data-hero-bubble="off"] .hero-mascot-link {
@@ -80,7 +92,7 @@ html[data-hero-bubble="off"] .hero-mascot-link {
 
 .hero-mascot-wrap .hero-figure {
   flex: 0 0 auto;
-  width: min(200px, 40vw);
+  width: min(200px, 38cqw);
   position: relative;
 }
 
@@ -117,26 +129,28 @@ html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo {
   --tail-bg: rgb(255 255 255 / var(--bubble-bg-opacity));
   position: relative;
   width: 100%;
-  padding: 0.85rem 1rem 0.95rem;
+  padding: 0.85rem 1rem 0.65rem;
   border: 2px solid var(--border-teal);
   border-left-width: 0;
   border-radius: 1.15rem;
   background-color: var(--tail-bg);
   box-shadow: none;
   transform-origin: left var(--tail-y);
-  transform: scale(0.12, 0.45);
-  overflow: hidden;
-  visibility: hidden;
+  overflow: visible;
+  visibility: visible;
 }
 
-.speech-bubble-wrap.is-animating .speech-bubble {
-  visibility: visible;
+/* Pre-JS: bubble visible via is-settled in HTML. JS replays grow when animating. */
+html.hero-anim-js .speech-bubble-wrap.is-growing .speech-bubble {
+  overflow: hidden;
   will-change: transform, border-radius;
-  animation: bubble-lava-grow 1.4s cubic-bezier(0.22, 0.85, 0.25, 1) forwards;
+}
+
+.speech-bubble-wrap.is-animating.is-goo-on {
+  filter: url(#goo);
 }
 
 .speech-bubble-wrap.is-settled .speech-bubble {
-  visibility: visible;
   overflow: visible;
   transform: scale(1, 1);
   border-radius: 1.15rem;
@@ -205,43 +219,21 @@ html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo {
   opacity: 0 !important;
 }
 
-.speech-bubble-wrap.is-animating .speech-tail {
-  animation: tail-fade-in 1.4s cubic-bezier(0.22, 0.85, 0.25, 1) forwards;
-}
-
 .speech-line {
   position: relative;
   z-index: 1;
+  margin: 0;
   font-size: clamp(0.76rem, 2.65vw, 0.9rem);
   font-weight: 500;
   line-height: 1.42;
   letter-spacing: -0.01em;
   text-align: left;
   hyphens: auto;
-  opacity: 0;
-}
-
-.speech-bubble-wrap.is-animating .speech-line {
-  animation: text-fade-in 1.4s cubic-bezier(0.22, 0.85, 0.25, 1) forwards;
-}
-
-.speech-bubble-wrap.is-settled .speech-line {
   opacity: 1;
 }
 
-@keyframes bubble-lava-grow {
-  0% {
-    transform: scale(0.06, 0.52);
-    border-radius: 50% 50% 48% 52% / 54% 46% 50% 50%;
-  }
-  92% {
-    transform: scale(1.012, 1.006);
-    border-radius: 1.12rem;
-  }
-  100% {
-    transform: scale(1, 1);
-    border-radius: 1.15rem;
-  }
+html.hero-anim-js .speech-bubble-wrap.is-growing .speech-line {
+  opacity: 0;
 }
 
 @keyframes tail-fade-in {
@@ -254,23 +246,14 @@ html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo {
   }
 }
 
-@keyframes text-fade-in {
-  0%,
-  78% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 @container hero-mascot (max-width: 520px) {
   .hero-mascot-wrap .hero-figure {
-    width: min(168px, 34vw);
+    width: min(150px, 36cqw);
   }
 
   .hero-mascot-wrap {
-    --bubble-max-width: min(300px, 56vw);
+    --bubble-max-width: min(280px, 58cqw);
+    --bubble-gap: -10px;
   }
 
   .speech-line {
@@ -278,7 +261,24 @@ html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo {
   }
 }
 
-@container hero-mascot (max-width: 380px) {
+/* Side-by-side on large phones (e.g. iPhone 16); stack only on very narrow widths */
+@container hero-mascot (max-width: 400px) {
+  .hero-mascot-wrap .hero-figure {
+    width: min(124px, 34cqw);
+  }
+
+  .hero-mascot-wrap {
+    --bubble-max-width: min(240px, 62cqw);
+    --bubble-gap: -8px;
+  }
+
+  .speech-line {
+    font-size: 0.71rem;
+    line-height: 1.38;
+  }
+}
+
+@container hero-mascot (max-width: 300px) {
   .hero-mascot-wrap .hero-stage {
     flex-direction: column;
     align-items: center;
@@ -312,8 +312,8 @@ html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo {
   }
 }
 
-/* Fallback when container queries are unavailable */
-@media (max-width: 380px) {
+/* Fallback when container queries are unavailable — stack only on very small viewports */
+@media (max-width: 300px) {
   @supports not (container-type: inline-size) {
     .hero-mascot-wrap .hero-stage {
       flex-direction: column;
@@ -351,22 +351,5 @@ html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo {
 @media (prefers-reduced-motion: reduce) {
   html:not(.force-motion) .speech-bubble-wrap {
     filter: none;
-  }
-
-  html:not(.force-motion) .speech-bubble-wrap.is-animating .speech-bubble {
-    animation: none !important;
-  }
-
-  html:not(.force-motion) .speech-bubble {
-    visibility: visible;
-    transform: scale(1, 1);
-    border-radius: 1.15rem;
-    overflow: visible;
-  }
-
-  html:not(.force-motion) .speech-tail,
-  html:not(.force-motion) .speech-line {
-    animation: none !important;
-    opacity: 1;
   }
 }

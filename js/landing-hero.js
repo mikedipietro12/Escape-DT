@@ -5,9 +5,6 @@
  *   - Set data-hero-bubble="off" on <html>, or open ?hero=static
  *
  * Preview grow animation when OS "reduce motion" is on: ?hero=motion
- *
- * Full removal: remove this script and css/landing-hero.css from index.html
- * and restore the static <img class="hero-logo"> block (see index.html comment).
  */
 (function () {
   const GROW_MS = 1400;
@@ -32,10 +29,12 @@
     return;
   }
 
+  root.classList.add("hero-anim-js");
+
   let heroImg = document.getElementById("hero-logo");
   let wrap = document.getElementById("speech-wrap");
   let settleTimer = null;
-  let started = false;
+  let growAnim = null;
 
   function tailYpx() {
     const wrapEl = document.querySelector(".hero-mascot-wrap");
@@ -101,15 +100,39 @@
 
   function clearGrowTimers() {
     clearTimeout(settleTimer);
+    settleTimer = null;
+  }
+
+  function cancelGrowAnimations(bubble) {
+    growAnim?.cancel();
+    growAnim = null;
+    bubble?.getAnimations?.().forEach((anim) => anim.cancel());
   }
 
   function finishGrow(speechWrap) {
     if (!speechWrap) return;
-    speechWrap.classList.remove("is-animating", "is-goo-on");
-    speechWrap.classList.add("is-settled");
+    clearGrowTimers();
+
     const bubble = speechWrap.querySelector(".speech-bubble");
+    const line = speechWrap.querySelector(".speech-line");
+
+    speechWrap.classList.remove("is-growing", "is-animating", "is-goo-on");
+    speechWrap.classList.add("is-settled");
+
     if (bubble) {
+      cancelGrowAnimations(bubble);
+      bubble.style.removeProperty("transform");
+      bubble.style.removeProperty("transform-origin");
+      bubble.style.removeProperty("border-radius");
       bubble.style.removeProperty("animation");
+    }
+    if (line) {
+      line.getAnimations?.().forEach((anim) => anim.cancel());
+      line.style.removeProperty("opacity");
+      line.style.removeProperty("animation");
+    }
+
+    if (bubble) {
       requestAnimationFrame(() => {
         syncSpeechFrame(bubble);
         observeSpeechBubble(bubble);
@@ -117,76 +140,69 @@
     }
   }
 
-  function resetGrowAnimation(bubble) {
-    if (!bubble) return;
-    bubble.getAnimations?.().forEach((anim) => anim.cancel());
-    bubble.style.animation = "none";
-    void bubble.offsetWidth;
-    bubble.style.removeProperty("animation");
-    bubble.style.removeProperty("transform");
-  }
-
-  function resetPseudoAnimations(bubble) {
-    if (!bubble) return;
-    const tail = bubble.querySelector(".speech-tail");
-    const line = bubble.querySelector(".speech-line");
-    bubble.classList.add("reset-pseudos");
-    if (tail) {
-      tail.getAnimations?.().forEach((anim) => anim.cancel());
-      tail.style.animation = "none";
-      tail.style.opacity = "0";
-    }
-    if (line) {
-      line.getAnimations?.().forEach((anim) => anim.cancel());
-      line.style.animation = "none";
-      line.style.opacity = "0";
-    }
-    void bubble.offsetWidth;
-    bubble.classList.remove("reset-pseudos");
-    if (tail) {
-      tail.style.removeProperty("animation");
-      tail.style.removeProperty("opacity");
-    }
-    if (line) {
-      line.style.removeProperty("animation");
-      line.style.removeProperty("opacity");
-    }
-  }
-
-  function applyGrowAnimation(bubble) {
-    bubble.style.animation = `bubble-lava-grow ${GROW_MS}ms ${GROW_EASING} forwards`;
-    void bubble.offsetWidth;
-  }
-
   function startGrow(speechWrap) {
-    if (!speechWrap) return;
+    const bubble = speechWrap?.querySelector(".speech-bubble");
+    const line = speechWrap?.querySelector(".speech-line");
+    if (!bubble || typeof bubble.animate !== "function") {
+      finishGrow(speechWrap);
+      return;
+    }
+
     clearGrowTimers();
+    cancelGrowAnimations(bubble);
 
-    const bubble = speechWrap.querySelector(".speech-bubble");
-    if (!bubble) return;
-
-    speechWrap.classList.remove("is-settled", "is-animating", "is-goo-on");
-    resetGrowAnimation(bubble);
-    resetPseudoAnimations(bubble);
-
-    void speechWrap.offsetWidth;
-    speechWrap.classList.add("is-animating");
+    speechWrap.classList.remove("is-settled", "is-growing", "is-animating", "is-goo-on");
+    speechWrap.classList.add("is-growing", "is-animating");
     speechWrap.classList.toggle("is-goo-on", BUBBLE_BG_OPACITY >= 0.99);
 
-    applyGrowAnimation(bubble);
+    const origin = `left ${tailYpx()}px`;
+    bubble.style.transformOrigin = origin;
 
-    bubble.removeEventListener("animationend", onBubbleGrowEnd);
-    bubble.addEventListener("animationend", onBubbleGrowEnd);
+    if (line) {
+      line.style.opacity = "0";
+    }
 
-    settleTimer = setTimeout(() => finishGrow(speechWrap), GROW_MS + 80);
-  }
+    void bubble.offsetWidth;
 
-  function onBubbleGrowEnd(e) {
-    if (e.target !== e.currentTarget) return;
-    const name = e.animationName;
-    if (name && name !== "bubble-lava-grow") return;
-    clearGrowTimers();
-    finishGrow(e.currentTarget.closest(".speech-bubble-wrap"));
+    growAnim = bubble.animate(
+      [
+        {
+          transform: "scale(0.06, 0.52)",
+          borderRadius: "50% 50% 48% 52% / 54% 46% 50% 50%",
+        },
+        {
+          transform: "scale(1.012, 1.006)",
+          borderRadius: "1.12rem",
+          offset: 0.92,
+        },
+        {
+          transform: "scale(1, 1)",
+          borderRadius: "1.15rem",
+        },
+      ],
+      {
+        duration: GROW_MS,
+        easing: GROW_EASING,
+        fill: "forwards",
+      }
+    );
+
+    if (line) {
+      line.animate(
+        [{ opacity: 0 }, { opacity: 1 }],
+        {
+          duration: GROW_MS,
+          easing: GROW_EASING,
+          fill: "forwards",
+          delay: Math.round(GROW_MS * 0.78),
+        }
+      );
+    }
+
+    growAnim.onfinish = () => finishGrow(speechWrap);
+    growAnim.oncancel = () => {};
+
+    settleTimer = setTimeout(() => finishGrow(speechWrap), GROW_MS + 120);
   }
 
   function shouldAnimate() {
@@ -209,36 +225,35 @@
       wrap = document.getElementById("speech-wrap");
     }
     if (!wrap) return;
-    if (started && !replay) return;
-    started = true;
 
-    if (shouldAnimate()) {
+    bindHeroImg();
+
+    const bubble = wrap.querySelector(".speech-bubble");
+    if (bubble) {
+      syncSpeechFrame(bubble);
+    }
+
+    if (shouldAnimate() && (replay || !wrap.dataset.growPlayed)) {
+      wrap.dataset.growPlayed = "1";
       startGrow(wrap);
     } else {
       finishGrow(wrap);
     }
-
-    bindHeroImg();
   }
 
   function scheduleInit(replay) {
-    const run = () => requestAnimationFrame(() => requestAnimationFrame(() => init(replay)));
-    if (document.readyState === "complete") {
-      run();
-    } else {
-      window.addEventListener("load", () => run(), { once: true });
-    }
+    requestAnimationFrame(() => requestAnimationFrame(() => init(replay)));
   }
 
-  if (wrap) {
-    scheduleInit(false);
-  } else {
+  if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => scheduleInit(false), { once: true });
+  } else {
+    scheduleInit(false);
   }
 
   window.addEventListener("pageshow", (e) => {
     if (e.persisted) {
-      started = false;
+      delete wrap?.dataset.growPlayed;
       scheduleInit(true);
     }
   });
