@@ -33,8 +33,6 @@ html[data-hero-bubble="on"] .hero-mascot-wrap {
 .hero-mascot-wrap {
   width: 100%;
   margin: 0 auto 1.25rem;
-  container-type: inline-size;
-  container-name: hero-mascot;
 }
 
 .hero-mascot-wrap .svg-defs {
@@ -92,7 +90,7 @@ html[data-hero-bubble="off"] .hero-mascot-link {
 
 .hero-mascot-wrap .hero-figure {
   flex: 0 0 auto;
-  width: min(200px, 38cqw);
+  width: min(200px, 36vw);
   position: relative;
 }
 
@@ -246,30 +244,20 @@ html.hero-anim-js .speech-bubble-wrap.is-growing .speech-line {
   }
 }
 
-@container hero-mascot (max-width: 520px) {
+/* Phones & small tablets: stay side-by-side, shrink to fit (incl. iPhone 16 ~393px) */
+@media (max-width: 520px) {
   .hero-mascot-wrap .hero-figure {
-    width: min(150px, 36cqw);
+    width: min(118px, 30vw);
   }
 
-  .hero-mascot-wrap {
-    --bubble-max-width: min(280px, 58cqw);
-    --bubble-gap: -10px;
-  }
-
-  .speech-line {
-    font-size: clamp(0.72rem, 2.4vw, 0.86rem);
-  }
-}
-
-/* Side-by-side on large phones (e.g. iPhone 16); stack only on very narrow widths */
-@container hero-mascot (max-width: 400px) {
-  .hero-mascot-wrap .hero-figure {
-    width: min(124px, 34cqw);
-  }
-
-  .hero-mascot-wrap {
-    --bubble-max-width: min(240px, 62cqw);
+  html[data-hero-bubble="on"] .hero-mascot-wrap {
+    --bubble-max-width: min(220px, 56vw);
     --bubble-gap: -8px;
+  }
+
+  .hero-mascot-wrap .hero-stage {
+    flex-direction: row;
+    flex-wrap: nowrap;
   }
 
   .speech-line {
@@ -278,7 +266,8 @@ html.hero-anim-js .speech-bubble-wrap.is-growing .speech-line {
   }
 }
 
-@container hero-mascot (max-width: 300px) {
+/* Stack only on very narrow viewports (e.g. iPhone SE portrait) */
+@media (max-width: 319px) {
   .hero-mascot-wrap .hero-stage {
     flex-direction: column;
     align-items: center;
@@ -309,42 +298,6 @@ html.hero-anim-js .speech-bubble-wrap.is-growing .speech-line {
     top: -12px;
     transform: translateX(-50%) rotate(-90deg);
     transform-origin: center bottom;
-  }
-}
-
-/* Fallback when container queries are unavailable — stack only on very small viewports */
-@media (max-width: 300px) {
-  @supports not (container-type: inline-size) {
-    .hero-mascot-wrap .hero-stage {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .speech-bubble-wrap {
-      max-width: min(var(--bubble-max-width), 92vw);
-      margin-top: 0.5rem;
-      margin-left: 0;
-    }
-
-    .speech-frame {
-      display: none !important;
-    }
-
-    .speech-bubble-wrap.is-settled .speech-bubble {
-      border-color: var(--border-teal);
-      border-left-width: 2px;
-    }
-
-    .speech-bubble-wrap.is-settled .speech-tail {
-      display: block;
-    }
-
-    .speech-tail {
-      left: 50%;
-      top: -12px;
-      transform: translateX(-50%) rotate(-90deg);
-      transform-origin: center bottom;
-    }
   }
 }
 
