@@ -49,7 +49,9 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(port, () => {
-  console.log(`Escape DT: http://127.0.0.1:${port}/index.html`);
-  console.log(`           http://localhost:${port}/index.html`);
+server.listen(port, "0.0.0.0", () => {
+  console.log(`Escape DT dev server listening on 0.0.0.0:${port}`);
+  console.log(`  App:   http://127.0.0.1:${port}/index.html`);
+  console.log(`  Demo:  http://127.0.0.1:${port}/demo/east-village-final-screen.html`);
+  console.log(`If localhost fails in your browser, forward port ${port} in Cursor (Ports panel) or use the tunnel URL if one was started.`);
 });
