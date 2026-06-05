@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>East Village final screen — prototype</title>
+  <script src="../js/season-theme.js"></script>
+  <link rel="stylesheet" href="east-village-final-screen.css">
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through the dev server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>/demo/east-village-final-screen.html</code>.
+  </p>
+
+  <header class="demo-toolbar">
+    <div class="demo-toolbar__title">
+      <h1>East Village · final screen prototype</h1>
+      <p>Horizontal Hastings map mock-up — not part of the live site.</p>
+    </div>
+    <div class="demo-toolbar__controls">
+      <label class="demo-control">
+        <span class="demo-control__label">Sample route</span>
+        <select id="route-picker" aria-label="Sample route"></select>
+      </label>
+      <button type="button" id="btn-replay" class="demo-btn">Replay map</button>
+      <button type="button" id="btn-all-stops" class="demo-btn demo-btn--ghost" aria-pressed="false">
+        Show all stops
+      </button>
+    </div>
+  </header>
+
+  <main class="demo-main">
+    <section class="step-e-mock" aria-label="Route review prototype">
+      <h2 class="step-e-mock__title">Your Route</h2>
+      <p class="step-e-mock__subtitle label">Hastings-Sunrise (East Village) · no SkyTrain anchor in this area</p>
+
+      <div id="route-review" class="route-review route-phase-map">
+        <div class="map-container">
+          <svg id="route-map" viewBox="0 0 620 280" aria-label="Illustrated east-west route map"></svg>
+          <button type="button" id="route-scroll-hint" class="route-scroll-hint" hidden aria-label="Scroll down to see your stops">
+            <span class="route-scroll-hint__text">Scroll for your stops</span>
+            <span class="route-scroll-hint__arrow" aria-hidden="true">↓</span>
+          </button>
+        </div>
+        <div id="route-summary-panel" class="route-summary" hidden>
+          <p id="route-export-summary" class="label route-export-summary"></p>
+          <div id="route-cards"></div>
+          <div class="totals" id="route-totals"></div>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button type="button" id="btn-edit-route" hidden>Edit Spots</button>
+        <button type="button" id="btn-route-finalize" class="primary" hidden>Finalize</button>
+        <div id="route-export-actions" class="route-export-actions" hidden>
+          <button type="button" class="btn-google-maps" disabled title="Prototype only">Add to Google Maps</button>
+          <div class="route-export-actions__secondary">
+            <button type="button" disabled title="Prototype only">Share with a friend</button>
+            <button type="button" disabled title="Prototype only">Save as PDF</button>
+          </div>
+          <p class="route-export-hint">Export buttons are disabled in this prototype.</p>
+        </div>
+      </div>
+    </section>
+
+    <aside class="demo-legend" aria-label="Map legend">
+      <h3>Layout notes</h3>
+      <ul>
+        <li><span class="legend-spine"></span> E Hastings St spine (west → east)</li>
+        <li><span class="legend-north"></span> North offset (e.g. Semlin, Franklin)</li>
+        <li><span class="legend-south"></span> South offset (Victoria, Powell, Triumph)</li>
+        <li><span class="legend-back"></span> Backtracking leg (gold)</li>
+      </ul>
+      <p class="demo-legend__note">Stop positions use real lat/lng from <code>data/hastings-sunrise-draft.json</code>. Cross-street labels are draft copy.</p>
+    </aside>
+  </main>
+
+  <script src="east-village-final-screen.js" type="module"></script>
+</body>
+</html>
