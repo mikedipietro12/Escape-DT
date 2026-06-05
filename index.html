@@ -4245,8 +4245,49 @@
 
     function getWalkLeg(lat1, lng1, lat2, lng2) {
       const km = haversineKm(lat1, lng1, lat2, lng2);
+      if (km < 0.001) return { km: 0, minutes: 0 };
       const minutes = Math.max(1, Math.round((km / WALK_SPEED_KMH) * 60));
       return { km, minutes };
+    }
+
+    function getStopMapLocationKey(stop) {
+      if (stop?.mapLocation) return `id:${stop.mapLocation}`;
+      const lat = Number(stop.lat).toFixed(4);
+      const lng = Number(stop.lng).toFixed(4);
+      return `geo:${lat},${lng}`;
+    }
+
+    function stopsShareMapLocation(a, b) {
+      if (!a || !b) return false;
+      return getStopMapLocationKey(a) === getStopMapLocationKey(b);
+    }
+
+    function buildRouteMapPointGroups(route) {
+      const groups = [];
+      route.forEach((stop, routeIdx) => {
+        const prev = groups[groups.length - 1];
+        if (prev && stopsShareMapLocation(prev.stop, stop)) {
+          prev.routeIndices.push(routeIdx);
+        } else {
+          groups.push({ stop, routeIndices: [routeIdx] });
+        }
+      });
+      groups.forEach((group, mapIdx) => {
+        group.mapIdx = mapIdx;
+      });
+      return groups;
+    }
+
+    function getMapPointIndexForRouteIndex(route, routeIdx) {
+      const groups = buildRouteMapPointGroups(route);
+      for (const group of groups) {
+        if (group.routeIndices.includes(routeIdx)) return group.mapIdx;
+      }
+      return routeIdx;
+    }
+
+    function getMapPointForRouteIndex(points, route, routeIdx) {
+      return points[getMapPointIndexForRouteIndex(route, routeIdx)];
     }
 
     function getStopWalkFromStation(stop) {
@@ -4352,20 +4393,28 @@
         legs.push({
           ...getWalkLeg(STATION_LAT, STATION_LNG, route[0].lat, route[0].lng),
           label: `To ${route[0].name}`,
+          legKind: "stationToStop",
+          toStopIndex: 0,
         });
       }
       for (let i = 0; i < route.length - 1; i++) {
+        if (stopsShareMapLocation(route[i], route[i + 1])) continue;
         const a = route[i];
         const b = route[i + 1];
         legs.push({
           ...getWalkLeg(a.lat, a.lng, b.lat, b.lng),
           label: `To ${b.name}`,
+          legKind: "stopToStop",
+          fromStopIndex: i,
+          toStopIndex: i + 1,
         });
       }
       const last = route[route.length - 1];
       legs.push({
         ...getWalkLeg(last.lat, last.lng, STATION_LAT, STATION_LNG),
         label: `Back to ${STATION_WALK_LABEL}`,
+        legKind: "stopToStation",
+        fromStopIndex: route.length - 1,
       });
       return legs;
     }
@@ -4383,6 +4432,7 @@
         });
       }
       for (let i = 0; i < route.length - 1; i++) {
+        if (stopsShareMapLocation(route[i], route[i + 1])) continue;
         const a = route[i];
         const b = route[i + 1];
         legs.push({
@@ -4754,9 +4804,17 @@
 
     function buildRouteMapPoints(route, mapOptions = {}) {
       if (!route.length) return [];
-      return shouldShowStationOnMap(mapOptions)
-        ? layoutRouteMapPointsFromStation(route)
-        : layoutRouteMapPointsFromLat(route);
+      const groups = buildRouteMapPointGroups(route);
+      const representatives = groups.map((group) => group.stop);
+      const rawPoints = shouldShowStationOnMap(mapOptions)
+        ? layoutRouteMapPointsFromStation(representatives)
+        : layoutRouteMapPointsFromLat(representatives);
+      return rawPoints.map((point, mapIdx) => ({
+        ...point,
+        mapIdx,
+        routeIndices: groups[mapIdx].routeIndices,
+        idx: groups[mapIdx].routeIndices[0],
+      }));
     }
 
     function getMapSpineBounds(points, showStation) {
@@ -4820,40 +4878,27 @@
         let fromStop = null;
         let toStop = null;
 
-        if (mapOptions.startAtFirstStop) {
-          if (i < points.length - 1) {
-            fromStop = points[i].stop;
-            toStop = points[i + 1].stop;
-            x1 = points[i].x;
-            y1 = points[i].y;
-            x2 = points[i + 1].x;
-            y2 = points[i + 1].y;
-          } else {
-            fromStop = points[points.length - 1].stop;
-            toStop = null;
-            x1 = points[points.length - 1].x;
-            y1 = points[points.length - 1].y;
-            x2 = station.x;
-            y2 = station.y;
-          }
-        } else if (i === 0) {
+        if (leg.legKind === "stationToStop") {
+          const p = getMapPointForRouteIndex(points, route, leg.toStopIndex);
           x1 = station.x;
           y1 = station.y;
-          x2 = points[0].x;
-          y2 = points[0].y;
-          toStop = points[0].stop;
-        } else if (i < points.length) {
-          fromStop = points[i - 1].stop;
-          toStop = points[i].stop;
-          x1 = points[i - 1].x;
-          y1 = points[i - 1].y;
-          x2 = points[i].x;
-          y2 = points[i].y;
-        } else {
-          fromStop = points[points.length - 1].stop;
-          toStop = null;
-          x1 = points[points.length - 1].x;
-          y1 = points[points.length - 1].y;
+          x2 = p.x;
+          y2 = p.y;
+          toStop = p.stop;
+        } else if (leg.legKind === "stopToStop") {
+          const a = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
+          const b = getMapPointForRouteIndex(points, route, leg.toStopIndex);
+          fromStop = a.stop;
+          toStop = b.stop;
+          x1 = a.x;
+          y1 = a.y;
+          x2 = b.x;
+          y2 = b.y;
+        } else if (leg.legKind === "stopToStation") {
+          const p = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
+          fromStop = p.stop;
+          x1 = p.x;
+          y1 = p.y;
           x2 = station.x;
           y2 = station.y;
         }
@@ -4891,15 +4936,15 @@
         let toStop = null;
 
         if (leg.legKind === "stationToStop") {
-          const p = points[leg.toStopIndex];
+          const p = getMapPointForRouteIndex(points, route, leg.toStopIndex);
           x1 = station.x;
           y1 = station.y;
           x2 = p.x;
           y2 = p.y;
           toStop = p.stop;
         } else if (leg.legKind === "stopToStop") {
-          const a = points[leg.fromStopIndex];
-          const b = points[leg.toStopIndex];
+          const a = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
+          const b = getMapPointForRouteIndex(points, route, leg.toStopIndex);
           fromStop = a.stop;
           toStop = b.stop;
           x1 = a.x;
@@ -4907,7 +4952,7 @@
           x2 = b.x;
           y2 = b.y;
         } else if (leg.legKind === "stopToStation") {
-          const p = points[leg.fromStopIndex];
+          const p = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
           fromStop = p.stop;
           x1 = p.x;
           y1 = p.y;
@@ -4956,16 +5001,24 @@
       return html;
     }
 
+    function formatMapStopNumberLabel(point) {
+      const indices = point.routeIndices || [point.idx];
+      const first = indices[0] + 1;
+      const last = indices[indices.length - 1] + 1;
+      return first === last ? `${first}` : `${first}–${last}`;
+    }
+
     function renderMapStopSvg(point) {
       const s = point.stop;
-      const idx = point.idx;
+      const mapIdx = point.mapIdx ?? point.idx;
+      const numLabel = formatMapStopNumberLabel(point);
       const east = isMapStopEastOffset(point.x);
       const labelX = east ? point.x - 12 : point.x + 15;
       const labelAnchor = east ? "end" : "start";
       return `
-        <g class="map-stop-group map-stop-group--hidden" data-stop-index="${idx}">
+        <g class="map-stop-group map-stop-group--hidden" data-stop-index="${mapIdx}">
           <circle class="map-stop" cx="${point.x}" cy="${point.y}" r="5" />
-          <text class="map-text" x="${labelX}" y="${point.y + 4}" text-anchor="${labelAnchor}">${idx + 1}. ${escapeHtml(s.crossStreet)}</text>
+          <text class="map-text" x="${labelX}" y="${point.y + 4}" text-anchor="${labelAnchor}">${numLabel}. ${escapeHtml(s.crossStreet)}</text>
         </g>
       `;
     }
@@ -4979,19 +5032,22 @@
       return null;
     }
 
-    function getMapStopIndexAfterLegV2(legIndex, routeLegs) {
+    function getMapStopIndexAfterLegV2(legIndex, routeLegs, route) {
       const leg = routeLegs[legIndex];
       if (!leg) return null;
+      let routeIdx = null;
       if (leg.legKind === "stationToStop" || leg.legKind === "stopToStop") {
-        return leg.toStopIndex;
+        routeIdx = leg.toStopIndex;
+      } else if (leg.legKind === "stopToStation") {
+        routeIdx = leg.fromStopIndex;
       }
-      if (leg.legKind === "stopToStation") return leg.fromStopIndex;
-      return null;
+      if (routeIdx == null) return null;
+      return getMapPointIndexForRouteIndex(route, routeIdx);
     }
 
-    function getMapStopIndexAfterLeg(legIndex, mapOptions, pointCount, routeLegs) {
-      if (isRouteFinalizeV2Enabled() && routeLegs) {
-        return getMapStopIndexAfterLegV2(legIndex, routeLegs);
+    function getMapStopIndexAfterLeg(legIndex, mapOptions, pointCount, routeLegs, route) {
+      if (routeLegs && routeLegs[legIndex]?.legKind) {
+        return getMapStopIndexAfterLegV2(legIndex, routeLegs, route);
       }
       return getMapStopIndexAfterLegLegacy(legIndex, mapOptions, pointCount);
     }
@@ -5045,9 +5101,7 @@
       const showStation = shouldShowStationOnMap(mapOptions);
       const layout = getRouteMapLayout(route, mapOptions);
       const { points, legs } = layout;
-      const routeLegs = isRouteFinalizeV2Enabled()
-        ? getRouteLegsV2(route, mapOptions)
-        : null;
+      const routeLegs = getRouteLegs(route, mapOptions);
       const legDuration = options.legDuration ?? MAP.legDurationMs;
       const spine = getMapSpineBounds(points, showStation);
 
@@ -5115,7 +5169,8 @@
                 legIndex,
                 mapOptions,
                 points.length,
-                routeLegs
+                routeLegs,
+                route
               );
               if (stopIdx != null) revealStop(stopIdx);
             } catch (err) {

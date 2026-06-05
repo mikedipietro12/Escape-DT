@@ -423,7 +423,6 @@
                 "x": 158
             },
             "description": "My goto sushi spot on Commercial. A bit more expensive compared to some of the other options, but I've never been disappointed in the quality of their fish and their Japanese dishes.",
-            "goto": "Salmon oshi, inari negiri",
             "walkFromStation": 20,
             "placeholderColor": "457b9d",
             "slug": "cozen-japanese-cuisine",
@@ -437,12 +436,14 @@
                 "food"
             ],
             "images": [
+                "assets/stops/cozen-japanese-cuisine-2.jpg",
                 "assets/stops/cozen-japanese-cuisine.jpg"
             ],
             "heroFocus": {
                 "x": 50,
-                "y": 11
-            }
+                "y": 59
+            },
+            "goto": "Salmon Oshi, Miso Soup, Inari negiri, black lager."
         },
         {
             "crossStreet": "Venables St",
@@ -471,7 +472,10 @@
             "walkFromStation": 28,
             "slug": "alterior",
             "images": [
-                "assets/stops/alterior.jpg"
+                "assets/stops/alterior-3.jpg",
+                "assets/stops/alterior-2.jpg",
+                "assets/stops/alterior.jpg",
+                "assets/stops/alterior-4.jpg"
             ],
             "lng": -123.0703,
             "timeOfDay": [
@@ -479,13 +483,14 @@
                 "evening"
             ],
             "neighborhood": "commercial",
+            "mapLocation": "alterior",
             "categories": [
                 "shopping",
                 "hangout"
             ],
             "heroFocus": {
                 "x": 50,
-                "y": 41
+                "y": 34
             }
         },
         {
@@ -498,7 +503,9 @@
             },
             "tags": [
                 "vintage",
-                "shoes"
+                "shoes",
+                "shopping",
+                "furniture"
             ],
             "name": "Vintage Sponsor",
             "coords": {
@@ -510,6 +517,7 @@
             "walkFromStation": 28,
             "slug": "vintage-sponsor",
             "images": [
+                "assets/stops/vintage-sponsor-5.jpg",
                 "assets/stops/vintage-sponsor-4.jpg",
                 "assets/stops/vintage-sponsor.jpg",
                 "assets/stops/vintage-sponsor-2.jpg",
@@ -521,12 +529,14 @@
                 "evening"
             ],
             "neighborhood": "commercial",
+            "mapLocation": "alterior",
             "categories": [
-                "shopping"
+                "shopping",
+                "hangout"
             ],
             "heroFocus": {
                 "x": 50,
-                "y": 46
+                "y": 79
             }
         },
         {
@@ -860,7 +870,14 @@
             "neighborhood": "commercial",
             "categories": [
                 "food"
-            ]
+            ],
+            "images": [
+                "assets/stops/mogu-fried-chicken.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 0
+            }
         },
         {
             "crossStreet": "Venables",
@@ -975,7 +992,16 @@
                 "coffee",
                 "food",
                 "drinks"
-            ]
+            ],
+            "images": [
+                "assets/stops/caffe-la-tana-2.jpg",
+                "assets/stops/caffe-la-tana.jpg",
+                "assets/stops/caffe-la-tana-3.jpg"
+            ],
+            "heroFocus": {
+                "x": 51,
+                "y": 44
+            }
         },
         {
             "crossStreet": "Venables",
@@ -1056,12 +1082,14 @@
                 "hangout"
             ],
             "images": [
+                "assets/stops/slice-of-life-art-gallery-4.jpg",
+                "assets/stops/slice-of-life-art-gallery-3.jpg",
                 "assets/stops/slice-of-life-art-gallery.jpg",
                 "assets/stops/slice-of-life-art-gallery-2.jpg"
             ],
             "heroFocus": {
                 "x": 50,
-                "y": 25
+                "y": 59
             }
         },
         {
@@ -1237,6 +1265,7 @@
                 "allday"
             ],
             "neighborhood": "commercial",
+            "mapLocation": "alterior",
             "categories": [
                 "hangout"
             ],
@@ -1704,7 +1733,14 @@
             "neighborhood": "commercial",
             "categories": [
                 "drinks"
-            ]
+            ],
+            "images": [
+                "assets/stops/superflux.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 52
+            }
         },
         {
             "crossStreet": "Clark & Charles",
@@ -1741,7 +1777,15 @@
             "categories": [
                 "drinks"
             ],
-            "goto": "A dark beer and some bar snacks in the winter."
+            "goto": "A dark beer and some bar snacks in the winter.",
+            "images": [
+                "assets/stops/strange-fellows.jpg",
+                "assets/stops/strange-fellows-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 38
+            }
         },
         {
             "id": "s64",
@@ -1963,6 +2007,276 @@
                 "x": 50,
                 "y": 92
             }
+        },
+        {
+            "id": "s109",
+            "slug": "truck-stop-cafe",
+            "name": "Truck Stop Cafe",
+            "categories": [
+                "food"
+            ],
+            "tags": [
+                "sit down",
+                "breakfast",
+                "brunch",
+                "diner"
+            ],
+            "neighborhood": "commercial",
+            "cost": "$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "If you're looking for a long standing, greasy spoon, this is your spot. Great food, diverse menu, and homestyle meals.",
+            "crossStreet": "Clark Dr & Napier St",
+            "coords": {
+                "y": 294
+            },
+            "lat": 49.2750585,
+            "lng": -123.0771019,
+            "googlePlaceId": "ChIJVa-Fo2pxhlQRCWkv0XKFBqs",
+            "placeholderColor": "2d0e54",
+            "_googleTypes": [
+                "restaurant",
+                "hamburger_restaurant",
+                "diner",
+                "breakfast_restaurant",
+                "american_restaurant",
+                "sandwich_shop",
+                "brunch_restaurant",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 30,
+            "goto": "Pancakes and a coffee",
+            "images": [
+                "assets/stops/truck-stop-cafe-2.jpg",
+                "assets/stops/truck-stop-cafe.jpg",
+                "assets/stops/truck-stop-cafe-3.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 79
+            }
+        },
+        {
+            "id": "s110",
+            "slug": "fujiya-clark-drive",
+            "name": "Fujiya - Clark Drive",
+            "categories": [
+                "food",
+                "shopping",
+                "groceries"
+            ],
+            "tags": [],
+            "neighborhood": "commercial",
+            "cost": "$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "This Japanese grocer is a great spot to try some new snacks, grab a cheap quality lunch, or get some groceries.",
+            "crossStreet": "Clark Dr & Venables",
+            "coords": {
+                "y": 284
+            },
+            "lat": 49.2765541,
+            "lng": -123.0768797,
+            "googlePlaceId": "ChIJPxvBMhVxhlQR3AFQBSmcoFA",
+            "placeholderColor": "54ec5d",
+            "_googleTypes": [
+                "asian_grocery_store",
+                "supermarket",
+                "grocery_store",
+                "food_store",
+                "food",
+                "point_of_interest",
+                "store",
+                "establishment"
+            ],
+            "_review": [
+                "tags"
+            ],
+            "walkFromStation": 40,
+            "goto": "Inari negiri, a random drink, and crunchy snack",
+            "images": [
+                "assets/stops/fujiya-clark-drive.jpg",
+                "assets/stops/fujiya-clark-drive-2.jpg"
+            ]
+        },
+        {
+            "id": "s111",
+            "slug": "kasko-frame-works",
+            "name": "Kasko Frame Works",
+            "categories": [
+                "shopping",
+                "hangout"
+            ],
+            "tags": [
+                "gallery"
+            ],
+            "neighborhood": "commercial",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "Kasko Frame Works is usually a custom framing store, but often, the front of the room is an art gallery, pop your head in and say hello and see what's up",
+            "crossStreet": "Clark Dr & Frances St",
+            "coords": {
+                "y": 262
+            },
+            "lat": 49.2797062,
+            "lng": -123.0769685,
+            "googlePlaceId": "ChIJyw9Wy4lxhlQRyfN4E76Ea7Y",
+            "placeholderColor": "cecc8c",
+            "_googleTypes": [
+                "art_gallery",
+                "service",
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 40,
+            "images": [
+                "assets/stops/kasko-frame-works.jpg"
+            ],
+            "heroFocus": {
+                "x": 49,
+                "y": 39
+            }
+        },
+        {
+            "id": "s112",
+            "slug": "bosa-foods",
+            "name": "Bosa Foods",
+            "categories": [
+                "food",
+                "shopping",
+                "groceries"
+            ],
+            "tags": [
+                "grab and go",
+                "patio",
+                "coffee",
+                "italian",
+                "sandwiches",
+                "hot table"
+            ],
+            "neighborhood": "commercial",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "Bosa is a local grocer specializing in Italian goods. Stop in for a sandwich or something from the hot table. Also a good option to grab some euro groceries if you are planning on cooking at home.",
+            "crossStreet": "Victoria & Turner st",
+            "coords": {
+                "y": 264
+            },
+            "lat": 49.2794212,
+            "lng": -123.065427,
+            "googlePlaceId": "ChIJcaLUPj5xhlQRltU0Llz3mjQ",
+            "placeholderColor": "cd9fc3",
+            "_googleTypes": [
+                "grocery_store",
+                "food_store",
+                "store",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 35,
+            "goto": "Lupini, biscotti, and a meatball sandwich",
+            "images": [
+                "assets/stops/bosa-foods.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 56
+            }
+        },
+        {
+            "id": "s113",
+            "slug": "butter-and-jazz-vintage-thrift",
+            "name": "Butter & Jazz Vintage + Thrift",
+            "categories": [
+                "shopping"
+            ],
+            "tags": [],
+            "neighborhood": "commercial",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "One of the newest vintage spaces in the neighborhood, this spot has a very cool vibe and a great selection of vintage and thrifted items.",
+            "crossStreet": "Venables St & Commercial Dr",
+            "coords": {
+                "y": 281
+            },
+            "lat": 49.2768904,
+            "lng": -123.0699082,
+            "googlePlaceId": "ChIJ56USvcdxhlQRkehLDJazV7M",
+            "placeholderColor": "dff446",
+            "_googleTypes": [
+                "thrift_store",
+                "discount_store",
+                "store",
+                "point_of_interest",
+                "service",
+                "establishment"
+            ],
+            "_review": [
+                "tags"
+            ],
+            "walkFromStation": 35,
+            "images": [
+                "assets/stops/butter-and-jazz-vintage-thrift-2.jpg",
+                "assets/stops/butter-and-jazz-vintage-thrift.jpg",
+                "assets/stops/butter-and-jazz-vintage-thrift-3.jpg",
+                "assets/stops/butter-and-jazz-vintage-thrift-4.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 57
+            }
+        },
+        {
+            "id": "s114",
+            "slug": "iron-dog-books",
+            "name": "Iron Dog Books",
+            "categories": [
+                "shopping"
+            ],
+            "tags": [
+                "books",
+                "used"
+            ],
+            "neighborhood": "commercial",
+            "cost": {
+                "min": "$",
+                "max": "$$"
+            },
+            "timeOfDay": [
+                "morning",
+                "afternoon"
+            ],
+            "description": "A diverse collection of books with lots of options from Canadian and Indigenous voices. A friendly vibe",
+            "crossStreet": "E Hastings St",
+            "coords": {
+                "y": 251
+            },
+            "lat": 49.2813108,
+            "lng": -123.0501772,
+            "googlePlaceId": "ChIJ-_qqS49xhlQRKRgCDR-xKeE",
+            "placeholderColor": "df4e90",
+            "_googleTypes": [
+                "book_store",
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "_review": [
+                "walkFromStation"
+            ],
+            "walkFromStation": 0
         }
     ]
 }

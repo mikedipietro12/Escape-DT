@@ -457,6 +457,30 @@
     </div>
   </div>
 
+  <div id="add-overlay" class="wizard-overlay" hidden>
+    <div class="wizard" role="dialog" aria-modal="true" aria-labelledby="add-title">
+      <div class="wizard-head">
+        <div>
+          <div class="wizard-place" id="add-title">Add stop</div>
+          <div class="wizard-progress">Name + Google Maps link — we'll fill in the rest</div>
+        </div>
+        <button type="button" class="wiz-close" id="add-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="wizard-body">
+        <label class="wiz-label" for="add-name">Name</label>
+        <input type="text" id="add-name" placeholder="Business name" autocomplete="off">
+        <label class="wiz-label" for="add-maps" style="margin-top:1rem;">Google Maps link</label>
+        <input type="text" id="add-maps" placeholder="https://www.google.com/maps/place/..." autocomplete="off">
+        <p class="hint" style="margin:0.5rem 0 0;font-size:0.78rem;color:var(--muted);">Paste the full URL from Google Maps (not a short link). We'll look up categories, cost, cross street, walk time, and more.</p>
+      </div>
+      <div class="wizard-foot">
+        <button type="button" id="add-cancel" class="ghost">Cancel</button>
+        <span style="flex:1"></span>
+        <button type="button" id="add-submit" class="primary">Add stop</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast"></div>
 
   <script>
@@ -1618,50 +1642,60 @@
     }
 
     // ---------- add new ----------
-    // Random but pleasant placeholder color (mid lightness/saturation), as 6-char hex.
-    // Avoids near-duplicates of colors already in use.
-    function randomPlaceholderColor() {
-      const used = new Set(
-        state.stops.map((s) => String(s.placeholderColor || "").toLowerCase()).filter(Boolean)
-      );
-      const hslToHex = (h, s, l) => {
-        const a = s * Math.min(l, 1 - l);
-        const f = (n) => {
-          const k = (n + h / 30) % 12;
-          const c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
-          return Math.round(255 * c).toString(16).padStart(2, "0");
-        };
-        return f(0) + f(8) + f(4);
-      };
-      let hex = "cccccc";
-      for (let i = 0; i < 12; i++) {
-        const h = Math.floor(Math.random() * 360);
-        const s = 0.45 + Math.random() * 0.25; // 45–70%
-        const l = 0.55 + Math.random() * 0.2;  // 55–75%
-        hex = hslToHex(h, s, l);
-        if (!used.has(hex)) break;
-      }
-      return hex;
-    }
-
     async function addNewStop() {
       if (!(await leaveCurrentStop())) return;
-      const id = state.refs.nextId || "s1";
-      const blank = {
-        id, slug: "", name: "", categories: [], tags: [],
-        neighborhood: "commercial", cost: "", timeOfDay: [],
-        description: "", crossStreet: "", walkFromStation: 0,
-        coords: { y: 300 }, placeholderColor: randomPlaceholderColor(),
-        _source: "stops", _isNew: true,
-      };
-      // don't push into state.stops until saved; just populate
-      state.selectedId = id;
-      populateForm(blank);
-      setDirty(false);
-      // bump nextId locally so a second add doesn't collide before reload
-      const n = /^s(\d+)$/.exec(id);
-      if (n) state.refs.nextId = "s" + (Number(n[1]) + 1);
-      toast("New stop " + id + " — fill in and Save");
+      openAddDialog();
+    }
+
+    function openAddDialog() {
+      $("#add-name").value = "";
+      $("#add-maps").value = "";
+      $("#add-submit").disabled = false;
+      $("#add-submit").textContent = "Add stop";
+      $("#add-overlay").hidden = false;
+      $("#add-name").focus();
+    }
+
+    function closeAddDialog() {
+      $("#add-overlay").hidden = true;
+    }
+
+    async function submitAddStop() {
+      const name = $("#add-name").value.trim();
+      const mapsUrl = $("#add-maps").value.trim();
+      if (!name) { toast("Enter a name", true); return; }
+      if (!mapsUrl) { toast("Paste a Google Maps link", true); return; }
+      if (/goo\.gl|maps\.app\.goo\.gl/i.test(mapsUrl)) {
+        toast("Short links can't be read — open in Maps and copy the full URL", true);
+        return;
+      }
+      if (!parseLatLngFromMapsLink(mapsUrl)) {
+        toast("Couldn't find coordinates in that link — use the full maps.google.com URL", true);
+        return;
+      }
+
+      const neighborhood = $("#filter-neighborhood").value || "commercial";
+      const btn = $("#add-submit");
+      btn.disabled = true;
+      btn.textContent = "Adding…";
+      try {
+        const res = await fetch("/api/enrich-stop", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, mapsUrl, neighborhood }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Add failed");
+        closeAddDialog();
+        state.selectedId = data.id;
+        await load();
+        toast(`Added ${data.name} (${data.id}) — review fields on the right`);
+      } catch (err) {
+        toast(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Add stop";
+      }
     }
 
     // ---------- load ----------
@@ -1800,6 +1834,19 @@
     $("#filter-needs-photos").addEventListener("change", renderList);
     $("#fill-run").addEventListener("click", startFillRun);
     $("#add-new").addEventListener("click", addNewStop);
+    $("#add-close").addEventListener("click", closeAddDialog);
+    $("#add-cancel").addEventListener("click", closeAddDialog);
+    $("#add-submit").addEventListener("click", submitAddStop);
+    $("#add-overlay").addEventListener("click", (e) => { if (e.target.id === "add-overlay") closeAddDialog(); });
+    $("#add-maps").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); submitAddStop(); }
+    });
+    $("#add-name").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); $("#add-maps").focus(); }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (!$("#add-overlay").hidden && e.key === "Escape") closeAddDialog();
+    });
     $("#nav-prev").addEventListener("click", () => navigateStop(-1));
     $("#nav-next").addEventListener("click", () => navigateStop(1));
 

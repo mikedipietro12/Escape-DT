@@ -11,7 +11,8 @@
       ],
       "tags": [
         "baked goods",
-        "books"
+        "books",
+        "grab and go"
       ],
       "neighborhood": "hastings-sunrise",
       "cost": "$",
@@ -21,7 +22,6 @@
       ],
       "description": "Cute little cafe on Hastings to get a quick snack and a coffee before heading down to see what else this neighborhood has in store.",
       "crossStreet": "E Hastings St & Semlin",
-      "walkFromStation": 40,
       "coords": {
         "y": 258
       },
@@ -35,7 +35,14 @@
         "food",
         "establishment"
       ],
-      "goto": "A coffee and a couple moffins."
+      "goto": "A coffee and a couple moffins.",
+      "images": [
+        "assets/stops/yama-cafe.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 29
+      }
     },
     {
       "id": "s47",
@@ -57,7 +64,6 @@
       ],
       "description": "Pallet is a local roaster with a stellar line-up. They always have great offerings and the patio is a nice place to stop before heading further into the neighborhood.",
       "crossStreet": "Semlin Dr & Hastings",
-      "walkFromStation": 40,
       "coords": {
         "y": 256
       },
@@ -71,7 +77,10 @@
         "food",
         "establishment"
       ],
-      "goto": "Some of the best roasts in the city."
+      "goto": "Some of the best roasts in the city.",
+      "images": [
+        "assets/stops/pallet-coffee-roasters-semlin-drive.jpg"
+      ]
     },
     {
       "id": "s48",
@@ -256,9 +265,8 @@
         "morning",
         "afternoon"
       ],
-      "description": "Describing themselves as a \"true third place\", the East Cafe prides themselves on being a welcoming, grounding, and creative place to hang out in the neighborhood. ",
+      "description": "Describing themselves as a \"true third place\", the East Cafe prides themselves on being a welcoming, grounding, and creative place to hang out in the neighborhood.",
       "crossStreet": "E Hastings St & Nanaimo",
-      "walkFromStation": 0,
       "coords": {
         "y": 259
       },
@@ -278,7 +286,14 @@
         "point_of_interest",
         "establishment"
       ],
-      "goto": "Coffee and check out the art."
+      "goto": "Coffee and check out the art.",
+      "images": [
+        "assets/stops/east-cafe.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 34
+      }
     },
     {
       "id": "s53",
@@ -301,7 +316,6 @@
       ],
       "description": "A unique local bar that specializes in gin cocktails and charcuterie boards.",
       "crossStreet": "E Hastings St & Kamloops",
-      "walkFromStation": 0,
       "coords": {
         "y": 258
       },
@@ -316,7 +330,10 @@
         "point_of_interest",
         "establishment"
       ],
-      "goto": "Dirty gin martini and a couple of snacks."
+      "goto": "Dirty gin martini and a couple of snacks.",
+      "images": [
+        "assets/stops/blind-rabbit.jpg"
+      ]
     },
     {
       "id": "s54",
@@ -339,7 +356,6 @@
       ],
       "description": "Authentic Palestinian food with amazing flavors. Lots of veggie and meat options on the menu to satisfy any needs.",
       "crossStreet": "E Hastings St & Penticton",
-      "walkFromStation": 0,
       "coords": {
         "y": 260
       },
@@ -355,7 +371,14 @@
         "point_of_interest",
         "establishment"
       ],
-      "goto": "Lam roast with mujaddarah."
+      "goto": "Lam roast with mujaddarah.",
+      "images": [
+        "assets/stops/tamam-fine-palestinian-cuisine.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 39
+      }
     },
     {
       "id": "s55",
@@ -377,7 +400,6 @@
       ],
       "description": "One of many Tacofino locations, the commissary offers some of the usual Tacofino options with a few local specific options as well.",
       "crossStreet": "E Hastings St & Garden dr",
-      "walkFromStation": 0,
       "coords": {
         "y": 259
       },
@@ -393,7 +415,11 @@
         "food",
         "establishment"
       ],
-      "goto": "Love taking advantage of the burrito-to-bowl option when I am dining in."
+      "goto": "Love taking advantage of the burrito-to-bowl option when I am dining in.",
+      "images": [
+        "assets/stops/tacofino-commissary.jpg",
+        "assets/stops/tacofino-commissary-2.jpg"
+      ]
     },
     {
       "id": "s56",
@@ -473,7 +499,10 @@
         "point_of_interest",
         "establishment"
       ],
-      "goto": "It's okay bar mix, pickles, and a pina colada."
+      "goto": "It's okay bar mix, pickles, and a pina colada.",
+      "images": [
+        "assets/stops/it-s-okay.jpg"
+      ]
     },
     {
       "id": "s58",
@@ -557,7 +586,14 @@
         "food",
         "establishment"
       ],
-      "goto": ""
+      "images": [
+        "assets/stops/dachi-restaurant-and-natural-wine.jpg",
+        "assets/stops/dachi-restaurant-and-natural-wine-2.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 34
+      }
     },
     {
       "id": "s60",
@@ -570,7 +606,8 @@
       "tags": [
         "cookies",
         "coffee",
-        "baked goods"
+        "baked goods",
+        "patio"
       ],
       "neighborhood": "hastings-sunrise",
       "cost": "$$",
@@ -599,7 +636,14 @@
         "store",
         "establishment"
       ],
-      "goto": "Muffin and a coffee."
+      "goto": "Muffin and a coffee.",
+      "heroFocus": {
+        "x": 46,
+        "y": 89
+      },
+      "images": [
+        "assets/stops/doe-coffee-roasters-6.jpg"
+      ]
     },
     {
       "id": "s61",
@@ -638,7 +682,9 @@
         "food",
         "establishment"
       ],
-      "goto": ""
+      "images": [
+        "assets/stops/jackalopes-neighbourhood-dive.jpg"
+      ]
     },
     {
       "id": "s62",
@@ -674,7 +720,10 @@
         "food",
         "establishment"
       ],
-      "goto": "Tofu bahn-mi"
+      "goto": "Tofu bahn-mi",
+      "images": [
+        "assets/stops/obanhmi-2.jpg"
+      ]
     },
     {
       "id": "s63",
@@ -711,7 +760,15 @@
         "store",
         "establishment"
       ],
-      "goto": "blueberry!"
+      "goto": "blueberry!",
+      "images": [
+        "assets/stops/plain-jane-ice-cream-2.jpg",
+        "assets/stops/plain-jane-ice-cream.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 54
+      }
     }
   ]
 }

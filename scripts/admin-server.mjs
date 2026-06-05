@@ -11,6 +11,11 @@ import http from "http";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import {
+  appendStopToFile,
+  enrichStopFromInput,
+  loadEnvFromRoot,
+} from "./enrich-lib.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -393,6 +398,39 @@ function serveStatic(req, res, urlPath) {
   });
 }
 
+async function handleEnrichStop(req, res) {
+  let body;
+  try {
+    body = JSON.parse(await readBody(req));
+  } catch {
+    return sendJson(res, 400, { error: "Invalid JSON body" });
+  }
+
+  const name = String(body.name || "").trim();
+  const mapsUrl = String(body.mapsUrl || body.mapsLink || "").trim();
+  const neighborhood = String(body.neighborhood || "commercial").trim().toLowerCase();
+
+  loadEnvFromRoot(root);
+  const key = process.env.GOOGLE_MAPS_API_KEY;
+  if (!key || key === "your-key-here") {
+    return sendJson(res, 500, { error: "Missing GOOGLE_MAPS_API_KEY in .env" });
+  }
+
+  try {
+    const { stop } = await enrichStopFromInput({ title: name, mapsUrl, neighborhood, root, key });
+    const target = appendStopToFile(root, stop, neighborhood);
+    console.log(`enriched ${stop.id} "${stop.name}" -> ${target.rel}`);
+    sendJson(res, 200, {
+      ok: true,
+      id: stop.id,
+      name: stop.name,
+      source: DRAFT_BY_NEIGHBORHOOD[neighborhood]?.source || STOPS.source,
+    });
+  } catch (err) {
+    sendJson(res, 400, { error: err.message || "Enrich failed" });
+  }
+}
+
 const server = http.createServer(async (req, res) => {
   const parsedUrl = new URL(req.url || "/", `http://127.0.0.1:${port}`);
   const urlPath = parsedUrl.pathname;
@@ -417,6 +455,14 @@ const server = http.createServer(async (req, res) => {
   if (urlPath === "/api/upload" && req.method === "POST") {
     try {
       return await handleUpload(req, res, query);
+    } catch (err) {
+      return sendJson(res, 500, { error: err.message });
+    }
+  }
+
+  if (urlPath === "/api/enrich-stop" && req.method === "POST") {
+    try {
+      return await handleEnrichStop(req, res);
     } catch (err) {
       return sendJson(res, 500, { error: err.message });
     }
