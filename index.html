@@ -1813,9 +1813,23 @@
     /* Path 3: All Spots */
     #p3-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
       margin-bottom: 1rem;
+    }
+    @media (min-width: 600px) {
+      #p3-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+      }
+    }
+    @media (max-width: 599px) {
+      #p3-grid {
+        width: calc(100% + 3rem);
+        max-width: 100vw;
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+      }
     }
     .p3-empty-filters {
       grid-column: 1 / -1;
@@ -1837,13 +1851,20 @@
       background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
     }
     .p3-card.is-expanded {
-      grid-column: 1 / -1;
       background: #fff;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
-      cursor: pointer;
+      cursor: default;
       overflow: hidden;
       align-self: start;
       z-index: 1;
+    }
+    @media (min-width: 600px) {
+      .p3-card.is-expanded {
+        grid-column: 1 / -1;
+      }
+    }
+    .p3-card.is-expanded .p3-card__summary {
+      cursor: pointer;
     }
     .p3-card.is-in-route:not(.is-expanded) {
       background: rgba(255, 255, 255, 0.35);
@@ -1965,6 +1986,33 @@
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
+    }
+    .p3-collapse-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      width: 100%;
+      padding: 0.45rem 0.75rem;
+      border: none;
+      border-bottom: 1px solid var(--ink);
+      border-radius: 0;
+      background: rgba(255, 255, 255, 0.65);
+      color: var(--ink);
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .p3-collapse-btn:hover {
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+      color: var(--ink);
+    }
+    .p3-collapse-btn__icon {
+      font-size: 1rem;
+      line-height: 1;
     }
     .p3-card__gallery {
       position: relative;
@@ -6330,7 +6378,8 @@
       const routeBtnClass = inRoute ? "p3-route-btn is-added" : "p3-route-btn";
       const routeLabel = inRoute ? "On your route" : "Add to route";
       return `
-        <div class="p3-card__expand-panel">
+        <div class="p3-card__expand-panel" onclick="event.stopPropagation()">
+          <button type="button" class="p3-collapse-btn" aria-label="Minimize spot details" onclick="collapseP3Spot('${spot.id}')"><span class="p3-collapse-btn__icon" aria-hidden="true">−</span> Minimize</button>
           <div class="p3-card__gallery">${renderPhotoGallery(spot, `p3-${spot.id}`)}</div>
           <div class="p3-card__expand-body">
             <div class="tags">${renderP3Tags(spot)}</div>
@@ -6450,8 +6499,8 @@
           const expandedClass = expanded ? " is-expanded" : "";
           const routeClass = inRoute ? " is-in-route" : "";
           return `
-          <div class="p3-card${testClass}${expandedClass}${routeClass}" data-spot-id="${spot.id}" onclick="toggleP3Spot('${spot.id}')">
-            <div class="p3-card__summary">
+          <div class="p3-card${testClass}${expandedClass}${routeClass}" data-spot-id="${spot.id}"${expanded ? "" : ` onclick="toggleP3Spot('${spot.id}')"`}>
+            <div class="p3-card__summary"${expanded ? ` onclick="collapseP3Spot('${spot.id}')"` : ""}>
               <img class="p3-card__thumb" src="${spot.image}" alt="${escapeHtml(spot.name)}" loading="lazy"${heroFocusStyleAttr(spot)}>
               <div class="p3-card__body">
                 ${renderP3AddBtn(spot)}
@@ -6481,6 +6530,13 @@
           card?.scrollIntoView({ behavior: "smooth", block: "nearest" });
         });
       }
+    }
+
+    function collapseP3Spot(id) {
+      if (state.expandedSpotId !== id) return;
+      closeP3PhotoLightbox();
+      state.expandedSpotId = null;
+      renderP3();
     }
 
     function openSpotInMaps(lat, lng) {

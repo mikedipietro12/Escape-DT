@@ -6,6 +6,10 @@
 >
 > Enrich tooling: `npm run enrich -- <csv> --neighborhood hastings-sunrise` (Google Places key in `.env`). `hastings-sunrise` is already a valid id in `data/neighborhoods.json`.
 
+> **Roadmap / not yet built — Mount Pleasant (Main Street).** Staging works like Hastings: draft file only (`data/mount-pleasant-draft.json`), **not** in `data/stops.json` until you open the area in the app. When you ship it, use the **vertical** route map (same model as Commercial Drive), not the Hastings horizontal map. SkyTrain anchor: **Main Street–Science World** (`station` on `mount-pleasant` in `data/neighborhoods.json`). Enrich fills walking minutes from that station via Google Directions (needs Directions API on the same key as Places).
+>
+> Enrich: `npm run enrich -- <list.txt> --neighborhood mount-pleasant --write` or the admin editor (`npm run admin`). Off–Main Street stops: say so when you add them (cross street / `coords.x` — same idea as Victoria off Commercial; see **Main Street (off-spine)** below).
+
 **Source of truth:** `data/stops.json` (not inline data in `index.html`).
 
 **Photos (optional at add time):** Stops appear on the site without photos. Until files exist, **omit** `images` / `image` and set `placeholderColor` (6-char hex, no `#`). When photos are ready, save under `assets/stops/<slug>.jpg` (hero), optional `<slug>-2.jpg`, `<slug>-3.jpg`, … and reference in JSON as `"images": ["assets/stops/<slug>.jpg", ...]`. A lone `"image"` path still works (treated as a one-item gallery). Keep `slug` stable so filenames match later.
@@ -112,7 +116,15 @@ When you add stops outside Commercial Drive, set `neighborhood` to one of these 
 
 Draft neighborhoods are staged in their own `data/<id>-draft.json` file (not loaded by the live app). Enrich them straight from a list of place names: `npm run enrich -- <list.txt> --neighborhood <id> --write`.
 
-**SkyTrain distance:** `data/neighborhoods.json` may set `"usesSkytrainStation": false` (Hastings-Sunrise does). Those stops **omit** `walkFromStation`; the admin editor hides the field and the live app must not show “min from Commercial-Broadway Skytrain” on cards or use station-based route start/end when that area ships. Commercial Drive keeps `walkFromStation` and station anchors.
+**SkyTrain distance:** `data/neighborhoods.json` may set `"usesSkytrainStation": false` (Hastings-Sunrise does). Those stops **omit** `walkFromStation`; the admin editor hides the field and the live app must not show SkyTrain walk minutes on cards or use station-based route start/end when that area ships. **Commercial Drive** and **Mount Pleasant** use `walkFromStation` (Commercial: `station` in `data/stops.json`; Mount Pleasant: `neighborhoods.mount-pleasant.station`). `npm run enrich` computes walk minutes via Google Directions when the neighborhood uses SkyTrain.
+
+**Mount Pleasant enrich (draft):**
+
+```bash
+npm run enrich -- my-main-street-list.txt --neighborhood mount-pleasant --write
+```
+
+One place name per line (or a Google Takeout CSV). Dry run omits `--write` → `data/_enriched-preview.json`. Then `npm run admin` → filter **Mount Pleasant** / **Needs info** for descriptions, tags, cross streets, photos.
 
 **Validation:** run `npm run test:data` to verify every stop’s `neighborhood` is in `data/neighborhoods.json`.
 
@@ -219,6 +231,20 @@ Spots on **Victoria Street** (east of Commercial Drive) still use `neighborhood:
 | `coords.x` | Optional override (`~175`). Omit if `crossStreet` already contains `Victoria` — the app detects it and draws the stop east of the centerline. |
 
 **Illustrated route map:** legs to or from Victoria use an **L-shape** — travel north/south on the Commercial spine (`MAP.xCenter`), then a **90° turn east** onto Victoria (or west back to the spine when leaving). Victoria-to-Victoria legs stay on the east column. Walk distances still come from real `lat`/`lng`.
+
+### Main Street (off-spine) — Mount Pleasant draft
+
+Spots on **Main Street** use `neighborhood: "mount-pleasant"`. Side-street or parallel-avenue locations (not on the Main spine) should be called out when you add them — same pattern as Victoria off Commercial:
+
+| Field | Off–Main stops |
+|--------|----------------|
+| `crossStreet` | Name the **side street or avenue** clearly (e.g. `Ontario & 7th`, `Kingsway & Main`). Tell the agent which direction off Main (east/west) when ambiguous. |
+| `lat`, `lng` | Pin on the actual storefront from your Maps link. |
+| `walkFromStation` | From **Main Street–Science World** (enrich computes via Directions, or set in admin). |
+| `coords.x` | Optional east/west offset from the Main spine when the live vertical map ships (Commercial uses `~175` east; Mount Pleasant conventions TBD when the first off-spine stops land). |
+| `coords.y` | Browse sort by latitude band among Mount Pleasant peers in the draft file. |
+
+**Route map (when live):** vertical spine on Main, with L-shaped legs to off-spine stops (mirror Commercial + Victoria). Not built until Mount Pleasant opens in the app.
 
 ---
 

@@ -21,7 +21,12 @@
     "mount-pleasant": {
       "id": "mount-pleasant",
       "title": "Mount Pleasant",
-      "aliases": ["mount pleasant", "mt pleasant", "main street", "main st", "main"]
+      "aliases": ["mount pleasant", "mt pleasant", "main street", "main st", "main"],
+      "station": {
+        "name": "Main Street–Science World Station",
+        "lat": 49.273056,
+        "lng": -123.100278
+      }
     },
     "chinatown": {
       "id": "chinatown",

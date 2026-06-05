@@ -1,4 +1,1604 @@
 {
-  "_note": "DRAFT, not loaded by the app. Mount Pleasant stops are staged here so they stay out of the live app until multi-area filtering / the horizontal route map ships. Add stops with `npm run enrich -- <list> --neighborhood mount-pleasant --write` (a plain list of place names works — no CSV needed) or the admin editor (npm run admin). Pending per stop: descriptions, photos, real cross streets, category/cost review (see _review per stop). See AGENTS.md roadmap.",
-  "stops": []
+  "_note": "DRAFT, not loaded by the app. 39 Mount Pleasant / Main Street stops (s70–s108). Geocoded via enrich + user Maps pins. Walk minutes estimated from Main Street–Science World (enable Routes/Directions API on enrich for Google walking times). West-of-Main stops use coords.x 125. Pending: descriptions, photos, cross street fine-tuning (_review). See AGENTS.md.",
+  "stops": [
+    {
+      "id": "s70",
+      "slug": "the-narrow-lounge",
+      "name": "The Narrow Lounge",
+      "categories": [
+        "drinks",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 3rd Ave",
+      "coords": {
+        "y": 341
+      },
+      "lat": 49.268354,
+      "lng": -123.1004118,
+      "googlePlaceId": "ChIJNVqaO3FxhlQRFZhv3GFvcbc",
+      "placeholderColor": "6bd0c5",
+      "_googleTypes": [
+        "cocktail_bar",
+        "lounge_bar",
+        "bar",
+        "night_club",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 8
+    },
+    {
+      "id": "s71",
+      "slug": "antisocial-skateboard-shop",
+      "name": "Antisocial Skateboard Shop",
+      "categories": [
+        "shopping",
+        "hangout"
+      ],
+      "tags": [
+        "activities"
+      ],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 2nd Ave",
+      "coords": {
+        "y": 345
+      },
+      "lat": 49.2677111,
+      "lng": -123.1009882,
+      "googlePlaceId": "ChIJkdLgKuBzhlQR3e8TF3ym5V4",
+      "placeholderColor": "7c8485",
+      "_googleTypes": [
+        "sporting_goods_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s72",
+      "slug": "fife-bakery",
+      "name": "Fife Bakery",
+      "categories": [
+        "coffee",
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "Quebec St & W 4th Ave",
+      "coords": {
+        "y": 342,
+        "x": 125
+      },
+      "lat": 49.2681578,
+      "lng": -123.1032231,
+      "googlePlaceId": "ChIJS0M8R2BxhlQRuIJvBcZPpwY",
+      "placeholderColor": "5f10ae",
+      "_googleTypes": [
+        "bakery",
+        "sandwich_shop",
+        "coffee_shop",
+        "cafe",
+        "food_store",
+        "store",
+        "restaurant",
+        "food",
+        "manufacturer",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 9
+    },
+    {
+      "id": "s73",
+      "slug": "earnest-ice-cream-quebec-st",
+      "name": "Earnest Ice Cream | Quebec St.",
+      "categories": [
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Quebec St & W 4th Ave",
+      "coords": {
+        "y": 338,
+        "x": 125
+      },
+      "lat": 49.2688082,
+      "lng": -123.1029334,
+      "googlePlaceId": "ChIJv1NxVGBxhlQRT1bpKNwx78A",
+      "placeholderColor": "afa9c0",
+      "_googleTypes": [
+        "ice_cream_shop",
+        "dessert_shop",
+        "confectionery",
+        "food_store",
+        "food",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 8
+    },
+    {
+      "id": "s74",
+      "slug": "glory-juice-co",
+      "name": "Glory Juice Co.",
+      "categories": [
+        "coffee",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "Quebec St & W 5th Ave",
+      "coords": {
+        "y": 337,
+        "x": 125
+      },
+      "lat": 49.2690157,
+      "lng": -123.1029898,
+      "googlePlaceId": "ChIJz_CrVGBxhlQRQAiUcIwd3gU",
+      "placeholderColor": "ed31cd",
+      "_googleTypes": [
+        "juice_shop",
+        "cafe",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 8
+    },
+    {
+      "id": "s75",
+      "slug": "purebread-bakery-coffee",
+      "name": "Purebread Bakery + Coffee",
+      "categories": [
+        "coffee",
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "Main St & W 7th Ave",
+      "coords": {
+        "y": 352,
+        "x": 125
+      },
+      "lat": 49.2665959,
+      "lng": -123.104535,
+      "googlePlaceId": "ChIJ_cxSZaNzhlQRYw-i4MnRALg",
+      "placeholderColor": "de37e2",
+      "_googleTypes": [
+        "bakery",
+        "coffee_shop",
+        "sandwich_shop",
+        "cafe",
+        "food_store",
+        "store",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 13
+    },
+    {
+      "id": "s76",
+      "slug": "mount-pleasant-vintage",
+      "name": "Mount Pleasant Vintage",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [
+        "vintage"
+      ],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & W 8th Ave",
+      "coords": {
+        "y": 357,
+        "x": 125
+      },
+      "lat": 49.2657766,
+      "lng": -123.1060929,
+      "googlePlaceId": "ChIJn_qdRm5zhlQRamWJg_sp4Qk",
+      "placeholderColor": "d43830",
+      "_googleTypes": [
+        "cocktail_bar",
+        "bar",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 15
+    },
+    {
+      "id": "s77",
+      "slug": "tacofino-ocho",
+      "name": "Tacofino Ocho",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Prince Albert St & W 7th Ave",
+      "coords": {
+        "y": 353,
+        "x": 125
+      },
+      "lat": 49.2663117,
+      "lng": -123.1044369,
+      "googlePlaceId": "ChIJE3nuJxpzhlQRYFKAJ9Sv09I",
+      "placeholderColor": "462168",
+      "_googleTypes": [
+        "burrito_restaurant",
+        "taco_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 13
+    },
+    {
+      "id": "s78",
+      "slug": "jonathan-rogers-park",
+      "name": "Jonathan Rogers Park",
+      "categories": [
+        "hangout"
+      ],
+      "tags": [
+        "park"
+      ],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "7th Ave & Columbia St",
+      "coords": {
+        "y": 366,
+        "x": 125
+      },
+      "lat": 49.2642717,
+      "lng": -123.1079662,
+      "googlePlaceId": "ChIJuxe5nuBzhlQRGzxeBtLX_90",
+      "placeholderColor": "48b255",
+      "_googleTypes": [
+        "park",
+        "tourist_attraction",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 18
+    },
+    {
+      "id": "s79",
+      "slug": "33-acres-brewing-company",
+      "name": "33 Acres Brewing Company",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "8th Ave & Ontario St",
+      "coords": {
+        "y": 368,
+        "x": 125
+      },
+      "lat": 49.2639299,
+      "lng": -123.1053388,
+      "googlePlaceId": "ChIJ8-9z9eBzhlQRrFZDlPTIfTw",
+      "placeholderColor": "e82656",
+      "_googleTypes": [
+        "brewery",
+        "food",
+        "manufacturer",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 17
+    },
+    {
+      "id": "s80",
+      "slug": "the-federal-store-luncheonette-and-grocer",
+      "name": "The Federal Store Luncheonette & Grocer",
+      "categories": [
+        "coffee",
+        "food",
+        "groceries"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "Quebec St & E 10th Ave",
+      "coords": {
+        "y": 381,
+        "x": 125
+      },
+      "lat": 49.2619028,
+      "lng": -123.1032786,
+      "googlePlaceId": "ChIJrZUaoOFzhlQRm9cwZS-mgso",
+      "placeholderColor": "f90731",
+      "_googleTypes": [
+        "cafe",
+        "grocery_store",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 20
+    },
+    {
+      "id": "s81",
+      "slug": "superbaba-vancouver",
+      "name": "Superbaba (Vancouver)",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 6th Ave",
+      "coords": {
+        "y": 372
+      },
+      "lat": 49.2633297,
+      "lng": -123.1012681,
+      "googlePlaceId": "ChIJT1nDEj1xhlQRL7VuTAnsxeI",
+      "placeholderColor": "455c32",
+      "_googleTypes": [
+        "middle_eastern_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 18
+    },
+    {
+      "id": "s82",
+      "slug": "fox-cabaret",
+      "name": "Fox Cabaret",
+      "categories": [
+        "drinks"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 6th Ave",
+      "coords": {
+        "y": 366
+      },
+      "lat": 49.2642425,
+      "lng": -123.1011679,
+      "googlePlaceId": "ChIJsygUKuBzhlQRLe0daKOSVgI",
+      "placeholderColor": "80772d",
+      "_googleTypes": [
+        "bar",
+        "cocktail_bar",
+        "live_music_venue",
+        "event_venue",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 16
+    },
+    {
+      "id": "s83",
+      "slug": "brassneck-brewery",
+      "name": "Brassneck Brewery",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 7th Ave",
+      "coords": {
+        "y": 357
+      },
+      "lat": 49.2657712,
+      "lng": -123.1006185,
+      "googlePlaceId": "ChIJh5IG619xhlQRC2qFug3XR8Y",
+      "placeholderColor": "23a4ed",
+      "_googleTypes": [
+        "brewery",
+        "food",
+        "manufacturer",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 13
+    },
+    {
+      "id": "s84",
+      "slug": "cultivate-tea",
+      "name": "Cultivate Tea",
+      "categories": [
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 6th Ave",
+      "coords": {
+        "y": 362
+      },
+      "lat": 49.2648816,
+      "lng": -123.1006318,
+      "googlePlaceId": "ChIJ9Y6fAftzhlQRo8-W9qXmo18",
+      "placeholderColor": "227af8",
+      "_googleTypes": [
+        "tea_store",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 15
+    },
+    {
+      "id": "s85",
+      "slug": "como-taperia",
+      "name": "Como Taperia",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 6th Ave",
+      "coords": {
+        "y": 363
+      },
+      "lat": 49.2647426,
+      "lng": -123.1006331,
+      "googlePlaceId": "ChIJQ5f_MMBxhlQR9R17HcWGvUA",
+      "placeholderColor": "c1b9b8",
+      "_googleTypes": [
+        "spanish_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 15
+    },
+    {
+      "id": "s86",
+      "slug": "budgies-burritos",
+      "name": "Budgies Burritos",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 5th Ave",
+      "coords": {
+        "y": 370
+      },
+      "lat": 49.2636343,
+      "lng": -123.1005453,
+      "googlePlaceId": "ChIJDQS71-FzhlQR1SNZ80yIhu8",
+      "placeholderColor": "e08293",
+      "_googleTypes": [
+        "vegetarian_restaurant",
+        "fast_food_restaurant",
+        "mexican_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 17
+    },
+    {
+      "id": "s87",
+      "slug": "f-as-in-frank-vintage-clothing",
+      "name": "F as in Frank Vintage Clothing",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [
+        "vintage"
+      ],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 5th Ave",
+      "coords": {
+        "y": 372
+      },
+      "lat": 49.2632927,
+      "lng": -123.1012092,
+      "googlePlaceId": "ChIJ1UtZxOFzhlQRP1GDO8f7uaE",
+      "placeholderColor": "f011ae",
+      "_googleTypes": [
+        "clothing_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 18
+    },
+    {
+      "id": "s88",
+      "slug": "glorydays-fine-goods",
+      "name": "Glorydays Fine Goods",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [
+        "vintage"
+      ],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 4th Ave",
+      "coords": {
+        "y": 379
+      },
+      "lat": 49.2621975,
+      "lng": -123.1013598,
+      "googlePlaceId": "ChIJ29r2s4NzhlQRTPtz48mp9Fk",
+      "placeholderColor": "c1c984",
+      "_googleTypes": [
+        "clothing_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 20
+    },
+    {
+      "id": "s89",
+      "slug": "rath-art-supplies",
+      "name": "Rath Art Supplies",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 5th Ave",
+      "coords": {
+        "y": 370
+      },
+      "lat": 49.263701,
+      "lng": -123.100743,
+      "googlePlaceId": "ChIJNTqB1uFzhlQREAQOfv440gw",
+      "placeholderColor": "edf2d0",
+      "_googleTypes": [
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 17
+    },
+    {
+      "id": "s90",
+      "slug": "gene-coffee-bar",
+      "name": "Gene Coffee Bar",
+      "categories": [
+        "coffee",
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 5th Ave",
+      "coords": {
+        "y": 369
+      },
+      "lat": 49.2638868,
+      "lng": -123.1007084,
+      "googlePlaceId": "ChIJfTyu1uFzhlQR5V787m68YiY",
+      "placeholderColor": "259081",
+      "_googleTypes": [
+        "coffee_shop",
+        "cafe",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 17
+    },
+    {
+      "id": "s91",
+      "slug": "the-corner-store",
+      "name": "The Corner Store",
+      "categories": [
+        "drinks",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 10th Ave",
+      "coords": {
+        "y": 381
+      },
+      "lat": 49.2618551,
+      "lng": -123.1012722,
+      "googlePlaceId": "ChIJBxLEkeFzhlQRr4VNKay9el8",
+      "placeholderColor": "ea865f",
+      "_googleTypes": [
+        "clothing_store",
+        "shoe_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 20
+    },
+    {
+      "id": "s92",
+      "slug": "tocador",
+      "name": "Tocador",
+      "categories": [
+        "drinks",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 10th Ave",
+      "coords": {
+        "y": 381
+      },
+      "lat": 49.2618242,
+      "lng": -123.1008102,
+      "googlePlaceId": "ChIJQyTlBnpxhlQRLMp85jVQHUQ",
+      "placeholderColor": "2b9367",
+      "_googleTypes": [
+        "restaurant",
+        "wine_bar",
+        "latin_american_restaurant",
+        "cocktail_bar",
+        "bar",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 20
+    },
+    {
+      "id": "s93",
+      "slug": "afuri-ramen-vancouver",
+      "name": "Afuri Ramen Vancouver",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 12th Ave",
+      "coords": {
+        "y": 392
+      },
+      "lat": 49.2600837,
+      "lng": -123.1013162,
+      "googlePlaceId": "ChIJDbG7_91zhlQRs9w84ZuJL4k",
+      "placeholderColor": "55283c",
+      "_googleTypes": [
+        "ramen_restaurant",
+        "asian_fusion_restaurant",
+        "asian_restaurant",
+        "fusion_restaurant",
+        "japanese_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 23
+    },
+    {
+      "id": "s94",
+      "slug": "onigiri-ya-at-maruhachi-gaiden",
+      "name": "ONIGIRI YA at Maruhachi GAIDEN",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 12th Ave",
+      "coords": {
+        "y": 395
+      },
+      "lat": 49.2595683,
+      "lng": -123.1008777,
+      "googlePlaceId": "ChIJ7ccQt-NzhlQRmDlk44jNPfA",
+      "placeholderColor": "4c81f0",
+      "_googleTypes": [
+        "japanese_restaurant",
+        "ramen_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 24
+    },
+    {
+      "id": "s95",
+      "slug": "49th-parallel-cafe-and-lucky-s-doughnuts-main-street",
+      "name": "49th Parallel Café & Lucky's Doughnuts",
+      "categories": [
+        "coffee",
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 13th Ave",
+      "coords": {
+        "y": 398
+      },
+      "lat": 49.2591539,
+      "lng": -123.1007927,
+      "googlePlaceId": "ChIJL7wlu-NzhlQR_WJtTl2Njvw",
+      "placeholderColor": "5764d2",
+      "_googleTypes": [
+        "cafe",
+        "donut_shop",
+        "coffee_shop",
+        "bakery",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 25
+    },
+    {
+      "id": "s96",
+      "slug": "burgoo",
+      "name": "Burgoo",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 14th Ave",
+      "coords": {
+        "y": 407
+      },
+      "lat": 49.2576533,
+      "lng": -123.1008875,
+      "googlePlaceId": "ChIJPddQZeNzhlQRVbraHJJvZog",
+      "placeholderColor": "048e74",
+      "_googleTypes": [
+        "bistro",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 28
+    },
+    {
+      "id": "s97",
+      "slug": "urban-source",
+      "name": "Urban Source",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 15th Ave",
+      "coords": {
+        "y": 411
+      },
+      "lat": 49.2570016,
+      "lng": -123.1009454,
+      "googlePlaceId": "ChIJo1H5YONzhlQRkaV0MNyA7hM",
+      "placeholderColor": "45965b",
+      "_googleTypes": [
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 29
+    },
+    {
+      "id": "s98",
+      "slug": "toshi-sushi",
+      "name": "Toshi Sushi",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Kingsway & Main St",
+      "coords": {
+        "y": 413,
+        "x": 125
+      },
+      "lat": 49.2566985,
+      "lng": -123.1018776,
+      "googlePlaceId": "ChIJffOLmORzhlQRaWgo3PaVM40",
+      "placeholderColor": "007be8",
+      "_googleTypes": [
+        "sushi_restaurant",
+        "meal_takeaway",
+        "japanese_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 30
+    },
+    {
+      "id": "s99",
+      "slug": "mount-pleasant-park",
+      "name": "Mount Pleasant Park",
+      "categories": [
+        "hangout"
+      ],
+      "tags": [
+        "park"
+      ],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 15th Ave",
+      "coords": {
+        "y": 411,
+        "x": 125
+      },
+      "lat": 49.2570843,
+      "lng": -123.106015,
+      "googlePlaceId": "ChIJ2-nGU-RzhlQRg10wKBoIhv4",
+      "placeholderColor": "47ee0d",
+      "_googleTypes": [
+        "park",
+        "tourist_attraction",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 30
+    },
+    {
+      "id": "s100",
+      "slug": "sushi-hil",
+      "name": "Sushi Hil",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 16th Ave",
+      "coords": {
+        "y": 422
+      },
+      "lat": 49.2553441,
+      "lng": -123.1010342,
+      "googlePlaceId": "ChIJo5hdQuxzhlQRROJTbS8F5f8",
+      "placeholderColor": "9ab02b",
+      "_googleTypes": [
+        "japanese_restaurant",
+        "sushi_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 32
+    },
+    {
+      "id": "s101",
+      "slug": "the-granville-island-toy-company",
+      "name": "The Granville Island Toy Company",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 16th Ave",
+      "coords": {
+        "y": 419
+      },
+      "lat": 49.2557949,
+      "lng": -123.1010234,
+      "googlePlaceId": "ChIJN3KM5c5zhlQRhGfOtudgPFo",
+      "placeholderColor": "5808b4",
+      "_googleTypes": [
+        "toy_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 31
+    },
+    {
+      "id": "s102",
+      "slug": "anh-and-chi",
+      "name": "Anh and Chi",
+      "categories": [
+        "drinks",
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 17th Ave",
+      "coords": {
+        "y": 424
+      },
+      "lat": 49.2549852,
+      "lng": -123.1008596,
+      "googlePlaceId": "ChIJI-wfSftzhlQRtHIGkGtqS2k",
+      "placeholderColor": "515c86",
+      "_googleTypes": [
+        "vietnamese_restaurant",
+        "asian_restaurant",
+        "cocktail_bar",
+        "bar",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 33
+    },
+    {
+      "id": "s103",
+      "slug": "good-thief",
+      "name": "Good Thief",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 16th Ave",
+      "coords": {
+        "y": 422
+      },
+      "lat": 49.2552728,
+      "lng": -123.1009841,
+      "googlePlaceId": "ChIJaQ9pTPtzhlQREJNkmxQp5-0",
+      "placeholderColor": "278d44",
+      "_googleTypes": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 32
+    },
+    {
+      "id": "s104",
+      "slug": "suyo-modern-peruvian",
+      "name": "SUYO Modern Peruvian",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 17th Ave",
+      "coords": {
+        "y": 430
+      },
+      "lat": 49.2540235,
+      "lng": -123.1010613,
+      "googlePlaceId": "ChIJ3efTtO5zhlQRQIv3wHdHaiY",
+      "placeholderColor": "5bf51b",
+      "_googleTypes": [
+        "peruvian_restaurant",
+        "fine_dining_restaurant",
+        "latin_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 34
+    },
+    {
+      "id": "s105",
+      "slug": "welk-s",
+      "name": "Welk's",
+      "categories": [
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 18th Ave",
+      "coords": {
+        "y": 433
+      },
+      "lat": 49.2535264,
+      "lng": -123.1011764,
+      "googlePlaceId": "ChIJ88sVG_tzhlQRSUY-AxdW5Qk",
+      "placeholderColor": "4e3258",
+      "_googleTypes": [
+        "general_store",
+        "health_food_store",
+        "toy_store",
+        "clothing_store",
+        "hardware_store",
+        "building_materials_store",
+        "food_store",
+        "store",
+        "health",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 35
+    },
+    {
+      "id": "s106",
+      "slug": "foglifter-coffee-roasters",
+      "name": "Foglifter Coffee Roasters",
+      "categories": [
+        "coffee",
+        "food",
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 18th Ave",
+      "coords": {
+        "y": 435
+      },
+      "lat": 49.2531182,
+      "lng": -123.1007379,
+      "googlePlaceId": "ChIJtZ1vTmVzhlQRKYtkWL3vwHs",
+      "placeholderColor": "2e7b6c",
+      "_googleTypes": [
+        "coffee_shop",
+        "coffee_roastery",
+        "cafe",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 36
+    },
+    {
+      "id": "s107",
+      "slug": "neptoon-records",
+      "name": "Neptoon Records",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 18th Ave",
+      "coords": {
+        "y": 435
+      },
+      "lat": 49.253109,
+      "lng": -123.1011061,
+      "googlePlaceId": "ChIJfcmTA_tzhlQRyFkG2kzyo6s",
+      "placeholderColor": "5f4efa",
+      "_googleTypes": [
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 36
+    },
+    {
+      "id": "s108",
+      "slug": "the-sellution-quality-consignment-vintage-furniture-furnishings",
+      "name": "The Sellution",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [
+        "vintage"
+      ],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 19th Ave",
+      "coords": {
+        "y": 437
+      },
+      "lat": 49.2528834,
+      "lng": -123.1007084,
+      "googlePlaceId": "ChIJf1Q2pCtzhlQREJ9pAWhCpis",
+      "placeholderColor": "673ccb",
+      "_googleTypes": [
+        "furniture_store",
+        "home_improvement_store",
+        "home_goods_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories?",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 36
+    }
+  ]
 }

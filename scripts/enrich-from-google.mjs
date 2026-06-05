@@ -19,6 +19,8 @@ import { fileURLToPath } from "url";
  *
  * Auto-fills: name, slug, lat, lng, googlePlaceId, coords.y, crossStreet (best
  * guess), cost (from priceLevel), categories (from types), placeholderColor, id.
+ * When the neighborhood uses SkyTrain, walkFromStation via Google Directions
+ * (station from data/stops.json for commercial, neighborhoods.json otherwise).
  * Leaves for you (flagged in _review): description (required), tags, timeOfDay.
  */
 
@@ -165,6 +167,32 @@ function crossStreetFrom(components = [], formatted = "") {
   return { value: street || "", review: true };
 }
 
+function stationForNeighborhood(neighborhood, neighborhoodsData, stopsData) {
+  const hood = neighborhoodsData?.neighborhoods?.[neighborhood];
+  if (hood?.station?.lat != null && hood?.station?.lng != null) {
+    return { lat: hood.station.lat, lng: hood.station.lng, name: hood.station.name || hood.title };
+  }
+  if (neighborhood === "commercial" && stopsData?.station) {
+    return { lat: stopsData.station.lat, lng: stopsData.station.lng, name: stopsData.station.name };
+  }
+  return null;
+}
+
+/** Walking minutes via Directions API (enable Directions API on the Maps key). */
+async function walkMinutesFromStation(station, destLat, destLng, key) {
+  const url = new URL("https://maps.googleapis.com/maps/api/directions/json");
+  url.searchParams.set("origin", `${station.lat},${station.lng}`);
+  url.searchParams.set("destination", `${destLat},${destLng}`);
+  url.searchParams.set("mode", "walking");
+  url.searchParams.set("key", key);
+  const res = await fetch(url);
+  const data = await res.json();
+  if (data.status !== "OK" || !data.routes?.[0]?.legs?.[0]?.duration?.value) {
+    throw new Error(data.error_message || data.status || "no walking route");
+  }
+  return Math.max(1, Math.round(data.routes[0].legs[0].duration.value / 60));
+}
+
 // Geocoding bias center per neighborhood (helps disambiguate same-named places).
 const NEIGHBORHOOD_BIAS = {
   commercial: { latitude: 49.2634, longitude: -123.0694, radius: 3000 },
@@ -252,6 +280,14 @@ async function main() {
 
   const data = JSON.parse(fs.readFileSync(stopsPath, "utf8"));
   const stops = data.stops;
+  const skytrainStation = usesSkytrain ? stationForNeighborhood(neighborhood, neighborhoodsData, data) : null;
+  if (usesSkytrain && !skytrainStation) {
+    console.warn(
+      `Warning: neighborhood "${neighborhood}" uses SkyTrain but has no station coords; walkFromStation will be 0.`
+    );
+  } else if (skytrainStation?.name) {
+    console.log(`Walk minutes from: ${skytrainStation.name}`);
+  }
 
   // Gather every existing stop across the live file and all draft files so ids,
   // slugs, and placeholder colours stay unique no matter which file we write to.
@@ -269,7 +305,8 @@ async function main() {
 
   const usedColors = new Set(allStops.map((s) => s.placeholderColor).filter(Boolean));
   const usedSlugs = new Set(allStops.map((s) => s.slug));
-  const latToY = buildLatToYFit(stops);
+  const fitStops = allStops.filter((s) => (s.neighborhood || "commercial") === neighborhood);
+  const latToY = buildLatToYFit(fitStops.length >= 2 ? fitStops : stops);
   let maxId = allStops.reduce((m, s) => {
     const n = parseInt(String(s.id).replace(/^s/, ""), 10);
     return Number.isFinite(n) ? Math.max(m, n) : m;
@@ -325,9 +362,23 @@ async function main() {
         _googleTypes: types,
         _review: [...new Set([...review, "timeOfDay?", "tags"])],
       };
-      if (usesSkytrain) stop.walkFromStation = 0;
+      if (usesSkytrain) {
+        if (skytrainStation) {
+          try {
+            stop.walkFromStation = await walkMinutesFromStation(skytrainStation, lat, lng, key);
+          } catch (walkErr) {
+            stop.walkFromStation = 0;
+            stop._review.push("walkFromStation");
+            console.warn(`     walk: ${walkErr.message} (set 0, flagged in _review)`);
+          }
+        } else {
+          stop.walkFromStation = 0;
+          stop._review.push("walkFromStation");
+        }
+      }
       enriched.push(stop);
-      console.log(`ok   ${title}  ->  ${name}  [${categories.join(", ") || "no category"}]`);
+      const walkNote = usesSkytrain && stop.walkFromStation ? `, ${stop.walkFromStation} min walk` : "";
+      console.log(`ok   ${title}  ->  ${name}  [${categories.join(", ") || "no category"}${walkNote}]`);
     } catch (err) {
       failures.push({ title, error: err.message });
       console.warn(`FAIL ${title}: ${err.message}`);
@@ -357,7 +408,8 @@ async function main() {
     fs.writeFileSync(previewPath, JSON.stringify({ enriched, failures }, null, 2) + "\n");
     console.log(`\nDry run. ${enriched.length} enriched, ${failures.length} failed.`);
     console.log(`Preview: data/_enriched-preview.json`);
-    console.log(`Re-run with --write to append into data/stops.json.`);
+    const relTarget = path.relative(root, targetPath).replace(/\\/g, "/");
+    console.log(`Re-run with --write to append into ${relTarget}.`);
   }
 }
 
