@@ -2773,18 +2773,18 @@
       });
     }
 
-    function renderPhotoHero(spot) {
-      return `<img src="${spot.image}" alt="${escapeHtml(spot.name)}"${heroFocusStyleAttr(spot)}>`;
+    function renderPhotoHero(spot, { loading = "lazy" } = {}) {
+      return `<img src="${spot.image}" alt="${escapeHtml(spot.name)}" loading="${loading}" decoding="async"${heroFocusStyleAttr(spot)}>`;
     }
 
-    function renderPhotoGallery(spot, galleryId) {
+    function renderPhotoGallery(spot, galleryId, { galleryFirstEager = false } = {}) {
       if (spot.images.length <= 1) {
-        return renderPhotoHero(spot);
+        return renderPhotoHero(spot, { loading: galleryFirstEager ? "eager" : "lazy" });
       }
       const focusAttr = heroFocusStyleAttr(spot);
       const slides = spot.images.map((src, i) => `
         <div class="photo-gallery__slide">
-          <img src="${src}" alt="${escapeHtml(spot.name)} — photo ${i + 1}" loading="${i === 0 ? "eager" : "lazy"}"${focusAttr}>
+          <img src="${src}" alt="${escapeHtml(spot.name)} — photo ${i + 1}" loading="${i === 0 && galleryFirstEager ? "eager" : "lazy"}" decoding="async"${focusAttr}>
         </div>
       `).join("");
       const dots = spot.images.map((_, i) =>
@@ -2993,7 +2993,7 @@
           pathsIntro: "Choose one of the following options and end up with a personalized route to explore the neighborhood.",
           paths: [
             { start: "path2", title: "See My Suggested Routes", label: "Curated based on my own tastes and experience." },
-            { start: "path1", title: "Choose Your Own Adventure", label: "Build a route based on your time, starting location, and what you'd like to explore" },
+            { start: "path1", title: "Choose Your Own Adventure", label: "Build your own route based on time, starting location, and what you'd like to do. Receive a custom, shareable route map for your day." },
             { start: "path3", title: "See All Spots", label: "Browse and filter every spot, build a route, open it in Google Maps" },
           ],
         },
@@ -3999,13 +3999,13 @@
       return [...within, ...outside];
     }
 
-    function renderSpotTile(spot, catId) {
+    function renderSpotTile(spot, catId, tileIndex = 0) {
       const isSelected = (state.selectedStops[catId] || []).includes(spot.id);
       const outsideClass = spot._outsideRadius ? " spot-tile--outside-radius" : "";
       return `
           <div class="spot-tile${outsideClass} ${isSelected ? 'selected' : ''}" onclick="toggleSpot('${catId}', '${spot.id}')">
             <div class="img-wrapper">
-              ${renderPhotoGallery(spot, `d-${spot.id}`)}
+              ${renderPhotoGallery(spot, `d-${spot.id}`, { galleryFirstEager: tileIndex < 4 })}
             </div>
             ${isSelected ? '<div class="checkmark">✓</div>' : ''}
             <div class="content">
@@ -4144,10 +4144,10 @@
       const markOutside = (spots) =>
         spots.map(s => Object.assign({}, s, { _outsideRadius: true }));
 
-      let html = within.map(spot => renderSpotTile(spot, catId)).join('');
+      let html = within.map((spot, i) => renderSpotTile(spot, catId, i)).join('');
       if (outside.length > 0) {
         html += `<p class="spot-section-label">Outside your time radius</p>`;
-        html += markOutside(outside).map(spot => renderSpotTile(spot, catId)).join('');
+        html += markOutside(outside).map((spot, i) => renderSpotTile(spot, catId, within.length + i)).join('');
       }
 
       grid.innerHTML = html;
@@ -5157,7 +5157,7 @@
       return `
         <div class="${cardClass}" role="button" tabindex="0" aria-expanded="false" data-stop-id="${escapeHtml(s.id)}"
           onclick="toggleRouteCardExpanded(event)" onkeydown="routeCardKeydown(event)">
-          <img src="${s.image}" alt="${escapeHtml(s.name)}"${heroFocusStyleAttr(s)}>
+          <img src="${s.image}" alt="${escapeHtml(s.name)}" loading="${idx < 2 ? "eager" : "lazy"}" decoding="async"${heroFocusStyleAttr(s)}>
           <div class="content">
             <h3 style="font-size: 1rem; text-transform:uppercase;">${idx + 1}. ${escapeHtml(s.name)}</h3>
             <div class="meta">${escapeHtml(s.crossStreet)}</div>
@@ -5215,9 +5215,10 @@
         !isRemoved && typeof idx === "number" && idx >= 0
           ? `${idx + 1}. ${escapeHtml(s.name)}`
           : escapeHtml(s.name);
+      const imgLoading = typeof idx === "number" && idx >= 0 && idx < 2 ? "eager" : "lazy";
       return `
         <div class="${cardClass}">
-          <img src="${s.image}" alt="${escapeHtml(s.name)}"${heroFocusStyleAttr(s)}>
+          <img src="${s.image}" alt="${escapeHtml(s.name)}" loading="${imgLoading}" decoding="async"${heroFocusStyleAttr(s)}>
           <div class="content">
             <h3 style="text-transform:uppercase;">${label}</h3>
           </div>
@@ -6351,7 +6352,7 @@
       const routeLabel = inRoute ? "On your route" : "Add to route";
       return `
         <div class="p3-card__expand-panel">
-          <div class="p3-card__gallery">${renderPhotoGallery(spot, `p3-${spot.id}`)}</div>
+          <div class="p3-card__gallery">${renderPhotoGallery(spot, `p3-${spot.id}`, { galleryFirstEager: true })}</div>
           <div class="p3-card__expand-body">
             <div class="tags">${renderP3Tags(spot)}</div>
             <p class="description">${escapeHtml(spot.description)}</p>
@@ -6472,14 +6473,14 @@
           return `
           <div class="p3-card${testClass}${expandedClass}${routeClass}" data-spot-id="${spot.id}" onclick="toggleP3Spot('${spot.id}')">
             <div class="p3-card__summary">
-              <img class="p3-card__thumb" src="${spot.image}" alt="${escapeHtml(spot.name)}" loading="lazy"${heroFocusStyleAttr(spot)}>
+              <img class="p3-card__thumb" src="${spot.image}" alt="${escapeHtml(spot.name)}" loading="lazy" decoding="async"${heroFocusStyleAttr(spot)}>
               <div class="p3-card__body">
                 ${renderP3AddBtn(spot)}
                 <h3 class="choice-title">${escapeHtml(spot.name)}</h3>
                 ${renderP3GridMeta(spot)}
               </div>
             </div>
-            ${renderP3ExpandPanel(spot)}
+            ${expanded ? renderP3ExpandPanel(spot) : ""}
           </div>
         `;
         })

@@ -16,7 +16,7 @@
         {
           "start": "path1",
           "title": "Choose Your Own Adventure",
-          "label": "Build a route based on your time, what you'd like to explore, and how you'll start and end"
+          "label": "Build your own route based on time, starting location, and what you'd like to do. Receive a custom, shareable route map for your day."
         },
         {
           "start": "path3",
