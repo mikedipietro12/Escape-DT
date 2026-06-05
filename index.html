@@ -1851,20 +1851,18 @@
       background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
     }
     .p3-card.is-expanded {
+      grid-column: 1 / -1;
       background: #fff;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
-      cursor: default;
+      cursor: pointer;
       overflow: hidden;
       align-self: start;
       z-index: 1;
     }
-    @media (min-width: 600px) {
+    @media (max-width: 599px) {
       .p3-card.is-expanded {
-        grid-column: 1 / -1;
+        grid-column: auto;
       }
-    }
-    .p3-card.is-expanded .p3-card__summary {
-      cursor: pointer;
     }
     .p3-card.is-in-route:not(.is-expanded) {
       background: rgba(255, 255, 255, 0.35);
@@ -1986,33 +1984,6 @@
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-    }
-    .p3-collapse-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.35rem;
-      width: 100%;
-      padding: 0.45rem 0.75rem;
-      border: none;
-      border-bottom: 1px solid var(--ink);
-      border-radius: 0;
-      background: rgba(255, 255, 255, 0.65);
-      color: var(--ink);
-      font-size: 0.58rem;
-      font-weight: 600;
-      letter-spacing: var(--tracking-wide);
-      text-transform: uppercase;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .p3-collapse-btn:hover {
-      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
-      color: var(--ink);
-    }
-    .p3-collapse-btn__icon {
-      font-size: 1rem;
-      line-height: 1;
     }
     .p3-card__gallery {
       position: relative;
@@ -2346,7 +2317,7 @@
         </div>
         <script>(function(){var img=document.getElementById("hero-logo");var logo=document.documentElement.dataset.heroLogo;if(logo&&logo!==img.getAttribute("src"))img.src=logo;})();</script>
         <h1>Let&rsquo;s get you out of <span class="hero-location-wrap" aria-live="polite"><span class="hero-location" id="hero-location-word">downtown</span></span> and into &ldquo;East&nbsp;Vancouver&rdquo;<sup class="footnote-wrap"><button type="button" class="footnote-trigger" aria-expanded="false" aria-describedby="footnote-territory">1</button><span id="footnote-territory" class="footnote-tooltip" role="tooltip">This takes place on the unceded territory of the Coast Salish Peoples, including the territories of the xʷməθkwəy̓əm (Musqueam), Skwxw&uacute;7mesh (Squamish), and Səl̓&iacute;lwətaʔ/Selilwitulh (Tsleil-Waututh) Nations.</span></sup></h1>
-        <p class="hero-subtitle" id="hero-subtitle">Whether you&rsquo;re here visiting for the first time, or have found yourself stuck in your regular routine, I am here to get you into some of our more eclectic east-end neighborhoods.</p>
+        <p class="hero-subtitle" id="hero-subtitle" hidden></p>
         <div class="landing-options">
           <div id="landing-areas" class="landing-panel" aria-label="Explore neighborhoods"></div>
           <div id="landing-paths" class="landing-panel" hidden aria-label="Ways to explore this neighborhood">
@@ -3010,8 +2981,6 @@
     let AREAS = {};
     let AREA_ORDER = [];
     const DEFAULT_LANDING_AREA = "commercial-drive";
-    const LANDING_SUBTITLE =
-      "Whether you're here visiting for the first time, or have found yourself stuck in your regular routine, I am here to get you into some of our more eclectic east-end neighborhoods.";
 
     const FALLBACK_AREAS = {
       version: 1,
@@ -3092,9 +3061,12 @@
       if (subtitleEl) {
         if (showPaths) {
           const area = AREAS[state.landingAreaId];
-          subtitleEl.textContent = area?.pathsIntro || LANDING_SUBTITLE;
+          const intro = area?.pathsIntro?.trim() || "";
+          subtitleEl.textContent = intro;
+          subtitleEl.hidden = !intro;
         } else {
-          subtitleEl.textContent = LANDING_SUBTITLE;
+          subtitleEl.textContent = "";
+          subtitleEl.hidden = true;
         }
       }
       if (showPaths) renderLandingPaths(state.landingAreaId);
@@ -6378,8 +6350,7 @@
       const routeBtnClass = inRoute ? "p3-route-btn is-added" : "p3-route-btn";
       const routeLabel = inRoute ? "On your route" : "Add to route";
       return `
-        <div class="p3-card__expand-panel" onclick="event.stopPropagation()">
-          <button type="button" class="p3-collapse-btn" aria-label="Minimize spot details" onclick="collapseP3Spot('${spot.id}')"><span class="p3-collapse-btn__icon" aria-hidden="true">−</span> Minimize</button>
+        <div class="p3-card__expand-panel">
           <div class="p3-card__gallery">${renderPhotoGallery(spot, `p3-${spot.id}`)}</div>
           <div class="p3-card__expand-body">
             <div class="tags">${renderP3Tags(spot)}</div>
@@ -6499,8 +6470,8 @@
           const expandedClass = expanded ? " is-expanded" : "";
           const routeClass = inRoute ? " is-in-route" : "";
           return `
-          <div class="p3-card${testClass}${expandedClass}${routeClass}" data-spot-id="${spot.id}"${expanded ? "" : ` onclick="toggleP3Spot('${spot.id}')"`}>
-            <div class="p3-card__summary"${expanded ? ` onclick="collapseP3Spot('${spot.id}')"` : ""}>
+          <div class="p3-card${testClass}${expandedClass}${routeClass}" data-spot-id="${spot.id}" onclick="toggleP3Spot('${spot.id}')">
+            <div class="p3-card__summary">
               <img class="p3-card__thumb" src="${spot.image}" alt="${escapeHtml(spot.name)}" loading="lazy"${heroFocusStyleAttr(spot)}>
               <div class="p3-card__body">
                 ${renderP3AddBtn(spot)}
@@ -6530,13 +6501,6 @@
           card?.scrollIntoView({ behavior: "smooth", block: "nearest" });
         });
       }
-    }
-
-    function collapseP3Spot(id) {
-      if (state.expandedSpotId !== id) return;
-      closeP3PhotoLightbox();
-      state.expandedSpotId = null;
-      renderP3();
     }
 
     function openSpotInMaps(lat, lng) {
