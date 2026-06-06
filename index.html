@@ -5399,6 +5399,21 @@
         return `M ${x1} ${y1} L ${x2} ${y2}`;
       }
 
+      const offSpineZone = (z) =>
+        z === "venablesWest" ||
+        z === "venablesEast" ||
+        z === "victoria" ||
+        z === "frances";
+      if (offSpineZone(z1) && offSpineZone(z2) && z1 !== z2) {
+        if (
+          (z1 === "victoria" && z2 === "victoria") ||
+          (z1 === "frances" && z2 === "frances")
+        ) {
+          return `M ${x1} ${y1} L ${x2} ${y2}`;
+        }
+        return `M ${x1} ${y1} L ${spine} ${y1} L ${spine} ${y2} L ${x2} ${y2}`;
+      }
+
       const fromOffSpine = fromStop ? isStopOffSpine(fromStop) : false;
       const toOffSpine = toStop ? isStopOffSpine(toStop) : false;
 
