@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>East Village — standard path</title>
+  <script src="/js/season-theme.js"></script>
+  <link rel="stylesheet" href="east-village-route-map.css">
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through the dev server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>/demo/east-village-standard-path.html</code>.
+  </p>
+
+  <div class="demo-shell">
+    <div class="demo-banner">
+      <strong>East Village map — standard path</strong>
+      Straight legs on the Hastings spine; gold segments when the route backtracks west.
+      Horizontal map (west → east) plus Step E route cards. Uses draft stops from
+      <code>data/hastings-sunrise-draft.json</code>.
+    </div>
+
+    <p class="demo-path-switch">
+      Map style:
+      <strong>Standard path</strong>
+      ·
+      <a href="east-village-curved-paths.html">Curved paths</a>
+    </p>
+
+    <div class="demo-controls">
+      <label>
+        Sample route
+        <select id="preset-select">
+          <option value="west-east">West → East crawl (5 stops)</option>
+          <option value="coffee">Coffee hop</option>
+          <option value="evening">Evening out</option>
+          <option value="park">Park + bites</option>
+        </select>
+      </label>
+      <button type="button" id="btn-replay">Replay map animation</button>
+    </div>
+
+    <section id="step-E" aria-label="Your Route mockup">
+      <h1>Your Route</h1>
+      <p class="route-area-subtitle">E Hastings</p>
+
+      <div id="route-review" class="route-review">
+        <div class="map-container">
+          <svg id="route-map" viewBox="0 0 600 240" aria-label="East Village route map"></svg>
+        </div>
+        <div id="route-summary-panel" class="route-summary" hidden>
+          <p id="route-export-summary" class="label route-export-summary">YOUR EAST VILLAGE ROUTE — N STOPS</p>
+          <div id="route-cards"></div>
+          <div class="totals" id="route-totals"></div>
+        </div>
+      </div>
+
+      <div class="nav-buttons" aria-hidden="true">
+        <button type="button" class="is-mock">Edit Spots</button>
+        <button type="button" class="primary is-mock">Finalize</button>
+      </div>
+    </section>
+
+    <aside class="demo-notes">
+      <h2>What we're testing</h2>
+      <ul>
+        <li><strong>Horizontal spine</strong> — E Hastings runs left (west) to right (east), opposite of Commercial Drive's north–south map.</li>
+        <li><strong>Off-spine legs</strong> — stops like Parallel 49 and Pandora Park use L-shaped paths (mirroring Victoria off Commercial).</li>
+        <li><strong>No station</strong> — East Village omits SkyTrain; walking totals are linear between stops only.</li>
+        <li><strong>Stacked layout</strong> — map full width on top; route cards appear centered underneath after the animation.</li>
+        <li><strong>Angled labels</strong> — visit number + side street (e.g. <code>1. Semlin</code>); same pin merges (<code>1. &amp; 3. Semlin</code>); off-spine stops use the horizontal street (<code>3. Triumph St</code> at Triumph &amp; Victoria, not Victoria).</li>
+        <li><strong>Gold segments</strong> — legs that backtrack west use the same backward colour as Commercial Drive.</li>
+      </ul>
+    </aside>
+  </div>
+
+  <script src="east-village-standard-path.js"></script>
+</body>
+</html>

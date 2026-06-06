@@ -85,6 +85,31 @@
       font: inherit;
     }
     .needs-toggle { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); font-size: 0.82rem; }
+    .filter-section { display: grid; gap: 0.35rem; }
+    .filter-section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; }
+    .filter-label { font-size: 0.68rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .filter-clear { font-size: 0.68rem; padding: 0; border: none; background: none; color: var(--accent); text-decoration: underline; }
+    .filter-clear:hover { color: #1d4fd0; }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .filter-chip {
+      font-size: 0.72rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      cursor: pointer;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+    .filter-chip:hover { border-color: #c7c7c7; color: var(--ink); }
+    .filter-chip.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .filter-tags-details { font-size: 0.82rem; }
+    .filter-tags-details summary { cursor: pointer; color: var(--muted); user-select: none; list-style: none; display: flex; align-items: center; gap: 0.35rem; }
+    .filter-tags-details summary::-webkit-details-marker { display: none; }
+    .filter-tags-details summary::before { content: "▸"; font-size: 0.65rem; }
+    .filter-tags-details[open] summary::before { content: "▾"; }
+    .filter-tags-details .filter-chips { margin-top: 0.4rem; max-height: 110px; overflow-y: auto; }
+    .pill.cat { background: #f0f4ff; color: #3b4f8a; border-color: #d4dff7; }
     .list-scroll { overflow-y: auto; flex: 1; min-height: 0; }
     .stop-row {
       padding: 0.55rem 0.7rem;
@@ -260,6 +285,21 @@
       <div class="list-controls">
         <input type="search" id="search" placeholder="Search name, slug, cross street…" autocomplete="off">
         <select id="filter-neighborhood"><option value="">All neighborhoods</option></select>
+        <div class="filter-section">
+          <div class="filter-section-head">
+            <span class="filter-label">Categories</span>
+            <button type="button" class="filter-clear" id="filter-categories-clear" hidden>Clear</button>
+          </div>
+          <div class="filter-chips" id="filter-categories"></div>
+        </div>
+        <details class="filter-tags-details" id="filter-tags-panel">
+          <summary><span class="filter-label" style="text-transform:none;letter-spacing:0;font-size:0.82rem;font-weight:400;">Descriptive tags</span></summary>
+          <div class="filter-section-head" style="margin-top:0.35rem;">
+            <span class="filter-label">Match any</span>
+            <button type="button" class="filter-clear" id="filter-tags-clear" hidden>Clear</button>
+          </div>
+          <div class="filter-chips" id="filter-tags"></div>
+        </details>
         <label class="needs-toggle"><input type="checkbox" id="filter-needs"> Needs info only</label>
         <label class="needs-toggle"><input type="checkbox" id="filter-needs-photos"> Needs photos only</label>
       </div>
@@ -585,6 +625,59 @@
       return f.x === DEFAULT_HERO_FOCUS.x && f.y === DEFAULT_HERO_FOCUS.y;
     }
 
+    const CATEGORY_LABELS = {
+      coffee: "Coffee",
+      food: "Food",
+      drinks: "Drinks",
+      shopping: "Shopping",
+      hangout: "Hangout",
+      groceries: "Groceries",
+    };
+
+    function categoryLabel(id) {
+      return CATEGORY_LABELS[id] || id;
+    }
+
+    function getActiveFilterChips(containerId) {
+      return [...$(containerId).querySelectorAll(".filter-chip.on")].map((el) => el.dataset.value);
+    }
+
+    function updateFilterClearButtons() {
+      const catOn = getActiveFilterChips("#filter-categories").length > 0;
+      const tagOn = getActiveFilterChips("#filter-tags").length > 0;
+      $("#filter-categories-clear").hidden = !catOn;
+      $("#filter-tags-clear").hidden = !tagOn;
+    }
+
+    function buildFilterChips(containerId, values, { labelFn, preserve } = {}) {
+      const container = $(containerId);
+      const prev = preserve ? new Set(getActiveFilterChips(containerId)) : new Set();
+      container.innerHTML = values.map((v) => {
+        const label = labelFn ? labelFn(v) : v;
+        const on = prev.has(v) ? " on" : "";
+        return `<button type="button" class="filter-chip${on}" data-value="${escapeHtml(v)}">${escapeHtml(label)}</button>`;
+      }).join("");
+      container.querySelectorAll(".filter-chip").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          btn.classList.toggle("on");
+          updateFilterClearButtons();
+          renderList();
+        });
+      });
+      updateFilterClearButtons();
+    }
+
+    function renderCategoryFilter() {
+      buildFilterChips("#filter-categories", state.refs.categories || [], {
+        labelFn: categoryLabel,
+        preserve: true,
+      });
+    }
+
+    function renderTagFilter() {
+      buildFilterChips("#filter-tags", state.refs.tags || [], { preserve: true });
+    }
+
     // ---------- list ----------
     function renderNeighborhoodFilter() {
       const sel = $("#filter-neighborhood");
@@ -598,10 +691,20 @@
       const nbh = $("#filter-neighborhood").value;
       const needsOnly = $("#filter-needs").checked;
       const needsPhotosOnly = $("#filter-needs-photos").checked;
+      const catFilter = getActiveFilterChips("#filter-categories");
+      const tagFilter = getActiveFilterChips("#filter-tags");
       return state.stops.filter((s) => {
         if (nbh && (s.neighborhood || "commercial") !== nbh) return false;
         if (needsOnly && !isNeedsInfo(s)) return false;
         if (needsPhotosOnly && !needsPhotos(s)) return false;
+        if (catFilter.length) {
+          const cats = s.categories || [];
+          if (!catFilter.some((c) => cats.includes(c))) return false;
+        }
+        if (tagFilter.length) {
+          const tags = (s.tags || []).map((t) => String(t).toLowerCase());
+          if (!tagFilter.some((t) => tags.includes(String(t).toLowerCase()))) return false;
+        }
         if (q) {
           const hay = `${s.name} ${s.slug} ${s.crossStreet} ${s.id}`.toLowerCase();
           if (!hay.includes(q)) return false;
@@ -664,6 +767,7 @@
               ${needs ? `<button class="row-fill" data-fill="${s.id}" title="Guided fill">Fill</button>` : ""}
             </div>
             <div class="row-meta">
+              ${(s.categories || []).map((c) => `<span class="pill cat">${escapeHtml(categoryLabel(c))}</span>`).join("")}
               <span class="pill">${escapeHtml(neighborhoodTitle(s.neighborhood || "commercial"))}</span>
               ${draft ? '<span class="pill draft">draft</span>' : ""}
               ${needs ? '<span class="pill needs">needs info</span>' : ""}
@@ -1706,6 +1810,8 @@
       state.refs = data.refs || state.refs;
 
       renderNeighborhoodFilter();
+      renderCategoryFilter();
+      renderTagFilter();
       $("#neighborhood").innerHTML = (state.refs.neighborhoods.neighborhoodOrder || [])
         .map((id) => `<option value="${id}">${neighborhoodTitle(id)}</option>`).join("");
       buildChecks("#categories", state.refs.categories, "cat");
@@ -1832,6 +1938,16 @@
     });
     $("#filter-needs").addEventListener("change", renderList);
     $("#filter-needs-photos").addEventListener("change", renderList);
+    $("#filter-categories-clear").addEventListener("click", () => {
+      $("#filter-categories").querySelectorAll(".filter-chip.on").forEach((b) => b.classList.remove("on"));
+      updateFilterClearButtons();
+      renderList();
+    });
+    $("#filter-tags-clear").addEventListener("click", () => {
+      $("#filter-tags").querySelectorAll(".filter-chip.on").forEach((b) => b.classList.remove("on"));
+      updateFilterClearButtons();
+      renderList();
+    });
     $("#fill-run").addEventListener("click", startFillRun);
     $("#add-new").addEventListener("click", addNewStop);
     $("#add-close").addEventListener("click", closeAddDialog);

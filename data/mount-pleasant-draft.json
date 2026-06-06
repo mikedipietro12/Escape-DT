@@ -91,7 +91,7 @@
       "categories": [
         "coffee",
         "food",
-        "shopping"
+        "groceries"
       ],
       "tags": [],
       "neighborhood": "mount-pleasant",
@@ -125,9 +125,6 @@
       ],
       "_review": [
         "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
         "tags"
       ],
       "walkFromStation": 9
@@ -137,8 +134,7 @@
       "slug": "earnest-ice-cream-quebec-st",
       "name": "Earnest Ice Cream | Quebec St.",
       "categories": [
-        "food",
-        "shopping"
+        "food"
       ],
       "tags": [],
       "neighborhood": "mount-pleasant",
@@ -168,9 +164,6 @@
       ],
       "_review": [
         "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
         "tags"
       ],
       "walkFromStation": 8
@@ -224,8 +217,7 @@
       "name": "Purebread Bakery + Coffee",
       "categories": [
         "coffee",
-        "food",
-        "shopping"
+        "food"
       ],
       "tags": [],
       "neighborhood": "mount-pleasant",
@@ -258,9 +250,6 @@
       ],
       "_review": [
         "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
         "tags"
       ],
       "walkFromStation": 13
@@ -270,7 +259,8 @@
       "slug": "mount-pleasant-vintage",
       "name": "Mount Pleasant Vintage",
       "categories": [
-        "shopping"
+        "food",
+        "drinks"
       ],
       "tags": [
         "vintage"
@@ -297,11 +287,7 @@
         "establishment"
       ],
       "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
+        "description"
       ],
       "walkFromStation": 15
     },
@@ -594,8 +580,7 @@
       "slug": "cultivate-tea",
       "name": "Cultivate Tea",
       "categories": [
-        "food",
-        "shopping"
+        "drinks"
       ],
       "tags": [],
       "neighborhood": "mount-pleasant",
@@ -622,10 +607,6 @@
       ],
       "_review": [
         "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
         "tags"
       ],
       "walkFromStation": 15
@@ -831,8 +812,7 @@
       "name": "Gene Coffee Bar",
       "categories": [
         "coffee",
-        "food",
-        "shopping"
+        "food"
       ],
       "tags": [],
       "neighborhood": "mount-pleasant",
@@ -861,9 +841,6 @@
       ],
       "_review": [
         "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
         "tags"
       ],
       "walkFromStation": 17
@@ -1037,8 +1014,7 @@
       "name": "49th Parallel Café & Lucky's Doughnuts",
       "categories": [
         "coffee",
-        "food",
-        "shopping"
+        "food"
       ],
       "tags": [],
       "neighborhood": "mount-pleasant",
@@ -1069,9 +1045,6 @@
       ],
       "_review": [
         "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
         "tags"
       ],
       "walkFromStation": 25
@@ -1483,8 +1456,7 @@
       "name": "Foglifter Coffee Roasters",
       "categories": [
         "coffee",
-        "food",
-        "shopping"
+        "food"
       ],
       "tags": [],
       "neighborhood": "mount-pleasant",
@@ -1514,9 +1486,6 @@
       ],
       "_review": [
         "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
         "tags"
       ],
       "walkFromStation": 36

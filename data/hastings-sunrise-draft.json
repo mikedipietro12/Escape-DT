@@ -63,7 +63,7 @@
         "afternoon"
       ],
       "description": "Pallet is a local roaster with a stellar line-up. They always have great offerings and the patio is a nice place to stop before heading further into the neighborhood.",
-      "crossStreet": "Semlin Dr & Hastings",
+      "crossStreet": "E Hastings & Semlin",
       "coords": {
         "y": 256
       },
@@ -250,7 +250,6 @@
       "categories": [
         "coffee",
         "food",
-        "shopping",
         "hangout"
       ],
       "tags": [
@@ -399,7 +398,7 @@
         "allday"
       ],
       "description": "One of many Tacofino locations, the commissary offers some of the usual Tacofino options with a few local specific options as well.",
-      "crossStreet": "E Hastings St & Garden dr",
+      "crossStreet": "E Hastings St & Garden",
       "coords": {
         "y": 259
       },
@@ -440,8 +439,7 @@
         "afternoon"
       ],
       "description": "A local bakery specializing in sourdough baked goods. With daily (Weds-Sun) offerings and daily specific offerings, there is always something great to grab from this spot.",
-      "crossStreet": "E Hastings St & Kamloops st.",
-      "walkFromStation": 0,
+      "crossStreet": "E Hastings St & Kamloops",
       "coords": {
         "y": 261
       },
@@ -485,7 +483,7 @@
         "allday"
       ],
       "description": "A fun spot to grab a cocktail and a burger and hang out with friends. Good vibes and good drinks.",
-      "crossStreet": "E Hastings St & Kamloops st.",
+      "crossStreet": "E Hastings St & Kamloops",
       "coords": {
         "y": 259
       },
@@ -569,7 +567,7 @@
         "evening"
       ],
       "description": "An intimate dining experience with super knowledgable staff, unique dishes, and great selection of natural wine and sake.",
-      "crossStreet": "E Hastings St & Nanaimo st.",
+      "crossStreet": "E Hastings St & Nanaimo",
       "coords": {
         "y": 258
       },
@@ -616,7 +614,7 @@
         "afternoon"
       ],
       "description": "Doe is a newer coffee roaster in the neighborhood. They offer an \"all you can drink\" membership option which is quite unique. Their baked goods are exceptional and their service is always friendly.",
-      "crossStreet": "E Hastings St & Garden Dr.",
+      "crossStreet": "E Hastings St & Garden",
       "coords": {
         "y": 259
       },
@@ -769,6 +767,45 @@
         "x": 50,
         "y": 54
       }
+    },
+    {
+      "id": "s114",
+      "slug": "iron-dog-books",
+      "name": "Iron Dog Books",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [
+        "books",
+        "used"
+      ],
+      "neighborhood": "hastings-sunrise",
+      "cost": {
+        "min": "$",
+        "max": "$$"
+      },
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "A diverse collection of books with lots of options from Canadian and Indigenous voices. A friendly vibe",
+      "crossStreet": "E Hastings St",
+      "coords": {
+        "y": 251
+      },
+      "lat": 49.2813108,
+      "lng": -123.0501772,
+      "googlePlaceId": "ChIJ-_qqS49xhlQRKRgCDR-xKeE",
+      "placeholderColor": "df4e90",
+      "_googleTypes": [
+        "book_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "walkFromStation"
+      ]
     }
   ]
 }

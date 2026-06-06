@@ -2065,7 +2065,6 @@
             "name": "Fujiya - Clark Drive",
             "categories": [
                 "food",
-                "shopping",
                 "groceries"
             ],
             "tags": [],
@@ -2108,7 +2107,6 @@
             "slug": "kasko-frame-works",
             "name": "Kasko Frame Works",
             "categories": [
-                "shopping",
                 "hangout"
             ],
             "tags": [
@@ -2150,7 +2148,6 @@
             "name": "Bosa Foods",
             "categories": [
                 "food",
-                "shopping",
                 "groceries"
             ],
             "tags": [
@@ -2239,44 +2236,42 @@
             }
         },
         {
-            "id": "s114",
-            "slug": "iron-dog-books",
-            "name": "Iron Dog Books",
+            "id": "s115",
+            "slug": "sneaky-pete-s-pool-cafe",
+            "name": "Sneaky Pete's Pool Café",
             "categories": [
-                "shopping"
+                "drinks",
+                "hangout"
             ],
-            "tags": [
-                "books",
-                "used"
-            ],
+            "tags": [],
             "neighborhood": "commercial",
-            "cost": {
-                "min": "$",
-                "max": "$$"
-            },
+            "cost": "$$",
             "timeOfDay": [
-                "morning",
-                "afternoon"
+                "allday"
             ],
-            "description": "A diverse collection of books with lots of options from Canadian and Indigenous voices. A friendly vibe",
-            "crossStreet": "E Hastings St",
+            "description": "A modern pool cafe with a full service bar, lots of tables, and some food options.",
+            "crossStreet": "McLean Dr & Pender",
             "coords": {
-                "y": 251
+                "y": 254
             },
-            "lat": 49.2813108,
-            "lng": -123.0501772,
-            "googlePlaceId": "ChIJ-_qqS49xhlQRKRgCDR-xKeE",
-            "placeholderColor": "df4e90",
+            "lat": 49.2808941,
+            "lng": -123.0739907,
+            "googlePlaceId": "ChIJzz2OaV5xhlQRsjeNgD59ChA",
+            "placeholderColor": "7caf1a",
             "_googleTypes": [
-                "book_store",
-                "store",
+                "sports_complex",
+                "event_venue",
+                "sports_activity_location",
+                "sports_club",
                 "point_of_interest",
+                "association_or_organization",
                 "establishment"
             ],
             "_review": [
-                "walkFromStation"
+                "tags"
             ],
-            "walkFromStation": 0
+            "walkFromStation": 45,
+            "goto": "Pint and a few games."
         }
     ]
 }
