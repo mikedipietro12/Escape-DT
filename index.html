@@ -546,6 +546,13 @@
     /* Typography */
     h1, h2 { font-weight: 600; text-transform: uppercase; }
     h1 { font-size: var(--type-display); margin-bottom: 1.5rem; letter-spacing: -0.02em; line-height: 1.1; }
+    @media (max-width: 767px) {
+      #main-container .container .step > h1 {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+        line-height: 1.15;
+      }
+    }
     h2 { font-size: var(--type-heading); margin-bottom: 0.5rem; }
     p { font-size: var(--type-body); margin-bottom: 1rem; }
     .label { font-size: var(--type-label); letter-spacing: var(--tracking-wide); text-transform: uppercase; font-weight: 500; }
@@ -626,6 +633,25 @@
     nav.progress button.progress-dot:focus-visible {
       outline: 2px solid var(--ink);
       outline-offset: 2px;
+    }
+    @media (max-width: 767px) {
+      nav.progress {
+        padding: 0.65rem 1.5rem 0.35rem;
+      }
+      #main-container .container {
+        padding: 0.75rem 1.5rem 1.5rem;
+      }
+      #main-container .path-context {
+        padding-top: 0.25rem;
+      }
+      #main-container .container .step > .label,
+      #main-container .container .step > p.label {
+        margin-bottom: 0.75rem;
+      }
+      #main-container .container .route-finalize-heading {
+        font-size: 1rem;
+        margin: 1rem 0 0.4rem;
+      }
     }
 
     /* UI Elements */
@@ -812,6 +838,20 @@
     .card.selected {
       outline: 2px solid var(--ink);
       outline-offset: 2px;
+    }
+    @media (max-width: 767px) {
+      #main-container .container .step .card {
+        padding: 1rem 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+      #main-container .container .step .card .choice-title {
+        font-size: 0.9rem;
+        margin-bottom: 0;
+      }
+      #main-container .container .step .card .choice-desc {
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+      }
     }
     /* Finalize Route Plan: keep selection filled with the seasonal fade */
     .route-finalize-card.selected {
