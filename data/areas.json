@@ -1,11 +1,13 @@
 {
-  "version": 1,
-  "areaOrder": ["commercial-drive"],
+  "version": 2,
+  "landingTagline": "Build a route, follow a plan, or browse every spot in the neighborhood.",
+  "areaOrder": ["commercial-drive", "east-village", "mount-pleasant", "chinatown"],
   "areas": {
     "commercial-drive": {
       "id": "commercial-drive",
+      "neighborhood": "commercial",
       "title": "Explore Commercial Drive",
-      "label": "Build a route, follow a plan, or browse every spot on the Drive.",
+      "label": "",
       "pathsIntro": "Choose one of the following options and end up with a personalized route to explore the neighborhood.",
       "paths": [
         {
@@ -24,6 +26,45 @@
           "label": "Browse and filter every spot, build a route, open it in Google Maps"
         }
       ]
+    },
+    "east-village": {
+      "id": "east-village",
+      "neighborhood": "hastings-sunrise",
+      "title": "Explore East Village (Hastings-Sunrise)",
+      "label": "",
+      "pathsIntro": "Choose one of the following options and end up with a personalized route to explore East Village.",
+      "paths": [
+        {
+          "start": "path1",
+          "title": "Choose Your Own Adventure",
+          "label": "Build your own route by time and vibe. Pick stops along Hastings and side streets — get a shareable horizontal route map."
+        },
+        {
+          "start": "path3",
+          "title": "See All Spots",
+          "label": "Browse and filter every East Village spot, build a visit list, and open it in Google Maps."
+        },
+        {
+          "start": "path2",
+          "title": "Suggested routes coming soon",
+          "label": "Curated East Village walks are on the way — check back for pre-built plans.",
+          "comingSoon": true
+        }
+      ]
+    },
+    "mount-pleasant": {
+      "id": "mount-pleasant",
+      "neighborhood": "mount-pleasant",
+      "title": "Explore Mount Pleasant",
+      "label": "Coming soon",
+      "comingSoon": true
+    },
+    "chinatown": {
+      "id": "chinatown",
+      "neighborhood": "chinatown",
+      "title": "Explore Chinatown",
+      "label": "Coming soon",
+      "comingSoon": true
     }
   }
 }

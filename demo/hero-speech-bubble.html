@@ -5,19 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hero speech bubble — demo</title>
   <link rel="stylesheet" href="hero-speech-bubble.css">
+  <script>document.documentElement.classList.add("hero-anim-js");</script>
 </head>
 <body>
   <p id="demo-warn" class="demo-warn" hidden>
-    Open this page through the dev server, not as a file.
-    From the repo root run <code>npm run dev</code>, then visit
-    <code>/demo/hero-speech-bubble.html</code>.
+    Open this page through the hero demo server, not as a file.
+    From the repo root run <code>npm run demo:hero</code>, then visit
+    <code>http://localhost:3004/demo/hero-speech-bubble.html</code>.
   </p>
 
   <header class="demo-header">
-    <h1>Speech bubble prototype</h1>
-    <p>Bubble grows out to the right of the mascot — lava swell, then settles into a rounded rectangle.</p>
+    <h1>Hero animation tuner</h1>
+    <p>Demo only — landing page is unchanged. Adjust sliders, hit <strong>Replay bubble</strong>, and copy the readout when ready to ship.</p>
   </header>
 
+  <div class="demo-layout">
+  <div class="demo-preview">
   <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="svg-defs">
     <defs>
       <filter id="goo" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
@@ -46,7 +49,7 @@
         >
         <p class="hero-img-error">Hero image failed to load. Use <code>npm run dev</code> and check <code>/assets/hero/shy-spring.png</code>.</p>
       </div>
-      <div class="speech-bubble-wrap is-animating" id="speech-wrap">
+      <div class="speech-bubble-wrap is-grow-pending" id="speech-wrap">
         <div class="speech-bubble" id="speech-anchor" aria-live="polite">
           <svg class="speech-frame" preserveAspectRatio="none" aria-hidden="true" focusable="false">
             <path class="speech-frame-fill" vector-effect="non-scaling-stroke" />
@@ -62,12 +65,14 @@
       </div>
     </div>
   </div>
+  </div>
 
   <div class="demo-controls">
     <section aria-label="Actions">
       <h2>Actions</h2>
       <div class="btn-row">
-        <button type="button" id="replay-btn">Replay bubble</button>
+        <button type="button" id="replay-btn">Replay grow</button>
+        <button type="button" id="replay-full-btn">Replay from start</button>
         <button type="button" id="reset-tuning-btn">Reset tuning</button>
       </div>
       <p class="tuning-readout" id="tuning-readout" aria-live="polite"></p>
@@ -82,13 +87,13 @@
       </label>
       <label>
         Bubble vertical offset
-        <input type="range" id="bubble-offset-y" min="0" max="48" value="18" step="1">
-        <output id="bubble-offset-y-out">18px</output>
+        <input type="range" id="bubble-offset-y" min="0" max="48" value="12" step="1">
+        <output id="bubble-offset-y-out">12px</output>
       </label>
       <label>
         Gap to mascot
-        <input type="range" id="bubble-gap" min="-28" max="8" value="-12" step="1">
-        <output id="bubble-gap-out">-12px</output>
+        <input type="range" id="bubble-gap" min="-28" max="8" value="-18" step="1">
+        <output id="bubble-gap-out">-18px</output>
       </label>
     </section>
 
@@ -102,12 +107,92 @@
       </div>
     </section>
 
+    <section aria-label="Layout">
+      <h2>Layout</h2>
+      <label>
+        Mascot width
+        <input type="range" id="hero-width" min="120" max="280" value="192" step="4">
+        <output id="hero-width-out">192px</output>
+      </label>
+      <label>
+        Bubble max width
+        <input type="range" id="bubble-max-width" min="200" max="420" value="340" step="4">
+        <output id="bubble-max-width-out">340px</output>
+      </label>
+    </section>
+
+    <section aria-label="Grow animation">
+      <h2>Grow animation</h2>
+      <label>
+        Duration
+        <input type="range" id="grow-ms" min="600" max="2400" value="1100" step="50">
+        <output id="grow-ms-out">1100ms</output>
+      </label>
+      <label>
+        Delay before grow
+        <input type="range" id="grow-delay" min="0" max="8000" value="3000" step="100">
+        <output id="grow-delay-out">3000ms</output>
+      </label>
+      <label>
+        Start scale X
+        <input type="range" id="grow-start-x" min="0.02" max="0.2" value="0.2" step="0.01">
+        <output id="grow-start-x-out">0.2</output>
+      </label>
+      <label>
+        Start scale Y
+        <input type="range" id="grow-start-y" min="0.2" max="0.8" value="0.8" step="0.02">
+        <output id="grow-start-y-out">0.8</output>
+      </label>
+      <label>
+        Overshoot scale
+        <input type="range" id="grow-overshoot" min="1" max="1.06" value="1.06" step="0.002">
+        <output id="grow-overshoot-out">1.06</output>
+      </label>
+      <label>
+        Text fade start (%)
+        <input type="range" id="text-fade-pct" min="50" max="95" value="67" step="1">
+        <output id="text-fade-pct-out">67%</output>
+      </label>
+    </section>
+
+    <section aria-label="Idle pulse">
+      <h2>Idle pulse <span class="demo-badge">demo only</span></h2>
+      <label>
+        <input type="checkbox" id="pulse-enabled" checked>
+        Enable settle pulse
+      </label>
+      <label>
+        Pulse duration
+        <input type="range" id="pulse-duration" min="1" max="6" value="2.7" step="0.1">
+        <output id="pulse-duration-out">2.7s</output>
+      </label>
+      <label>
+        Delay before first pulse
+        <input type="range" id="pulse-delay" min="0" max="2" value="0.1" step="0.05">
+        <output id="pulse-delay-out">0.1s</output>
+      </label>
+      <label>
+        Peak scale X
+        <input type="range" id="pulse-scale-x" min="1" max="1.06" value="1.019" step="0.001">
+        <output id="pulse-scale-x-out">1.019</output>
+      </label>
+      <label>
+        Peak scale Y
+        <input type="range" id="pulse-scale-y" min="1" max="1.06" value="1.015" step="0.001">
+        <output id="pulse-scale-y-out">1.015</output>
+      </label>
+    </section>
+
     <section aria-label="Appearance">
       <h2>Appearance</h2>
       <label>
         White background opacity
-        <input type="range" id="bg-opacity" min="0" max="1" value="0.15" step="0.05">
-        <output id="bg-opacity-out">0.15</output>
+        <input type="range" id="bg-opacity" min="0" max="1" value="0.6" step="0.05">
+        <output id="bg-opacity-out">0.6</output>
+      </label>
+      <label>
+        <input type="checkbox" id="show-border">
+        Show teal border
       </label>
       <label>
         <input type="checkbox" id="force-motion">
@@ -115,9 +200,10 @@
       </label>
     </section>
   </div>
+  </div>
 
   <p class="demo-note">
-    Landing intro copy (~230 characters). Tune tail Y so the triangle points at the mouth. If it feels cramped, widen <code>--bubble-max-width</code> (default 300px) or trim a sentence.
+    Run <code>npm run demo:hero</code> (port <strong>3004</strong>) — separate from <code>npm run dev</code> (port 3000) so the live landing stays untouched while you tune here.
   </p>
 
   <script src="hero-speech-bubble.js"></script>

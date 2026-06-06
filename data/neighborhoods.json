@@ -16,7 +16,19 @@
       "id": "hastings-sunrise",
       "title": "Hastings-Sunrise (East Village)",
       "aliases": ["east village", "eastvillage", "hastings sunrise"],
-      "usesSkytrainStation": false
+      "usesSkytrainStation": false,
+      "routeAnchors": {
+        "west": {
+          "name": "E Hastings & Commercial",
+          "lat": 49.28086,
+          "lng": -123.0696
+        },
+        "east": {
+          "name": "E Hastings & Renfrew",
+          "lat": 49.28124,
+          "lng": -123.0448
+        }
+      }
     },
     "mount-pleasant": {
       "id": "mount-pleasant",

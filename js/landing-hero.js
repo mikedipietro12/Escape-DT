@@ -7,12 +7,17 @@
  * Preview grow animation when OS "reduce motion" is on: ?hero=motion
  */
 (function () {
-  const GROW_MS = 1400;
+  const GROW_MS = 1100;
+  const GROW_DELAY_MS = 0;
+  const GROW_START_X = 0.2;
+  const GROW_START_Y = 0.8;
+  const GROW_OVERSHOOT = 1.06;
+  const TEXT_FADE_PCT = 0.67;
   const GROW_EASING = "cubic-bezier(0.22, 0.85, 0.25, 1)";
   const TAIL_NOTCH_HALF = 11;
   const TAIL_TIP_X = -12.25;
   const TAIL_FRAME_PAD = 14;
-  const BUBBLE_BG_OPACITY = 0.15;
+  const BUBBLE_BG_OPACITY = 0.6;
 
   const root = document.documentElement;
   const params = new URLSearchParams(location.search);
@@ -34,6 +39,7 @@
   let heroImg = document.getElementById("hero-logo");
   let wrap = document.getElementById("speech-wrap");
   let settleTimer = null;
+  let growDelayTimer = null;
   let growAnim = null;
 
   function tailYpx() {
@@ -100,7 +106,9 @@
 
   function clearGrowTimers() {
     clearTimeout(settleTimer);
+    clearTimeout(growDelayTimer);
     settleTimer = null;
+    growDelayTimer = null;
   }
 
   function cancelGrowAnimations(bubble) {
@@ -116,7 +124,7 @@
     const bubble = speechWrap.querySelector(".speech-bubble");
     const line = speechWrap.querySelector(".speech-line");
 
-    speechWrap.classList.remove("is-growing", "is-animating", "is-goo-on");
+    speechWrap.classList.remove("is-growing", "is-animating", "is-goo-on", "is-grow-pending");
     speechWrap.classList.add("is-settled");
 
     if (bubble) {
@@ -151,7 +159,7 @@
     clearGrowTimers();
     cancelGrowAnimations(bubble);
 
-    speechWrap.classList.remove("is-settled", "is-growing", "is-animating", "is-goo-on");
+    speechWrap.classList.remove("is-settled", "is-growing", "is-animating", "is-goo-on", "is-grow-pending");
     speechWrap.classList.add("is-growing", "is-animating");
     speechWrap.classList.toggle("is-goo-on", BUBBLE_BG_OPACITY >= 0.99);
 
@@ -167,11 +175,11 @@
     growAnim = bubble.animate(
       [
         {
-          transform: "scale(0.06, 0.52)",
+          transform: `scale(${GROW_START_X}, ${GROW_START_Y})`,
           borderRadius: "50% 50% 48% 52% / 54% 46% 50% 50%",
         },
         {
-          transform: "scale(1.012, 1.006)",
+          transform: `scale(${GROW_OVERSHOOT}, ${GROW_OVERSHOOT - 0.006})`,
           borderRadius: "1.12rem",
           offset: 0.92,
         },
@@ -194,7 +202,7 @@
           duration: GROW_MS,
           easing: GROW_EASING,
           fill: "forwards",
-          delay: Math.round(GROW_MS * 0.78),
+          delay: Math.round(GROW_MS * TEXT_FADE_PCT),
         }
       );
     }
@@ -203,6 +211,20 @@
     growAnim.oncancel = () => {};
 
     settleTimer = setTimeout(() => finishGrow(speechWrap), GROW_MS + 120);
+  }
+
+  function scheduleGrow(speechWrap, { skipDelay = false } = {}) {
+    if (!speechWrap) return;
+
+    clearGrowTimers();
+    speechWrap.classList.remove("is-settled", "is-growing", "is-animating", "is-goo-on");
+    speechWrap.classList.add("is-grow-pending");
+
+    const delay = skipDelay ? 0 : GROW_DELAY_MS;
+    growDelayTimer = setTimeout(() => {
+      growDelayTimer = null;
+      startGrow(speechWrap);
+    }, delay);
   }
 
   function shouldAnimate() {
@@ -235,7 +257,7 @@
 
     if (shouldAnimate() && (replay || !wrap.dataset.growPlayed)) {
       wrap.dataset.growPlayed = "1";
-      startGrow(wrap);
+      scheduleGrow(wrap, { skipDelay: replay });
     } else {
       finishGrow(wrap);
     }

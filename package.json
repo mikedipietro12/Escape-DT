@@ -6,6 +6,7 @@
     "test:data": "node scripts/validate-data.mjs",
     "test:seo": "node scripts/test-seo.mjs",
     "dev": "node scripts/serve.mjs",
+    "demo:hero": "node scripts/serve.mjs 3004",
     "admin": "node scripts/admin-server.mjs",
     "enrich": "node scripts/enrich-from-google.mjs",
     "gotos": "node scripts/add-gotos.mjs",

@@ -1,15 +1,48 @@
 {
-  "_note": "Approved hero speech bubble tuning (demo validated). Use these when wiring the landing hero. Prototype: demo/hero-speech-bubble.html",
-  "approved": "2026-06-02",
+  "_note": "Approved hero speech bubble tuning (demo validated). Prototype: demo/hero-speech-bubble.html",
+  "approved": "2026-06-06",
   "tailY": "46",
-  "bubbleOffsetY": "18",
-  "bubbleGap": "-12",
-  "bgOpacity": "0.15",
+  "bubbleOffsetY": "12",
+  "bubbleGap": "-18",
+  "bgOpacity": "0.6",
+  "heroWidth": "192",
+  "bubbleMaxWidth": "340",
+  "growMs": "1100",
+  "growDelay": "3000",
+  "growStartX": "0.2",
+  "growStartY": "0.8",
+  "growOvershoot": "1.06",
+  "textFadePct": "67",
+  "showBorder": false,
   "forceMotion": false,
+  "pulseEnabled": true,
+  "pulseDuration": "2.7",
+  "pulseDelay": "0.1",
+  "pulseScaleX": "1.019",
+  "pulseScaleY": "1.015",
   "css": {
     "--tail-y": "46px",
-    "--bubble-offset-y": "18px",
-    "--bubble-gap": "-12px",
-    "--bubble-bg-opacity": "0.15"
+    "--bubble-offset-y": "12px",
+    "--bubble-gap": "-18px",
+    "--bubble-bg-opacity": "0.6",
+    "--hero-figure-width": "min(192px, 36vw)",
+    "--bubble-max-width": "340px",
+    "--pulse-duration": "2.7s",
+    "--pulse-delay": "0.1s",
+    "--pulse-scale-x": "1.019",
+    "--pulse-scale-y": "1.015"
+  },
+  "animation": {
+    "growMs": 1100,
+    "growDelayMs": 3000,
+    "startScale": [0.2, 0.8],
+    "overshoot": 1.06,
+    "textFadePct": 67,
+    "border": false,
+    "pulse": {
+      "duration": "2.7s",
+      "delay": "0.1s",
+      "peakScale": [1.019, 1.015]
+    }
   }
 }

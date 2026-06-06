@@ -52,4 +52,7 @@ const server = http.createServer((req, res) => {
 server.listen(port, () => {
   console.log(`Escape DT: http://127.0.0.1:${port}/index.html`);
   console.log(`           http://localhost:${port}/index.html`);
+  if (port === 3004) {
+    console.log(`Hero tuner: http://localhost:${port}/demo/hero-speech-bubble.html`);
+  }
 });

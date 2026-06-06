@@ -1,5 +1,5 @@
 {
-  "_note": "DRAFT, not loaded by the app. 19 Hastings-Sunrise stops geocoded via npm run enrich. Pending: descriptions, photos, real cross streets, category/cost review (see _review per stop). See .cursor/plans horizontal_route_map plan and AGENTS.md roadmap.",
+  "_note": "Draft copy for admin editor — live East Village stops are in data/stops.json (neighborhood: hastings-sunrise). Keep in sync when editing via npm run admin.",
   "stops": [
     {
       "id": "s46",

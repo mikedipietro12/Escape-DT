@@ -25,12 +25,15 @@ html[data-hero-bubble="off"] .hero-mascot-wrap .hero-logo {
 
 html[data-hero-bubble="on"] .hero-mascot-wrap {
   --tail-y: 46px;
-  --bubble-gap: -12px;
-  --bubble-bg-opacity: 0.15;
-  --bubble-max-width: 300px;
-  /* Mascot PNGs (819×1024): crown of head ≈ y=181; offset scales with rendered figure width */
-  --hero-figure-width: min(200px, 36vw);
-  --bubble-offset-y: calc(var(--hero-figure-width) * 181 / 819);
+  --bubble-gap: -18px;
+  --bubble-bg-opacity: 0.6;
+  --bubble-max-width: 340px;
+  --hero-figure-width: min(192px, 36vw);
+  --bubble-offset-y: 12px;
+  --pulse-duration: 2.7s;
+  --pulse-delay: 0.1s;
+  --pulse-scale-x: 1.019;
+  --pulse-scale-y: 1.015;
 }
 
 .hero-mascot-wrap {
@@ -73,11 +76,6 @@ html[data-hero-bubble="off"] .hero-mascot-link {
   .hero-mascot-link:hover .hero-logo,
   .hero-mascot-link:focus-visible .hero-logo {
     filter: brightness(1.04);
-  }
-
-  .hero-mascot-link:hover .speech-bubble-wrap.is-settled .speech-frame-stroke,
-  .hero-mascot-link:focus-visible .speech-bubble-wrap.is-settled .speech-frame-stroke {
-    stroke: rgba(61, 214, 200, 0.95);
   }
 }
 
@@ -126,13 +124,11 @@ html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo {
 }
 
 .speech-bubble {
-  --border-teal: rgba(61, 214, 200, 0.7);
   --tail-bg: rgb(255 255 255 / var(--bubble-bg-opacity));
   position: relative;
   width: 100%;
   padding: 0.85rem 1rem 0.65rem;
-  border: 2px solid var(--border-teal);
-  border-left-width: 0;
+  border: none;
   border-radius: 1.15rem;
   background-color: var(--tail-bg);
   box-shadow: none;
@@ -141,10 +137,55 @@ html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo {
   visibility: visible;
 }
 
+/* Hide bubble slot until grow delay elapses — hero mascot alone on first paint. */
+html.hero-anim-js .speech-bubble-wrap.is-grow-pending {
+  flex: 0 0 0 !important;
+  max-width: 0 !important;
+  min-width: 0 !important;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  margin-left: 0 !important;
+  pointer-events: none;
+}
+
+html[data-hero-bubble="on"]:not(.hero-anim-js) .speech-bubble-wrap.is-grow-pending {
+  flex: 1 1 0;
+  max-width: var(--bubble-max-width);
+  min-width: 0;
+  opacity: 1;
+  visibility: visible;
+  overflow: visible;
+  margin-left: var(--bubble-gap);
+  pointer-events: auto;
+}
+
+html[data-hero-bubble="on"]:not(.hero-anim-js) .speech-bubble-wrap.is-grow-pending .speech-bubble {
+  visibility: visible;
+}
+
+html[data-hero-bubble="on"]:not(.hero-anim-js) .speech-bubble-wrap.is-grow-pending .speech-frame {
+  display: block;
+}
+
+html.hero-anim-js .speech-bubble-wrap.is-grow-pending .speech-bubble,
+html.hero-anim-js .speech-bubble-wrap.is-grow-pending .speech-line {
+  visibility: hidden;
+}
+
 /* Pre-JS: bubble visible via is-settled in HTML. JS replays grow when animating. */
+html.hero-anim-js .speech-bubble-wrap.is-grow-pending .speech-bubble,
 html.hero-anim-js .speech-bubble-wrap.is-growing .speech-bubble {
   overflow: hidden;
   will-change: transform, border-radius;
+}
+
+html.hero-anim-js .speech-bubble-wrap.is-growing .speech-bubble {
+  visibility: visible;
+}
+
+html.hero-anim-js .speech-bubble-wrap.is-growing .speech-line {
+  opacity: 0;
 }
 
 .speech-bubble-wrap.is-animating.is-goo-on {
@@ -194,7 +235,7 @@ html.hero-anim-js .speech-bubble-wrap.is-growing .speech-bubble {
 
 .speech-frame-stroke {
   fill: none;
-  stroke: var(--border-teal);
+  stroke: transparent;
   stroke-width: 2;
   stroke-linecap: butt;
   stroke-linejoin: round;
@@ -205,9 +246,8 @@ html.hero-anim-js .speech-bubble-wrap.is-growing .speech-bubble {
 }
 
 .speech-bubble-wrap.is-settled .speech-bubble {
-  border-color: transparent;
   background-color: transparent;
-  animation: none;
+  animation: hero-bubble-pulse var(--pulse-duration) ease-in-out var(--pulse-delay) infinite;
   border-radius: 1.15rem;
 }
 
@@ -247,17 +287,25 @@ html.hero-anim-js .speech-bubble-wrap.is-growing .speech-line {
   }
 }
 
+@keyframes hero-bubble-pulse {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(var(--pulse-scale-x), var(--pulse-scale-y));
+  }
+}
+
 /* Phones & small tablets: keep mascot size; bubble shrinks to remaining row width */
 @media (max-width: 520px) {
   html[data-hero-bubble="on"] .hero-mascot-wrap {
-    /* Keep mascot at full scale; only the bubble gives up width as the viewport narrows */
-    --hero-figure-width: min(200px, 40vw);
-    /* ~hero-section horizontal padding (1.5rem × 2) + figure + gap */
+    --hero-figure-width: min(192px, 40vw);
     --bubble-max-width: min(
-      300px,
+      340px,
       calc(100vw - 3rem - var(--hero-figure-width) - var(--bubble-gap, 0px) - 6px)
     );
-    --bubble-gap: 4px;
+    --bubble-gap: -18px;
   }
 
   .hero-mascot-wrap .hero-figure {
@@ -307,8 +355,7 @@ html.hero-anim-js .speech-bubble-wrap.is-growing .speech-line {
   }
 
   .speech-bubble-wrap.is-settled .speech-bubble {
-    border-color: var(--border-teal);
-    border-left-width: 2px;
+    background-color: var(--tail-bg);
   }
 
   .speech-bubble-wrap.is-settled .speech-tail {
@@ -326,5 +373,10 @@ html.hero-anim-js .speech-bubble-wrap.is-growing .speech-line {
 @media (prefers-reduced-motion: reduce) {
   html:not(.force-motion) .speech-bubble-wrap {
     filter: none;
+  }
+
+  html:not(.force-motion) .speech-bubble-wrap.is-settled .speech-bubble {
+    animation: none;
+    transform: scale(1, 1);
   }
 }
