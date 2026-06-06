@@ -5281,11 +5281,13 @@
       xCenter: 150,
       xEast: 175,
       xWest: 125,
+      xVenablesWest: 108,
+      xVenablesEast: 114,
       yNorth: 50,
       yStation: 550,
       ySpan: 500,
       ySouthSpan: 90,
-      legDurationMs: 1000,
+      legDurationMs: 1400,
       defaultViewBox: "0 0 340 600",
       viewBoxPad: 24,
     };
@@ -5316,6 +5318,10 @@
       return x > MAP.xCenter + 5;
     }
 
+    function isMapStopWestOffset(x) {
+      return x < MAP.xCenter - 5;
+    }
+
     function getMapLegColor(leg) {
       if (leg.isBackward) return MAP_BACKWARD_COLOR;
       const colors = getMapLegColors();
@@ -5330,21 +5336,71 @@
       return /\bfrances\b/i.test(String(crossStreet || ""));
     }
 
+    function getStopMapZone(stop) {
+      if (!stop) return "spine";
+      if (stop.mapVenables === "east") return "venablesEast";
+      if (stop.mapVenables === "west") return "venablesWest";
+      if (isVictoriaCrossStreet(stop.crossStreet)) return "victoria";
+      if (isFrancesCrossStreet(stop.crossStreet)) return "frances";
+      return "spine";
+    }
+
     function getStopMapX(stop) {
+      const zone = getStopMapZone(stop);
+      if (zone === "venablesEast") return MAP.xVenablesEast;
+      if (zone === "venablesWest") return MAP.xVenablesWest;
       const explicit = stop.coords?.x;
       if (explicit != null && explicit !== MAP.xCenter) return explicit;
-      if (isVictoriaCrossStreet(stop.crossStreet)) return MAP.xEast;
-      if (isFrancesCrossStreet(stop.crossStreet)) return MAP.xWest;
+      if (zone === "victoria") return MAP.xEast;
+      if (zone === "frances") return MAP.xWest;
       return explicit ?? MAP.xCenter;
     }
 
     function isStopOffSpine(stop) {
+      const zone = getStopMapZone(stop);
+      if (zone !== "spine") return true;
       return Math.abs(getStopMapX(stop) - MAP.xCenter) > 5;
     }
 
-    function getMapLegPathD(x1, y1, x2, y2, fromOffSpine, toOffSpine) {
+    function getMapLegPathD(x1, y1, x2, y2, fromStop, toStop) {
       const spine = MAP.xCenter;
       const nearSpine = (x) => Math.abs(x - spine) <= 5;
+      const z1 = fromStop ? getStopMapZone(fromStop) : "spine";
+      const z2 = toStop ? getStopMapZone(toStop) : "spine";
+
+      if (z1 === "venablesWest" && z2 === "venablesWest") {
+        return `M ${x1} ${y1} L ${x2} ${y2}`;
+      }
+      if (
+        (z1 === "venablesWest" && z2 === "venablesEast") ||
+        (z1 === "venablesEast" && z2 === "venablesWest")
+      ) {
+        return `M ${x1} ${y1} L ${x2} ${y1}`;
+      }
+      if (z1 === "venablesEast" && z2 === "spine") {
+        return `M ${x1} ${y1} L ${spine} ${y1} L ${spine} ${y2}`;
+      }
+      if (z1 === "spine" && z2 === "venablesWest") {
+        const parts = [`M ${x1} ${y1}`];
+        if (y1 !== y2) parts.push(`L ${spine} ${y2}`);
+        parts.push(`L ${x2} ${y2}`);
+        return parts.join(" ");
+      }
+      if (z1 === "spine" && z2 === "venablesEast") {
+        const parts = [`M ${x1} ${y1}`];
+        if (y1 !== y2) parts.push(`L ${spine} ${y2}`);
+        parts.push(`L ${x2} ${y2}`);
+        return parts.join(" ");
+      }
+      if (z1 === "venablesWest" && z2 === "spine") {
+        return `M ${x1} ${y1} L ${spine} ${y1} L ${spine} ${y2}`;
+      }
+      if (z1 === "venablesEast" && z2 === "venablesEast") {
+        return `M ${x1} ${y1} L ${x2} ${y2}`;
+      }
+
+      const fromOffSpine = fromStop ? isStopOffSpine(fromStop) : false;
+      const toOffSpine = toStop ? isStopOffSpine(toStop) : false;
 
       if (toOffSpine && !fromOffSpine) {
         const parts = [`M ${x1} ${y1}`];
@@ -5513,6 +5569,17 @@
       return points;
     }
 
+    function alignVenablesMapPoints(points) {
+      const west = points.filter((p) => getStopMapZone(p.stop) === "venablesWest");
+      const east = points.filter((p) => getStopMapZone(p.stop) === "venablesEast");
+      if (!west.length || !east.length) return points;
+      const rowY = Math.max(...west.map((p) => p.y));
+      east.forEach((p) => {
+        p.y = rowY;
+      });
+      return points;
+    }
+
     function layoutRouteMapPointsFromStation(route) {
       const furthestDist = Math.max(
         ...route.map((s) => getStopWalkFromStation(s).km),
@@ -5557,12 +5624,13 @@
       const rawPoints = shouldShowStationOnMap(mapOptions)
         ? layoutRouteMapPointsFromStation(representatives)
         : layoutRouteMapPointsFromLat(representatives);
-      return rawPoints.map((point, mapIdx) => ({
+      const points = rawPoints.map((point, mapIdx) => ({
         ...point,
         mapIdx,
         routeIndices: groups[mapIdx].routeIndices,
         idx: groups[mapIdx].routeIndices[0],
       }));
+      return alignVenablesMapPoints(points);
     }
 
     function getMapSpineBounds(points, showStation) {
@@ -5586,7 +5654,12 @@
 
       points.forEach((p) => {
         const east = isMapStopEastOffset(p.x);
-        xs.push(east ? p.x - 90 : p.x - 12, east ? p.x + 12 : p.x + 90);
+        const west = isMapStopWestOffset(p.x);
+        if (east || west) {
+          xs.push(p.x - 90, p.x + 12);
+        } else {
+          xs.push(p.x - 12, p.x + 90);
+        }
         ys.push(p.y - 14, p.y + 14);
       });
 
@@ -5651,8 +5724,6 @@
           y2 = station.y;
         }
 
-        const fromOffSpine = fromStop ? isStopOffSpine(fromStop) : false;
-        const toOffSpine = toStop ? isStopOffSpine(toStop) : false;
         const isBackward = isMapLegBackward(y1, y2);
         return {
           ...leg,
@@ -5660,7 +5731,7 @@
           y1,
           x2,
           y2,
-          pathD: getMapLegPathD(x1, y1, x2, y2, fromOffSpine, toOffSpine),
+          pathD: getMapLegPathD(x1, y1, x2, y2, fromStop, toStop),
           legIndex: i,
           isBackward,
         };
@@ -5708,8 +5779,6 @@
           y2 = station.y;
         }
 
-        const fromOffSpine = fromStop ? isStopOffSpine(fromStop) : false;
-        const toOffSpine = toStop ? isStopOffSpine(toStop) : false;
         const isBackward = isMapLegBackward(y1, y2);
         return {
           ...leg,
@@ -5717,7 +5786,7 @@
           y1,
           x2,
           y2,
-          pathD: getMapLegPathD(x1, y1, x2, y2, fromOffSpine, toOffSpine),
+          pathD: getMapLegPathD(x1, y1, x2, y2, fromStop, toStop),
           legIndex: i,
           isBackward,
         };
@@ -5761,8 +5830,9 @@
       const mapIdx = point.mapIdx ?? point.idx;
       const numLabel = formatMapStopNumberLabel(point);
       const east = isMapStopEastOffset(point.x);
-      const labelX = east ? point.x - 12 : point.x + 15;
-      const labelAnchor = east ? "end" : "start";
+      const west = isMapStopWestOffset(point.x);
+      const labelX = east || west ? point.x - 12 : point.x + 15;
+      const labelAnchor = east || west ? "end" : "start";
       return `
         <g class="map-stop-group map-stop-group--hidden" data-stop-index="${mapIdx}">
           <circle class="map-stop" cx="${point.x}" cy="${point.y}" r="5" />
@@ -6678,9 +6748,18 @@
       let waypointStops = [];
 
       if (opts.startAtStation && opts.endAtStation) {
-        origin = station;
-        dest = station;
-        waypointStops = resolved;
+        // Google Maps cannot resolve api=1 directions when origin === destination
+        // (common SkyTrain round trip). Use a multi-segment /dir/ walking URL instead.
+        const pathPoints = [
+          station,
+          ...resolved.map((s) => `${s.lat},${s.lng}`),
+          station,
+        ];
+        return (
+          "https://www.google.com/maps/dir/" +
+          pathPoints.join("/") +
+          "/data=!4m2!4m1!3e2"
+        );
       } else if (opts.startAtStation && !opts.endAtStation) {
         origin = station;
         dest = last;

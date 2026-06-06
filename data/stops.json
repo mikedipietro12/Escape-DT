@@ -484,6 +484,7 @@
             ],
             "neighborhood": "commercial",
             "mapLocation": "alterior",
+            "mapVenables": "west",
             "categories": [
                 "shopping",
                 "hangout"
@@ -643,7 +644,7 @@
             "name": "Sula Indian Restaurant",
             "coords": {
                 "y": 278,
-                "x": 152
+                "x": 150
             },
             "description": "With multiple locations in the city, it's no secret that this is some of the best Indian food you can get. I've tried many of the dishes and always find myself coming back for more!",
             "goto": "Share platter to start, then some dal makhani, saag paneer, butter chicken and lamb vindaloo.",
@@ -1012,7 +1013,8 @@
             "tags": [
                 "vintage",
                 "clothing",
-                "collectables"
+                "collectables",
+                "shopping"
             ],
             "name": "FUN HÄUS",
             "coords": {
@@ -1077,6 +1079,7 @@
                 "allday"
             ],
             "neighborhood": "commercial",
+            "mapVenables": "west",
             "categories": [
                 "shopping",
                 "hangout"
