@@ -12,11 +12,8 @@
             "lat": 49.2649446,
             "cost": "$",
             "tags": [
-                "snacks",
-                "cookies",
-                "baked goods",
-                "grab and go",
-                "sit down"
+                "existing",
+                "activities"
             ],
             "name": "JJ Bean",
             "coords": {
@@ -213,7 +210,8 @@
                 "pizza",
                 "wine",
                 "lunch",
-                "dinner"
+                "dinner",
+                "grab and go"
             ],
             "name": "Belli Pizza",
             "coords": {

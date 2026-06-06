@@ -261,7 +261,10 @@
     .cost-btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
     .chip.toggle { cursor: pointer; border: 1px solid var(--line); background: #f2f2f2; }
     .chip.toggle.on { background: var(--accent); color: #fff; }
-    #wiz-tag-chips { margin-top: 0.6rem; max-height: 160px; overflow-y: auto; }
+    .tag-chip-label { display: block; margin-top: 0.35rem; font-size: 0.72rem; color: var(--muted); }
+    #tag-main-chips { margin-top: 0.25rem; }
+    #wiz-tag-main-chips { margin-top: 0.35rem; }
+    #wiz-tag-chips { margin-top: 0.35rem; max-height: 160px; overflow-y: auto; }
     .wizard-foot { display: flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.2rem; border-top: 1px solid var(--line); }
     .wiz-orig { font-size: 0.8rem; color: var(--muted); margin-top: 0.6rem; }
 
@@ -349,6 +352,10 @@
           <div class="field">
             <label>Tags <span class="hint">(descriptive, comma-separated)</span></label>
             <input type="text" name="tags" id="tags" placeholder="patio, grab and go, greek">
+            <div id="tag-main-wrap" hidden>
+              <span class="tag-chip-label">Main tags <span class="hint">(for selected categories)</span></span>
+              <div class="chips" id="tag-main-chips"></div>
+            </div>
             <div class="chips" id="tag-suggestions" style="margin-top:0.35rem;"></div>
           </div>
 
@@ -634,6 +641,39 @@
       groceries: "Groceries",
     };
 
+    // Path 1 Step D primary filters — shown as "main tags" when categories are set.
+    const PRIMARY_TAGS_BY_CATEGORY = {
+      coffee: ["sit down", "grab and go", "cookies"],
+      drinks: ["sit down", "patio", "tvs", "cocktails", "beer"],
+      food: ["sit down", "grab and go"],
+      hangout: ["shops", "art gallery", "activities", "park"],
+    };
+
+    function parseTagsValue(str) {
+      return String(str || "").split(",").map((s) => s.trim()).filter(Boolean);
+    }
+
+    function tagsInclude(arr, tag) {
+      const lower = String(tag).toLowerCase();
+      return (arr || []).some((t) => String(t).toLowerCase() === lower);
+    }
+
+    function toggleTagInList(arr, tag) {
+      const cur = [...(arr || [])];
+      const i = cur.findIndex((t) => String(t).toLowerCase() === String(tag).toLowerCase());
+      if (i >= 0) cur.splice(i, 1);
+      else cur.push(tag);
+      return cur;
+    }
+
+    function primaryTagsForCategories(categories) {
+      const set = new Set();
+      for (const cat of categories || []) {
+        for (const t of PRIMARY_TAGS_BY_CATEGORY[cat] || []) set.add(t);
+      }
+      return [...set];
+    }
+
     function categoryLabel(id) {
       return CATEGORY_LABELS[id] || id;
     }
@@ -807,15 +847,50 @@
       form.costMax.innerHTML = opts;
     }
 
+    function syncMainTagChipStates(tags) {
+      const cur = tags || parseTagsValue(form.tags.value);
+      $("#tag-main-chips").querySelectorAll("[data-t]").forEach((ch) => {
+        ch.classList.toggle("on", tagsInclude(cur, ch.dataset.t));
+      });
+    }
+
+    function renderMainTagChips() {
+      const cats = collectChecks("#categories");
+      const mainTags = primaryTagsForCategories(cats);
+      const wrap = $("#tag-main-wrap");
+      if (!mainTags.length) {
+        wrap.hidden = true;
+        $("#tag-main-chips").innerHTML = "";
+        return;
+      }
+      wrap.hidden = false;
+      const cur = parseTagsValue(form.tags.value);
+      $("#tag-main-chips").innerHTML = mainTags.map((t) =>
+        `<span class="chip toggle ${tagsInclude(cur, t) ? "on" : ""}" data-t="${escapeHtml(t)}">${escapeHtml(t)}</span>`
+      ).join("");
+      $("#tag-main-chips").querySelectorAll("[data-t]").forEach((ch) => {
+        ch.addEventListener("click", () => {
+          const next = toggleTagInList(parseTagsValue(form.tags.value), ch.dataset.t);
+          form.tags.value = next.join(", ");
+          syncMainTagChipStates(next);
+          onInput();
+        });
+      });
+    }
+
     function renderTagSuggestions() {
-      $("#tag-suggestions").innerHTML = state.refs.tags.slice(0, 40)
+      const mainSet = new Set(primaryTagsForCategories(collectChecks("#categories")).map((t) => t.toLowerCase()));
+      $("#tag-suggestions").innerHTML = state.refs.tags
+        .filter((t) => !mainSet.has(String(t).toLowerCase()))
+        .slice(0, 40)
         .map((t) => `<span class="chip" data-tag="${escapeHtml(t)}" style="cursor:pointer;">+ ${escapeHtml(t)}</span>`).join("");
       $("#tag-suggestions").querySelectorAll("[data-tag]").forEach((el) => {
         el.addEventListener("click", () => {
-          const cur = form.tags.value.split(",").map((s) => s.trim()).filter(Boolean);
+          const cur = parseTagsValue(form.tags.value);
           const t = el.dataset.tag;
-          if (!cur.includes(t)) cur.push(t);
+          if (!tagsInclude(cur, t)) cur.push(t);
           form.tags.value = cur.join(", ");
+          syncMainTagChipStates(cur);
           onInput();
         });
       });
@@ -895,6 +970,8 @@
         $("#meta-google").style.display = "none";
       }
 
+      renderMainTagChips();
+      renderTagSuggestions();
       updatePreview();
       renderThumbs();
       updateSaveBarNav();
@@ -1159,6 +1236,7 @@
 
     function onInput() {
       $("#color-swatch").style.background = "#" + (form.placeholderColor.value.trim().replace(/^#/, "") || "cccccc");
+      syncMainTagChipStates();
       updatePreview();
       renderThumbs();
       scheduleAutoSave();
@@ -1505,10 +1583,20 @@
       const head = `<label class="wiz-label">${def.label}<span class="hint">${def.hint}</span></label>`;
       if (field === "tags") {
         const cur = stop.tags || [];
+        const mainTags = primaryTagsForCategories(stop.categories || []);
+        const mainSet = new Set(mainTags.map((t) => t.toLowerCase()));
+        const otherTags = state.refs.tags.filter((t) => !mainSet.has(String(t).toLowerCase()));
+        const chip = (t) =>
+          `<span class="chip toggle ${tagsInclude(cur, t) ? "on" : ""}" data-t="${escapeHtml(t)}">${escapeHtml(t)}</span>`;
+        const mainBlock = mainTags.length
+          ? `<span class="tag-chip-label">Main tags</span><div class="chips" id="wiz-tag-main-chips">${mainTags.map(chip).join("")}</div>`
+          : "";
+        const otherBlock = otherTags.length
+          ? `<span class="tag-chip-label">${mainTags.length ? "All tags" : "Tags"}</span><div class="chips" id="wiz-tag-chips">${otherTags.map(chip).join("")}</div>`
+          : "";
         return head +
           `<input type="text" id="wiz-tags" value="${escapeHtml(cur.join(", "))}" placeholder="patio, grab and go">` +
-          `<div class="chips" id="wiz-tag-chips">${state.refs.tags.map((t) =>
-            `<span class="chip toggle ${cur.includes(t) ? "on" : ""}" data-t="${escapeHtml(t)}">${escapeHtml(t)}</span>`).join("")}</div>`;
+          mainBlock + otherBlock;
       }
       if (field === "cost") {
         const c = stop.cost;
@@ -1550,21 +1638,22 @@
         const input = $("#wiz-tags");
         const syncChips = () => {
           const cur = wizard.stop.tags || [];
-          $("#wiz-tag-chips").querySelectorAll(".chip").forEach((ch) => ch.classList.toggle("on", cur.includes(ch.dataset.t)));
+          $("#wiz-body").querySelectorAll("[data-t]").forEach((ch) => {
+            ch.classList.toggle("on", tagsInclude(cur, ch.dataset.t));
+          });
+        };
+        const applyTags = (cur) => {
+          wizard.stop.tags = cur;
+          input.value = cur.join(", ");
+          mark();
+          syncChips();
         };
         input.addEventListener("input", () => {
-          wizard.stop.tags = input.value.split(",").map((s) => s.trim()).filter(Boolean);
-          mark(); syncChips();
+          applyTags(parseTagsValue(input.value));
         });
-        $("#wiz-tag-chips").querySelectorAll(".chip").forEach((ch) => {
+        $("#wiz-body").querySelectorAll("[data-t]").forEach((ch) => {
           ch.addEventListener("click", () => {
-            const cur = wizard.stop.tags || [];
-            const t = ch.dataset.t;
-            const i = cur.indexOf(t);
-            if (i >= 0) cur.splice(i, 1); else cur.push(t);
-            wizard.stop.tags = cur;
-            input.value = cur.join(", ");
-            mark(); syncChips();
+            applyTags(toggleTagInList(wizard.stop.tags || [], ch.dataset.t));
           });
         });
         input.focus();
@@ -1990,7 +2079,13 @@
     });
     form.addEventListener("submit", saveStop);
     form.addEventListener("input", onInput);
-    form.addEventListener("change", onInput);
+    form.addEventListener("change", () => {
+      if (form.style.display !== "none") {
+        renderMainTagChips();
+        renderTagSuggestions();
+      }
+      onInput();
+    });
     form.querySelectorAll('input[name="costMode"]').forEach((r) =>
       r.addEventListener("change", () => { setCostMode(r.value); onInput(); }));
     window.addEventListener("beforeunload", (e) => {
