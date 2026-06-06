@@ -30,7 +30,7 @@ html[data-hero-bubble="on"] .hero-mascot-wrap {
   --bubble-max-width: 340px;
   --hero-figure-width: min(192px, 36vw);
   --bubble-offset-y: 12px;
-  --pulse-duration: 2.7s;
+  --pulse-duration: 4.7s;
   --pulse-delay: 0.1s;
   --pulse-scale-x: 1.019;
   --pulse-scale-y: 1.015;

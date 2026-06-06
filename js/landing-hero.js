@@ -7,8 +7,8 @@
  * Preview grow animation when OS "reduce motion" is on: ?hero=motion
  */
 (function () {
-  const GROW_MS = 1100;
-  const GROW_DELAY_MS = 0;
+  const GROW_MS = 2400;
+  const GROW_DELAY_MS = 1200;
   const GROW_START_X = 0.2;
   const GROW_START_Y = 0.8;
   const GROW_OVERSHOOT = 1.06;
