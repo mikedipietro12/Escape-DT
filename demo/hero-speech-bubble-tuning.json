@@ -27,6 +27,7 @@
     "--bubble-bg-opacity": "0.6",
     "--hero-figure-width": "min(192px, 36vw)",
     "--bubble-max-width": "340px",
+    "--grow-delay-ms": "1200",
     "--pulse-duration": "4.7s",
     "--pulse-delay": "0.1s",
     "--pulse-scale-x": "1.019",

@@ -76,7 +76,7 @@ Live on the landing page (`css/landing-hero.css`, `js/landing-hero.js`). Interac
 | White background opacity | `0.6` | `--bubble-bg-opacity` |
 | Mascot width | `192px` (responsive) | `--hero-figure-width` |
 | Bubble max width | `340px` | `--bubble-max-width` |
-| Grow animation | `2400ms`, delay `1200ms`, start `scale(0.2, 0.8)`, overshoot `1.06`, text `@67%` | `js/landing-hero.js` |
+| Grow animation | `2400ms`, delay `1200ms` (`--grow-delay-ms`), start `scale(0.2, 0.8)`, overshoot `1.06`, text `@67%` | `js/landing-hero.js`, `css/landing-hero.css` |
 | Idle pulse | `4.7s`, delay `0.1s`, peak `scale(1.019, 1.015)` | `--pulse-*` in `css/landing-hero.css` |
 | Border | off | — |
 

@@ -1989,11 +1989,31 @@
       margin-top: 0.35rem;
     }
     @media (max-width: 767px) {
+      .hero-subtitle {
+        margin-bottom: 0;
+        line-height: 1.45;
+      }
+      .landing-tagline {
+        margin-bottom: 0.5rem;
+      }
+      .landing-options {
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      #landing-areas,
+      #landing-paths-cards {
+        gap: 0.5rem;
+      }
+      .landing-options .card {
+        padding: 1rem 1.1rem;
+        margin-bottom: 0;
+      }
       .landing-options .card .choice-title {
-        font-size: 1.05rem;
+        font-size: 0.9rem;
       }
       .landing-options .card .choice-desc {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
       }
     }
     .landing-options .card:hover {
@@ -2710,6 +2730,19 @@
           </div>
           </a>
         </div>
+        <noscript>
+          <style>
+            html[data-hero-bubble="on"] .speech-bubble-wrap.is-grow-pending .speech-bubble {
+              visibility: visible !important;
+              height: auto !important;
+              padding: 0.85rem 1rem 0.65rem !important;
+              background-color: rgb(255 255 255 / 0.6) !important;
+            }
+            html[data-hero-bubble="on"] .speech-bubble-wrap.is-grow-pending .speech-frame {
+              display: block !important;
+            }
+          </style>
+        </noscript>
         <script>(function(){var img=document.getElementById("hero-logo");var logo=document.documentElement.dataset.heroLogo;if(logo&&logo!==img.getAttribute("src"))img.src=logo;})();</script>
         <h1>Let&rsquo;s get you out of <span class="hero-location-wrap" aria-live="polite"><span class="hero-location" id="hero-location-word">downtown</span></span> and into &ldquo;East&nbsp;Vancouver&rdquo;<sup class="footnote-wrap"><button type="button" class="footnote-trigger" aria-expanded="false" aria-describedby="footnote-territory">1</button><span id="footnote-territory" class="footnote-tooltip" role="tooltip">This takes place on the unceded territory of the Coast Salish Peoples, including the territories of the xʷməθkwəy̓əm (Musqueam), Skwxw&uacute;7mesh (Squamish), and Səl̓&iacute;lwətaʔ/Selilwitulh (Tsleil-Waututh) Nations.</span></sup></h1>
         <p class="hero-subtitle" id="hero-subtitle" hidden></p>

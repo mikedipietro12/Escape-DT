@@ -8,7 +8,6 @@
  */
 (function () {
   const GROW_MS = 2400;
-  const GROW_DELAY_MS = 1200;
   const GROW_START_X = 0.2;
   const GROW_START_Y = 0.8;
   const GROW_OVERSHOOT = 1.06;
@@ -18,6 +17,7 @@
   const TAIL_TIP_X = -12.25;
   const TAIL_FRAME_PAD = 14;
   const BUBBLE_BG_OPACITY = 0.6;
+  const DEFAULT_GROW_DELAY_MS = 1200;
 
   const root = document.documentElement;
   const params = new URLSearchParams(location.search);
@@ -41,6 +41,21 @@
   let settleTimer = null;
   let growDelayTimer = null;
   let growAnim = null;
+  let growSequenceStarted = false;
+
+  if (wrap) {
+    wrap.classList.remove("is-settled", "is-growing", "is-animating", "is-goo-on");
+    wrap.classList.add("is-grow-pending");
+  }
+
+  function growDelayMs() {
+    const wrapEl = document.querySelector(".hero-mascot-wrap");
+    const raw = wrapEl
+      ? getComputedStyle(wrapEl).getPropertyValue("--grow-delay-ms").trim()
+      : "";
+    const n = parseInt(raw, 10);
+    return Number.isFinite(n) && n >= 0 ? n : DEFAULT_GROW_DELAY_MS;
+  }
 
   function tailYpx() {
     const wrapEl = document.querySelector(".hero-mascot-wrap");
@@ -220,7 +235,7 @@
     speechWrap.classList.remove("is-settled", "is-growing", "is-animating", "is-goo-on");
     speechWrap.classList.add("is-grow-pending");
 
-    const delay = skipDelay ? 0 : GROW_DELAY_MS;
+    const delay = skipDelay ? 0 : growDelayMs();
     growDelayTimer = setTimeout(() => {
       growDelayTimer = null;
       startGrow(speechWrap);
@@ -250,17 +265,21 @@
 
     bindHeroImg();
 
-    const bubble = wrap.querySelector(".speech-bubble");
-    if (bubble) {
-      syncSpeechFrame(bubble);
+    if (!shouldAnimate()) {
+      finishGrow(wrap);
+      return;
     }
 
-    if (shouldAnimate() && (replay || !wrap.dataset.growPlayed)) {
-      wrap.dataset.growPlayed = "1";
-      scheduleGrow(wrap, { skipDelay: replay });
-    } else {
-      finishGrow(wrap);
+    if (replay) {
+      scheduleGrow(wrap, { skipDelay: true });
+      return;
     }
+
+    if (growSequenceStarted) {
+      return;
+    }
+    growSequenceStarted = true;
+    scheduleGrow(wrap, { skipDelay: false });
   }
 
   function scheduleInit(replay) {
@@ -275,7 +294,7 @@
 
   window.addEventListener("pageshow", (e) => {
     if (e.persisted) {
-      delete wrap?.dataset.growPlayed;
+      growSequenceStarted = false;
       scheduleInit(true);
     }
   });

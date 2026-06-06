@@ -154,38 +154,25 @@ body {
   margin-left: var(--bubble-gap);
 }
 
-html.hero-anim-js .speech-bubble-wrap.is-grow-pending {
-  flex: 0 0 0 !important;
-  max-width: 0 !important;
-  min-width: 0 !important;
-  opacity: 0;
-  visibility: hidden;
-  overflow: hidden;
-  margin-left: 0 !important;
+html.hero-anim-js .speech-bubble-wrap.is-grow-pending,
+html:not(.hero-anim-js) .speech-bubble-wrap.is-grow-pending {
   pointer-events: none;
 }
 
-html:not(.hero-anim-js) .speech-bubble-wrap.is-grow-pending {
-  flex: 1 1 auto;
-  max-width: var(--bubble-max-width);
-  opacity: 1;
-  visibility: visible;
-  overflow: visible;
-  margin-left: var(--bubble-gap);
-  pointer-events: auto;
-}
-
-html:not(.hero-anim-js) .speech-bubble-wrap.is-grow-pending .speech-bubble {
-  visibility: visible;
-}
-
-html:not(.hero-anim-js) .speech-bubble-wrap.is-grow-pending .speech-frame {
-  display: block;
-}
-
 html.hero-anim-js .speech-bubble-wrap.is-grow-pending .speech-bubble,
-html.hero-anim-js .speech-bubble-wrap.is-grow-pending .speech-line {
+html:not(.hero-anim-js) .speech-bubble-wrap.is-grow-pending .speech-bubble {
   visibility: hidden;
+  height: 0;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  overflow: hidden;
+}
+
+html.hero-anim-js .speech-bubble-wrap.is-grow-pending .speech-frame,
+html.hero-anim-js .speech-bubble-wrap.is-grow-pending .speech-tail {
+  display: none;
 }
 
 .speech-bubble-wrap.is-animating.is-goo-on {
