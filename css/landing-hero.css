@@ -39,7 +39,7 @@ html[data-hero-bubble="on"] .hero-mascot-wrap {
 
 .hero-mascot-wrap {
   width: 100%;
-  margin: 0 auto 1.25rem;
+  margin: 0 auto 0.5rem;
 }
 
 .hero-mascot-wrap .svg-defs {
@@ -280,12 +280,17 @@ html[data-hero-bubble="on"] .speech-bubble-wrap.is-growing .speech-line {
 /* Phones & small tablets: keep mascot size; bubble shrinks to remaining row width */
 @media (max-width: 520px) {
   html[data-hero-bubble="on"] .hero-mascot-wrap {
-    --hero-figure-width: min(192px, 40vw);
+    --hero-figure-width: min(168px, 36vw);
     --bubble-max-width: min(
       340px,
       calc(100vw - 3rem - var(--hero-figure-width) - var(--bubble-gap, 0px) - 6px)
     );
     --bubble-gap: -18px;
+    --bubble-offset-y: 8px;
+  }
+
+  .hero-mascot-wrap {
+    margin-bottom: 0.25rem;
   }
 
   .hero-mascot-wrap .hero-figure {
@@ -306,7 +311,7 @@ html[data-hero-bubble="on"] .speech-bubble-wrap.is-growing .speech-line {
   }
 
   .speech-bubble {
-    padding: 0.55rem 0.65rem 0.45rem;
+    padding: 0.45rem 0.6rem 0.35rem;
   }
 
   .speech-line {

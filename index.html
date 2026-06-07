@@ -898,7 +898,7 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 0.75rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
     @media (min-width: 600px) {
       .category-grid { grid-template-columns: repeat(3, 1fr); }
@@ -945,8 +945,8 @@
 
     .ranked-list {
       border-top: 1px solid var(--border);
-      padding-top: 1.5rem;
-      margin-top: 1.5rem;
+      padding-top: 0.75rem;
+      margin-top: 0.75rem;
     }
     .rank-item {
       display: flex;
@@ -1139,12 +1139,39 @@
       padding: 0.25rem 0.5rem;
       border: 1px solid var(--ink);
     }
+    .spot-tile .tags-more-btn {
+      display: none;
+      font-size: 0.65rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--ink);
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font-family: inherit;
+      line-height: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .spot-tile .tags-more-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    @media (max-width: 767px) {
+      .spot-tile .tags:not(.tags--expanded) .tag--overflow {
+        display: none;
+      }
+      .spot-tile .tags:not(.tags--expanded) .tags-more-btn {
+        display: inline-flex;
+        align-items: center;
+      }
+    }
     .spot-tile.selected {
       background: var(--ink);
       color: #fff;
       border: 2px solid var(--ink);
     }
-    .spot-tile.selected .tag { border-color: #fff; }
+    .spot-tile.selected .tag,
+    .spot-tile.selected .tags-more-btn { border-color: #fff; }
 
     .step-d-filters {
       margin-bottom: 1.5rem;
@@ -1918,7 +1945,7 @@
       display: block;
       width: min(180px, 42vw);
       height: auto;
-      margin: 0 auto 1.25rem;
+      margin: 0 auto 0.5rem;
       position: relative;
       z-index: 1;
     }
@@ -4695,6 +4722,40 @@
       return [...within, ...outside];
     }
 
+    const SPOT_TILE_MOBILE_TAG_LIMIT = 3;
+
+    function renderSpotTileTags(spot) {
+      const tags = spot.tags || [];
+      const hasExtraTags = tags.length > SPOT_TILE_MOBILE_TAG_LIMIT;
+      const hasMetaTags =
+        Boolean(spot.costLabel) ||
+        (usesSkytrainStation(spot.neighborhood) && spot.walkFromStation != null);
+      const showMoreBtn = hasExtraTags || hasMetaTags;
+      const tagSpans = tags
+        .map((t, i) => {
+          const overflowClass = showMoreBtn && i >= SPOT_TILE_MOBILE_TAG_LIMIT ? " tag--overflow" : "";
+          return `<span class="tag${overflowClass}">${escapeHtml(t)}</span>`;
+        })
+        .join("");
+      const moreBtn = showMoreBtn
+        ? `<button type="button" class="tags-more-btn" aria-label="Show more tags" aria-expanded="false" onclick="event.stopPropagation(); toggleSpotTileTags(event)">…</button>`
+        : "";
+      const metaOverflow = showMoreBtn ? " tag--overflow" : "";
+      const metaTags =
+        `<span class="tag${metaOverflow}">${escapeHtml(spot.costLabel)}</span>` +
+        (usesSkytrainStation(spot.neighborhood) && spot.walkFromStation != null
+          ? `<span class="tag${metaOverflow}">${spot.walkFromStation} min walk</span>`
+          : "");
+      return `<div class="tags">${tagSpans}${moreBtn}${metaTags}</div>`;
+    }
+
+    function toggleSpotTileTags(e) {
+      const tagsEl = e.currentTarget.closest(".tags");
+      if (!tagsEl) return;
+      tagsEl.classList.add("tags--expanded");
+      e.currentTarget.setAttribute("aria-expanded", "true");
+    }
+
     function renderSpotTile(spot, catId, tileIndex = 0) {
       const isSelected = (state.selectedStops[catId] || []).includes(spot.id);
       const outsideClass = spot._outsideRadius ? " spot-tile--outside-radius" : "";
@@ -4706,11 +4767,7 @@
             ${isSelected ? '<div class="checkmark">✓</div>' : ''}
             <div class="content">
               <h2 class="choice-title">${spot.name}</h2>
-              <div class="tags">
-                ${spot.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-                <span class="tag">${spot.costLabel}</span>
-                ${usesSkytrainStation(spot.neighborhood) && spot.walkFromStation != null ? `<span class="tag">${spot.walkFromStation} min walk</span>` : ""}
-              </div>
+              ${renderSpotTileTags(spot)}
               <p>${spot.description}</p>
               ${gotoHtml(spot)}
             </div>
