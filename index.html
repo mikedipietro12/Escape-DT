@@ -852,6 +852,14 @@
         font-size: 0.8rem;
         margin-top: 0.25rem;
       }
+      /* Path 1 Step A: keep Back under the time cards (not pinned to viewport bottom) */
+      #step-A.active {
+        flex-grow: 0;
+      }
+      #step-A .nav-buttons {
+        margin-top: 1.25rem;
+        padding-top: 0;
+      }
     }
     /* Finalize Route Plan: keep selection filled with the seasonal fade */
     .route-finalize-card.selected {
@@ -4090,6 +4098,12 @@
       el.style.display = "block";
     }
 
+    function resetScrollPosition() {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+
     function showStep(step) {
       state.currentStep = step;
       if (step !== "P3") {
@@ -4109,7 +4123,7 @@
         topNav.style.display = 'none';
         progress.classList.add('hidden');
         applyLandingView();
-        window.scrollTo(0, 0);
+        resetScrollPosition();
         return;
       }
 
@@ -4136,7 +4150,7 @@
       }
       stepEl.classList.add('active');
       updatePathContext();
-      window.scrollTo(0, 0);
+      resetScrollPosition();
 
       if (step === 'B') renderStepB();
       if (step === 'D') renderStepD();
@@ -4153,6 +4167,8 @@
         routeSubtitleEl.textContent = sub;
         routeSubtitleEl.hidden = !sub;
       }
+
+      requestAnimationFrame(resetScrollPosition);
     }
 
     function goTo(step) { showStep(step); }
