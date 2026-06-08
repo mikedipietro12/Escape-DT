@@ -7,7 +7,7 @@
     "version": 1,
     "stops": [
         {
-            "crossStreet": "Commercial & 6th",
+            "crossStreet": "E 6th Ave",
             "id": "s1",
             "lat": 49.2649446,
             "cost": "$",
@@ -42,7 +42,7 @@
             }
         },
         {
-            "crossStreet": "6th & Commercial",
+            "crossStreet": "E 6th Ave",
             "id": "s2",
             "lat": 49.2644127,
             "cost": "$",
@@ -198,7 +198,7 @@
             }
         },
         {
-            "crossStreet": "E 2nd",
+            "crossStreet": "E 2nd Ave",
             "id": "s6",
             "lat": 49.26905,
             "googlePlaceId": "ChIJL4-dMwBxhlQRx_HBHWoYlDE",
@@ -244,7 +244,7 @@
             }
         },
         {
-            "crossStreet": "E 1st",
+            "crossStreet": "E 1st Ave",
             "id": "s7",
             "lat": 49.2693101,
             "googlePlaceId": "ChIJZw7gbUdxhlQR1inpfufueaE",
@@ -444,7 +444,7 @@
             "goto": "Salmon Oshi, Miso Soup, Inari negiri, black lager."
         },
         {
-            "crossStreet": "Venables St",
+            "crossStreet": "Venables",
             "id": "s12",
             "lat": 49.27701,
             "cost": {
@@ -493,7 +493,7 @@
             }
         },
         {
-            "crossStreet": "Venables & Commercial",
+            "crossStreet": "Venables",
             "id": "s13",
             "lat": 49.27701,
             "cost": {
@@ -587,7 +587,7 @@
             }
         },
         {
-            "crossStreet": "E 2nd",
+            "crossStreet": "E 2nd Ave",
             "id": "s15",
             "lat": 49.2682595,
             "googlePlaceId": "ChIJNwjdpkdxhlQRlKAwiWMe-5U",
@@ -1094,7 +1094,7 @@
             }
         },
         {
-            "crossStreet": "Commercial & E 4th",
+            "crossStreet": "E 4th Ave",
             "id": "s27",
             "lat": 49.2668884,
             "cost": {
@@ -1129,7 +1129,7 @@
             "goto": "Flip through the previously owned section!"
         },
         {
-            "crossStreet": "E 4th",
+            "crossStreet": "E 4th Ave",
             "id": "s28",
             "lat": 49.267024,
             "cost": {
@@ -1167,7 +1167,7 @@
             "goto": "Wander around the front to see the new suggested books."
         },
         {
-            "crossStreet": "E 4th",
+            "crossStreet": "E 4th Ave",
             "id": "s29",
             "lat": 49.2669913,
             "cost": {
@@ -1306,6 +1306,7 @@
                 "allday"
             ],
             "neighborhood": "commercial",
+            "mapLocation": "mah",
             "categories": [
                 "coffee",
                 "food",
@@ -1338,6 +1339,7 @@
                 "allday"
             ],
             "neighborhood": "commercial",
+            "mapLocation": "mah",
             "categories": [
                 "hangout"
             ],
@@ -1424,7 +1426,7 @@
             ]
         },
         {
-            "crossStreet": "E 3rd",
+            "crossStreet": "E 3rd Ave",
             "id": "s36",
             "lat": 49.26805,
             "cost": "$",
@@ -1493,7 +1495,7 @@
             ]
         },
         {
-            "crossStreet": "E 1st",
+            "crossStreet": "E 1st Ave",
             "id": "s38",
             "lat": 49.2700614,
             "cost": {
@@ -1530,7 +1532,7 @@
             ]
         },
         {
-            "crossStreet": "E 18th",
+            "crossStreet": "E 18th Ave",
             "id": "s39",
             "lat": 49.2539316,
             "cost": {
@@ -1565,18 +1567,18 @@
             "neighborhood": "commercial",
             "categories": [
                 "coffee",
-                "groceries",
-                "food"
+                "food",
+                "groceries"
             ],
             "images": [
                 "assets/stops/flourist.jpg"
             ]
         },
         {
-            "crossStreet": "E 18th",
+            "crossStreet": "E 18th Ave",
             "id": "s40",
             "lat": 49.2521585,
-            "cost": "free",
+            "cost": "",
             "tags": [
                 "art gallery"
             ],
@@ -1807,7 +1809,7 @@
             ],
             "cost": "$$",
             "description": "This place has a south facing patio that keeps you nice and shaded in the hot summer months while still being able to people watch with a mountain view. Coffee and cocktails to either start or end your day!",
-            "crossStreet": "Commercial & Charles",
+            "crossStreet": "Charles",
             "walkFromStation": 20,
             "coords": {
                 "y": 300
@@ -1849,7 +1851,7 @@
             "goto": "Check out the mini cinema to see what's playing."
         },
         {
-            "crossStreet": "Commercial & 12th",
+            "crossStreet": "E 12th Ave",
             "id": "s66",
             "lat": 49.2597798,
             "googlePlaceId": "ChIJ1ZqN1P9xhlQRtJ_2k147k6k",
@@ -2068,7 +2070,11 @@
                 "food",
                 "groceries"
             ],
-            "tags": [],
+            "tags": [
+                "grocery",
+                "japanese",
+                "grab and go"
+            ],
             "neighborhood": "commercial",
             "cost": "$",
             "timeOfDay": [
@@ -2093,9 +2099,6 @@
                 "store",
                 "establishment"
             ],
-            "_review": [
-                "tags"
-            ],
             "walkFromStation": 40,
             "goto": "Inari negiri, a random drink, and crunchy snack",
             "images": [
@@ -2111,7 +2114,9 @@
                 "hangout"
             ],
             "tags": [
-                "gallery"
+                "gallery",
+                "art gallery",
+                "activities"
             ],
             "neighborhood": "commercial",
             "cost": "$$",
@@ -2198,9 +2203,14 @@
             "categories": [
                 "shopping"
             ],
-            "tags": [],
+            "tags": [
+                "thrift",
+                "shopping",
+                "collectables",
+                "shoes"
+            ],
             "neighborhood": "commercial",
-            "cost": "$$",
+            "cost": "$",
             "timeOfDay": [
                 "allday"
             ],
@@ -2220,9 +2230,6 @@
                 "point_of_interest",
                 "service",
                 "establishment"
-            ],
-            "_review": [
-                "tags"
             ],
             "walkFromStation": 35,
             "images": [
@@ -2250,7 +2257,8 @@
                 "pool",
                 "billiards",
                 "drinks",
-                "cocktails"
+                "cocktails",
+                "beer"
             ],
             "neighborhood": "commercial",
             "cost": "$$",
@@ -2306,6 +2314,12 @@
             "lng": -123.0633912,
             "googlePlaceId": "ChIJAQDwKRhxhlQRR3vEBGao7Zw",
             "placeholderColor": "4b8c57",
+            "_googleTypes": [
+                "cafe",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
             "goto": "A coffee and a couple moffins.",
             "images": [
                 "assets/stops/yama-cafe.jpg"
@@ -2342,6 +2356,12 @@
             "lng": -123.063905,
             "googlePlaceId": "ChIJC8i4KhhxhlQR0dgyJ_6v3kg",
             "placeholderColor": "fc7d18",
+            "_googleTypes": [
+                "cafe",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
             "goto": "Some of the best roasts in the city.",
             "images": [
                 "assets/stops/pallet-coffee-roasters-semlin-drive.jpg"
@@ -2374,6 +2394,14 @@
             "lng": -123.0661357,
             "googlePlaceId": "ChIJzeZiaABxhlQRdz6rzPbZNos",
             "placeholderColor": "7dab77",
+            "_googleTypes": [
+                "restaurant",
+                "wine_bar",
+                "bar",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
             "goto": "Chefs selection, always."
         },
         {
@@ -2407,6 +2435,18 @@
             "lng": -123.06441099999999,
             "googlePlaceId": "ChIJ4S1x8xlxhlQRE8HG0PL5H8Y",
             "placeholderColor": "8813db",
+            "_googleTypes": [
+                "brewery",
+                "liquor_store",
+                "bar",
+                "manufacturer",
+                "service",
+                "restaurant",
+                "store",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
             "goto": "Trash panda, nitro stout, waffle fries."
         },
         {
@@ -2438,6 +2478,12 @@
             "lng": -123.0581806,
             "googlePlaceId": "ChIJEWq_7hhxhlQR_k-jUi4iX1I",
             "placeholderColor": "dcbbe3",
+            "_googleTypes": [
+                "park",
+                "tourist_attraction",
+                "point_of_interest",
+                "establishment"
+            ],
             "goto": "Grab lunch or ice cream from a spot on Hastings and hang out."
         },
         {
@@ -2465,7 +2511,18 @@
             "lat": 49.281293299999994,
             "lng": -123.05764099999999,
             "googlePlaceId": "ChIJdQLQhhhxhlQRagNnCnRjLho",
-            "placeholderColor": "fd3420"
+            "placeholderColor": "fd3420",
+            "_googleTypes": [
+                "sports_club",
+                "event_venue",
+                "cafe",
+                "sports_complex",
+                "sports_activity_location",
+                "association_or_organization",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ]
         },
         {
             "id": "s52",
@@ -2497,6 +2554,18 @@
             "lng": -123.05628790000002,
             "googlePlaceId": "ChIJd874dSJxhlQRMOcBQRCYaCA",
             "placeholderColor": "d62c29",
+            "_googleTypes": [
+                "cafe",
+                "coffee_shop",
+                "live_music_venue",
+                "event_venue",
+                "food_store",
+                "store",
+                "restaurant",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
             "goto": "Coffee and check out the art.",
             "images": [
                 "assets/stops/east-cafe.jpg"
@@ -2534,6 +2603,13 @@
             "lng": -123.05371819999999,
             "googlePlaceId": "ChIJQ4SE6_dxhlQRqZ332oYOf4A",
             "placeholderColor": "3bf595",
+            "_googleTypes": [
+                "bar",
+                "restaurant",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
             "goto": "Dirty gin martini and a couple of snacks.",
             "images": [
                 "assets/stops/blind-rabbit.jpg"
@@ -2567,6 +2643,14 @@
             "lng": -123.05155080000002,
             "googlePlaceId": "ChIJV3TKkyFxhlQROWKHEU39DoM",
             "placeholderColor": "105ac7",
+            "_googleTypes": [
+                "mediterranean_restaurant",
+                "middle_eastern_restaurant",
+                "restaurant",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
             "goto": "Lam roast with mujaddarah.",
             "images": [
                 "assets/stops/tamam-fine-palestinian-cuisine.jpg"
@@ -2603,6 +2687,14 @@
             "lng": -123.05748249999999,
             "googlePlaceId": "ChIJJTyDgxhxhlQRU6AygkdONkc",
             "placeholderColor": "844d1a",
+            "_googleTypes": [
+                "taco_restaurant",
+                "mexican_restaurant",
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
             "goto": "Love taking advantage of the burrito-to-bowl option when I am dining in.",
             "images": [
                 "assets/stops/tacofino-commissary.jpg",
@@ -2636,6 +2728,14 @@
             "lng": -123.0552077,
             "googlePlaceId": "ChIJLcL_xM9xhlQRgXXXZuvMFoA",
             "placeholderColor": "6525c7",
+            "_googleTypes": [
+                "bakery",
+                "food_store",
+                "store",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
             "goto": "Jalapeno & Cheddar sourdough (Fridays!)."
         },
         {
@@ -2672,6 +2772,12 @@
             "lng": -123.05506439999999,
             "googlePlaceId": "ChIJt75l9qBxhlQRjxZr01jMiMo",
             "placeholderColor": "9d945e",
+            "_googleTypes": [
+                "restaurant",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
             "goto": "It's okay bar mix, pickles, and a pina colada.",
             "images": [
                 "assets/stops/it-s-okay.jpg"
@@ -2705,6 +2811,16 @@
             "lng": -123.05554389999999,
             "googlePlaceId": "ChIJj70casJxhlQRT5WNycxFxYg",
             "placeholderColor": "e6eb13",
+            "_googleTypes": [
+                "mexican_restaurant",
+                "cocktail_bar",
+                "taco_restaurant",
+                "bar",
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
             "goto": "pastor and suedero with a marg and beer chaser."
         },
         {
@@ -2740,6 +2856,15 @@
             "lng": -123.0580444,
             "googlePlaceId": "ChIJnXAbDwVxhlQRf21Mes_WxwE",
             "placeholderColor": "284206",
+            "_googleTypes": [
+                "restaurant",
+                "wine_bar",
+                "cocktail_bar",
+                "bar",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
             "images": [
                 "assets/stops/dachi-restaurant-and-natural-wine.jpg",
                 "assets/stops/dachi-restaurant-and-natural-wine-2.jpg"
@@ -2778,6 +2903,18 @@
             "lng": -123.0587182,
             "googlePlaceId": "ChIJYwDNec5xhlQRVkHjirxG3jM",
             "placeholderColor": "949444",
+            "_googleTypes": [
+                "cafe",
+                "pastry_shop",
+                "dessert_shop",
+                "confectionery",
+                "bakery",
+                "point_of_interest",
+                "food_store",
+                "food",
+                "store",
+                "establishment"
+            ],
             "goto": "Muffin and a coffee.",
             "heroFocus": {
                 "x": 46,
@@ -2818,6 +2955,12 @@
             "lng": -123.05899419999999,
             "googlePlaceId": "ChIJiRiHZBhxhlQRsXp6_kd3JnY",
             "placeholderColor": "1667c3",
+            "_googleTypes": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
             "images": [
                 "assets/stops/jackalopes-neighbourhood-dive.jpg"
             ]
@@ -2849,6 +2992,13 @@
             "lng": -123.05911639999998,
             "googlePlaceId": "ChIJoQrJiwtxhlQRdLwynLperNw",
             "placeholderColor": "69d3b7",
+            "_googleTypes": [
+                "vietnamese_restaurant",
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
             "goto": "Tofu bahn-mi",
             "images": [
                 "assets/stops/obanhmi-2.jpg"
@@ -2879,6 +3029,16 @@
             "lng": -123.0581509,
             "googlePlaceId": "ChIJz1LEc_hxhlQRErUyFrDYXcQ",
             "placeholderColor": "ec1e82",
+            "_googleTypes": [
+                "ice_cream_shop",
+                "dessert_shop",
+                "confectionery",
+                "food_store",
+                "food",
+                "point_of_interest",
+                "store",
+                "establishment"
+            ],
             "goto": "blueberry!",
             "images": [
                 "assets/stops/plain-jane-ice-cream-2.jpg",
@@ -2917,7 +3077,16 @@
             "lat": 49.2813108,
             "lng": -123.0501772,
             "googlePlaceId": "ChIJ-_qqS49xhlQRKRgCDR-xKeE",
-            "placeholderColor": "df4e90"
+            "placeholderColor": "df4e90",
+            "_googleTypes": [
+                "book_store",
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "_review": [
+                "walkFromStation"
+            ]
         }
     ]
 }

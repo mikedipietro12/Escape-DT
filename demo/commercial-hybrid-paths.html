@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commercial Drive — hybrid paths</title>
+  <script src="/js/season-theme.js"></script>
+  <link rel="stylesheet" href="/demo/east-village-route-map.css">
+  <style>
+    .map-panel {
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      padding: 0.85rem;
+      background: rgba(255, 255, 255, 0.35);
+      margin-bottom: 1.5rem;
+    }
+
+    .map-panel .map-container svg {
+      border: 1px dashed rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.45);
+      max-height: min(70vh, 36rem);
+      width: 100%;
+      height: auto;
+    }
+
+    .map-panel .map-line {
+      stroke-width: 1.5;
+    }
+
+    .map-panel .map-path {
+      stroke-width: 3;
+    }
+
+    .map-trace-arrow {
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .map-trace-arrow path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .map-overlay-layer .map-stop {
+      stroke: var(--bg-top);
+      stroke-width: 2.5;
+    }
+
+    .demo-path-switch {
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .demo-path-switch a {
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through the dev server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>/demo/commercial-hybrid-paths.html</code>.
+  </p>
+
+  <div class="demo-shell">
+    <div class="demo-banner">
+      <strong>Commercial Drive map — hybrid paths (current proposal)</strong>
+      Preview for the next live illustrated route map. Straight spine legs on direction changes;
+      rounded corners off Commercial; trace arrow on the draw; south returns to the first stop
+      or SkyTrain use a tiny curve onto a parallel line just left of the spine.
+    </div>
+
+    <p class="demo-path-switch">
+      Archived experiments:
+      <a href="commercial-curved-paths.html">Curved lanes</a>
+      ·
+      <a href="commercial-stacked-lanes.html">Stacked lanes</a>
+      ·
+      <a href="commercial-route-map.html">Spine crop</a>
+    </p>
+
+    <div class="demo-controls">
+      <label>
+        Sample route
+        <select id="preset-select">
+          <option value="backtrack">Backtrack (Prado → JJ Bean → Don't Argue)</option>
+          <option value="victoria">Victoria walk (JJ → Mah → Park → pizza)</option>
+          <option value="venables">Venables hop (Slice → Alterior → Fun Haus)</option>
+          <option value="half-day">Half-day mid-morning (Victoria + Venables + spine)</option>
+          <option value="south-loop">South of station (JJ → Equinox → back)</option>
+          <option value="world-cup">World Cup day (north crawl, then south)</option>
+          <option value="frances-return">Frances return (Earnest → Don't Argue)</option>
+        </select>
+      </label>
+      <button type="button" id="btn-replay">Replay map</button>
+    </div>
+
+    <section class="map-panel" aria-label="Hybrid route map preview">
+      <div class="map-container">
+        <svg id="route-map" viewBox="0 0 340 600" aria-label="Hybrid Commercial route map"></svg>
+      </div>
+    </section>
+
+    <aside class="demo-notes">
+      <h2>What we're testing</h2>
+      <ul>
+        <li><strong>Hybrid paths</strong> — straight spine + rounded off-spine corners + trace arrow (see <code>AGENTS.md</code>).</li>
+        <li><strong>Return lane</strong> — southbound legs back to the first stop or SkyTrain: tiny curve, then a gold line just left of the spine.</li>
+        <li><strong>Try backtrack, south-loop, or world-cup</strong> — each ends with a return leg on the left lane.</li>
+      </ul>
+    </aside>
+  </div>
+
+  <script src="/demo/commercial-hybrid-paths.js"></script>
+</body>
+</html>

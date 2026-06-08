@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 
 export const DRAFT_FILES = {
-  "hastings-sunrise": { rel: path.join("data", "hastings-sunrise-draft.json"), indent: 2 },
   "mount-pleasant": { rel: path.join("data", "mount-pleasant-draft.json"), indent: 2 },
   chinatown: { rel: path.join("data", "chinatown-draft.json"), indent: 2 },
 };

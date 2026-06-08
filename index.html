@@ -1346,18 +1346,30 @@
     }
     @media (min-width: 768px) {
       .map-split,
-      .route-review.route-phase-summary { flex-direction: row; }
+      .route-review.route-phase-summary,
+      .route-review.route-phase-map:not(.route-review--stacked) { flex-direction: row; align-items: flex-start; }
       .map-split .map-container,
-      .route-review.route-phase-summary .map-container { width: 40%; flex-shrink: 0; }
+      .route-review.route-phase-summary .map-container,
+      .route-review.route-phase-map:not(.route-review--stacked) .map-container { width: 40%; flex-shrink: 0; max-width: none; }
       .map-split .route-list,
-      .route-review.route-phase-summary .route-summary { width: 60%; }
+      .route-review.route-phase-summary .route-summary,
+      .route-review.route-phase-map:not(.route-review--stacked) .route-summary { width: 60%; display: block; }
     }
     .route-review.route-phase-map {
       align-items: center;
     }
-    .route-review.route-phase-map .map-container {
-      max-width: 400px;
-      width: 100%;
+    @media (max-width: 767px) {
+      .route-review.route-phase-map .map-container {
+        max-width: min(100%, 18rem);
+        width: 100%;
+      }
+      .route-review.route-phase-map .map-container svg {
+        max-height: min(50vh, 22rem);
+      }
+      #step-E .route-review:not(.route-review--stacked) .map-container svg,
+      #step-P2-PLAN .route-review:not(.route-review--stacked) .map-container svg {
+        max-height: min(48vh, 20rem);
+      }
     }
     .route-review.route-phase-map .route-summary {
       display: none;
@@ -1705,6 +1717,18 @@
       fill: none; 
       stroke-linejoin: round;
       stroke-linecap: round;
+    }
+    .map-trace-arrow {
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .map-trace-arrow path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
     .map-stop { 
       fill: var(--ink); 
@@ -5363,6 +5387,9 @@
       legDurationMs: 1400,
       defaultViewBox: "0 0 340 600",
       viewBoxPad: 24,
+      cornerRadius: 18,
+      returnLaneOffset: 5,
+      returnLaneCurve: 4,
     };
 
     const MAP_LEG_COLORS_BASE = [
@@ -5433,6 +5460,255 @@
       const zone = getStopMapZone(stop);
       if (zone !== "spine") return true;
       return Math.abs(getStopMapX(stop) - MAP.xCenter) > 5;
+    }
+
+    function isReturnSouthLaneLeg(leg, y1, y2) {
+      if (y2 <= y1) return false;
+      if (leg.legKind === "stopToStation") return true;
+      if (leg.legKind === "stopToStop" && leg.toStopIndex === 0) return true;
+      return false;
+    }
+
+    function appendReturnSouthLane(parts, y1, y2) {
+      const xMain = MAP.xCenter;
+      const xLane = MAP.xCenter - MAP.returnLaneOffset;
+      const r = MAP.returnLaneCurve;
+      if (Math.abs(y2 - y1) < r * 2) {
+        parts.push(`L ${xMain} ${y2}`);
+        return;
+      }
+      parts.push(`Q ${xLane} ${y1} ${xLane} ${y1 + r}`);
+      parts.push(`L ${xLane} ${y2 - r}`);
+      parts.push(`Q ${xLane} ${y2} ${xMain} ${y2}`);
+    }
+
+    function getReturnSouthLanePathD(y1, y2) {
+      const parts = [`M ${MAP.xCenter} ${y1}`];
+      appendReturnSouthLane(parts, y1, y2);
+      return parts.join(" ");
+    }
+
+    function getHybridReturnSouthPathD(x1, y1, x2, y2, fromStop, toStop) {
+      const spine = MAP.xCenter;
+      const fromOff = fromStop ? isStopOffSpine(fromStop) : false;
+      const toOff = toStop ? isStopOffSpine(toStop) : false;
+
+      if (fromOff && !toOff) {
+        const parts = [`M ${x1} ${y1}`];
+        parts.push(roundedHorizVert(x1, y1, spine, y1, y1));
+        appendReturnSouthLane(parts, y1, y2);
+        return parts.join(" ");
+      }
+
+      return getReturnSouthLanePathD(y1, y2);
+    }
+
+    function applyHybridGeometry(point) {
+      if (isStopOffSpine(point.stop)) {
+        point.dotX = point.x;
+        point.dotY = point.y;
+      } else {
+        point.dotX = MAP.xCenter;
+        point.dotY = point.y;
+      }
+      point.lineX = MAP.xCenter;
+      point.layoutY = point.y;
+    }
+
+    function prepareHybridMapPoints(route, mapOptions = {}) {
+      const points = buildRouteMapPoints(route, mapOptions);
+      points.forEach(applyHybridGeometry);
+      return points;
+    }
+
+    function getCornerRadius(x1, y1, x2, y2) {
+      const dx = Math.abs(x2 - x1);
+      const dy = Math.abs(y2 - y1);
+      let cap = MAP.cornerRadius;
+      if (dx > 0.5 && dy > 0.5) cap = Math.min(cap, dx * 0.9, dy * 0.9);
+      else if (dx > 0.5) cap = Math.min(cap, dx * 0.9);
+      else if (dy > 0.5) cap = Math.min(cap, dy * 0.9);
+      return Math.max(cap, 6);
+    }
+
+    function roundedVertHoriz(x1, y1, x2, y2) {
+      const r = getCornerRadius(x1, y1, x2, y2);
+      if (Math.abs(x1 - x2) < 0.5) return `L ${x2} ${y2}`;
+      if (Math.abs(y1 - y2) < 0.5) return `L ${x2} ${y2}`;
+
+      const down = y2 > y1;
+      const east = x2 > x1;
+      const yPre = down ? y2 - r : y2 + r;
+      const xPost = east ? x1 + r : x1 - r;
+      return `L ${x1} ${yPre} Q ${x1} ${y2} ${xPost} ${y2} L ${x2} ${y2}`;
+    }
+
+    function roundedHorizVert(x1, y1, x2, y2, yExit) {
+      const yNext = yExit ?? y2;
+      const r = getCornerRadius(x1, y1, x2, yNext);
+
+      if (Math.abs(x1 - x2) < 0.5) {
+        if (Math.abs(y1 - yNext) < 0.5) return `L ${x2} ${yNext}`;
+        return roundedVertHoriz(x1, y1, x2, yNext);
+      }
+
+      const east = x2 > x1;
+      const xPre = east ? x2 - r : x2 + r;
+
+      if (Math.abs(y1 - y2) < 0.5 && Math.abs(y1 - yNext) > 0.5) {
+        const down = yNext > y1;
+        const yPost = down ? y1 + r : y1 - r;
+        return `L ${xPre} ${y1} Q ${x2} ${y1} ${x2} ${yPost}`;
+      }
+
+      if (Math.abs(y1 - y2) < 0.5) return `L ${x2} ${y2}`;
+
+      const down = y2 > y1;
+      const yPost = down ? y1 + r : y1 - r;
+      return `L ${xPre} ${y1} Q ${x2} ${y1} ${x2} ${yPost} L ${x2} ${y2}`;
+    }
+
+    function getCurvedOffSpinePathD(x1, y1, x2, y2, fromStop, toStop, lineX1, lineX2) {
+      const spine = MAP.xCenter;
+      const z1 = fromStop ? getStopMapZone(fromStop) : "spine";
+      const z2 = toStop ? getStopMapZone(toStop) : "spine";
+      const parts = [];
+
+      if (z1 === "venablesWest" && z2 === "venablesWest") {
+        return `M ${x1} ${y1} L ${x2} ${y2}`;
+      }
+      if (
+        (z1 === "venablesWest" && z2 === "venablesEast") ||
+        (z1 === "venablesEast" && z2 === "venablesWest")
+      ) {
+        return `M ${x1} ${y1} L ${x2} ${y1}`;
+      }
+      if (z1 === "venablesEast" && z2 === "venablesEast") {
+        return `M ${x1} ${y1} L ${x2} ${y2}`;
+      }
+
+      const fromOff = fromStop ? isStopOffSpine(fromStop) : false;
+      const toOff = toStop ? isStopOffSpine(toStop) : false;
+
+      if (toOff && !fromOff) {
+        parts.push(`M ${lineX1} ${y1}`);
+        parts.push(roundedVertHoriz(lineX1, y1, x2, y2));
+        return parts.join(" ");
+      }
+
+      if (fromOff && !toOff) {
+        parts.push(`M ${x1} ${y1}`);
+        parts.push(roundedHorizVert(x1, y1, spine, y1, y2));
+        parts.push(`L ${lineX2} ${y2}`);
+        return parts.join(" ");
+      }
+
+      if (fromOff && toOff) {
+        parts.push(`M ${x1} ${y1}`);
+        parts.push(roundedHorizVert(x1, y1, spine, y1, y2));
+        if (Math.abs(y1 - y2) > 0.5) parts.push(`L ${spine} ${y2}`);
+        parts.push(roundedVertHoriz(spine, y2, x2, y2));
+        return parts.join(" ");
+      }
+
+      return `M ${x1} ${y1} L ${x2} ${y2}`;
+    }
+
+    function getHybridLegPathD(a, b) {
+      const fromOff = isStopOffSpine(a.stop);
+      const toOff = isStopOffSpine(b.stop);
+      if (fromOff || toOff) {
+        return getCurvedOffSpinePathD(
+          a.dotX,
+          a.dotY,
+          b.dotX,
+          b.dotY,
+          a.stop,
+          b.stop,
+          a.lineX,
+          b.lineX
+        );
+      }
+      return getMapLegPathD(a.dotX, a.dotY, b.dotX, b.dotY, a.stop, b.stop);
+    }
+
+    function buildHybridRouteLeg(leg, legIndex, route, points, station) {
+      let x1, y1, x2, y2;
+      let fromStop = null;
+      let toStop = null;
+      let pathD;
+
+      if (leg.legKind === "stationToStop") {
+        const p = getMapPointForRouteIndex(points, route, leg.toStopIndex);
+        x1 = station.x;
+        y1 = station.y;
+        x2 = p.dotX;
+        y2 = p.dotY;
+        toStop = p.stop;
+        if (isStopOffSpine(p.stop)) {
+          pathD = getCurvedOffSpinePathD(
+            station.x,
+            station.y,
+            p.dotX,
+            p.dotY,
+            null,
+            p.stop,
+            MAP.xCenter,
+            MAP.xCenter
+          );
+        } else {
+          pathD = `M ${MAP.xCenter} ${station.y} L ${p.dotX} ${p.dotY}`;
+        }
+      } else if (leg.legKind === "stopToStop") {
+        const a = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
+        const b = getMapPointForRouteIndex(points, route, leg.toStopIndex);
+        fromStop = a.stop;
+        toStop = b.stop;
+        x1 = a.dotX;
+        y1 = a.dotY;
+        x2 = b.dotX;
+        y2 = b.dotY;
+        if (isReturnSouthLaneLeg(leg, y1, y2)) {
+          pathD = getHybridReturnSouthPathD(x1, y1, x2, y2, a.stop, b.stop);
+        } else {
+          pathD = getHybridLegPathD(a, b);
+        }
+      } else if (leg.legKind === "stopToStation") {
+        const p = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
+        fromStop = p.stop;
+        x1 = p.dotX;
+        y1 = p.dotY;
+        x2 = station.x;
+        y2 = station.y;
+        if (isReturnSouthLaneLeg(leg, y1, y2)) {
+          pathD = getHybridReturnSouthPathD(x1, y1, x2, y2, p.stop, null);
+        } else if (isStopOffSpine(p.stop)) {
+          pathD = getCurvedOffSpinePathD(
+            p.dotX,
+            p.dotY,
+            station.x,
+            station.y,
+            p.stop,
+            null,
+            p.lineX,
+            MAP.xCenter
+          );
+        } else {
+          pathD = `M ${p.dotX} ${p.dotY} L ${MAP.xCenter} ${station.y}`;
+        }
+      }
+
+      const isBackward = isMapLegBackward(y1, y2);
+      return {
+        ...leg,
+        x1,
+        y1,
+        x2,
+        y2,
+        pathD,
+        legIndex,
+        isBackward,
+      };
     }
 
     function getMapLegPathD(x1, y1, x2, y2, fromStop, toStop) {
@@ -5579,6 +5855,34 @@
       if (observeEl) routeScrollHintObserver.observe(observeEl);
     }
 
+    function usesRouteReviewSideBySide(reviewEl) {
+      return (
+        window.matchMedia("(min-width: 768px)").matches &&
+        !reviewEl?.classList.contains("route-review--stacked")
+      );
+    }
+
+    function primeRouteReviewSummary(config) {
+      const {
+        exportSummaryEl,
+        exportSummaryText,
+        cardsId,
+        totalsId,
+        route,
+        totalsStyle = "furthest-roundtrip",
+        mapOptions,
+        routeCardOptions,
+      } = config;
+      if (exportSummaryEl && exportSummaryText) {
+        exportSummaryEl.innerText = exportSummaryText;
+      }
+      renderRouteCards(cardsId, route, routeCardOptions);
+      renderRouteTotals(totalsId, route, {
+        style: totalsStyle,
+        mapOptions,
+      });
+    }
+
     function revealRouteReviewSummary(config) {
       const {
         reviewEl,
@@ -5594,14 +5898,7 @@
         observeEl,
       } = config;
 
-      if (exportSummaryEl && exportSummaryText) {
-        exportSummaryEl.innerText = exportSummaryText;
-      }
-      renderRouteCards(cardsId, route, config.routeCardOptions);
-      renderRouteTotals(totalsId, route, {
-        style: totalsStyle,
-        mapOptions: config.mapOptions,
-      });
+      primeRouteReviewSummary(config);
       reviewEl.classList.remove("route-phase-map");
       reviewEl.classList.add("route-phase-summary");
       summaryPanelEl.hidden = false;
@@ -5627,17 +5924,25 @@
 
       teardownRouteScrollHint(config.scrollHintEl);
       syncRouteReviewStackedLayout(reviewEl, config.mapOptions);
-      reviewEl.classList.remove("route-phase-summary");
-      reviewEl.classList.add("route-phase-map");
-      summaryPanelEl.hidden = true;
+      const sideBySide = usesRouteReviewSideBySide(reviewEl);
 
-      const totalsEl = document.getElementById(config.totalsId);
-      if (totalsEl) totalsEl.innerHTML = "";
-      const cardsEl = document.getElementById(config.cardsId);
-      if (cardsEl) cardsEl.innerHTML = "";
+      if (sideBySide) {
+        reviewEl.classList.remove("route-phase-map");
+        reviewEl.classList.add("route-phase-summary");
+        summaryPanelEl.hidden = false;
+        primeRouteReviewSummary(config);
+      } else {
+        reviewEl.classList.remove("route-phase-summary");
+        reviewEl.classList.add("route-phase-map");
+        summaryPanelEl.hidden = true;
+        const totalsEl = document.getElementById(config.totalsId);
+        if (totalsEl) totalsEl.innerHTML = "";
+        const cardsEl = document.getElementById(config.cardsId);
+        if (cardsEl) cardsEl.innerHTML = "";
+      }
 
       const onMapDone = () => {
-        revealRouteReviewSummary(config);
+        if (!sideBySide) revealRouteReviewSummary(config);
         onMapComplete?.();
       };
 
@@ -5722,13 +6027,11 @@
     }
 
     function getMapSpineBounds(points, showStation) {
-      if (showStation) {
+      const ys = points.map((p) => p.layoutY ?? p.y);
+      if (showStation) ys.push(MAP.yStation);
+      if (!ys.length) {
         return { y1: MAP.yNorth, y2: MAP.yStation };
       }
-      if (!points.length) {
-        return { y1: MAP.yNorth, y2: MAP.yStation };
-      }
-      const ys = points.map((p) => p.y);
       const pad = 28;
       return {
         y1: Math.min(...ys) - pad,
@@ -5741,14 +6044,16 @@
       const ys = [];
 
       points.forEach((p) => {
-        const east = isMapStopEastOffset(p.x);
-        const west = isMapStopWestOffset(p.x);
+        const x = p.dotX ?? p.x;
+        const y = p.dotY ?? p.y;
+        const east = isMapStopEastOffset(x);
+        const west = isMapStopWestOffset(x);
         if (east || west) {
-          xs.push(p.x - 90, p.x + 12);
+          xs.push(x - 90, x + 12);
         } else {
-          xs.push(p.x - 12, p.x + 90);
+          xs.push(x - 12, x + 90);
         }
-        ys.push(p.y - 14, p.y + 14);
+        ys.push(y - 14, y + 14);
       });
 
       if (showStation) {
@@ -5773,121 +6078,19 @@
       return `${minX} ${minY} ${w} ${h}`;
     }
 
-    function getRouteMapLayoutLegacy(route, mapOptions = {}) {
-      const station = { x: MAP.xCenter, y: MAP.yStation };
-      const routeLegs = getRouteLegsLegacy(route, mapOptions);
-      if (!route.length) {
-        return { station, points: [], legs: [], stopCount: 0 };
-      }
-
-      const points = buildRouteMapPoints(route, mapOptions);
-
-      const legs = routeLegs.map((leg, i) => {
-        let x1, y1, x2, y2;
-        let fromStop = null;
-        let toStop = null;
-
-        if (leg.legKind === "stationToStop") {
-          const p = getMapPointForRouteIndex(points, route, leg.toStopIndex);
-          x1 = station.x;
-          y1 = station.y;
-          x2 = p.x;
-          y2 = p.y;
-          toStop = p.stop;
-        } else if (leg.legKind === "stopToStop") {
-          const a = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
-          const b = getMapPointForRouteIndex(points, route, leg.toStopIndex);
-          fromStop = a.stop;
-          toStop = b.stop;
-          x1 = a.x;
-          y1 = a.y;
-          x2 = b.x;
-          y2 = b.y;
-        } else if (leg.legKind === "stopToStation") {
-          const p = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
-          fromStop = p.stop;
-          x1 = p.x;
-          y1 = p.y;
-          x2 = station.x;
-          y2 = station.y;
-        }
-
-        const isBackward = isMapLegBackward(y1, y2);
-        return {
-          ...leg,
-          x1,
-          y1,
-          x2,
-          y2,
-          pathD: getMapLegPathD(x1, y1, x2, y2, fromStop, toStop),
-          legIndex: i,
-          isBackward,
-        };
-      });
-
-      return { station, points, legs, stopCount: route.length };
-    }
-
-    function getRouteMapLayoutV2(route, mapOptions = {}) {
-      const station = { x: MAP.xCenter, y: MAP.yStation };
-      const routeLegs = getRouteLegsV2(route, mapOptions);
-      if (!route.length) {
-        return { station, points: [], legs: [], stopCount: 0 };
-      }
-
-      const points = buildRouteMapPoints(route, mapOptions);
-
-      const legs = routeLegs.map((leg, i) => {
-        let x1, y1, x2, y2;
-        let fromStop = null;
-        let toStop = null;
-
-        if (leg.legKind === "stationToStop") {
-          const p = getMapPointForRouteIndex(points, route, leg.toStopIndex);
-          x1 = station.x;
-          y1 = station.y;
-          x2 = p.x;
-          y2 = p.y;
-          toStop = p.stop;
-        } else if (leg.legKind === "stopToStop") {
-          const a = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
-          const b = getMapPointForRouteIndex(points, route, leg.toStopIndex);
-          fromStop = a.stop;
-          toStop = b.stop;
-          x1 = a.x;
-          y1 = a.y;
-          x2 = b.x;
-          y2 = b.y;
-        } else if (leg.legKind === "stopToStation") {
-          const p = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
-          fromStop = p.stop;
-          x1 = p.x;
-          y1 = p.y;
-          x2 = station.x;
-          y2 = station.y;
-        }
-
-        const isBackward = isMapLegBackward(y1, y2);
-        return {
-          ...leg,
-          x1,
-          y1,
-          x2,
-          y2,
-          pathD: getMapLegPathD(x1, y1, x2, y2, fromStop, toStop),
-          legIndex: i,
-          isBackward,
-        };
-      });
-
-      return { station, points, legs, stopCount: route.length };
-    }
-
     function getRouteMapLayout(route, mapOptions = {}) {
-      if (isRouteFinalizeV2Enabled()) {
-        return getRouteMapLayoutV2(route, mapOptions);
+      const station = { x: MAP.xCenter, y: MAP.yStation };
+      const routeLegs = getRouteLegs(route, mapOptions);
+      if (!route.length) {
+        return { station, points: [], legs: [], stopCount: 0 };
       }
-      return getRouteMapLayoutLegacy(route, mapOptions);
+
+      const points = prepareHybridMapPoints(route, mapOptions);
+      const legs = routeLegs.map((leg, i) =>
+        buildHybridRouteLeg(leg, i, route, points, station)
+      );
+
+      return { station, points, legs, stopCount: route.length };
     }
 
     function renderMapStaticSvg(options = {}) {
@@ -5917,14 +6120,16 @@
       const s = point.stop;
       const mapIdx = point.mapIdx ?? point.idx;
       const numLabel = formatMapStopNumberLabel(point);
-      const east = isMapStopEastOffset(point.x);
-      const west = isMapStopWestOffset(point.x);
-      const labelX = east || west ? point.x - 12 : point.x + 15;
+      const x = point.dotX ?? point.x;
+      const y = point.dotY ?? point.y;
+      const east = isMapStopEastOffset(x);
+      const west = isMapStopWestOffset(x);
+      const labelX = east || west ? x - 12 : x + 15;
       const labelAnchor = east || west ? "end" : "start";
       return `
         <g class="map-stop-group map-stop-group--hidden" data-stop-index="${mapIdx}">
-          <circle class="map-stop" cx="${point.x}" cy="${point.y}" r="5" />
-          <text class="map-text" x="${labelX}" y="${point.y + 4}" text-anchor="${labelAnchor}">${numLabel}. ${escapeHtml(s.crossStreet)}</text>
+          <circle class="map-stop" cx="${x}" cy="${y}" r="5" />
+          <text class="map-text" x="${labelX}" y="${y + 4}" text-anchor="${labelAnchor}">${numLabel}. ${escapeHtml(s.crossStreet)}</text>
         </g>
       `;
     }
@@ -5958,8 +6163,35 @@
       return getMapStopIndexAfterLegLegacy(legIndex, mapOptions, pointCount);
     }
 
+    function createTraceArrow(routeLayer) {
+      const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      g.setAttribute("class", "map-trace-arrow");
+      const head = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      head.setAttribute("d", "M -7,-4.5 L 0,0 L -7,4.5");
+      head.setAttribute("fill", "none");
+      g.appendChild(head);
+      routeLayer.appendChild(g);
+      return g;
+    }
+
+    function syncTraceArrow(pathEl, arrowEl, length) {
+      if (!arrowEl || !length) return;
+      const offset = parseFloat(getComputedStyle(pathEl).strokeDashoffset) || 0;
+      const drawn = Math.max(0, Math.min(length, length - offset));
+      if (drawn < 1) {
+        arrowEl.style.opacity = "0";
+        return;
+      }
+      const pt = pathEl.getPointAtLength(drawn);
+      const ahead = pathEl.getPointAtLength(Math.min(length, drawn + 4));
+      const angle = (Math.atan2(ahead.y - pt.y, ahead.x - pt.x) * 180) / Math.PI;
+      arrowEl.setAttribute("transform", `translate(${pt.x},${pt.y}) rotate(${angle})`);
+      arrowEl.style.opacity = "1";
+      arrowEl.style.color = pathEl.style.stroke || "var(--ink)";
+    }
+
     function animateMapPath(pathEl, options = {}) {
-      const { duration = 1500, direction = "draw", onComplete = null } = options;
+      const { duration = 1500, direction = "draw", onComplete = null, arrowEl = null } = options;
       if (!pathEl) {
         onComplete?.();
         return;
@@ -5975,6 +6207,15 @@
       pathEl.style.strokeDasharray = `${length}`;
       pathEl.style.strokeDashoffset = `${startOffset}`;
       pathEl.setAttribute("fill", "none");
+
+      let arrowFrame = 0;
+      const trackArrow = () => {
+        if (!arrowEl) return;
+        syncTraceArrow(pathEl, arrowEl, length);
+        arrowFrame = requestAnimationFrame(trackArrow);
+      };
+      if (arrowEl) trackArrow();
+
       const runTransition = () => {
         pathEl.style.transition = `stroke-dashoffset ${duration}ms ease-in-out`;
         pathEl.style.strokeDashoffset = `${endOffset}`;
@@ -5985,6 +6226,8 @@
         const finish = () => {
           if (done) return;
           done = true;
+          if (arrowFrame) cancelAnimationFrame(arrowFrame);
+          if (arrowEl) arrowEl.style.opacity = "0";
           onComplete();
         };
         pathEl.addEventListener("transitionend", function handler(e) {
@@ -6025,12 +6268,13 @@
       svg.innerHTML = html;
       svg.setAttribute(
         "viewBox",
-        route.length && !showStation
+        route.length
           ? computeMapViewBox(points, legs, showStation)
           : MAP.defaultViewBox
       );
 
       const routeLayer = svg.querySelector(".map-route-layer");
+      const traceArrow = legDuration > 0 ? createTraceArrow(routeLayer) : null;
 
       if (!route.length) {
         options.onComplete?.();
@@ -6073,6 +6317,7 @@
         animateMapPath(pathEl, {
           duration: legDuration,
           direction: "draw",
+          arrowEl: traceArrow,
           onComplete: () => {
             if (isStale()) return;
             try {

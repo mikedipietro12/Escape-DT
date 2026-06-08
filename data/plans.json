@@ -81,7 +81,8 @@
           "type": "prose",
           "text": "then pop into Alterior, in there you can check out locally made clothing and some specially curated brands you've never seen anywhere else. While you are in Alterior, you can also check out Vintage Sponsor; easily one of the best vintage shops in the city, I can't even go in there without buying something."
         },
-        { "type": "stops", "ids": ["s12", "s13"] },
+        { "type": "stops", "ids": ["s12"] },
+        { "type": "stops", "ids": ["s13"] },
         {
           "type": "prose",
           "text": "Head upstairs and check out Book Section, a free library and book shop."

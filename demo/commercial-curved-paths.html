@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commercial Drive — curved paths</title>
+  <script src="/js/season-theme.js"></script>
+  <link rel="stylesheet" href="east-village-route-map.css">
+  <style>
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 720px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .compare-panel {
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      padding: 0.85rem;
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .compare-panel h2 {
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.65rem;
+    }
+
+    .compare-panel--curved h2 {
+      color: #2d6a3e;
+    }
+
+    .compare-panel p {
+      font-size: 0.82rem;
+      line-height: 1.4;
+      margin-bottom: 0.65rem;
+      opacity: 0.85;
+    }
+
+    .compare-panel .map-container svg {
+      border: 1px dashed rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.45);
+    }
+
+    .map-trace-arrow {
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .map-trace-arrow path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .map-overlay-layer .map-stop {
+      stroke: var(--bg-top);
+      stroke-width: 3;
+    }
+
+    .demo-path-switch {
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .demo-path-switch a {
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through the dev server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>/demo/commercial-curved-paths.html</code>.
+  </p>
+
+  <div class="demo-shell">
+    <div class="demo-banner">
+      <strong>Commercial Drive map — curved paths (archived experiment)</strong>
+      Superseded by <a href="commercial-hybrid-paths.html">hybrid paths</a> for the live app.
+      Kept for comparison: backtracking steps left with U-turn curves; off-spine corners rounded.
+    </div>
+
+    <p class="demo-path-switch">
+      Map style:
+      <strong>Curved lanes</strong>
+      (rejoins spine on north)
+      ·
+      <a href="commercial-hybrid-paths.html">Hybrid</a>
+      (off-spine curves only)
+      ·
+      <a href="commercial-stacked-lanes.html">Stacked lanes</a>
+      (every reversal steps left)
+      ·
+      <a href="commercial-route-map.html">Spine crop</a>
+      ·
+      <a href="east-village-curved-paths.html">East Village</a>
+    </p>
+
+    <div class="demo-controls">
+      <label>
+        Sample route
+        <select id="preset-select">
+          <option value="backtrack">Backtrack (Prado → JJ Bean → Don't Argue)</option>
+          <option value="victoria">Victoria walk (JJ → Mah → Park → pizza)</option>
+          <option value="venables">Venables hop (Slice → Alterior → Fun Haus)</option>
+          <option value="half-day">Half-day mid-morning (Victoria + Venables + spine)</option>
+          <option value="south-loop">South of station (JJ → Equinox → back)</option>
+          <option value="world-cup">World Cup day (north crawl, then south)</option>
+        </select>
+      </label>
+      <button type="button" id="btn-replay">Replay both maps</button>
+    </div>
+
+    <div class="compare-grid">
+      <section class="compare-panel compare-panel--standard" aria-label="Standard L-path map">
+        <h2>Standard (live app)</h2>
+        <p>Straight segments and sharp 90° turns. Backward legs use gold stroke on the same spine column.</p>
+        <div class="map-container">
+          <svg id="route-map-standard" viewBox="0 0 340 600" aria-label="Standard Commercial route map"></svg>
+        </div>
+      </section>
+
+      <section class="compare-panel compare-panel--curved" aria-label="Curved path map">
+        <h2>Curved lanes</h2>
+        <p>Each southward reversal shifts the line 18px left with a U-turn curve. Off-spine detours round their corners.</p>
+        <div class="map-container">
+          <svg id="route-map-curved" viewBox="0 0 340 600" aria-label="Curved Commercial route map"></svg>
+        </div>
+      </section>
+    </div>
+
+    <aside class="demo-notes">
+      <h2>What we're testing</h2>
+      <ul>
+        <li><strong>Lane bump</strong> — each leg that heads south (<code>y</code> increases) steps the route line one lane left (18px west of the spine).</li>
+        <li><strong>Turnaround curves</strong> — south reversals bulge upward and shift left; resuming north bulges downward and rejoins the main spine.</li>
+        <li><strong>Same-direction travel</strong> — consecutive northbound or southbound stops share the same lane line.</li>
+        <li><strong>Off-spine corners</strong> — Victoria, Venables, and Frances legs use quadratic curves at spine junctions instead of hard L-shapes.</li>
+        <li><strong>Gold backward legs</strong> — still flagged when geographic walk is southbound; curved path draws on the offset lane.</li>
+        <li><strong>Turnaround timing</strong> — U-turn and straight leg are separate strokes so the curve traces fully before the run continues (same pattern for south reversal and north resume).</li>
+        <li><strong>Trace arrow</strong> — small arrowhead on the curved map leads the drawing tip (curved panel only).</li>
+      </ul>
+    </aside>
+  </div>
+
+  <script src="commercial-curved-paths.js"></script>
+</body>
+</html>

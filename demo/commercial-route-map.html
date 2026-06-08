@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commercial Drive — route map crop</title>
+  <script src="/js/season-theme.js"></script>
+  <link rel="stylesheet" href="east-village-route-map.css">
+  <style>
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 720px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .compare-panel {
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      padding: 0.85rem;
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .compare-panel h2 {
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.65rem;
+    }
+
+    .compare-panel--fixed h2 {
+      color: #2d6a3e;
+    }
+
+    .compare-panel p {
+      font-size: 0.82rem;
+      line-height: 1.4;
+      margin-bottom: 0.65rem;
+      opacity: 0.85;
+    }
+
+    .compare-panel .map-container svg {
+      border: 1px dashed rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.45);
+    }
+  </style>
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through the dev server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>/demo/commercial-route-map.html</code>.
+  </p>
+
+  <div class="demo-shell">
+    <div class="demo-banner">
+      <strong>Commercial Drive map — crop spine to route</strong>
+      Prototype before changing <code>index.html</code>. Side-by-side: today’s full spine
+      (Venables → station) vs cropping the black line and viewBox to the active stops.
+    </div>
+
+    <div class="demo-controls">
+      <label>
+        Sample route
+        <select id="preset-select">
+          <option value="station-jj-equinox">Station → JJ Bean → Equinox Gallery</option>
+          <option value="station-nearby">Station → JJ Bean → Rollzzy (near station)</option>
+          <option value="victoria-leg">Station → JJ Bean → Victoria Park</option>
+        </select>
+      </label>
+      <button type="button" id="btn-replay">Replay both maps</button>
+    </div>
+
+    <div class="compare-grid">
+      <section class="compare-panel compare-panel--current" aria-label="Current map behaviour">
+        <h2>Current (live app)</h2>
+        <p>Black spine runs from Venables (<code>y=50</code>) to the station. ViewBox stays at the full <code>340×600</code> canvas when the station is shown.</p>
+        <div class="map-container">
+          <svg id="route-map-current" viewBox="0 0 340 600" aria-label="Current Commercial route map"></svg>
+        </div>
+      </section>
+
+      <section class="compare-panel compare-panel--fixed" aria-label="Fixed map behaviour">
+        <h2>Fixed (prototype)</h2>
+        <p>Spine and viewBox clip to the route — station plus stops only, with a little padding. Stops fill the map frame.</p>
+        <div class="map-container">
+          <svg id="route-map-fixed" viewBox="0 0 340 600" aria-label="Fixed Commercial route map"></svg>
+        </div>
+      </section>
+    </div>
+
+    <aside class="demo-notes">
+      <h2>What we're testing</h2>
+      <ul>
+        <li><strong>Spine bounds</strong> — <code>getMapSpineBounds</code> should use route stop Y positions (+ station) instead of always <code>yNorth…yStation</code> when the station is on the map.</li>
+        <li><strong>ViewBox</strong> — <code>computeMapViewBox</code> should run for station-start routes too, not only when <code>!showStation</code>.</li>
+        <li><strong>South-of-station stops</strong> — Equinox, Flourist, and The Burrow sit <em>below</em> the station on the map (<code>y &gt; 550</code>). The live spine used to end at the station, so E 18th hung off the line. Cropping the spine to route bounds fixes that too.</li>
+        <li><strong>Round-trip legs</strong> — coloured paths and backward (gold) segments should still draw correctly inside the cropped frame.</li>
+      </ul>
+    </aside>
+  </div>
+
+  <script src="commercial-route-map.js"></script>
+</body>
+</html>

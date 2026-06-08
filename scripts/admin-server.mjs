@@ -31,12 +31,6 @@ const STOPS = {
 // routes it to the right file. Add a new entry here to stage another area.
 const DRAFTS = [
   {
-    source: "hastings-draft",
-    rel: path.join("data", "hastings-sunrise-draft.json"),
-    indent: 2,
-    neighborhood: "hastings-sunrise",
-  },
-  {
     source: "mount-pleasant-draft",
     rel: path.join("data", "mount-pleasant-draft.json"),
     indent: 2,

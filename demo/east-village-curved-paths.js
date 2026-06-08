@@ -757,14 +757,16 @@ async function init() {
   }
 
   try {
-    const res = await fetch("/data/hastings-sunrise-draft.json");
+    const res = await fetch("/data/stops.json");
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    allStops = (data.stops || []).map(hydrateStop);
+    allStops = (data.stops || [])
+      .filter((s) => (s.neighborhood || "commercial") === "hastings-sunrise")
+      .map(hydrateStop);
   } catch (err) {
     document.querySelector(".demo-shell")?.insertAdjacentHTML(
       "afterbegin",
-      `<p class="demo-banner" style="border-color:#c00">Could not load draft stops: ${escapeHtml(err.message)}. Run <code>npm run dev</code> from the repo root.</p>`
+      `<p class="demo-banner" style="border-color:#c00">Could not load East Village stops: ${escapeHtml(err.message)}. Run <code>npm run dev</code> from the repo root.</p>`
     );
     return;
   }

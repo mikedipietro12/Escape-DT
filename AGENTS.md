@@ -235,7 +235,25 @@ Spots on **Victoria Street** (east of Commercial Drive) still use `neighborhood:
 | `coords.y` | Match latitude band of peers: Grant area ~351–372, Georgia area ~188 (see existing stops in `data/stops.json`). |
 | `coords.x` | Optional override (`~175`). Omit if `crossStreet` already contains `Victoria` — the app detects it and draws the stop east of the centerline. |
 
-**Illustrated route map:** legs to or from Victoria use an **L-shape** — travel north/south on the Commercial spine (`MAP.xCenter`), then a **90° turn east** onto Victoria (or west back to the spine when leaving). Victoria-to-Victoria legs stay on the east column. Walk distances still come from real `lat`/`lng`.
+**Illustrated route map (live app today):** legs to or from Victoria use an **L-shape** — travel north/south on the Commercial spine (`MAP.xCenter`), then a **90° turn east** onto Victoria (or west back to the spine when leaving). Victoria-to-Victoria legs stay on the east column. Walk distances still come from real `lat`/`lng`.
+
+### Commercial Drive illustrated route map — hybrid paths (live)
+
+**Status:** Ported from [`demo/commercial-hybrid-paths.html`](demo/commercial-hybrid-paths.html) into `index.html`.
+
+**Demo reference:** [`demo/commercial-hybrid-paths.js`](demo/commercial-hybrid-paths.js). Preview tweaks: `npm run dev` → `/demo/commercial-hybrid-paths.html`.
+
+**Supersedes** curved-lanes and stacked-lanes for spine behaviour. Archived experiments remain in `demo/`.
+
+| Behaviour | Hybrid |
+|-----------|--------|
+| Spine north/south + backtracking | Straight legs on center column; gold when walking south (same as live) |
+| Direction reversals on spine | **No** U-turn curves, **no** lane offset (except return lane below) |
+| South return to first stop or SkyTrain | Tiny curve onto a parallel line just left of the spine, then curve back at destination |
+| Off-spine (Victoria, Venables, Frances) | Rounded quadratic corners at spine junctions — **both** onto and back from Commercial |
+| Animated route draw | Trace arrowhead at the drawing tip |
+
+Mount Pleasant vertical map should mirror this model when it ships.
 
 ### Main Street (off-spine) — Mount Pleasant draft
 
