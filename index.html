@@ -1568,6 +1568,7 @@
     .route-export-actions__secondary {
       display: flex;
       flex: 1 1 100%;
+      flex-wrap: wrap;
       gap: 0.75rem;
       width: 100%;
     }
@@ -2771,6 +2772,163 @@
       overflow: hidden;
     }
 
+    .feedback-sheet {
+      position: fixed;
+      inset: 0;
+      z-index: 360;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      pointer-events: none;
+      visibility: hidden;
+    }
+    .feedback-sheet.is-open {
+      pointer-events: auto;
+      visibility: visible;
+    }
+    .feedback-sheet__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      transition: opacity 0.28s ease;
+    }
+    .feedback-sheet.is-open .feedback-sheet__backdrop {
+      opacity: 1;
+    }
+    .feedback-sheet__panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 800px;
+      max-height: min(88vh, 44rem);
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+      border-top: 1px solid var(--ink);
+      border-radius: 1rem 1rem 0 0;
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.14);
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+      padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+    }
+    .feedback-sheet.is-open .feedback-sheet__panel {
+      transform: translateY(0);
+    }
+    .feedback-sheet__handle {
+      width: 2.5rem;
+      height: 0.25rem;
+      margin: 0.55rem auto 0;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.18);
+      flex-shrink: 0;
+    }
+    .feedback-sheet__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.65rem 1rem 0.35rem;
+      flex-shrink: 0;
+    }
+    .feedback-sheet__header h2 {
+      margin: 0;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+    }
+    .feedback-sheet__close {
+      flex-shrink: 0;
+      width: 2.25rem;
+      height: 2.25rem;
+      padding: 0;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .feedback-sheet__body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 0 1rem;
+      -webkit-overflow-scrolling: touch;
+    }
+    .feedback-section {
+      margin-bottom: 1rem;
+    }
+    .feedback-section-heading {
+      margin: 0 0 0.5rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      opacity: 0.75;
+    }
+    .feedback-field {
+      margin-bottom: 0.65rem;
+    }
+    .feedback-field > label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .feedback-field input[type="text"],
+    .feedback-field input[type="url"],
+    .feedback-field textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--ink);
+      border-radius: 0.35rem;
+      background: rgba(255, 255, 255, 0.55);
+      font: inherit;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    .feedback-field textarea {
+      resize: vertical;
+      min-height: 4.5rem;
+    }
+    .feedback-validation,
+    .feedback-error {
+      margin: 0 0 0.75rem;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    .feedback-validation {
+      color: var(--ink-muted);
+    }
+    .feedback-error {
+      color: #8b2020;
+    }
+    .feedback-error a {
+      color: inherit;
+    }
+    .feedback-success-msg {
+      margin: 0.5rem 0 1rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .feedback-sheet__actions {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.85rem 1rem 0.35rem;
+      flex-shrink: 0;
+    }
+    .feedback-sheet__actions button {
+      flex: 1;
+      min-width: 0;
+    }
+    body.feedback-sheet-open {
+      overflow: hidden;
+    }
+
     .route-card.placeholder {
       opacity: 0.45;
       pointer-events: none;
@@ -3108,6 +3266,7 @@
           <div class="route-export-actions__secondary">
             <button type="button" id="btn-route-share" onclick="shareRouteWithFriend()">Share with a friend</button>
             <button type="button" id="btn-route-pdf" onclick="exportRouteAsPdf()">Save as PDF</button>
+            <button type="button" id="btn-route-feedback" aria-label="Leave suggestions">SUGGESTIONS?</button>
             <a class="route-export-tour connect-tour-btn" href="mailto:seasonsofeastvan@gmail.com?subject=Book%20a%20tour" aria-label="Book a tour — email Seasons of East Van">Book a tour</a>
           </div>
           <p class="route-export-hint" id="route-export-hint" hidden>Save as PDF opens print — choose Save as PDF in the dialog.</p>
@@ -3167,6 +3326,7 @@
           <div class="route-export-actions__secondary">
             <button type="button" id="btn-p2-share" onclick="shareRouteWithFriend()">Share with a friend</button>
             <button type="button" id="btn-p2-pdf" onclick="exportRouteAsPdf()">Save as PDF</button>
+            <button type="button" id="btn-p2-feedback" aria-label="Leave suggestions">SUGGESTIONS?</button>
             <a class="route-export-tour connect-tour-btn" href="mailto:seasonsofeastvan@gmail.com?subject=Book%20a%20tour" aria-label="Book a tour — email Seasons of East Van">Book a tour</a>
           </div>
           <p class="route-export-hint" id="p2-export-hint" hidden>Save as PDF opens print — choose Save as PDF in the dialog.</p>
@@ -3252,6 +3412,57 @@
         <button type="button" class="photo-lightbox__arrow photo-lightbox__arrow--next" aria-label="Next photo" hidden>&#8250;</button>
       </div>
       <div class="photo-lightbox__dots" hidden></div>
+    </div>
+  </div>
+
+  <div id="feedback-sheet" class="feedback-sheet" aria-hidden="true">
+    <div class="feedback-sheet__backdrop" aria-hidden="true"></div>
+    <div class="feedback-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="feedback-sheet-title">
+      <div class="feedback-sheet__handle" aria-hidden="true"></div>
+      <div class="feedback-sheet__header">
+        <h2 id="feedback-sheet-title">Suggestions</h2>
+        <button type="button" class="feedback-sheet__close" aria-label="Close suggestions">&times;</button>
+      </div>
+      <form id="feedback-form" class="feedback-sheet__body" novalidate>
+        <div id="feedback-form-panel">
+          <section class="feedback-section" aria-labelledby="feedback-general-heading">
+            <h3 id="feedback-general-heading" class="feedback-section-heading">General feedback</h3>
+            <div class="feedback-field">
+              <label for="feedback-general">How was your experience using this web app? What would you like to see in future versions?</label>
+              <textarea id="feedback-general" name="general_feedback" rows="3"></textarea>
+            </div>
+          </section>
+          <section class="feedback-section" aria-labelledby="feedback-spot-heading">
+            <h3 id="feedback-spot-heading" class="feedback-section-heading">Suggest a spot</h3>
+            <div class="feedback-field">
+              <label for="feedback-spot-name">Place name</label>
+              <input type="text" id="feedback-spot-name" name="spot_name" autocomplete="off">
+            </div>
+            <div class="feedback-field">
+              <label for="feedback-spot-cross">Cross street / area</label>
+              <input type="text" id="feedback-spot-cross" name="spot_cross_street" autocomplete="off">
+            </div>
+            <div class="feedback-field">
+              <label for="feedback-spot-maps">Google Maps link</label>
+              <input type="url" id="feedback-spot-maps" name="spot_maps_link" inputmode="url" autocomplete="off">
+            </div>
+            <div class="feedback-field">
+              <label for="feedback-spot-notes">Why you'd recommend it</label>
+              <textarea id="feedback-spot-notes" name="spot_notes" rows="3"></textarea>
+            </div>
+          </section>
+          <p id="feedback-validation" class="feedback-validation" hidden></p>
+          <p id="feedback-error" class="feedback-error" hidden></p>
+        </div>
+        <div id="feedback-success-panel" hidden>
+          <p class="feedback-success-msg">Thanks — got it! Your note helps shape what we add next.</p>
+        </div>
+        <div class="feedback-sheet__actions">
+          <button type="button" id="feedback-cancel">Cancel</button>
+          <button type="submit" class="primary" id="feedback-submit">Send</button>
+          <button type="button" class="primary" id="feedback-close-success" hidden>Close</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -3596,6 +3807,8 @@
     let AREA_ORDER = [];
     let LANDING_TAGLINE = "";
     const DEFAULT_LANDING_AREA = "commercial-drive";
+    let FEEDBACK_ENDPOINT = "https://formspree.io/f/mojzwroo";
+    let FEEDBACK_MAILTO = "seasonsofeastvan@gmail.com";
 
     const FALLBACK_AREAS = {
       version: 1,
@@ -3730,6 +3943,18 @@
       showStep("LANDING");
     }
 
+    async function loadFeedbackConfig() {
+      try {
+        const res = await fetch("data/feedback.json", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.endpoint) FEEDBACK_ENDPOINT = String(data.endpoint).trim();
+        if (data.mailto) FEEDBACK_MAILTO = String(data.mailto).trim();
+      } catch (_) {
+        /* keep defaults */
+      }
+    }
+
     async function loadAppData() {
       const banner = document.getElementById("data-load-error");
       try {
@@ -3738,6 +3963,7 @@
           fetch("data/plans.json", { cache: "no-store" }),
           fetch("data/areas.json", { cache: "no-store" }),
           fetch("data/neighborhoods.json", { cache: "no-store" }),
+          loadFeedbackConfig(),
         ]);
         if (!stopsRes.ok) throw new Error(`stops.json HTTP ${stopsRes.status}`);
         if (!plansRes.ok) throw new Error(`plans.json HTTP ${plansRes.status}`);
@@ -7863,6 +8089,226 @@
       viewP3Route();
     }
 
+    function isFeedbackSheetOpen() {
+      return document.getElementById("feedback-sheet")?.classList.contains("is-open");
+    }
+
+    function getFeedbackContext() {
+      const area = AREAS[state.landingAreaId || DEFAULT_LANDING_AREA];
+      const onP2 = state.currentStep === "P2-PLAN";
+      const route = onP2 ? getPlanRoute() : getFinalRoute();
+      const plan = onP2 ? PLANS[state.planTime] : null;
+      return {
+        area: area?.title || "",
+        path: state.pathContext || "",
+        planTitle: plan?.title || "",
+        routeStops: route.map((s) => s.name).join(", "),
+        pageUrl: location.href,
+      };
+    }
+
+    function resetFeedbackSheetUi() {
+      const form = document.getElementById("feedback-form");
+      const formPanel = document.getElementById("feedback-form-panel");
+      const successPanel = document.getElementById("feedback-success-panel");
+      const validation = document.getElementById("feedback-validation");
+      const errorEl = document.getElementById("feedback-error");
+      const cancelBtn = document.getElementById("feedback-cancel");
+      const submitBtn = document.getElementById("feedback-submit");
+      const closeSuccessBtn = document.getElementById("feedback-close-success");
+      form?.reset();
+      if (formPanel) formPanel.hidden = false;
+      if (successPanel) successPanel.hidden = true;
+      if (validation) {
+        validation.hidden = true;
+        validation.textContent = "";
+      }
+      if (errorEl) {
+        errorEl.hidden = true;
+        errorEl.textContent = "";
+      }
+      if (cancelBtn) cancelBtn.hidden = false;
+      if (submitBtn) {
+        submitBtn.hidden = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send";
+      }
+      if (closeSuccessBtn) closeSuccessBtn.hidden = true;
+    }
+
+    function showFeedbackValidation(message) {
+      const validation = document.getElementById("feedback-validation");
+      if (!validation) return;
+      validation.textContent = message;
+      validation.hidden = !message;
+    }
+
+    function showFeedbackError(message, mailtoHref) {
+      const errorEl = document.getElementById("feedback-error");
+      if (!errorEl) return;
+      if (mailtoHref) {
+        errorEl.innerHTML =
+          `${escapeHtml(message)} <a href="${escapeHtml(mailtoHref)}">Send via email instead</a>`;
+      } else {
+        errorEl.textContent = message;
+      }
+      errorEl.hidden = !message;
+    }
+
+    function showFeedbackSuccess() {
+      const formPanel = document.getElementById("feedback-form-panel");
+      const successPanel = document.getElementById("feedback-success-panel");
+      const cancelBtn = document.getElementById("feedback-cancel");
+      const submitBtn = document.getElementById("feedback-submit");
+      const closeSuccessBtn = document.getElementById("feedback-close-success");
+      const validation = document.getElementById("feedback-validation");
+      const errorEl = document.getElementById("feedback-error");
+      if (formPanel) formPanel.hidden = true;
+      if (successPanel) successPanel.hidden = false;
+      if (validation) validation.hidden = true;
+      if (errorEl) errorEl.hidden = true;
+      if (cancelBtn) cancelBtn.hidden = true;
+      if (submitBtn) submitBtn.hidden = true;
+      if (closeSuccessBtn) {
+        closeSuccessBtn.hidden = false;
+        closeSuccessBtn.focus();
+      }
+    }
+
+    function buildFeedbackPayload() {
+      const general = document.getElementById("feedback-general")?.value.trim() || "";
+      const spotName = document.getElementById("feedback-spot-name")?.value.trim() || "";
+      const spotCross = document.getElementById("feedback-spot-cross")?.value.trim() || "";
+      const spotMaps = document.getElementById("feedback-spot-maps")?.value.trim() || "";
+      const spotNotes = document.getElementById("feedback-spot-notes")?.value.trim() || "";
+      const ctx = getFeedbackContext();
+      return {
+        _subject: "Escape DT feedback",
+        general_feedback: general,
+        spot_name: spotName,
+        spot_cross_street: spotCross,
+        spot_maps_link: spotMaps,
+        spot_notes: spotNotes,
+        area: ctx.area,
+        path: ctx.path,
+        plan_title: ctx.planTitle,
+        route_stops: ctx.routeStops,
+        page_url: ctx.pageUrl,
+      };
+    }
+
+    function buildFeedbackMailto(payload) {
+      const lines = [];
+      if (payload.general_feedback) {
+        lines.push(`General feedback:\n${payload.general_feedback}`);
+      }
+      if (payload.spot_name) lines.push(`Spot name: ${payload.spot_name}`);
+      if (payload.spot_cross_street) lines.push(`Cross street / area: ${payload.spot_cross_street}`);
+      if (payload.spot_maps_link) lines.push(`Maps link: ${payload.spot_maps_link}`);
+      if (payload.spot_notes) lines.push(`Why recommend:\n${payload.spot_notes}`);
+      if (payload.area) lines.push(`Area: ${payload.area}`);
+      if (payload.path) lines.push(`Path: ${payload.path}`);
+      if (payload.plan_title) lines.push(`Plan: ${payload.plan_title}`);
+      if (payload.route_stops) lines.push(`Route stops: ${payload.route_stops}`);
+      if (payload.page_url) lines.push(`Page: ${payload.page_url}`);
+      const subject = encodeURIComponent("Escape DT feedback");
+      const body = encodeURIComponent(lines.join("\n\n"));
+      return `mailto:${FEEDBACK_MAILTO}?subject=${subject}&body=${body}`;
+    }
+
+    function openFeedbackSheet() {
+      const sheet = document.getElementById("feedback-sheet");
+      if (!sheet) return;
+      resetFeedbackSheetUi();
+      sheet.classList.add("is-open");
+      sheet.setAttribute("aria-hidden", "false");
+      document.body.classList.add("feedback-sheet-open");
+      requestAnimationFrame(() => {
+        document.getElementById("feedback-general")?.focus();
+      });
+    }
+
+    function closeFeedbackSheet() {
+      const sheet = document.getElementById("feedback-sheet");
+      if (!sheet?.classList.contains("is-open")) return;
+      sheet.classList.remove("is-open");
+      sheet.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("feedback-sheet-open");
+    }
+
+    async function submitFeedback(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById("feedback-submit");
+      const payload = buildFeedbackPayload();
+      showFeedbackValidation("");
+      showFeedbackError("", null);
+
+      if (!FEEDBACK_ENDPOINT) {
+        window.location.href = buildFeedbackMailto(payload);
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending…";
+      }
+
+      try {
+        const res = await fetch(FEEDBACK_ENDPOINT, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          showFeedbackSuccess();
+          return;
+        }
+        showFeedbackError(
+          "Something went wrong sending your feedback.",
+          buildFeedbackMailto(payload)
+        );
+      } catch (_) {
+        showFeedbackError(
+          "Could not reach the feedback service.",
+          buildFeedbackMailto(payload)
+        );
+      } finally {
+        const successPanel = document.getElementById("feedback-success-panel");
+        if (submitBtn && successPanel?.hidden) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Send";
+        }
+      }
+    }
+
+    function initFeedbackSheet() {
+      const sheet = document.getElementById("feedback-sheet");
+      const form = document.getElementById("feedback-form");
+      if (!sheet || sheet.dataset.bound) return;
+      sheet.dataset.bound = "1";
+
+      document.getElementById("btn-route-feedback")
+        ?.addEventListener("click", openFeedbackSheet);
+      document.getElementById("btn-p2-feedback")
+        ?.addEventListener("click", openFeedbackSheet);
+
+      sheet.querySelector(".feedback-sheet__backdrop")
+        ?.addEventListener("click", closeFeedbackSheet);
+      sheet.querySelector(".feedback-sheet__close")
+        ?.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          closeFeedbackSheet();
+        });
+      document.getElementById("feedback-cancel")
+        ?.addEventListener("click", closeFeedbackSheet);
+      document.getElementById("feedback-close-success")
+        ?.addEventListener("click", closeFeedbackSheet);
+      form?.addEventListener("submit", submitFeedback);
+    }
+
     function initP3RouteSheet() {
       const bar = document.getElementById("p3-route-bar");
       const sheet = document.getElementById("p3-route-sheet");
@@ -7885,7 +8331,9 @@
         ?.addEventListener("click", finalizeP3RouteFromSheet);
 
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && isP3RouteSheetOpen()) closeP3RouteSheet();
+        if (e.key !== "Escape") return;
+        if (isFeedbackSheetOpen()) closeFeedbackSheet();
+        else if (isP3RouteSheetOpen()) closeP3RouteSheet();
       });
     }
 
@@ -8012,6 +8460,7 @@
     }
 
     initP3PhotoLightbox();
+    initFeedbackSheet();
     initP3RouteSheet();
 
     const HERO_LOCATIONS = ["downtown", "the suburbs", "north van", "burnaby", "kits"];

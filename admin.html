@@ -64,6 +64,9 @@
     button.primary:hover { background: #1d4fd0; }
     button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
     button.ghost { background: transparent; }
+    button.danger { color: var(--danger); border-color: #f3c0c0; background: #fff5f5; }
+    button.danger:hover { background: #fdecec; border-color: #e8a0a0; }
+    button.danger:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .layout { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 49px); }
     @media (max-width: 820px) { .layout { grid-template-columns: 1fr; height: auto; } }
@@ -138,6 +141,8 @@
 
     .form-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
     .form-head h2 { margin: 0; font-size: 1.15rem; }
+    .form-head-spacer { flex: 1; min-width: 0.5rem; }
+    button.danger.ghost { background: transparent; font-size: 0.82rem; }
     .field { margin-bottom: 0.9rem; }
     .field > label { display: block; font-weight: 600; font-size: 0.8rem; margin-bottom: 0.25rem; }
     .field .hint { font-weight: 400; color: var(--muted); font-size: 0.72rem; }
@@ -318,6 +323,8 @@
             <h2 id="form-title">Stop</h2>
             <span class="pill" id="form-source"></span>
             <span class="pill" id="form-id"></span>
+            <span class="form-head-spacer"></span>
+            <button type="button" class="danger ghost" id="delete-btn" title="Remove this stop from the data file">Delete…</button>
           </div>
 
           <div id="meta-review" class="meta-box" style="display:none;">
@@ -519,6 +526,9 @@
         <label class="wiz-label" for="add-maps" style="margin-top:1rem;">Google Maps link</label>
         <input type="text" id="add-maps" placeholder="https://www.google.com/maps/place/..." autocomplete="off">
         <p class="hint" style="margin:0.5rem 0 0;font-size:0.78rem;color:var(--muted);">Paste the full URL from Google Maps (not a short link). We'll look up categories, cost, cross street, walk time, and more.</p>
+        <label class="wiz-label" for="add-neighborhood" style="margin-top:1rem;">Neighborhood</label>
+        <select id="add-neighborhood"></select>
+        <p class="hint" style="margin:0.35rem 0 0;font-size:0.78rem;color:var(--muted);">Where this stop is saved. Draft areas stay in their draft file until the area ships in the app.</p>
       </div>
       <div class="wizard-foot">
         <button type="button" id="add-cancel" class="ghost">Cancel</button>
@@ -1459,6 +1469,77 @@
       }
     }
 
+    function clearEditor() {
+      state.selectedId = null;
+      setDirty(false);
+      form.style.display = "none";
+      $("#editor-empty").style.display = "";
+      updateSaveBarNav();
+    }
+
+    async function deleteStop(force = false) {
+      if (!state.selectedId) return;
+      const stop = state.stops.find((s) => s.id === state.selectedId);
+      if (!stop) return;
+
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = null;
+      if (autoSavePromise) {
+        try {
+          await autoSavePromise;
+        } catch {
+          return;
+        }
+      }
+
+      const btn = $("#delete-btn");
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/stop/${encodeURIComponent(stop.id)}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(force ? { force: true } : {}),
+        });
+        const data = await res.json();
+
+        if (res.status === 409 && data.plans?.length) {
+          const planList = data.plans.join(", ");
+          const ok = confirm(
+            `"${stop.name}" (${stop.id}) is on pre-built plan(s): ${planList}.\n\n` +
+            "Delete anyway? You'll need to edit data/plans.json to remove the broken references."
+          );
+          if (!ok) return;
+          return deleteStop(true);
+        }
+
+        if (res.status === 405) {
+          throw new Error("Delete not supported — restart the editor (Ctrl+C, then npm run admin) and try again.");
+        }
+        if (!res.ok) throw new Error(data.error || "Delete failed");
+
+        state.stops = state.stops.filter((s) => s.id !== stop.id);
+        clearEditor();
+        renderList();
+        let msg = `Deleted ${stop.name} (${stop.id})`;
+        if (data.plans?.length) msg += ` — also remove from plans: ${data.plans.join(", ")}`;
+        toast(msg);
+      } catch (err) {
+        toast(err.message, true);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function confirmDeleteStop() {
+      if (!state.selectedId) return;
+      const stop = state.stops.find((s) => s.id === state.selectedId);
+      if (!stop) return;
+      const ok = confirm(
+        `Delete "${stop.name}" (${stop.id})?\n\nThis removes it from the JSON file. Photo files in assets/stops/ are not deleted.`
+      );
+      if (ok) deleteStop();
+    }
+
     // ---------- guided fill wizard ----------
     const WIZARD_ORDER = ["tags", "cost", "timeOfDay", "categories", "crossStreet", "walkFromStation", "description", "goto", "images"];
     const FIELD_DEFS = {
@@ -1642,18 +1723,20 @@
             ch.classList.toggle("on", tagsInclude(cur, ch.dataset.t));
           });
         };
-        const applyTags = (cur) => {
+        const setTagsFromList = (cur) => {
           wizard.stop.tags = cur;
           input.value = cur.join(", ");
           mark();
           syncChips();
         };
         input.addEventListener("input", () => {
-          applyTags(parseTagsValue(input.value));
+          wizard.stop.tags = parseTagsValue(input.value);
+          mark();
+          syncChips();
         });
         $("#wiz-body").querySelectorAll("[data-t]").forEach((ch) => {
           ch.addEventListener("click", () => {
-            applyTags(toggleTagInList(wizard.stop.tags || [], ch.dataset.t));
+            setTagsFromList(toggleTagInList(wizard.stop.tags || [], ch.dataset.t));
           });
         });
         input.focus();
@@ -1714,7 +1797,7 @@
 
       if (field === "tags") {
         const input = $("#wiz-tags");
-        if (input) stop.tags = input.value.split(",").map((s) => s.trim()).filter(Boolean);
+        if (input) stop.tags = parseTagsValue(input.value);
       } else if (field === "cost") {
         const rangeOn = $("#wiz-cost-range")?.checked;
         if (rangeOn) {
@@ -1794,6 +1877,8 @@
       try {
         const ok = await saveWizard();
         if (!ok) return;
+        const saved = state.stops.find((s) => s.id === wizard.stop.id);
+        if (saved) wizard.stop = JSON.parse(JSON.stringify(saved));
         if (!isLast) {
           wizard.index++;
           renderWizard();
@@ -1840,7 +1925,21 @@
       openAddDialog();
     }
 
+    function renderAddNeighborhoodSelect() {
+      const sel = $("#add-neighborhood");
+      const order = state.refs.neighborhoods.neighborhoodOrder || [];
+      const drafts = (state.refs && state.refs.drafts) || {};
+      sel.innerHTML = order.map((id) => {
+        const title = neighborhoodTitle(id);
+        const draft = drafts[id] ? " (draft)" : "";
+        return `<option value="${escapeHtml(id)}">${escapeHtml(title)}${draft}</option>`;
+      }).join("");
+    }
+
     function openAddDialog() {
+      renderAddNeighborhoodSelect();
+      const filterNbh = $("#filter-neighborhood").value;
+      $("#add-neighborhood").value = filterNbh || "commercial";
       $("#add-name").value = "";
       $("#add-maps").value = "";
       $("#add-submit").disabled = false;
@@ -1867,7 +1966,7 @@
         return;
       }
 
-      const neighborhood = $("#filter-neighborhood").value || "commercial";
+      const neighborhood = $("#add-neighborhood").value || "commercial";
       const btn = $("#add-submit");
       btn.disabled = true;
       btn.textContent = "Adding…";
@@ -2077,6 +2176,7 @@
       setDirty(false);
       load();
     });
+    $("#delete-btn").addEventListener("click", confirmDeleteStop);
     form.addEventListener("submit", saveStop);
     form.addEventListener("input", onInput);
     form.addEventListener("change", () => {

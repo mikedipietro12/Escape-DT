@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero mascot + speech bubble (static export)</title>
+  <style>
+    /* Copy everything below into your project. Swap the img src for your mascot PNG. */
+    :root {
+      --ink: #000;
+      --tail-y: 46px;
+      --bubble-gap: -18px;
+      --bubble-bg-opacity: 0.6;
+      --bubble-max-width: 340px;
+      --hero-figure-width: 192px;
+      --bubble-offset-y: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+      font-family: Futura, "Futura PT", "Century Gothic", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background: #f5f5f5;
+    }
+
+    html.png-export body {
+      min-height: 0;
+      padding: 0;
+      background: transparent;
+    }
+
+    .hero-export {
+      width: 100%;
+      max-width: 36rem;
+    }
+
+    html.png-export .hero-export {
+      width: auto;
+      max-width: none;
+    }
+
+    .hero-mascot-wrap {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .hero-stage {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      width: 100%;
+    }
+
+    .hero-figure {
+      flex: 0 0 auto;
+      width: var(--hero-figure-width);
+      position: relative;
+    }
+
+    .hero-logo {
+      display: block;
+      width: 100%;
+      height: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .speech-bubble-wrap {
+      position: relative;
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: var(--bubble-max-width);
+      margin-top: var(--bubble-offset-y);
+      margin-left: var(--bubble-gap);
+      align-self: flex-start;
+    }
+
+    .speech-bubble {
+      --tail-bg: rgb(255 255 255 / var(--bubble-bg-opacity));
+      position: relative;
+      width: 100%;
+      padding: 0.85rem 1rem 0.65rem;
+      border: none;
+      border-radius: 1.15rem;
+      background-color: var(--tail-bg);
+      transform-origin: left var(--tail-y);
+      overflow: visible;
+    }
+
+    .speech-tail {
+      position: absolute;
+      left: -14px;
+      top: var(--tail-y);
+      z-index: 0;
+      width: 14px;
+      height: 22px;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .speech-tail-fill {
+      fill: var(--tail-bg);
+    }
+
+    .speech-line {
+      position: relative;
+      z-index: 1;
+      font-size: 0.9rem;
+      font-weight: 500;
+      line-height: 1.42;
+      letter-spacing: -0.01em;
+      text-align: left;
+      hyphens: auto;
+    }
+
+    @media (max-width: 520px) {
+      :root {
+        --hero-figure-width: 168px;
+        --bubble-offset-y: 8px;
+      }
+
+      .speech-bubble {
+        padding: 0.45rem 0.6rem 0.35rem;
+      }
+
+      .speech-line {
+        font-size: 0.68rem;
+        line-height: 1.32;
+        letter-spacing: -0.02em;
+      }
+    }
+
+    @media (max-width: 319px) {
+      .hero-stage {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .speech-bubble-wrap {
+        max-width: min(var(--bubble-max-width), 92vw);
+        margin-top: 0.75rem;
+        margin-left: 0;
+        align-self: center;
+      }
+
+      .speech-tail {
+        left: 50%;
+        top: -12px;
+        transform: translateX(-50%) rotate(-90deg);
+        transform-origin: center bottom;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    Static hero export — mascot + speech bubble, no animation.
+    Assets: copy assets/hero/shy-spring.png (or shy-winter.png, shy-summer.png, shy-fall.png).
+    Preview: npm run dev → http://localhost:3000/demo/hero-static-export.html
+  -->
+  <div class="hero-export">
+    <div class="hero-mascot-wrap">
+      <div class="hero-stage">
+        <div class="hero-figure">
+          <img
+            class="hero-logo"
+            src="../assets/hero/shy-spring.png"
+            alt="Escape the Downtown mascot"
+            width="360"
+            height="360"
+            decoding="async"
+          >
+        </div>
+        <div class="speech-bubble-wrap">
+          <div class="speech-bubble">
+            <svg class="speech-tail" viewBox="0 0 14 22" aria-hidden="true" focusable="false">
+              <path class="speech-tail-fill" d="M14 0 L1.75 11 L14 22 Z" />
+            </svg>
+            <p class="speech-line">
+              10 years, hundreds of kilometres, one East Van. I'm a local photographer who's walked every block of these neighbourhoods. Here are the places I keep coming back to, and now I want to share them with you.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    if (new URLSearchParams(location.search).has("png")) {
+      document.documentElement.classList.add("png-export");
+    }
+  </script>
+</body>
+</html>

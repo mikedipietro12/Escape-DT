@@ -1578,7 +1578,7 @@
             "crossStreet": "E 18th Ave",
             "id": "s40",
             "lat": 49.2521585,
-            "cost": "",
+            "cost": "free",
             "tags": [
                 "art gallery"
             ],
@@ -1979,7 +1979,7 @@
             "crossStreet": "Frances & Napier",
             "id": "s69",
             "lat": 49.2759585,
-            "cost": "",
+            "cost": "free",
             "tags": [
                 "park",
                 "activities",
@@ -2146,7 +2146,8 @@
             "heroFocus": {
                 "x": 49,
                 "y": 39
-            }
+            },
+            "goto": ""
         },
         {
             "id": "s112",
@@ -2241,7 +2242,8 @@
             "heroFocus": {
                 "x": 50,
                 "y": 57
-            }
+            },
+            "goto": ""
         },
         {
             "id": "s115",
@@ -2522,7 +2524,8 @@
                 "food",
                 "point_of_interest",
                 "establishment"
-            ]
+            ],
+            "goto": ""
         },
         {
             "id": "s52",
@@ -2872,7 +2875,8 @@
             "heroFocus": {
                 "x": 50,
                 "y": 34
-            }
+            },
+            "goto": "Share tasting menu"
         },
         {
             "id": "s60",
@@ -2963,7 +2967,8 @@
             ],
             "images": [
                 "assets/stops/jackalopes-neighbourhood-dive.jpg"
-            ]
+            ],
+            "goto": "Pints."
         },
         {
             "id": "s62",
@@ -3086,7 +3091,15 @@
             ],
             "_review": [
                 "walkFromStation"
-            ]
+            ],
+            "goto": "Look through the Canadian and Indigenous authors section to see what's new.",
+            "images": [
+                "assets/stops/iron-dog-books.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 38
+            }
         }
     ]
 }

@@ -225,6 +225,64 @@ async function handleSaveStop(req, res, id) {
   sendJson(res, 200, { ok: true, id: stop.id, source: target.source });
 }
 
+function findPlanRefs(stopId) {
+  try {
+    const data = readJson(path.join("data", "plans.json"));
+    const refs = [];
+    for (const key of data.planOrder || Object.keys(data.plans || {})) {
+      const plan = data.plans?.[key];
+      if (!plan) continue;
+      const ids = new Set(plan.stops || []);
+      for (const seg of plan.narrative || []) {
+        if (seg.type === "stops") for (const id of seg.ids || []) ids.add(id);
+      }
+      if (ids.has(stopId)) refs.push(key);
+    }
+    return refs;
+  } catch {
+    return [];
+  }
+}
+
+async function handleDeleteStop(req, res, id) {
+  let body = {};
+  try {
+    const raw = await readBody(req);
+    if (raw.trim()) body = JSON.parse(raw);
+  } catch {
+    return sendJson(res, 400, { error: "Invalid JSON body" });
+  }
+
+  const { fileObjects, stops } = loadAll();
+  const stop = stops.find((s) => s.id === id);
+  if (!stop) return sendJson(res, 404, { error: "Stop not found" });
+
+  const planRefs = findPlanRefs(id);
+  if (planRefs.length && !body.force) {
+    return sendJson(res, 409, {
+      error: "Stop is used in pre-built plans",
+      plans: planRefs,
+    });
+  }
+
+  const file = DRAFT_BY_SOURCE[stop._source] || STOPS;
+  const obj = fileObjects[file.source];
+  const before = (obj.stops || []).length;
+  obj.stops = (obj.stops || []).filter((s) => s.id !== id);
+  if (obj.stops.length === before) {
+    return sendJson(res, 404, { error: "Stop not found in file" });
+  }
+
+  try {
+    writeJson(file, obj);
+  } catch (err) {
+    return sendJson(res, 500, { error: `Write failed: ${err.message}` });
+  }
+
+  console.log(`deleted ${id} "${stop.name}" from ${file.rel}`);
+  sendJson(res, 200, { ok: true, id, plans: planRefs });
+}
+
 // ---------- image uploads ----------
 function slugify(str) {
   return String(str || "")
@@ -463,11 +521,21 @@ const server = http.createServer(async (req, res) => {
   }
 
   const saveMatch = /^\/api\/stop\/([^/]+)$/.exec(urlPath);
-  if (saveMatch && (req.method === "POST" || req.method === "PUT")) {
-    try {
-      return await handleSaveStop(req, res, decodeURIComponent(saveMatch[1]));
-    } catch (err) {
-      return sendJson(res, 500, { error: err.message });
+  if (saveMatch) {
+    const stopId = decodeURIComponent(saveMatch[1]);
+    if (req.method === "POST" || req.method === "PUT") {
+      try {
+        return await handleSaveStop(req, res, stopId);
+      } catch (err) {
+        return sendJson(res, 500, { error: err.message });
+      }
+    }
+    if (req.method === "DELETE") {
+      try {
+        return await handleDeleteStop(req, res, stopId);
+      } catch (err) {
+        return sendJson(res, 500, { error: err.message });
+      }
     }
   }
 
