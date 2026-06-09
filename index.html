@@ -3520,8 +3520,10 @@
     let STATION_LNG = -123.0694;
 
     function formatCost(cost) {
-      if (cost == null || cost === "") return "";
-      if (typeof cost === "string") return cost;
+      if (cost == null || cost === "") return "Free";
+      if (typeof cost === "string") {
+        return cost.toLowerCase() === "free" ? "Free" : cost;
+      }
       if (Array.isArray(cost)) {
         const min = cost[0];
         const max = cost[cost.length - 1];

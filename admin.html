@@ -18,6 +18,7 @@
       --warn-soft: #fff4e2;
       --ok: #15803d;
       --danger: #b91c1c;
+      --list-panel-width: 320px;
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
@@ -68,12 +69,46 @@
     button.danger:hover { background: #fdecec; border-color: #e8a0a0; }
     button.danger:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .layout { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 49px); }
-    @media (max-width: 820px) { .layout { grid-template-columns: 1fr; height: auto; } }
+    .layout {
+      display: grid;
+      grid-template-columns: var(--list-panel-width) 6px 1fr;
+      height: calc(100vh - 49px);
+    }
+    @media (max-width: 820px) {
+      .layout { grid-template-columns: 1fr; height: auto; }
+      .layout-resizer { display: none; }
+    }
+    .layout-resizer {
+      position: relative;
+      z-index: 2;
+      cursor: col-resize;
+      touch-action: none;
+      background: transparent;
+    }
+    .layout-resizer::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 2px;
+      width: 1px;
+      background: var(--line);
+      transition: background 0.12s, width 0.12s;
+    }
+    .layout-resizer:hover::after,
+    .layout-resizer.dragging::after {
+      left: 1px;
+      width: 3px;
+      background: var(--accent);
+    }
+    body.resizing-list-panel {
+      cursor: col-resize;
+      user-select: none;
+    }
+    body.resizing-list-panel * { cursor: col-resize !important; }
 
     /* ---- list panel ---- */
     .list-panel {
-      border-right: 1px solid var(--line);
       background: var(--panel);
       display: flex;
       flex-direction: column;
@@ -211,6 +246,19 @@
     .meta-box { background: #fbfbf9; border: 1px solid var(--line); border-radius: 8px; padding: 0.7rem; margin-bottom: 0.9rem; }
     .meta-box h4 { margin: 0 0 0.4rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
     .chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .tag-warnings {
+      margin-top: 0.45rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid #f1d9ad;
+      background: var(--warn-soft);
+      font-size: 0.78rem;
+      color: #7c4a03;
+    }
+    .tag-warnings ul { margin: 0.35rem 0 0; padding-left: 1.1rem; }
+    .tag-warnings li { margin: 0.15rem 0; }
+    .tag-warnings-actions { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.45rem; flex-wrap: wrap; }
+    .tag-warnings-actions button { font-size: 0.75rem; padding: 0.3rem 0.55rem; }
     .chip { font-size: 0.7rem; background: #eee; border-radius: 999px; padding: 0.1rem 0.45rem; color: #444; }
     .review-list { margin: 0; padding-left: 1.1rem; color: var(--warn); font-size: 0.8rem; }
 
@@ -315,6 +363,15 @@
       <div class="list-scroll" id="list"></div>
     </aside>
 
+    <div
+      class="layout-resizer"
+      id="layout-resizer"
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="Resize stop list"
+      tabindex="0"
+    ></div>
+
     <main class="editor-panel">
       <div id="editor-empty" class="placeholder-msg">Select a stop on the left, or add a new one.</div>
       <form id="editor" class="editor-grid" style="display:none;" autocomplete="off">
@@ -358,7 +415,9 @@
 
           <div class="field">
             <label>Tags <span class="hint">(descriptive, comma-separated)</span></label>
-            <input type="text" name="tags" id="tags" placeholder="patio, grab and go, greek">
+            <input type="text" name="tags" id="tags" placeholder="patio, grab and go, greek" list="tag-alias-suggestions" autocomplete="off">
+            <datalist id="tag-alias-suggestions"></datalist>
+            <div id="tag-warnings" class="tag-warnings" hidden></div>
             <div id="tag-main-wrap" hidden>
               <span class="tag-chip-label">Main tags <span class="hint">(for selected categories)</span></span>
               <div class="chips" id="tag-main-chips"></div>
@@ -374,6 +433,7 @@
             </div>
             <div id="cost-single">
               <select name="costSingle"></select>
+              <p class="hint" style="margin:0.25rem 0 0;">Blank = Free</p>
             </div>
             <div id="cost-range" class="row2" style="display:none;">
               <select name="costMin"></select>
@@ -426,7 +486,7 @@
           </div>
 
           <div class="field">
-            <label>Google Maps link <span class="hint">(paste to auto-fill lat/lng below — not saved)</span></label>
+            <label>Google Maps link <span class="hint">(paste link, Fill lat/lng — also walk minutes on SkyTrain areas; not saved)</span></label>
             <div class="color-row">
               <input type="text" id="maps-link" placeholder="https://www.google.com/maps/place/.../@49.27,-123.06,17z/..." style="flex:1;">
               <button type="button" id="maps-fill-btn">Fill lat/lng</button>
@@ -540,16 +600,142 @@
 
   <div id="toast"></div>
 
+  <script type="module">
+    import { auditTags, normalizeTags } from "./scripts/tag-rules.mjs";
+    window.__tagRules = { auditTags, normalizeTags };
+    window.dispatchEvent(new Event("tag-rules-ready"));
+  </script>
+
   <script>
     const state = {
       stops: [],
       refs: { neighborhoods: { neighborhoods: {}, neighborhoodOrder: [] }, categories: [], timeOfDay: [], costs: [], tags: [], nextId: "s1" },
+      capabilities: { walkFromStation: false },
       selectedId: null,
       dirty: false,
     };
 
     const $ = (sel) => document.querySelector(sel);
     const form = $("#editor");
+    const tagRulesReady = new Promise((resolve) => {
+      if (window.__tagRules) resolve(window.__tagRules);
+      else window.addEventListener("tag-rules-ready", () => resolve(window.__tagRules), { once: true });
+    });
+
+    function populateTagAliasDatalist(rulesMeta) {
+      const list = $("#tag-alias-suggestions");
+      if (!list || !rulesMeta?.aliases) return;
+      list.innerHTML = Object.entries(rulesMeta.aliases)
+        .filter(([, canon]) => canon)
+        .map(([variant, canon]) => `<option value="${escapeHtml(canon)}">${escapeHtml(variant)} → ${escapeHtml(canon)}</option>`)
+        .join("");
+    }
+
+    async function renderTagWarnings() {
+      const box = $("#tag-warnings");
+      if (!box || form.style.display === "none") return;
+      const rules = await tagRulesReady;
+      const categories = collectChecks("#categories");
+      const audit = rules.auditTags(parseTagsValue(form.tags.value), categories);
+      if (!audit.warnings.length) {
+        box.hidden = true;
+        box.innerHTML = "";
+        return;
+      }
+      const items = audit.warnings.map((w) => `<li>${escapeHtml(w.message)}</li>`).join("");
+      const normalizeBtn = audit.changed
+        ? `<button type="button" class="primary" id="tag-normalize-btn">Normalize tags</button>`
+        : "";
+      box.innerHTML =
+        `<strong>Tag suggestions</strong>` +
+        `<ul>${items}</ul>` +
+        `<div class="tag-warnings-actions">${normalizeBtn}</div>`;
+      box.hidden = false;
+      const btn = $("#tag-normalize-btn");
+      if (btn) {
+        btn.addEventListener("click", async () => {
+          await applyTagNormalization();
+        });
+      }
+    }
+
+    async function applyTagNormalization() {
+      const rules = await tagRulesReady;
+      const categories = collectChecks("#categories");
+      const next = rules.normalizeTags(parseTagsValue(form.tags.value), categories);
+      form.tags.value = next.join(", ");
+      renderMainTagChips();
+      renderTagSuggestions();
+      await renderTagWarnings();
+      onInput();
+      toast("Tags normalized");
+    }
+
+    const LIST_PANEL_WIDTH_KEY = "escape-dt-admin-list-width";
+    const LIST_PANEL_MIN = 200;
+    const LIST_PANEL_MAX = 560;
+    const LIST_PANEL_DEFAULT = 320;
+
+    function setListPanelWidth(px) {
+      const w = Math.min(LIST_PANEL_MAX, Math.max(LIST_PANEL_MIN, Math.round(px)));
+      document.documentElement.style.setProperty("--list-panel-width", `${w}px`);
+      return w;
+    }
+
+    function initListPanelResize() {
+      const layout = $(".layout");
+      const resizer = $("#layout-resizer");
+      const listPanel = $(".list-panel");
+      if (!layout || !resizer || !listPanel) return;
+
+      const saved = parseInt(localStorage.getItem(LIST_PANEL_WIDTH_KEY) || "", 10);
+      if (saved >= LIST_PANEL_MIN && saved <= LIST_PANEL_MAX) setListPanelWidth(saved);
+
+      let startX = 0;
+      let startWidth = LIST_PANEL_DEFAULT;
+
+      function finishResize(e) {
+        resizer.classList.remove("dragging");
+        document.body.classList.remove("resizing-list-panel");
+        resizer.releasePointerCapture(e.pointerId);
+        resizer.removeEventListener("pointermove", onPointerMove);
+        resizer.removeEventListener("pointerup", finishResize);
+        resizer.removeEventListener("pointercancel", finishResize);
+        const w = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--list-panel-width"), 10);
+        if (w) localStorage.setItem(LIST_PANEL_WIDTH_KEY, String(w));
+      }
+
+      function onPointerMove(e) {
+        if (window.matchMedia("(max-width: 820px)").matches) return;
+        setListPanelWidth(startWidth + (e.clientX - startX));
+      }
+
+      resizer.addEventListener("pointerdown", (e) => {
+        if (window.matchMedia("(max-width: 820px)").matches) return;
+        if (e.button !== 0) return;
+        e.preventDefault();
+        startX = e.clientX;
+        startWidth = listPanel.getBoundingClientRect().width;
+        resizer.classList.add("dragging");
+        document.body.classList.add("resizing-list-panel");
+        resizer.setPointerCapture(e.pointerId);
+        resizer.addEventListener("pointermove", onPointerMove);
+        resizer.addEventListener("pointerup", finishResize);
+        resizer.addEventListener("pointercancel", finishResize);
+      });
+
+      resizer.addEventListener("keydown", (e) => {
+        if (window.matchMedia("(max-width: 820px)").matches) return;
+        const step = e.shiftKey ? 40 : 16;
+        let w = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--list-panel-width"), 10) || LIST_PANEL_DEFAULT;
+        if (e.key === "ArrowLeft") w -= step;
+        else if (e.key === "ArrowRight") w += step;
+        else return;
+        e.preventDefault();
+        const next = setListPanelWidth(w);
+        localStorage.setItem(LIST_PANEL_WIDTH_KEY, String(next));
+      });
+    }
 
     function toast(msg, isError) {
       const el = $("#toast");
@@ -601,7 +787,9 @@
       if (!String(stop.description || "").trim()) return true;
       if (!(stop.tags || []).length) return true;
       if (usesSkytrainStation(stop.neighborhood) && !stop.walkFromStation) return true;
-      if (Array.isArray(stop._review) && stop._review.length) return true;
+      if (Array.isArray(stop._review) && stop._review.some((entry) => needsAttention(entry.replace(/\?$/, ""), stop))) {
+        return true;
+      }
       return false;
     }
 
@@ -851,7 +1039,8 @@
     }
 
     function buildCostOptions() {
-      const opts = '<option value=""></option>' + state.refs.costs.map((c) => `<option value="${c}">${c}</option>`).join("");
+      const opts = '<option value="">Free (default)</option>' +
+        state.refs.costs.filter((c) => c !== "Free").map((c) => `<option value="${c}">${c}</option>`).join("");
       form.costSingle.innerHTML = opts;
       form.costMin.innerHTML = opts;
       form.costMax.innerHTML = opts;
@@ -961,12 +1150,12 @@
         const min = Array.isArray(cost) ? cost[0] : cost.min;
         const max = Array.isArray(cost) ? cost[cost.length - 1] : cost.max;
         setCostMode("range");
-        form.costMin.value = min || "";
-        form.costMax.value = max || "";
+        form.costMin.value = normalizeCostString(min) || min || "";
+        form.costMax.value = normalizeCostString(max) || max || "";
         form.costSingle.value = "";
       } else {
         setCostMode("single");
-        form.costSingle.value = cost || "";
+        form.costSingle.value = costFormValue(cost);
         form.costMin.value = "";
         form.costMax.value = "";
       }
@@ -982,6 +1171,7 @@
 
       renderMainTagChips();
       renderTagSuggestions();
+      renderTagWarnings();
       updatePreview();
       renderThumbs();
       updateSaveBarNav();
@@ -991,7 +1181,7 @@
       return [...$(containerId).querySelectorAll("input:checked")].map((cb) => cb.value);
     }
 
-    function buildStopFromForm() {
+    function buildStopFromForm({ syncTagsInput = false } = {}) {
       const original = state.stops.find((s) => s.id === state.selectedId) || {};
       const stop = JSON.parse(JSON.stringify(original));
       delete stop._source;
@@ -1005,18 +1195,27 @@
       if (slug) stop.slug = slug; else delete stop.slug;
       stop.neighborhood = form.neighborhood.value;
       stop.categories = collectChecks("#categories");
-      const tags = form.tags.value.split(",").map((s) => s.trim()).filter(Boolean);
+      let tags = parseTagsValue(form.tags.value);
+      if (window.__tagRules) {
+        tags = window.__tagRules.normalizeTags(tags, stop.categories);
+      }
       stop.tags = tags;
+      if (syncTagsInput) {
+        form.tags.value = tags.join(", ");
+      }
       stop.timeOfDay = collectChecks("#timeOfDay");
 
       // cost
       const mode = form.querySelector('input[name="costMode"]:checked').value;
       if (mode === "range") {
         const min = form.costMin.value, max = form.costMax.value;
-        if (min && max && min !== max) stop.cost = { min, max };
-        else stop.cost = min || max || "";
+        const nMin = normalizeCostString(min) || min;
+        const nMax = normalizeCostString(max) || max;
+        if (nMin && nMax && nMin !== nMax) stop.cost = { min: nMin, max: nMax };
+        else stop.cost = nMin || nMax || "Free";
       } else {
-        stop.cost = form.costSingle.value || "";
+        const single = form.costSingle.value.trim();
+        stop.cost = single ? normalizeCostString(single) : "Free";
       }
 
       stop.description = form.description.value.trim();
@@ -1095,19 +1294,44 @@
       $("#preview-meta").textContent = [stop.crossStreet, walk].filter(Boolean).join(" · ");
     }
 
-    function formatCost(cost) {
-      if (cost == null || cost === "") return "";
-      if (typeof cost === "string") return cost;
+    function normalizeCostString(value) {
+      if (value == null || value === "") return "Free";
+      return String(value).toLowerCase() === "free" ? "Free" : value;
+    }
+
+    function resolveCost(cost) {
+      if (cost == null || cost === "") return "Free";
+      if (typeof cost === "string") return normalizeCostString(cost);
       if (Array.isArray(cost)) {
-        const min = cost[0], max = cost[cost.length - 1];
-        if (!min) return ""; if (!max || min === max) return min; return `${min}\u2013${max}`;
+        const min = cost[0];
+        const max = cost[cost.length - 1];
+        if (!min && !max) return "Free";
+        if (!min) return normalizeCostString(max) || max;
+        if (!max || min === max) return normalizeCostString(min) || min;
+        return `${normalizeCostString(min) || min}\u2013${normalizeCostString(max) || max}`;
       }
       if (typeof cost === "object") {
         const { min, max } = cost;
-        if (min != null && max != null && min !== max) return `${min}\u2013${max}`;
-        return min || max || "";
+        if (!min && !max) return "Free";
+        if (min != null && max != null && min !== max) {
+          return `${normalizeCostString(min) || min}\u2013${normalizeCostString(max) || max}`;
+        }
+        return normalizeCostString(min || max) || min || max || "Free";
       }
       return String(cost);
+    }
+
+    function costFormValue(cost) {
+      if (cost == null || cost === "" || (typeof cost === "string" && cost.toLowerCase() === "free")) return "";
+      return typeof cost === "string" ? cost : "";
+    }
+
+    function costTierOptions() {
+      return state.refs.costs?.length ? state.refs.costs : ["Free", "$", "$$", "$$$"];
+    }
+
+    function formatCost(cost) {
+      return resolveCost(cost);
     }
 
     // ---------- auto-save ----------
@@ -1162,9 +1386,11 @@
       renderList();
     }
 
-    async function runAutoSave({ quiet = true } = {}) {
+    async function runAutoSave({ quiet = true, syncTagsInput } = {}) {
       if (!state.selectedId || form.style.display === "none") return false;
-      const stop = buildStopFromForm();
+      const stop = buildStopFromForm({
+        syncTagsInput: syncTagsInput ?? document.activeElement !== form.tags,
+      });
       if (!String(stop.name || "").trim()) return false;
 
       if (autoSavePromise) return autoSavePromise;
@@ -1211,10 +1437,10 @@
         }
       }
       if (!state.dirty) return true;
-      const stop = buildStopFromForm();
+      const stop = buildStopFromForm({ syncTagsInput: true });
       if (!String(stop.name || "").trim()) return false;
       try {
-        await runAutoSave({ quiet: true });
+        await runAutoSave({ quiet: true, syncTagsInput: true });
         return !state.dirty;
       } catch {
         return false;
@@ -1232,10 +1458,10 @@
         }
       }
       if (!state.dirty) return true;
-      const stop = buildStopFromForm();
+      const stop = buildStopFromForm({ syncTagsInput: true });
       if (String(stop.name || "").trim()) {
         try {
-          await runAutoSave({ quiet: true });
+          await runAutoSave({ quiet: true, syncTagsInput: true });
           return !state.dirty;
         } catch {
           return false;
@@ -1247,6 +1473,7 @@
     function onInput() {
       $("#color-swatch").style.background = "#" + (form.placeholderColor.value.trim().replace(/^#/, "") || "cccccc");
       syncMainTagChipStates();
+      renderTagWarnings();
       updatePreview();
       renderThumbs();
       scheduleAutoSave();
@@ -1375,12 +1602,24 @@
     const UPLOAD_MAX_MB = 25;
     const UPLOAD_MAX_BYTES = UPLOAD_MAX_MB * 1024 * 1024;
 
+    function editorServerHint() {
+      return "Run npm run admin and open http://localhost:3001/ (not port 3000 or a file:// tab).";
+    }
+
     function uploadErrorMessage(err) {
       const msg = String(err && err.message ? err.message : err);
       if (msg === "Failed to fetch" || err instanceof TypeError) {
-        return "Upload couldn't reach the editor server. Run npm run admin and open http://localhost:3001/ (not port 3000 or a file:// tab).";
+        return `Upload couldn't reach the editor server. ${editorServerHint()}`;
       }
       return msg;
+    }
+
+    function walkLookupErrorMessage(res, data) {
+      if (res && res.status === 405) {
+        return `Walk lookup isn't available — restart the editor (Ctrl+C, then npm run admin). ${editorServerHint()}`;
+      }
+      if (data && data.error) return data.error;
+      return "Walk lookup failed";
     }
 
     async function parseUploadResponse(res) {
@@ -1460,10 +1699,10 @@
       e.preventDefault();
       clearTimeout(autoSaveTimer);
       autoSaveTimer = null;
-      const stop = buildStopFromForm();
+      const stop = buildStopFromForm({ syncTagsInput: true });
       if (!stop.name) { toast("Name is required", true); return; }
       try {
-        await runAutoSave({ quiet: false });
+        await runAutoSave({ quiet: false, syncTagsInput: true });
       } catch {
         /* toast shown in runAutoSave */
       }
@@ -1544,7 +1783,7 @@
     const WIZARD_ORDER = ["tags", "cost", "timeOfDay", "categories", "crossStreet", "walkFromStation", "description", "goto", "images"];
     const FIELD_DEFS = {
       tags: { label: "Tags", hint: "Descriptive vibes / cuisine / service. Click to toggle or type your own." },
-      cost: { label: "Cost", hint: "Pick free, a price tier, or tick price range." },
+      cost: { label: "Cost", hint: "Leave blank for Free, or pick a tier / price range." },
       timeOfDay: { label: "Time of day", hint: "When is this spot good for?" },
       categories: { label: "Categories", hint: "1\u20133 browse filters." },
       crossStreet: { label: "Cross street", hint: "Nearest corner (include \u201CVictoria\u201D for Victoria-side spots)." },
@@ -1561,7 +1800,7 @@
         case "tags": return !(stop.tags || []).length;
         case "categories": return !(stop.categories || []).length;
         case "timeOfDay": return !(stop.timeOfDay || []).length;
-        case "cost": return !formatCost(stop.cost);
+        case "cost": return false;
         case "crossStreet": return !String(stop.crossStreet || "").trim();
         case "walkFromStation": return !stop.walkFromStation;
         case "description": return !String(stop.description || "").trim();
@@ -1591,7 +1830,10 @@
         $("#meta-review").style.display = "none";
       }
     }
-    function needsAttention(field, stop) { return fieldIsEmpty(field, stop) || inReview(field, stop); }
+    function needsAttention(field, stop) {
+      if (field === "cost") return false;
+      return fieldIsEmpty(field, stop) || inReview(field, stop);
+    }
     function needsAnyInfo(stop) { return wizardOrderFor(stop).some((f) => needsAttention(f, stop)); }
 
     // Walk the (neighborhood-filtered) list FORWARD from just after `afterId`, so
@@ -1610,10 +1852,18 @@
       return null;
     }
 
-    const WIZ_COST_BUTTONS = ["free", "$", "$$", "$$$"];
-
     function costOpts(sel) {
-      return ["", ...WIZ_COST_BUTTONS].map((v) => `<option value="${v}" ${v === sel ? "selected" : ""}>${v || "\u2014"}</option>`).join("");
+      const blank = sel == null || sel === "" || String(sel).toLowerCase() === "free";
+      const normSel = blank ? "" : sel;
+      const paid = costTierOptions().filter((c) => c !== "Free");
+      return ['<option value="">Free (default)</option>']
+        .concat(paid.map((v) => `<option value="${v}" ${v === normSel ? "selected" : ""}>${v}</option>`))
+        .join("");
+    }
+
+    function costTierMatches(value, tier) {
+      const norm = normalizeCostString(value) || value;
+      return norm === tier;
     }
 
     function openWizard(id, opts = {}) {
@@ -1686,8 +1936,8 @@
         const min = isRange ? (Array.isArray(c) ? c[0] : c.min) : "";
         const max = isRange ? (Array.isArray(c) ? c[c.length - 1] : c.max) : "";
         return head +
-          `<div class="cost-btns" id="wiz-cost-btns">${WIZ_COST_BUTTONS.map((v) =>
-            `<button type="button" class="cost-btn ${(!isRange && single === v) ? "on" : ""}" data-c="${v}">${v}</button>`).join("")}</div>` +
+          `<div class="cost-btns" id="wiz-cost-btns">${costTierOptions().map((v) =>
+            `<button type="button" class="cost-btn ${(!isRange && costTierMatches(single, v)) ? "on" : ""}" data-c="${v}">${v}</button>`).join("")}</div>` +
           `<label class="wiz-check"><input type="checkbox" id="wiz-cost-range" ${isRange ? "checked" : ""}> Price range</label>` +
           `<div id="wiz-cost-range-row" class="row2" style="margin-top:0.4rem;${isRange ? "" : "display:none;"}">` +
             `<select id="wiz-cost-min">${costOpts(min)}</select><select id="wiz-cost-max">${costOpts(max)}</select></div>` +
@@ -1756,7 +2006,7 @@
         const applyRange = () => {
           const min = $("#wiz-cost-min").value, max = $("#wiz-cost-max").value;
           if (min && max && min !== max) wizard.stop.cost = { min, max };
-          else wizard.stop.cost = min || max || "";
+          else wizard.stop.cost = min || max || "Free";
           mark();
         };
         $("#wiz-cost-range").addEventListener("change", (e) => {
@@ -1804,10 +2054,10 @@
           const min = $("#wiz-cost-min")?.value || "";
           const max = $("#wiz-cost-max")?.value || "";
           if (min && max && min !== max) stop.cost = { min, max };
-          else stop.cost = min || max || "";
+          else stop.cost = min || max || "Free";
         } else {
           const on = $("#wiz-cost-btns")?.querySelector(".cost-btn.on");
-          stop.cost = on ? on.dataset.c : "";
+          stop.cost = on ? on.dataset.c : "Free";
         }
       } else if (field === "timeOfDay" || field === "categories") {
         stop[field] = [...$("#wiz-body").querySelectorAll('.checks input:checked')].map((c) => c.dataset.v);
@@ -1996,6 +2246,7 @@
       const data = await res.json();
       state.stops = data.stops || [];
       state.refs = data.refs || state.refs;
+      state.capabilities = data.capabilities || { walkFromStation: false };
 
       renderNeighborhoodFilter();
       renderCategoryFilter();
@@ -2005,6 +2256,7 @@
       buildChecks("#categories", state.refs.categories, "cat");
       buildChecks("#timeOfDay", state.refs.timeOfDay, "tod");
       buildCostOptions();
+      populateTagAliasDatalist(state.refs.tagRules);
       renderTagSuggestions();
       renderList();
 
@@ -2034,7 +2286,7 @@
       return null;
     }
 
-    function fillLatLngFromMapsLink() {
+    async function fillLatLngFromMapsLink() {
       const raw = $("#maps-link").value;
       if (!raw.trim()) { toast("Paste a Google Maps link first", true); return; }
       if (/goo\.gl|maps\.app\.goo\.gl/i.test(raw)) {
@@ -2046,10 +2298,50 @@
         toast("Couldn't find coordinates in that link — use the full maps.google.com URL", true);
         return;
       }
+
+      const btn = $("#maps-fill-btn");
+      const prevText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "Filling…";
+
       form.lat.value = coords.lat;
       form.lng.value = coords.lng;
+
+      let walkMsg = "";
+      const nbh = form.neighborhood.value || "commercial";
+      if (usesSkytrainStation(nbh)) {
+        if (!state.capabilities.walkFromStation) {
+          onInput();
+          btn.disabled = false;
+          btn.textContent = prevText;
+          toast(`Walk lookup isn't available — restart the editor (Ctrl+C, then npm run admin). ${editorServerHint()}`, true);
+          return;
+        }
+        try {
+          const res = await fetch("/api/walk-from-station", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ lat: coords.lat, lng: coords.lng, neighborhood: nbh }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(walkLookupErrorMessage(res, data));
+          if (!data.skipped && data.walkFromStation != null) {
+            form.walkFromStation.value = data.walkFromStation;
+            walkMsg = `, ${data.walkFromStation} min walk`;
+          }
+        } catch (err) {
+          onInput();
+          btn.disabled = false;
+          btn.textContent = prevText;
+          toast(`${err.message} — lat/lng filled`, true);
+          return;
+        }
+      }
+
       onInput();
-      toast(`Filled ${coords.lat}, ${coords.lng}`);
+      btn.disabled = false;
+      btn.textContent = prevText;
+      toast(`Filled ${coords.lat}, ${coords.lng}${walkMsg}`);
     }
 
     // ---------- preview photo drag (hero focal point) ----------
@@ -2178,11 +2470,17 @@
     });
     $("#delete-btn").addEventListener("click", confirmDeleteStop);
     form.addEventListener("submit", saveStop);
+    form.tags.addEventListener("blur", () => {
+      buildStopFromForm({ syncTagsInput: true });
+      syncMainTagChipStates();
+      renderTagWarnings();
+    });
     form.addEventListener("input", onInput);
     form.addEventListener("change", () => {
       if (form.style.display !== "none") {
         renderMainTagChips();
         renderTagSuggestions();
+        renderTagWarnings();
       }
       onInput();
     });
@@ -2195,6 +2493,7 @@
       }
     });
 
+    initListPanelResize();
     load().catch((err) => toast("Load failed: " + err.message, true));
   </script>
 </body>

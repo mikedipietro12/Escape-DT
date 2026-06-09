@@ -10,6 +10,7 @@
     "admin": "node scripts/admin-server.mjs",
     "enrich": "node scripts/enrich-from-google.mjs",
     "gotos": "node scripts/add-gotos.mjs",
+    "cleanup:tags": "node scripts/cleanup-tags.mjs --write",
     "compress:photos": "node scripts/compress-stop-photos.mjs --write"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 {
-  "_note": "DRAFT, not loaded by the app. 39 Mount Pleasant / Main Street stops (s70–s108). Geocoded via enrich + user Maps pins. Walk minutes estimated from Main Street–Science World (enable Routes/Directions API on enrich for Google walking times). West-of-Main stops use coords.x 125. Pending: descriptions, photos, cross street fine-tuning (_review). See AGENTS.md.",
+  "_note": "DRAFT, not loaded by the app. 51 Mount Pleasant / Main Street stops (s70–s108). Geocoded via enrich + user Maps pins. Walk minutes estimated from Main Street–Science World. Off-Main west stops use tiered coords.x by distance west of Main (125 near / 115 mid / 108 far / 100 deep — same idea as Frances vs Clark on Commercial). Future east-of-Main parks: coords.x 175. Pending: descriptions, photos, cross street fine-tuning (_review). See AGENTS.md.",
   "stops": [
     {
       "id": "s70",
@@ -54,7 +54,7 @@
         "shops",
         "skateboarding",
         "books",
-        "clothes",
+        "clothing",
         "hang out"
       ],
       "neighborhood": "mount-pleasant",
@@ -79,54 +79,6 @@
       ],
       "walkFromStation": 10,
       "goto": "Shop tee's, hardware, magazines."
-    },
-    {
-      "id": "s72",
-      "slug": "fife-bakery",
-      "name": "Fife Bakery",
-      "categories": [
-        "coffee",
-        "food",
-        "groceries"
-      ],
-      "tags": [
-        "grab and go",
-        "cookies",
-        "baked goods",
-        "sit down",
-        "coffee"
-      ],
-      "neighborhood": "mount-pleasant",
-      "cost": "$$",
-      "timeOfDay": [
-        "morning",
-        "afternoon"
-      ],
-      "description": "Sour dough bakery with an amazing baked goods selection. You can't go wrong ordering any of their treats!",
-      "crossStreet": "Quebec St & W 4th Ave",
-      "coords": {
-        "y": 342,
-        "x": 125
-      },
-      "lat": 49.2681578,
-      "lng": -123.1032231,
-      "googlePlaceId": "ChIJS0M8R2BxhlQRuIJvBcZPpwY",
-      "placeholderColor": "5f10ae",
-      "_googleTypes": [
-        "bakery",
-        "sandwich_shop",
-        "coffee_shop",
-        "cafe",
-        "food_store",
-        "store",
-        "restaurant",
-        "food",
-        "manufacturer",
-        "point_of_interest",
-        "establishment"
-      ],
-      "walkFromStation": 9,
-      "goto": "Muffin or sausage roll."
     },
     {
       "id": "s73",
@@ -220,7 +172,6 @@
         "grab and go",
         "baked goods",
         "cookies",
-        "coffee",
         "pies"
       ],
       "neighborhood": "mount-pleasant",
@@ -233,7 +184,7 @@
       "crossStreet": "Main St & W 7th Ave",
       "coords": {
         "y": 352,
-        "x": 125
+        "x": 115
       },
       "lat": 49.2665959,
       "lng": -123.104535,
@@ -278,7 +229,7 @@
       "crossStreet": "Main St & W 8th Ave",
       "coords": {
         "y": 357,
-        "x": 125
+        "x": 108
       },
       "lat": 49.2657766,
       "lng": -123.1060929,
@@ -315,7 +266,7 @@
       "crossStreet": "7th Ave & Columbia St",
       "coords": {
         "y": 366,
-        "x": 125
+        "x": 100
       },
       "lat": 49.2642717,
       "lng": -123.1079662,
@@ -341,7 +292,6 @@
       "tags": [
         "patio",
         "beer",
-        "food",
         "sit down",
         "grab and go",
         "brunch"
@@ -355,7 +305,7 @@
       "crossStreet": "8th Ave & Ontario St",
       "coords": {
         "y": 368,
-        "x": 125
+        "x": 108
       },
       "lat": 49.2639299,
       "lng": -123.1053388,
@@ -384,7 +334,6 @@
       "tags": [
         "sit down",
         "grab and go",
-        "coffee",
         "baked goods"
       ],
       "neighborhood": "mount-pleasant",
@@ -397,7 +346,7 @@
       "crossStreet": "Quebec St. & E 10th Ave",
       "coords": {
         "y": 381,
-        "x": 125
+        "x": 115
       },
       "lat": 49.2619028,
       "lng": -123.1032786,
@@ -571,15 +520,25 @@
       "slug": "como-taperia",
       "name": "Como Taperia",
       "categories": [
-        "food"
+        "food",
+        "drinks"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "tapas",
+        "cocktails",
+        "wine",
+        "spanish"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": {
+        "min": "$$",
+        "max": "$$$"
+      },
       "timeOfDay": [
-        "allday"
+        "evening"
       ],
-      "description": "",
+      "description": "Easily one of my favorite spots in the neighborhood. If you are looking to share some incredible dishes with friends in a good atmosphere, this is your spot.",
       "crossStreet": "Main St & 6th Ave",
       "coords": {
         "y": 363
@@ -595,14 +554,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 15
+      "walkFromStation": 15,
+      "goto": "Order one (or two) of every dish."
     },
     {
       "id": "s86",
@@ -611,13 +564,19 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "vegetarian",
+        "grab and go",
+        "burritos",
+        "tacos",
+        "nachos"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "A neighborhood staple for vegetarians, Budgies has great budget friendly options for everyone. Everything can also be made vegan and gluten free.",
       "crossStreet": "Main St & 5th Ave",
       "coords": {
         "y": 370
@@ -635,14 +594,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 17
+      "walkFromStation": 17,
+      "goto": "The Johnny O"
     },
     {
       "id": "s87",
@@ -652,14 +605,17 @@
         "shopping"
       ],
       "tags": [
-        "vintage"
+        "vintage",
+        "reworks",
+        "clothing",
+        "shoes"
       ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "One of the first vintage shops I ever visited in Vancouver, F as in Frank is a legendary spot with a ton of unique selections including their vintage re-worked pieces. T's, athletic apparel, and the vintage classics can all be found here.",
       "crossStreet": "Main St & 5th Ave",
       "coords": {
         "y": 372
@@ -673,14 +629,6 @@
         "store",
         "point_of_interest",
         "establishment"
-      ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
       ],
       "walkFromStation": 18
     },
@@ -699,7 +647,7 @@
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "Glorydays has been in the game for almost a decade, moving from Mintage Mall to their own location in the last couple of years. Specializing in Vintage T's and their popular shop merch.",
       "crossStreet": "Main St & 4th Ave",
       "coords": {
         "y": 379
@@ -714,14 +662,6 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
       "walkFromStation": 20
     },
     {
@@ -731,13 +671,19 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "art",
+        "supplies",
+        "painting",
+        "colouring",
+        "pencils"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "Small shop specializing in art supplies.",
       "crossStreet": "Main St & 5th Ave",
       "coords": {
         "y": 370
@@ -751,15 +697,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 17
+      "walkFromStation": 17,
+      "goto": "Locally made water colour mini-cubes."
     },
     {
       "id": "s90",
@@ -769,14 +708,18 @@
         "coffee",
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "patio",
+        "grab and go",
+        "sit down"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
+      "description": "One of the best spots in the neighborhood for a coffee view of the mountains. An iconic location with good coffee. Nice spot to start a day or get some work done.",
       "crossStreet": "Main St & 5th Ave",
       "coords": {
         "y": 369
@@ -794,27 +737,28 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags"
-      ],
-      "walkFromStation": 17
+      "walkFromStation": 17,
+      "goto": "Coffee on the bench out front people watching and taking in mountain views."
     },
     {
       "id": "s91",
       "slug": "the-corner-store",
       "name": "The Corner Store",
       "categories": [
-        "drinks",
-        "food"
+        "food",
+        "drinks"
       ],
-      "tags": [],
+      "tags": [
+        "shopping",
+        "shoes",
+        "clothing"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "A Complex store carrying brands such as Asics, Carhartt WIP, Pleasures, Metalwood Studios, Stussy, Nike, as well as some shop exclusives like Mt. Pleasant Sports.",
       "crossStreet": "Main St & 10th Ave",
       "coords": {
         "y": 381
@@ -830,14 +774,6 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
       "walkFromStation": 20
     },
     {
@@ -845,16 +781,21 @@
       "slug": "tocador",
       "name": "Tocador",
       "categories": [
-        "drinks",
-        "food"
+        "food",
+        "drinks"
       ],
-      "tags": [],
+      "tags": [
+        "patio",
+        "cuban",
+        "cocktails",
+        "beer"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "evening"
       ],
-      "description": "",
+      "description": "Colourful Cuban restaurant with some exotic cocktails and flavorful dishes. Great for a late night snack and cocktail on the patio.",
       "crossStreet": "Main St & 10th Ave",
       "coords": {
         "y": 381
@@ -873,56 +814,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 20
-    },
-    {
-      "id": "s93",
-      "slug": "afuri-ramen-vancouver",
-      "name": "Afuri Ramen Vancouver",
-      "categories": [
-        "food"
-      ],
-      "tags": [],
-      "neighborhood": "mount-pleasant",
-      "cost": "$$",
-      "timeOfDay": [
-        "allday"
-      ],
-      "description": "",
-      "crossStreet": "Main St & 12th Ave",
-      "coords": {
-        "y": 392
-      },
-      "lat": 49.2600837,
-      "lng": -123.1013162,
-      "googlePlaceId": "ChIJDbG7_91zhlQRs9w84ZuJL4k",
-      "placeholderColor": "55283c",
-      "_googleTypes": [
-        "ramen_restaurant",
-        "asian_fusion_restaurant",
-        "asian_restaurant",
-        "fusion_restaurant",
-        "japanese_restaurant",
-        "restaurant",
-        "food",
-        "point_of_interest",
-        "establishment"
-      ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 23
+      "walkFromStation": 20,
+      "goto": "Bird Conspiracy & a couple comidas."
     },
     {
       "id": "s94",
@@ -931,13 +824,18 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "ramen",
+        "onigiri",
+        "grab and go",
+        "sit down"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": "$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "Stop in for some Maruhachi Tsuke-men or grab a couple onigiri to go. I've been sneaking into this place for years for a quick nourishing meal.",
       "crossStreet": "Main St & 12th Ave",
       "coords": {
         "y": 395
@@ -954,14 +852,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 24
+      "walkFromStation": 24,
+      "goto": "Cha-shu Tsuke-men or a couple Onigiri"
     },
     {
       "id": "s95",
@@ -971,14 +863,18 @@
         "coffee",
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "patio",
+        "grab and go",
+        "donuts"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
+      "description": "If you're into coffee, patios, and doughnuts, this is a no brainer for you!",
       "crossStreet": "Main St & 13th Ave",
       "coords": {
         "y": 398
@@ -998,10 +894,6 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags"
-      ],
       "walkFromStation": 25
     },
     {
@@ -1011,13 +903,18 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "patio",
+        "burgers",
+        "soups"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "Relaxed but high quality comfort food. Soups, sandwiches in a rustic and authentic setting.",
       "crossStreet": "Main St & 14th Ave",
       "coords": {
         "y": 407
@@ -1033,14 +930,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 28
+      "walkFromStation": 28,
+      "goto": "Lobster bisque or Burgoo burger"
     },
     {
       "id": "s97",
@@ -1049,13 +940,18 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "recycled treasures",
+        "scrapbooking",
+        "art",
+        "supplies"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": "$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "Sometimes, you just need a random test tube, poster, pom pom, or antique picture frame you didn't know you actually needed. This spot is a scrap-bookers dreamland, with tons of stuff to choose from and an ever rotating assortment of new-to-you goods.",
       "crossStreet": "Main St & 15th Ave",
       "coords": {
         "y": 411
@@ -1069,15 +965,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 29
+      "walkFromStation": 29,
+      "goto": "Check out what they have out front!"
     },
     {
       "id": "s98",
@@ -1128,18 +1017,22 @@
         "hangout"
       ],
       "tags": [
-        "park"
+        "park",
+        "skate park",
+        "picnic tables",
+        "playground",
+        "gardens"
       ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": "Free",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "A lovely little community park just off of main that has lots to do.",
       "crossStreet": "Main St & 15th Ave",
       "coords": {
         "y": 411,
-        "x": 125
+        "x": 108
       },
       "lat": 49.2570843,
       "lng": -123.106015,
@@ -1151,30 +1044,31 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 30
+      "walkFromStation": 30,
+      "goto": "Grab some goodies from main and come chill in the park. Occasionally shoot a basketball or skate."
     },
     {
       "id": "s100",
       "slug": "sushi-hil",
       "name": "Sushi Hil",
       "categories": [
-        "food"
+        "food",
+        "drinks"
       ],
-      "tags": [],
+      "tags": [
+        "sushi",
+        "sit down",
+        "sake"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$$",
+      "cost": {
+        "min": "$$",
+        "max": "$$$"
+      },
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "If you are after the highest quality and a refined sushi experience, Sushi Hil is for you. A very classic sushi aesthetic, they let their sushi do the talking. Chef's choice is always a win if budget isn't an issue.",
       "crossStreet": "Main St & 16th Ave",
       "coords": {
         "y": 422
@@ -1191,14 +1085,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 32
+      "walkFromStation": 32,
+      "goto": "Chirashi, or whatever the server recommends that night!"
     },
     {
       "id": "s101",
@@ -1207,13 +1095,17 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "gifts",
+        "toys",
+        "kids"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "It's easy to get lost in this shop, with a plethora of games, toys, and activities for all ages. A warning for parents: hard to get your kid to leave!",
       "crossStreet": "Main St & 16th Ave",
       "coords": {
         "y": 419
@@ -1228,13 +1120,6 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
       "walkFromStation": 31
     },
     {
@@ -1242,16 +1127,25 @@
       "slug": "anh-and-chi",
       "name": "Anh and Chi",
       "categories": [
-        "drinks",
-        "food"
+        "food",
+        "drinks"
       ],
-      "tags": [],
+      "tags": [
+        "patio",
+        "sit down",
+        "Vietnamese",
+        "cocktails"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": {
+        "min": "$$",
+        "max": "$$$"
+      },
       "timeOfDay": [
-        "evening"
+        "evening",
+        "allday"
       ],
-      "description": "",
+      "description": "A long-standing Vietnamese restaurant in the neighborhood, with many dishes that keep you coming back. A nice patio and even nicer interior, great service and excellent menu.",
       "crossStreet": "Main St & 17th Ave",
       "coords": {
         "y": 424
@@ -1270,14 +1164,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 33
+      "walkFromStation": 33,
+      "goto": "Wok fried noodles or rice."
     },
     {
       "id": "s103",
@@ -1286,13 +1174,16 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "cocktails"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "Described as the \"rebellious sibling\" to Anh and Chi, this cocktail bar serves up some truly unique cocktails. I've only been here a couple of times, but I was absolutely blown away by the diversity and uniqueness of the bar offerings",
       "crossStreet": "Main St & 16th Ave",
       "coords": {
         "y": 422
@@ -1307,15 +1198,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 32
+      "walkFromStation": 32,
+      "goto": "Best Kept Secret"
     },
     {
       "id": "s104",
@@ -1364,15 +1248,27 @@
       "name": "Welk's",
       "categories": [
         "food",
-        "shopping"
+        "shopping",
+        "groceries"
       ],
-      "tags": [],
+      "tags": [
+        "kitchenware",
+        "snacks",
+        "cards",
+        "stationary",
+        "glassware",
+        "coffee",
+        "tea"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": {
+        "min": "$",
+        "max": "$$$"
+      },
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "Welk's is a neighborhood swiss army knife. They have almost anything you could possibly need, from greeting cards to kombucha, from mason jars, to door hinges. I find myself going there for the most random items, and they always seem to have what I am looking for!",
       "crossStreet": "Main St & 18th Ave",
       "coords": {
         "y": 433
@@ -1395,55 +1291,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
-      "walkFromStation": 35
-    },
-    {
-      "id": "s106",
-      "slug": "foglifter-coffee-roasters",
-      "name": "Foglifter Coffee Roasters",
-      "categories": [
-        "coffee",
-        "food"
-      ],
-      "tags": [],
-      "neighborhood": "mount-pleasant",
-      "cost": "$$",
-      "timeOfDay": [
-        "morning",
-        "afternoon"
-      ],
-      "description": "",
-      "crossStreet": "Main St & 18th Ave",
-      "coords": {
-        "y": 435
-      },
-      "lat": 49.2531182,
-      "lng": -123.1007379,
-      "googlePlaceId": "ChIJtZ1vTmVzhlQRKYtkWL3vwHs",
-      "placeholderColor": "2e7b6c",
-      "_googleTypes": [
-        "coffee_shop",
-        "coffee_roastery",
-        "cafe",
-        "food_store",
-        "store",
-        "food",
-        "point_of_interest",
-        "establishment"
-      ],
-      "_review": [
-        "description",
-        "tags"
-      ],
-      "walkFromStation": 36
+      "walkFromStation": 35,
+      "goto": "Anything!"
     },
     {
       "id": "s107",
@@ -1452,13 +1301,21 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "records",
+        "cds",
+        "music",
+        "collectibles"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": {
+        "min": "$",
+        "max": "$$$"
+      },
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "A quirky neighborhood record shop where you can often run into local legends and big time celebs rifling through the stacks.",
       "crossStreet": "Main St & 18th Ave",
       "coords": {
         "y": 435
@@ -1472,32 +1329,31 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
       "walkFromStation": 36
     },
     {
       "id": "s108",
-      "slug": "the-sellution-quality-consignment-vintage-furniture-furnishings",
-      "name": "The Sellution",
+      "slug": "the-sellution-quality",
+      "name": "The Sellution Quality Consignment",
       "categories": [
         "shopping"
       ],
       "tags": [
-        "vintage"
+        "vintage",
+        "furniture",
+        "consignment",
+        "furnishings",
+        "antiques"
       ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": {
+        "min": "$",
+        "max": "$$$"
+      },
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "If you are looking for some pre-loved furniture for your home, this is a spot to check out.",
       "crossStreet": "Main St & 19th Ave",
       "coords": {
         "y": 437
@@ -1514,14 +1370,6 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags"
-      ],
       "walkFromStation": 36
     },
     {
@@ -1531,13 +1379,17 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "womens",
+        "clothing",
+        "accessories"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "A cute shop specializing in women's clothing and accessories.",
       "crossStreet": "Main St",
       "coords": {
         "y": 449
@@ -1552,12 +1404,7 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 35
     },
     {
       "id": "s117",
@@ -1566,13 +1413,17 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "clothing",
+        "unisex",
+        "shoes"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": "$$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "A high end clothing store that has been in the neighborhood a long time. Specializing in locally made and expertly curated pieces.",
       "crossStreet": "Main St",
       "coords": {
         "y": 450
@@ -1590,12 +1441,7 @@
         "service",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 35
     },
     {
       "id": "s120",
@@ -1604,13 +1450,21 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
-      "neighborhood": "mount-pleasant",
-      "cost": "$$",
-      "timeOfDay": [
-        "allday"
+      "tags": [
+        "books",
+        "toys",
+        "art supplies"
       ],
-      "description": "",
+      "neighborhood": "mount-pleasant",
+      "cost": {
+        "min": "$",
+        "max": "$$"
+      },
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "A cute independently owned bookstore that is high curated and tones of fun to browse.",
       "crossStreet": "Main St",
       "coords": {
         "y": 451
@@ -1629,12 +1483,8 @@
         "service",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 40,
+      "goto": "I love grabbing a new book for my daughter any time I am around."
     },
     {
       "id": "s121",
@@ -1645,14 +1495,21 @@
         "food",
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "patio",
+        "sit down",
+        "grab and go",
+        "lunch",
+        "cookies",
+        "baked goods"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
+      "description": "One of my favorite spots on main to grab a coffee and light snack. In the fall and winter, the interior is warm and cozy, in the spring and summer, you can find me outside with my coffee and cookie.",
       "crossStreet": "Main St",
       "coords": {
         "y": 451
@@ -1671,12 +1528,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 40,
+      "goto": "A slice of quiche, a cookie, and a coffee"
     },
     {
       "id": "s122",
@@ -1685,13 +1538,21 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "music",
+        "instruments",
+        "vintage",
+        "audio gear"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": {
+        "min": "$",
+        "max": "$$$"
+      },
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "One of my favorite shops to browse, especially if you feel like you want to walk into a musical time machine. So many great pieces to look at, and if you are musically inclined, play.",
       "crossStreet": "Main St",
       "coords": {
         "y": 452
@@ -1705,29 +1566,31 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 38
     },
     {
       "id": "s123",
-      "slug": "the-soap-dispensary-and-kitchen-staples",
+      "slug": "the-soap-dispensary",
       "name": "The Soap Dispensary and Kitchen Staples",
       "categories": [
         "food",
         "shopping",
         "groceries"
       ],
-      "tags": [],
+      "tags": [
+        "kitchen",
+        "bulk",
+        "soap"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": {
+        "min": "$",
+        "max": "$$$"
+      },
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "If you are looking to get some unique kitchen items, shop waste-free, or sample some soaps and topicals, the Soap dispensary is your stop.",
       "crossStreet": "Main St",
       "coords": {
         "y": 452
@@ -1744,12 +1607,7 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 38
     },
     {
       "id": "s124",
@@ -1758,13 +1616,22 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "clothing",
+        "unisex",
+        "shoes",
+        "consignment",
+        "new and used"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": {
+        "min": "$",
+        "max": "$$$"
+      },
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "Front & Company is one of those clothing stores that really has something for everyone. With a large selection of consignment clothing, you can find quality goods for all fits.",
       "crossStreet": "Main St",
       "coords": {
         "y": 455
@@ -1779,12 +1646,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 38,
+      "goto": "I always take a look at the shoes."
     },
     {
       "id": "s125",
@@ -1793,13 +1656,21 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "collectibles",
+        "gifts",
+        "toys",
+        "cards"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": {
+        "min": "$",
+        "max": "$$$"
+      },
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "A fun little gift shop to get that extra little something you need for a gift.",
       "crossStreet": "Main St",
       "coords": {
         "y": 453
@@ -1814,12 +1685,7 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 38
     },
     {
       "id": "s126",
@@ -1828,13 +1694,17 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "clothing",
+        "unisex",
+        "basics"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "This shop offers sustainably sourced materials, with styles designed in Canada. Lots of new styles and basics if you are into high quality fabrics sourced ethically.",
       "crossStreet": "Main St",
       "coords": {
         "y": 454
@@ -1849,12 +1719,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 38,
+      "goto": "Tank tops and tees. Their socks are super comfy too."
     },
     {
       "id": "s127",
@@ -1862,17 +1728,23 @@
       "name": "Trafiq Cafe & Bakery",
       "categories": [
         "coffee",
-        "food",
-        "shopping"
+        "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "grab and go",
+        "cookies",
+        "baked goods",
+        "sandwiches",
+        "cakes"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
+      "description": "High quality baked goods, cakes, and coffee.",
       "crossStreet": "Main St",
       "coords": {
         "y": 477
@@ -1899,15 +1771,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 45,
+      "goto": "A shot of espresso and a cookie."
     },
     {
       "id": "s128",
@@ -1943,10 +1808,9 @@
         "categories?",
         "crossStreet",
         "timeOfDay?",
-        "tags",
-        "walkFromStation"
+        "tags"
       ],
-      "walkFromStation": 0
+      "walkFromStation": 46
     },
     {
       "id": "s129",
@@ -1955,13 +1819,17 @@
       "categories": [
         "drinks"
       ],
-      "tags": [],
+      "tags": [
+        "cocktails",
+        "bar",
+        "sit down"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "evening"
       ],
-      "description": "",
+      "description": "Looking for a unique cocktail experience? Shameful Tiki room is for you. Dark, mysterious, and a ton of fun. Service is hilarious and the cocktails are too. A must try if you are looking for a fun late night out.",
       "crossStreet": "Main St",
       "coords": {
         "y": 485
@@ -1976,15 +1844,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 47,
+      "goto": "Volcano bowl (with friends)."
     },
     {
       "id": "s130",
@@ -1993,13 +1854,20 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "records",
+        "music",
+        "cds"
+      ],
       "neighborhood": "mount-pleasant",
-      "cost": "$$",
+      "cost": {
+        "min": "$",
+        "max": "$$"
+      },
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "Great spot to browse new and used records or sell some of your old collection.",
       "crossStreet": "Main St",
       "coords": {
         "y": 486
@@ -2013,16 +1881,7 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 47
     },
     {
       "id": "s131",
@@ -2031,13 +1890,18 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "kids",
+        "clothing",
+        "women",
+        "consignment"
+      ],
       "neighborhood": "mount-pleasant",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
+      "description": "Another quality consignment stop on Main st. with great selection for kids and ladies.",
       "crossStreet": "Main St",
       "coords": {
         "y": 485
@@ -2051,16 +1915,8 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "description",
-        "cost",
-        "categories?",
-        "crossStreet",
-        "timeOfDay?",
-        "tags",
-        "walkFromStation"
-      ],
-      "walkFromStation": 0
+      "walkFromStation": 48,
+      "goto": "I always check the back for kids clothes!"
     },
     {
       "id": "s132",
@@ -2096,11 +1952,48 @@
         "point_of_interest",
         "establishment"
       ],
-      "_review": [
-        "walkFromStation"
-      ],
-      "walkFromStation": 0,
+      "walkFromStation": 48,
       "goto": "Silk Route tasting menu"
+    },
+    {
+      "id": "s133",
+      "slug": "bunker-apparel-goods",
+      "name": "Bunker Apparel + Goods",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [
+        "vintage",
+        "furniture",
+        "clothing",
+        "shoes",
+        "antiques",
+        "housewares"
+      ],
+      "neighborhood": "mount-pleasant",
+      "cost": {
+        "min": "$",
+        "max": "$$$"
+      },
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "As you walk downstairs, you are greeted with a large room of antique furniture which is always fascinating to look through, then, you head towards the back where there is a large collection of vintage clothes of all genres, and to the right, you find my favorite room, full of antiques and oddities.",
+      "crossStreet": "Main St",
+      "coords": {
+        "y": 497
+      },
+      "lat": 49.2442464,
+      "lng": -123.1007878,
+      "googlePlaceId": "ChIJU8WlLQBzhlQR3jd9pGo_fRI",
+      "placeholderColor": "379036",
+      "_googleTypes": [
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "walkFromStation": 50,
+      "goto": "Flip through the clothes and look through the antiques."
     }
   ]
 }

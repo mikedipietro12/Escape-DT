@@ -71,7 +71,8 @@ export function parsePlaceIdFromMapsLink(raw) {
 
 export function costFromPriceLevel(level) {
   if (level == null) return null;
-  if (level === "PRICE_LEVEL_FREE" || level === "PRICE_LEVEL_INEXPENSIVE") return "$";
+  if (level === "PRICE_LEVEL_FREE") return "Free";
+  if (level === "PRICE_LEVEL_INEXPENSIVE") return "$";
   if (level === "PRICE_LEVEL_MODERATE") return "$$";
   if (level === "PRICE_LEVEL_EXPENSIVE" || level === "PRICE_LEVEL_VERY_EXPENSIVE") return "$$$";
   return null;
@@ -138,17 +139,37 @@ export function stationForNeighborhood(neighborhood, neighborhoodsData, stopsDat
 }
 
 export async function walkMinutesFromStation(station, destLat, destLng, key) {
-  const url = new URL("https://maps.googleapis.com/maps/api/directions/json");
-  url.searchParams.set("origin", `${station.lat},${station.lng}`);
-  url.searchParams.set("destination", `${destLat},${destLng}`);
-  url.searchParams.set("mode", "walking");
-  url.searchParams.set("key", key);
-  const res = await fetch(url);
+  const res = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": key,
+      "X-Goog-FieldMask": "routes.duration",
+    },
+    body: JSON.stringify({
+      origin: {
+        location: {
+          latLng: { latitude: station.lat, longitude: station.lng },
+        },
+      },
+      destination: {
+        location: {
+          latLng: { latitude: destLat, longitude: destLng },
+        },
+      },
+      travelMode: "WALK",
+      computeAlternativeRoutes: false,
+    }),
+  });
   const data = await res.json();
-  if (data.status !== "OK" || !data.routes?.[0]?.legs?.[0]?.duration?.value) {
-    throw new Error(data.error_message || data.status || "no walking route");
+  if (!res.ok) {
+    throw new Error(data.error?.message || data.error_message || res.statusText || "Routes API error");
   }
-  return Math.max(1, Math.round(data.routes[0].legs[0].duration.value / 60));
+  const duration = data.routes?.[0]?.duration;
+  if (!duration) throw new Error("no walking route");
+  const seconds = Number.parseFloat(String(duration).replace(/s$/, ""));
+  if (!Number.isFinite(seconds) || seconds <= 0) throw new Error("no walking route");
+  return Math.max(1, Math.round(seconds / 60));
 }
 
 const PLACE_FIELD_MASK =
@@ -310,7 +331,8 @@ export async function buildEnrichedStop({
   usedSlugs.add(slug);
 
   const cost = costFromPriceLevel(place.priceLevel);
-  if (cost == null) review.push("cost");
+  const isPark = types.includes("park");
+  if (cost == null && !isPark) review.push("cost");
   const categories = categoriesFromTypes(types);
   if (!categories.length) review.push("categories");
   else review.push("categories?");
@@ -324,7 +346,7 @@ export async function buildEnrichedStop({
     categories,
     tags: [],
     neighborhood,
-    cost: cost || "$$",
+    cost: cost || (isPark ? "Free" : "$$"),
     timeOfDay: timeOfDayGuess(types),
     description: "",
     crossStreet: cs.value,

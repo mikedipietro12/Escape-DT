@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mount Pleasant — hybrid paths</title>
+  <script src="/js/season-theme.js"></script>
+  <link rel="stylesheet" href="/demo/east-village-route-map.css">
+  <style>
+    .demo-shell {
+      max-width: min(960px, 100%);
+    }
+
+    /* Step E layout — matches index.html route review */
+    .route-review {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .route-review.route-phase-summary {
+        gap: 1.25rem;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .route-review.route-phase-summary {
+        flex-direction: row;
+        align-items: stretch;
+      }
+
+      .route-review.route-phase-summary .map-container {
+        width: 40%;
+        flex-shrink: 0;
+        max-width: none;
+        display: flex;
+        overflow: hidden;
+      }
+
+      .route-review.route-phase-summary .map-container svg {
+        width: 100%;
+        height: 100% !important;
+        max-height: none;
+        overflow: hidden;
+      }
+
+      .route-review.route-phase-summary .route-summary {
+        width: 60%;
+        max-width: none;
+        margin: 0;
+        display: block;
+      }
+
+      .route-review.route-phase-summary .route-export-summary {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .route-review .map-container {
+        max-width: min(100%, 18rem);
+        width: 100%;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+
+      .route-review .map-container svg {
+        max-height: min(48vh, 20rem);
+      }
+    }
+
+    .demo-step-label {
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--ink-muted);
+      margin: -0.25rem 0 1rem;
+    }
+  </style>
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through the dev server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>/demo/mount-pleasant-hybrid-paths.html</code>.
+  </p>
+
+  <div class="demo-shell">
+    <div class="demo-banner">
+      <strong>Mount Pleasant map — hybrid paths (trial)</strong>
+      Preview styled like Step E (Your Route): map at live size with stop list beside it on wider screens.
+    </div>
+
+    <p class="demo-path-switch">
+      Commercial reference:
+      <a href="commercial-hybrid-paths.html">Hybrid paths demo</a>
+    </p>
+
+    <div class="demo-controls">
+      <label>
+        Sample route
+        <select id="preset-select">
+          <option value="west-crawl">West crawl (Purebread → Vintage → park → brewery)</option>
+          <option value="mixed-main-quebec">Main ↔ Quebec (6th Ave → Earnest → 5th Ave)</option>
+          <option value="quebec-hop">Quebec hop (Earnest → Glory → Federal)</option>
+          <option value="spine-north">Main spine north (Antisocial → 6th cluster → 10th)</option>
+          <option value="full-west-loop">Spine + west loop</option>
+          <option value="south-parks">South end (Toshi → Mount Pleasant Park → back)</option>
+          <option value="backtrack">Backtrack (Narrow → Antisocial → Narrow)</option>
+        </select>
+      </label>
+      <button type="button" id="btn-replay">Replay map</button>
+    </div>
+
+    <p class="demo-step-label">Your route (Step E preview)</p>
+
+    <div id="route-review" class="route-review route-phase-summary">
+      <div class="map-container">
+        <svg id="route-map" viewBox="0 0 340 600" preserveAspectRatio="xMinYMid meet" aria-label="Mount Pleasant route map"></svg>
+      </div>
+      <div class="route-summary">
+        <p id="route-export-summary" class="label route-export-summary">YOUR MOUNT PLEASANT ROUTE</p>
+        <div id="route-cards"></div>
+        <div class="totals" id="route-totals"></div>
+      </div>
+    </div>
+
+    <aside class="demo-notes">
+      <h2>Off-Main animation (locked)</h2>
+      <ul>
+        <li><strong>Spine Y</strong> — station at the top; stops spaced south (down) by latitude. Southernmost stop in the route anchors the bottom (try <em>Spine + west loop</em>).</li>
+        <li><strong>West tiers</strong> — <code>125</code> Quebec/Kingsway · <code>115</code> W 7th / Quebec 10th · <code>108</code> Ontario / W 8th · <code>100</code> Columbia.</li>
+        <li><strong>West ↔ west</strong> — grid legs: down/up the side column, then across (not diagonals). Try <em>West crawl</em>.</li>
+        <li><strong>Main ↔ off-Main</strong> — rounded L via the Main spine.</li>
+        <li><strong>Labels</strong> — off-Main names sit to the left of the pin; tight clusters stagger vertically.</li>
+      </ul>
+    </aside>
+  </div>
+
+  <script src="/demo/mount-pleasant-hybrid-paths.js"></script>
+</body>
+</html>

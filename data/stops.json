@@ -12,7 +12,6 @@
             "lat": 49.2649446,
             "cost": "$",
             "tags": [
-                "existing",
                 "activities"
             ],
             "name": "JJ Bean",
@@ -131,7 +130,6 @@
             "tags": [
                 "sit down",
                 "grab and go",
-                "take out",
                 "wraps",
                 "greek",
                 "lunch",
@@ -205,7 +203,6 @@
             "cost": "$$$",
             "tags": [
                 "sit down",
-                "take out",
                 "patio",
                 "pizza",
                 "wine",
@@ -372,7 +369,6 @@
                 "sit down",
                 "patio",
                 "beer",
-                "bar",
                 "tvs",
                 "pub",
                 "wings"
@@ -455,7 +451,7 @@
                 "books",
                 "clothing",
                 "denim",
-                "houseware",
+                "housewares",
                 "shoes",
                 "shops",
                 "activities"
@@ -503,7 +499,6 @@
             "tags": [
                 "vintage",
                 "shoes",
-                "shopping",
                 "furniture"
             ],
             "name": "Vintage Sponsor",
@@ -550,7 +545,6 @@
                 "cookies",
                 "italian",
                 "sit down",
-                "take out",
                 "grab and go",
                 "patio",
                 "lunch",
@@ -886,7 +880,6 @@
             "cost": "$$",
             "tags": [
                 "fried chicken",
-                "take out",
                 "sit down",
                 "grab and go",
                 "patio",
@@ -967,7 +960,6 @@
                 "lunch",
                 "dinner",
                 "sit down",
-                "take out",
                 "grab and go",
                 "wine",
                 "cocktails"
@@ -1011,8 +1003,7 @@
             "tags": [
                 "vintage",
                 "clothing",
-                "collectables",
-                "shopping"
+                "collectibles"
             ],
             "name": "FUN HÄUS",
             "coords": {
@@ -1177,8 +1168,7 @@
             "tags": [
                 "skateboarding",
                 "clothing",
-                "unisex",
-                "skateboards"
+                "unisex"
             ],
             "name": "The Drive Skateshop",
             "coords": {
@@ -1320,7 +1310,7 @@
             "crossStreet": "Victoria & Grant",
             "id": "s33",
             "lat": 49.27174,
-            "cost": "free",
+            "cost": "Free",
             "tags": [
                 "playground",
                 "park",
@@ -1357,7 +1347,7 @@
             "crossStreet": "Charles",
             "id": "s34",
             "lat": 49.2734896,
-            "cost": "free",
+            "cost": "Free",
             "tags": [
                 "playground",
                 "park",
@@ -1467,8 +1457,7 @@
                 "snacks",
                 "tacos",
                 "grab and go",
-                "mexican",
-                "latina"
+                "mexican"
             ],
             "name": "Mi Tierra Latina Store",
             "coords": {
@@ -1541,7 +1530,6 @@
             },
             "tags": [
                 "baked goods",
-                "fresh bread",
                 "cookies",
                 "patio",
                 "sit down",
@@ -1578,7 +1566,7 @@
             "crossStreet": "E 18th Ave",
             "id": "s40",
             "lat": 49.2521585,
-            "cost": "free",
+            "cost": "Free",
             "tags": [
                 "art gallery"
             ],
@@ -1610,8 +1598,7 @@
             "tags": [
                 "dessert",
                 "ice cream",
-                "grab and go",
-                "commercial"
+                "grab and go"
             ],
             "name": "Earnest Ice Cream",
             "coords": {
@@ -1638,7 +1625,7 @@
             "crossStreet": "Woodland & Adanac",
             "id": "s42",
             "lat": 49.277689,
-            "cost": "free",
+            "cost": "Free",
             "tags": [
                 "playground",
                 "park",
@@ -1677,10 +1664,8 @@
             "cost": "$",
             "tags": [
                 "beer",
-                "craft beer",
                 "snacks",
                 "patio",
-                "commercial",
                 "sit down"
             ],
             "name": "Bomber Brewing",
@@ -1713,10 +1698,8 @@
             },
             "tags": [
                 "beer",
-                "craft beer",
                 "snacks",
                 "patio",
-                "commercial",
                 "sit down"
             ],
             "name": "Superflux",
@@ -1754,13 +1737,11 @@
                 "max": "$$"
             },
             "tags": [
-                "craft beer",
                 "beer",
                 "snacks",
                 "sit down",
                 "grab and go",
-                "patio",
-                "commercial"
+                "patio"
             ],
             "name": "Strange Fellows",
             "coords": {
@@ -1801,7 +1782,6 @@
             ],
             "tags": [
                 "patio",
-                "coffee",
                 "cocktails"
             ],
             "timeOfDay": [
@@ -1831,7 +1811,7 @@
                 "activities",
                 "art gallery"
             ],
-            "cost": "free",
+            "cost": "Free",
             "timeOfDay": [
                 "allday"
             ],
@@ -1898,7 +1878,6 @@
                 "sit down",
                 "patio",
                 "beer",
-                "craft beer",
                 "tvs",
                 "pub",
                 "lunch",
@@ -1944,7 +1923,7 @@
             },
             "tags": [
                 "clothing",
-                "houseware",
+                "housewares",
                 "gifts",
                 "shops"
             ],
@@ -1979,7 +1958,7 @@
             "crossStreet": "Frances & Napier",
             "id": "s69",
             "lat": 49.2759585,
-            "cost": "free",
+            "cost": "Free",
             "tags": [
                 "park",
                 "activities",
@@ -2071,7 +2050,6 @@
                 "groceries"
             ],
             "tags": [
-                "grocery",
                 "japanese",
                 "grab and go"
             ],
@@ -2114,7 +2092,6 @@
                 "hangout"
             ],
             "tags": [
-                "gallery",
                 "art gallery",
                 "activities"
             ],
@@ -2206,8 +2183,7 @@
             ],
             "tags": [
                 "thrift",
-                "shopping",
-                "collectables",
+                "collectibles",
                 "shoes"
             ],
             "neighborhood": "commercial",
@@ -2258,7 +2234,6 @@
                 "hang out",
                 "pool",
                 "billiards",
-                "drinks",
                 "cocktails",
                 "beer"
             ],
@@ -2461,13 +2436,10 @@
             "tags": [
                 "park",
                 "splash pad",
-                "tennis",
-                "pickleball",
-                "basketball",
-                "hangout"
+                "hang out"
             ],
             "neighborhood": "hastings-sunrise",
-            "cost": "free",
+            "cost": "Free",
             "timeOfDay": [
                 "allday"
             ],
@@ -2539,7 +2511,6 @@
             "tags": [
                 "grab and go",
                 "sit down",
-                "coffee",
                 "baked goods"
             ],
             "neighborhood": "hastings-sunrise",
@@ -2713,8 +2684,7 @@
                 "groceries"
             ],
             "tags": [
-                "baked goods",
-                "bread"
+                "baked goods"
             ],
             "neighborhood": "hastings-sunrise",
             "cost": "$",
@@ -2752,7 +2722,6 @@
             ],
             "tags": [
                 "breakfast",
-                "food",
                 "bar",
                 "late night",
                 "burgers",
@@ -2836,14 +2805,11 @@
             ],
             "tags": [
                 "sit down",
-                "bar",
-                "restaurant",
                 "farm to table",
                 "natural wine",
                 "patio",
                 "sake",
-                "cocktails",
-                "wine"
+                "cocktails"
             ],
             "neighborhood": "hastings-sunrise",
             "cost": "$$",
@@ -2888,7 +2854,6 @@
             ],
             "tags": [
                 "cookies",
-                "coffee",
                 "baked goods",
                 "patio"
             ],
@@ -2939,7 +2904,6 @@
             ],
             "tags": [
                 "dive bar",
-                "bar",
                 "sit down",
                 "beer",
                 "happy hour",

@@ -15,7 +15,10 @@ import {
   appendStopToFile,
   enrichStopFromInput,
   loadEnvFromRoot,
+  stationForNeighborhood,
+  walkMinutesFromStation,
 } from "./enrich-lib.mjs";
+import { normalizeTags, TAG_RULES_META } from "./tag-rules.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -49,7 +52,23 @@ const DRAFT_BY_NEIGHBORHOOD = Object.fromEntries(DRAFTS.map((d) => [d.neighborho
 
 const CANONICAL_CATEGORIES = ["coffee", "food", "drinks", "shopping", "hangout", "groceries"];
 const TIME_OF_DAY = ["morning", "afternoon", "evening", "allday"];
-const COSTS = ["$", "$$", "$$$"];
+const COSTS = ["Free", "$", "$$", "$$$"];
+
+function normalizeCost(cost) {
+  if (cost == null || cost === "") return "Free";
+  if (typeof cost === "string") {
+    return cost.toLowerCase() === "free" ? "Free" : cost;
+  }
+  if (Array.isArray(cost)) {
+    return cost.map((v) => (String(v).toLowerCase() === "free" ? "Free" : v));
+  }
+  if (cost && typeof cost === "object") {
+    const min = cost.min != null && String(cost.min).toLowerCase() === "free" ? "Free" : cost.min;
+    const max = cost.max != null && String(cost.max).toLowerCase() === "free" ? "Free" : cost.max;
+    if (min !== cost.min || max !== cost.max) return { ...cost, min, max };
+  }
+  return cost;
+}
 
 // Where stop photos live, relative to the repo root. Files are named
 // <slug>.jpg (hero), then <slug>-2.jpg, <slug>-3.jpg, … for extra images.
@@ -144,6 +163,7 @@ function handleGetStops(res) {
   const { stops } = loadAll();
   sendJson(res, 200, {
     stops,
+    capabilities: { walkFromStation: true },
     refs: {
       neighborhoods: readJson(path.join("data", "neighborhoods.json")),
       categories: CANONICAL_CATEGORIES,
@@ -152,6 +172,7 @@ function handleGetStops(res) {
       tags: collectTags(stops),
       nextId: nextStopId(stops),
       drafts: Object.fromEntries(DRAFTS.map((d) => [d.neighborhood, d.source])),
+      tagRules: TAG_RULES_META,
     },
   });
 }
@@ -186,6 +207,13 @@ async function handleSaveStop(req, res, id) {
   }
   if (!String(stop.name || "").trim()) {
     return sendJson(res, 400, { error: "Stop name is required" });
+  }
+
+  if (Array.isArray(stop.tags)) {
+    stop.tags = normalizeTags(stop.tags, stop.categories || []);
+  }
+  if (stop.cost != null && stop.cost !== "") {
+    stop.cost = normalizeCost(stop.cost);
   }
 
   // Map every id to the file it currently lives in (for routing + cross-file moves).
@@ -450,6 +478,51 @@ function serveStatic(req, res, urlPath) {
   });
 }
 
+async function handleWalkFromStation(req, res) {
+  let body;
+  try {
+    body = JSON.parse(await readBody(req));
+  } catch {
+    return sendJson(res, 400, { error: "Invalid JSON body" });
+  }
+
+  const lat = Number(body.lat);
+  const lng = Number(body.lng);
+  const neighborhood = String(body.neighborhood || "commercial").trim().toLowerCase();
+
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+    return sendJson(res, 400, { error: "lat and lng are required" });
+  }
+
+  const neighborhoodsData = readJson(path.join("data", "neighborhoods.json"));
+  const hood = neighborhoodsData?.neighborhoods?.[neighborhood];
+  if (!hood) {
+    return sendJson(res, 400, { error: `Unknown neighborhood "${neighborhood}"` });
+  }
+  if (hood.usesSkytrainStation === false) {
+    return sendJson(res, 200, { ok: true, skipped: true });
+  }
+
+  loadEnvFromRoot(root);
+  const key = process.env.GOOGLE_MAPS_API_KEY;
+  if (!key || key === "your-key-here") {
+    return sendJson(res, 500, { error: "Missing GOOGLE_MAPS_API_KEY in .env" });
+  }
+
+  const stopsData = readJson(path.join("data", "stops.json"));
+  const station = stationForNeighborhood(neighborhood, neighborhoodsData, stopsData);
+  if (!station) {
+    return sendJson(res, 400, { error: "No SkyTrain station configured for this neighborhood" });
+  }
+
+  try {
+    const walkFromStation = await walkMinutesFromStation(station, lat, lng, key);
+    sendJson(res, 200, { ok: true, walkFromStation });
+  } catch (err) {
+    sendJson(res, 400, { error: err.message || "Could not compute walking time" });
+  }
+}
+
 async function handleEnrichStop(req, res) {
   let body;
   try {
@@ -485,7 +558,8 @@ async function handleEnrichStop(req, res) {
 
 const server = http.createServer(async (req, res) => {
   const parsedUrl = new URL(req.url || "/", `http://127.0.0.1:${port}`);
-  const urlPath = parsedUrl.pathname;
+  let urlPath = parsedUrl.pathname;
+  if (urlPath.length > 1 && urlPath.endsWith("/")) urlPath = urlPath.slice(0, -1);
   const query = parsedUrl.searchParams;
 
   if (urlPath === "/api/stops" && req.method === "GET") {
@@ -515,6 +589,14 @@ const server = http.createServer(async (req, res) => {
   if (urlPath === "/api/enrich-stop" && req.method === "POST") {
     try {
       return await handleEnrichStop(req, res);
+    } catch (err) {
+      return sendJson(res, 500, { error: err.message });
+    }
+  }
+
+  if (urlPath === "/api/walk-from-station" && req.method === "POST") {
+    try {
+      return await handleWalkFromStation(req, res);
     } catch (err) {
       return sendJson(res, 500, { error: err.message });
     }

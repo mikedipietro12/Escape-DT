@@ -314,7 +314,8 @@ ${body}
 }
 
 function formatCost(cost) {
-  if (typeof cost === "string") return cost;
+  if (cost == null || cost === "") return "Free";
+  if (typeof cost === "string") return cost.toLowerCase() === "free" ? "Free" : cost;
   if (cost && typeof cost === "object" && cost.min) return `${cost.min}–${cost.max || cost.min}`;
   if (Array.isArray(cost)) return cost.join("–");
   return "";
