@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero animation lab — combined</title>
+  <link rel="stylesheet" href="hero-anim-lab.css">
+  <style>
+    .hero-figure {
+      --hero-figure-width: min(240px, 50vw);
+    }
+
+    #jello-canvas {
+      display: block;
+      width: 100%;
+      /* Hero PNGs are 819x1024; JS re-syncs this from the loaded texture */
+      aspect-ratio: 819 / 1024;
+      height: auto;
+      cursor: crosshair;
+      touch-action: none;
+      will-change: transform;
+    }
+
+    .webgl-fail {
+      padding: 1rem;
+      font-size: 0.85rem;
+      background: #fff3bf;
+      border-radius: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through a local server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>http://localhost:3000/demo/hero-combined.html</code>.
+    (GSAP loads from a CDN, so you also need internet.)
+  </p>
+
+  <header class="lab-header">
+    <h1>Hero animation lab — combined</h1>
+    <p>
+      The elastic-pop intro (bubble springs out, text fades in) on top of the jello mascot —
+      drag your mouse through it any time. Pieces from the
+      <a href="hero-gsap.html">intro variants</a> and
+      <a href="hero-jello.html">jello poke-through</a> demos.
+    </p>
+  </header>
+
+  <div class="lab-stage">
+    <div class="hero-stage">
+      <div class="hero-figure">
+        <canvas id="jello-canvas" aria-label="Escape the Downtown mascot (interactive jello)"></canvas>
+        <p class="webgl-fail" id="webgl-fail" hidden>
+          WebGL isn&rsquo;t available in this browser, so the jello effect can&rsquo;t run.
+        </p>
+      </div>
+      <div class="speech-bubble-wrap" id="speech-wrap">
+        <div class="speech-bubble" id="speech-bubble">
+          <div class="speech-skin" id="speech-skin"><i class="speech-tail"></i></div>
+          <p class="speech-line" id="speech-line">
+            10 years, hundreds of kilometres, one East Van. I&rsquo;m a local photographer who&rsquo;s
+            walked every block of these neighbourhoods. Here are the places I keep coming back to,
+            and now I want to share them with you.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lab-controls">
+    <h2>Playback</h2>
+    <div class="btn-row">
+      <button type="button" id="replay-btn" class="btn-replay">Replay intro</button>
+      <button type="button" id="poke-btn">Poke</button>
+      <button type="button" id="swirl-btn">Swirl through</button>
+    </div>
+    <label style="margin-top:0.6rem;">
+      Speed
+      <input type="range" id="speed" min="0.1" max="2" step="0.05" value="1">
+      <output id="speed-out">1.00&times;</output>
+    </label>
+
+    <h2>Jello feel</h2>
+    <label>
+      Poke radius
+      <input type="range" id="radius" min="0.12" max="0.5" step="0.01" value="0.26">
+      <output id="radius-out">0.26</output>
+    </label>
+    <label>
+      Push strength
+      <input type="range" id="strength" min="0.3" max="3" step="0.1" value="1.3">
+      <output id="strength-out">1.3</output>
+    </label>
+    <label>
+      Wobbliness
+      <input type="range" id="wobbliness" min="0" max="1" step="0.05" value="0.6">
+      <output id="wobbliness-out">0.60</output>
+    </label>
+
+    <h2>Season</h2>
+    <div class="btn-row" id="season-row">
+      <button type="button" data-season="winter">Winter</button>
+      <button type="button" data-season="spring" class="is-active">Spring</button>
+      <button type="button" data-season="summer">Summer</button>
+      <button type="button" data-season="fall">Fall</button>
+    </div>
+
+    <p class="lab-note">
+      Layering: the mascot lives on a WebGL canvas (jello shader, spring physics); GSAP animates the
+      <em>canvas element</em> for the intro pop and idle breathing, while the shader warps the pixels
+      inside it — the two never fight. The speech bubble and its text stay in the DOM, animated with
+      the same elastic timeline as the intro-variants demo.
+    </p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="hero-combined.js"></script>
+</body>
+</html>

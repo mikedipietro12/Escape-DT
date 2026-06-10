@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chinatown — grid route map</title>
+  <script src="/js/season-theme.js"></script>
+  <link rel="stylesheet" href="east-village-route-map.css">
+  <style>
+    .map-grid-line {
+      fill: none;
+      stroke: rgba(0, 0, 0, 0.14);
+      stroke-width: 1.5;
+    }
+    .map-grid-line--shaped {
+      stroke-linecap: butt;
+      stroke-linejoin: miter;
+    }
+    .map-street-label {
+      font-size: 9px;
+      fill: rgba(0, 0, 0, 0.38);
+      letter-spacing: 0.03em;
+      pointer-events: none;
+    }
+    .map-street-label--h-gap {
+      dominant-baseline: hanging;
+    }
+    .map-street-label--v-gap {
+      dominant-baseline: central;
+    }
+    .map-stop-num {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    .debug-panel {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      max-height: 220px;
+      overflow: auto;
+    }
+    .debug-panel table { width: 100%; border-collapse: collapse; }
+    .debug-panel th, .debug-panel td { text-align: left; padding: 0.2rem 0.4rem; vertical-align: top; }
+    .debug-panel tr:nth-child(even) { background: rgba(0,0,0,0.04); }
+    .debug-snap { color: #8a5a00; }
+  </style>
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open through the dev server: <code>npm run dev</code> →
+    <code>/demo/chinatown-grid-paths.html</code>
+  </p>
+
+  <div class="demo-shell">
+    <div class="demo-banner">
+      <strong>Chinatown grid map</strong>
+      — Manhattan legs on arterial intersections. Loads
+      <code>data/chinatown-draft.json</code> + <code>data/chinatown-grid.json</code>.
+    </div>
+
+    <div class="demo-controls">
+      <label>
+        Sample route
+        <select id="preset-select"></select>
+      </label>
+      <label>
+        <input type="checkbox" id="station-toggle" checked />
+        Start/end at Main St–Science World
+      </label>
+      <button type="button" id="btn-replay">Replay map animation</button>
+    </div>
+
+    <section id="step-E" aria-label="Your Route mockup">
+      <h1>Your Route</h1>
+      <p class="route-area-subtitle">Chinatown grid</p>
+      <div id="route-review" class="route-review">
+        <div class="map-container">
+          <svg id="route-map" viewBox="0 0 600 480" aria-label="Chinatown grid route map"></svg>
+        </div>
+        <div id="route-summary-panel" class="route-summary" hidden>
+          <p id="route-export-summary" class="label route-export-summary"></p>
+          <div id="route-cards"></div>
+          <div class="totals" id="route-totals"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="debug-panel" id="debug-panel" hidden>
+      <strong>Grid resolution</strong>
+      <table>
+        <thead><tr><th>Stop</th><th>Intersection</th><th>Source</th></tr></thead>
+        <tbody id="debug-rows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="/js/chinatown-map.js"></script>
+  <script src="chinatown-grid-paths.js"></script>
+</body>
+</html>

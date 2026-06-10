@@ -8,7 +8,9 @@
     "half-a-day-evening",
     "mp-quick-quebec",
     "mp-main-vintage-brew",
-    "mp-evening-crawl"
+    "mp-evening-crawl",
+    "mp-full-day-main",
+    "chinatown-pre-post-match"
   ],
   "plans": {
     "world-cup-day": {
@@ -241,6 +243,122 @@
         { "type": "stops", "ids": ["s99"] }
       ],
       "stops": ["s85", "s82", "s92", "s98", "s99"]
+    },
+    "mp-full-day-main": {
+      "neighborhood": "mount-pleasant",
+      "title": "Full day (Vintage, Shopping, Eating & Drinking) on Main",
+      "duration": "All day",
+      "description": "If you are looking to spend breakfast, lunch, and dinner all in Mount Pleasant, this route is for you",
+      "introduction": "Mount Pleasant has so many great spots and this plan will take you from the Skytrain, all the way up Main, and back, with a mix of eating, shopping, and exploring.\n\nWhen you get off the Main-Street Science World Skytrain, you can head up the street to enter into the district with all the shops. Stop off at GENE coffee bar for a quick drink and take in the views of where you came from.\n\nYou can then shop around in that close vicinity, F as in Frank, Glory Days, Fish Market Studio, Pulp fiction books, and Mintage Mall.\n\nOnce you've had enough shopping, it might be time for another coffee, tea or light snack and a perfect chance to rest your legs while you recharge for the next leg of the walk. Head up to Federal Store just off Main street to grab a seat on the patio and watch the bikes wizz by.\n\nOnce you're done, if you want some more shopping, Corner Store will be waiting for you before you head back onto Main to see what else the neighborhood has in store.\n\nYou can then continue heading further South, stopping in more vintage shops on the west side of the road, or head straight to Woo to See you and Eugene Choo for new clothes expertly curated.\n\nBy this time, you're probably starving for lunch, so it would be a good chance to stop at Anh and Chi for lunch before you continue further down for a bit more shopping and browsing.\n\nAfter lunch, you can keep walking down Main to check out, Exile, Front & Company & their gift shop.\n\nBy this point, you may be shopped out, so it would be a good time to grab a snack at Liberty Cafe, enjoy the patio, recharge in the sun, and prepare for an evening of drinking and adventure.\n\nSince you already ate at a restaurant at lunch, I'd recommend heading to AJs or Superbaba. But call ahead and order because we are heading for dinner in the park. Once you pick up your food, keep walking west where you will find 33A and B and pick up a six pack so you can enjoy some early evening sun at Jonathan Rogers park.\n\nAfter a couple beers and pizza, if you still have room for ice cream, you can walk off that evening meal and head to Earnest Ice cream, where you can then head towards the seawall for a quick view of the city and mountains before heading back to the skytrain station.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "Mount Pleasant has so many great spots and this plan will take you from the Skytrain, all the way up Main, and back, with a mix of eating, shopping, and exploring.\n\nWhen you get off the Main-Street Science World Skytrain, you can head up the street to enter into the district with all the shops. Stop off at GENE coffee bar for a quick drink and take in the views of where you came from."
+        },
+        { "type": "stops", "ids": ["s90"] },
+        {
+          "type": "prose",
+          "text": "You can then shop around in that close vicinity, F as in Frank, Glory Days, Fish Market Studio, Pulp fiction books, and Mintage Mall."
+        },
+        { "type": "stops", "ids": ["s87", "s88", "s182", "s183", "s184", "s89"] },
+        {
+          "type": "prose",
+          "text": "Once you've had enough shopping, it might be time for another coffee, tea or light snack and a perfect chance to rest your legs while you recharge for the next leg of the walk. Head up to Federal Store just off Main street to grab a seat on the patio and watch the bikes wizz by."
+        },
+        { "type": "stops", "ids": ["s80"] },
+        {
+          "type": "prose",
+          "text": "Once you're done, if you want some more shopping, Corner Store will be waiting for you before you head back onto Main to see what else the neighborhood has in store."
+        },
+        { "type": "stops", "ids": ["s91"] },
+        {
+          "type": "prose",
+          "text": "By this time, you're probably starving for lunch, so it would be a good chance to stop at Anh and Chi for lunch before you continue further down for a bit more shopping and browsing."
+        },
+        { "type": "stops", "ids": ["s102"] },
+        {
+          "type": "prose",
+          "text": "You can then continue heading further South — head straight to Woo to See you and Eugene Choo for new clothes expertly curated."
+        },
+        { "type": "stops", "ids": ["s116", "s117"] },
+        {
+          "type": "prose",
+          "text": "After lunch, you can keep walking down Main to check out Exile, Front & Company & their gift shop."
+        },
+        { "type": "stops", "ids": ["s122", "s124", "s125"] },
+        {
+          "type": "prose",
+          "text": "By this point, you may be shopped out, so it would be a good time to grab a snack at Liberty Cafe, enjoy the patio, recharge in the sun, and prepare for an evening of drinking and adventure."
+        },
+        { "type": "stops", "ids": ["s121"] },
+        {
+          "type": "prose",
+          "text": "Since you already ate at a restaurant at lunch, I'd recommend heading to AJs or Superbaba. But call ahead and order because we are heading for dinner in the park."
+        },
+        { "type": "stops", "ids": ["s185", "s81"] },
+        {
+          "type": "prose",
+          "text": "Once you pick up your food, keep walking west where you will find 33A and B and pick up a six pack so you can enjoy some early evening sun at Jonathan Rogers park."
+        },
+        { "type": "stops", "ids": ["s79", "s78"] },
+        {
+          "type": "prose",
+          "text": "After a couple beers and pizza, if you still have room for ice cream, you can walk off that evening meal and head to Earnest Ice cream, where you can then head towards the seawall for a quick view of the city and mountains before heading back to the skytrain station."
+        },
+        { "type": "stops", "ids": ["s73"] }
+      ],
+      "stops": [
+        "s90",
+        "s87",
+        "s88",
+        "s182",
+        "s183",
+        "s184",
+        "s89",
+        "s80",
+        "s91",
+        "s102",
+        "s116",
+        "s117",
+        "s122",
+        "s124",
+        "s125",
+        "s121",
+        "s185",
+        "s81",
+        "s79",
+        "s78",
+        "s73"
+      ]
+    },
+    "chinatown-pre-post-match": {
+      "neighborhood": "chinatown",
+      "title": "Chinatown Pre & Post-Match",
+      "duration": "90 min before, 90 min after",
+      "description": "This is our pre and post-Whitecaps match ritual",
+      "introduction": "If you are heading to a late afternoon or evening Whitecaps game (or I guess Canucks...) this is a great route to get you some good drinks and food before the game, and then some options for post game celebration. It's about a 30 minute walk from Chinatown to the stadiums, and it's always a fun walk over while the rest of the locals cross the bridge or take the seawall after their own pre-game rituals.\n\nFirst, we always get off the skytrain and head to The Boxcar, where you can get a Good Company and company, before picking one of their fantastic cocktails. To soak up some of that fun, it's worth ordering a slice from their neighbor, Mortadella and then wrapping up to head over the bridge to the game.\n\nPost game, if you are looking for another bite to eat before heading off for more fun, I'd suggest a burger at Between 2 Buns. Then, depending on your mood, Chinatown has lots of late night spots. If you are looking for cocktail centric bar with dark vibes and good music, you can head to Keefer Bar. If you are looking for something more upscale, maybe Bagheera or Bao Bei would suit your needs. If you are looking for a much younger scene, London Pub is your gateway to some pool, darts, and dancing. Or, if you're looking for a fun post-match rowdy crowd and a few pints of guiness, the Irish Heather has to be your stop.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "If you are heading to a late afternoon or evening Whitecaps game (or I guess Canucks...) this is a great route to get you some good drinks and food before the game, and then some options for post game celebration. It's about a 30 minute walk from Chinatown to the stadiums, and it's always a fun walk over while the rest of the locals cross the bridge or take the seawall after their own pre-game rituals."
+        },
+        {
+          "type": "prose",
+          "text": "First, we always get off the skytrain and head to The Boxcar, where you can get a Good Company and company, before picking one of their fantastic cocktails. To soak up some of that fun, it's worth ordering a slice from their neighbor, Mortadella and then wrapping up to head over the bridge to the game."
+        },
+        { "type": "stops", "ids": ["s137", "s138"] },
+        {
+          "type": "prose",
+          "text": "Post game, if you are looking for another bite to eat before heading off for more fun, I'd suggest a burger at Between 2 Buns."
+        },
+        { "type": "stops", "ids": ["s155"] },
+        {
+          "type": "prose",
+          "text": "Then, depending on your mood, Chinatown has lots of late night spots. If you are looking for cocktail centric bar with dark vibes and good music, you can head to Keefer Bar. If you are looking for something more upscale, maybe Bagheera or Bao Bei would suit your needs. If you are looking for a much younger scene, London Pub is your gateway to some pool, darts, and dancing. Or, if you're looking for a fun post-match rowdy crowd and a few pints of guiness, the Irish Heather has to be your stop."
+        },
+        { "type": "stops", "ids": ["s151", "s172", "s170", "s148", "s188"] }
+      ],
+      "stops": ["s137", "s138", "s155", "s151", "s172", "s170", "s148", "s188"]
     }
   }
 }

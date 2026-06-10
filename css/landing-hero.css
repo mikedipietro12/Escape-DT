@@ -106,6 +106,22 @@ html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo {
   pointer-events: none;
 }
 
+/* Jello mascot canvas (js/landing-hero-jello.js) — swapped in over the <img>
+   when WebGL is available. Hero PNGs are 819x1024; JS re-syncs the ratio. */
+html[data-hero-bubble="on"] .hero-mascot-wrap .hero-jello-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 819 / 1024;
+  position: relative;
+  z-index: 2;
+  will-change: transform;
+}
+
+html[data-hero-bubble="on"] .hero-mascot-wrap .hero-logo.hero-logo--jello {
+  display: none;
+}
+
 .speech-bubble-wrap {
   position: relative;
   flex: 1 1 0;

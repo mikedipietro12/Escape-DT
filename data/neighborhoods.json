@@ -43,7 +43,12 @@
     "chinatown": {
       "id": "chinatown",
       "title": "Chinatown",
-      "aliases": []
+      "aliases": [],
+      "station": {
+        "name": "Main Street–Science World Station",
+        "lat": 49.273056,
+        "lng": -123.100278
+      }
     }
   }
 }

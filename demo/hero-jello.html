@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero animation lab — jello poke-through</title>
+  <link rel="stylesheet" href="hero-anim-lab.css">
+  <style>
+    .hero-figure {
+      --hero-figure-width: min(240px, 50vw);
+    }
+
+    #jello-canvas {
+      display: block;
+      width: 100%;
+      /* Hero PNGs are 819x1024; JS re-syncs this from the loaded texture */
+      aspect-ratio: 819 / 1024;
+      height: auto;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .webgl-fail {
+      padding: 1rem;
+      font-size: 0.85rem;
+      background: #fff3bf;
+      border-radius: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through a local server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>http://localhost:3000/demo/hero-jello.html</code>.
+    (GSAP loads from a CDN, so you also need internet.)
+  </p>
+
+  <header class="lab-header">
+    <h1>Hero animation lab — jello poke-through</h1>
+    <p>
+      Drag your mouse <em>through</em> the mascot: pixels get pushed aside around the cursor like
+      jello, then spring back into shape. Demo only — see also the
+      <a href="hero-gsap.html">intro variants</a>, <a href="hero-blob.html">blob &amp; deform</a>,
+      and <a href="hero-combined.html">combined</a> demos.
+    </p>
+  </header>
+
+  <div class="lab-stage">
+    <div class="hero-stage">
+      <div class="hero-figure">
+        <canvas id="jello-canvas" aria-label="Escape the Downtown mascot (interactive jello)"></canvas>
+        <p class="webgl-fail" id="webgl-fail" hidden>
+          WebGL isn&rsquo;t available in this browser, so the jello effect can&rsquo;t run.
+        </p>
+      </div>
+      <div class="speech-bubble-wrap" id="speech-wrap">
+        <div class="speech-bubble" id="speech-bubble">
+          <div class="speech-skin" id="speech-skin"><i class="speech-tail"></i></div>
+          <p class="speech-line" id="speech-line">
+            Go ahead — run your mouse right through me. I&rsquo;ll pull myself back together.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lab-controls">
+    <h2>Feel</h2>
+    <label>
+      Poke radius
+      <input type="range" id="radius" min="0.12" max="0.5" step="0.01" value="0.26">
+      <output id="radius-out">0.26</output>
+    </label>
+    <label>
+      Push strength
+      <input type="range" id="strength" min="0.3" max="3" step="0.1" value="1.3">
+      <output id="strength-out">1.3</output>
+    </label>
+    <label>
+      Wobbliness
+      <input type="range" id="wobbliness" min="0" max="1" step="0.05" value="0.6">
+      <output id="wobbliness-out">0.60</output>
+    </label>
+
+    <h2>Actions</h2>
+    <div class="btn-row">
+      <button type="button" id="poke-btn" class="btn-replay">Poke</button>
+      <button type="button" id="swirl-btn">Swirl through</button>
+    </div>
+
+    <h2>Season</h2>
+    <div class="btn-row" id="season-row">
+      <button type="button" data-season="winter">Winter</button>
+      <button type="button" data-season="spring" class="is-active">Spring</button>
+      <button type="button" data-season="summer">Summer</button>
+      <button type="button" data-season="fall">Fall</button>
+    </div>
+
+    <p class="lab-note">
+      How it works: the mascot PNG is drawn on a small WebGL canvas (raw WebGL, no three.js).
+      A fragment shader displaces pixels radially around the cursor; the push vector lives in a
+      spring-damper simulation, so when the cursor stops or leaves, the dent oscillates back to
+      rest — that&rsquo;s the jello. <strong>Wobbliness</strong> lowers the damping (longer jiggle);
+      <strong>Push strength</strong> scales how hard cursor velocity shoves the pixels.
+      Touch works too — drag a finger across the mascot.
+    </p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="hero-jello.js"></script>
+</body>
+</html>

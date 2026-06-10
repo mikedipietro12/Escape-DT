@@ -36,6 +36,8 @@ const MAP = {
   cornerRadius: 18,
   returnLaneOffset: 5,
   returnLaneCurve: 4,
+  /** Consecutive on-route stops within this many walk minutes share one map dot. */
+  clusterWalkMinutes: 3,
 };
 
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -319,20 +321,30 @@ function applyStopLabelLayout(points) {
   /** Only stack labels when pins share a latitude band — not when the route backtracks north. */
   const labelStackBand = 40;
   const westLabels = [];
-  points.forEach((point) => {
-    point.labelOffsetY = 0;
-    const x = point.dotX ?? point.x;
-    if (!isMapStopWestOffset(x) && !isMapStopEastOffset(x)) return;
-    const baseY = point.dotY ?? point.y;
+  const eastLabels = [];
+
+  function stackLabel(baseY, sideLabels) {
     let offset = 0;
-    for (const prev of westLabels) {
+    for (const prev of sideLabels) {
       if (Math.abs(prev.baseY - baseY) > labelStackBand) continue;
       const prevBottom = prev.baseY + prev.offset + 10;
       const needed = prevBottom + labelGap - (baseY + offset);
       if (needed > 0) offset += needed;
     }
-    point.labelOffsetY = offset;
-    westLabels.push({ baseY, offset });
+    sideLabels.push({ baseY, offset });
+    return offset;
+  }
+
+  points.forEach((point) => {
+    point.labelOffsetY = 0;
+    const x = point.dotX ?? point.x;
+    if (isMapStopWestOffset(x)) {
+      const baseY = point.dotY ?? point.y;
+      point.labelOffsetY = stackLabel(baseY, westLabels);
+    } else if (isMapStopEastOffset(x)) {
+      const baseY = point.dotY ?? point.y;
+      point.labelOffsetY = stackLabel(baseY, eastLabels);
+    }
   });
   return points;
 }
@@ -393,11 +405,32 @@ function stopsShareMapLocation(a, b) {
   return getStopMapLocationKey(a) === getStopMapLocationKey(b);
 }
 
-function buildRouteMapPointGroups(route) {
+/** Consecutive route stops that share a map dot (exact geo/mapLocation or same cluster band). */
+function stopsShareMapCluster(a, b, mapOptions = {}) {
+  if (stopsShareMapLocation(a, b)) return true;
+  if (!a || !b) return false;
+  if (getStopMapZone(a) !== getStopMapZone(b)) return false;
+  if (isStopOffSpine(a) || isStopOffSpine(b)) {
+    if (Math.abs(getStopMapX(a) - getStopMapX(b)) > 10) return false;
+    if (
+      mapLabelCrossStreet(a.crossStreet, a) !== mapLabelCrossStreet(b.crossStreet, b)
+    ) {
+      return false;
+    }
+  }
+  if (a.walkFromStation != null && b.walkFromStation != null) {
+    return (
+      Math.abs(a.walkFromStation - b.walkFromStation) <= MAP.clusterWalkMinutes
+    );
+  }
+  return Math.abs(Number(a.lat) - Number(b.lat)) < 0.0008;
+}
+
+function buildRouteMapPointGroups(route, mapOptions = {}) {
   const groups = [];
   route.forEach((stop, routeIdx) => {
     const prev = groups[groups.length - 1];
-    if (prev && stopsShareMapLocation(prev.stop, stop)) {
+    if (prev && stopsShareMapCluster(prev.stop, stop, mapOptions)) {
       prev.routeIndices.push(routeIdx);
     } else {
       groups.push({ stop, routeIndices: [routeIdx] });
@@ -411,7 +444,7 @@ function buildRouteMapPointGroups(route) {
 
 function buildRouteMapPoints(route, mapOptions = {}) {
   if (!route.length) return [];
-  const groups = buildRouteMapPointGroups(route);
+  const groups = buildRouteMapPointGroups(route, mapOptions);
   const representatives = groups.map((group) => group.stop);
   const rawPoints = layoutRouteMapPoints(representatives, mapOptions);
   const points = rawPoints.map((point, mapIdx) => ({
@@ -591,7 +624,7 @@ function getHybridLegPathD(a, b) {
   return getMapLegPathD(a.dotX, a.dotY, b.dotX, b.dotY, a.stop, b.stop);
 }
 
-function getRouteLegs(route, mapOptions = {}) {
+function buildRouteLegs(route, mapOptions = {}, shouldSkipLeg) {
   const station = getStation(mapOptions);
   const opts = normalizeMapOptions(mapOptions);
   if (!route.length) return [];
@@ -605,7 +638,7 @@ function getRouteLegs(route, mapOptions = {}) {
     });
   }
   for (let i = 0; i < route.length - 1; i++) {
-    if (stopsShareMapLocation(route[i], route[i + 1])) continue;
+    if (shouldSkipLeg(i)) continue;
     const a = route[i];
     const b = route[i + 1];
     legs.push({
@@ -628,16 +661,32 @@ function getRouteLegs(route, mapOptions = {}) {
   return legs;
 }
 
-function getMapPointIndexForRouteIndex(route, routeIdx) {
-  const groups = buildRouteMapPointGroups(route);
+/** Walk totals and map draw — one leg per cluster hop (consecutive stops on the same dot are skipped). */
+function getRouteLegs(route, mapOptions = {}) {
+  const groups = buildRouteMapPointGroups(route, mapOptions);
+  const mapIdxByRouteIdx = [];
+  groups.forEach((group) => {
+    group.routeIndices.forEach((ri) => {
+      mapIdxByRouteIdx[ri] = group.mapIdx;
+    });
+  });
+  return buildRouteLegs(
+    route,
+    mapOptions,
+    (i) => mapIdxByRouteIdx[i] === mapIdxByRouteIdx[i + 1]
+  );
+}
+
+function getMapPointIndexForRouteIndex(route, routeIdx, mapOptions = {}) {
+  const groups = buildRouteMapPointGroups(route, mapOptions);
   for (const group of groups) {
     if (group.routeIndices.includes(routeIdx)) return group.mapIdx;
   }
   return routeIdx;
 }
 
-function getMapPointForRouteIndex(points, route, routeIdx) {
-  return points[getMapPointIndexForRouteIndex(route, routeIdx)];
+function getMapPointForRouteIndex(points, route, routeIdx, mapOptions = {}) {
+  return points[getMapPointIndexForRouteIndex(route, routeIdx, mapOptions)];
 }
 
 function getRouteMapLayout(route, options = {}) {
@@ -658,7 +707,7 @@ function getRouteMapLayout(route, options = {}) {
     let pathD;
 
     if (leg.legKind === "stationToStop") {
-      const p = getMapPointForRouteIndex(points, route, leg.toStopIndex);
+      const p = getMapPointForRouteIndex(points, route, leg.toStopIndex, mapOptions);
       x1 = station.x;
       y1 = station.y;
       x2 = hybrid ? p.dotX : p.x;
@@ -683,8 +732,8 @@ function getRouteMapLayout(route, options = {}) {
         pathD = getMapLegPathD(x1, y1, x2, y2, null, toStop);
       }
     } else if (leg.legKind === "stopToStop") {
-      const a = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
-      const b = getMapPointForRouteIndex(points, route, leg.toStopIndex);
+      const a = getMapPointForRouteIndex(points, route, leg.fromStopIndex, mapOptions);
+      const b = getMapPointForRouteIndex(points, route, leg.toStopIndex, mapOptions);
       fromStop = a.stop;
       toStop = b.stop;
       if (hybrid) {
@@ -705,7 +754,7 @@ function getRouteMapLayout(route, options = {}) {
         pathD = getMapLegPathD(x1, y1, x2, y2, fromStop, toStop);
       }
     } else if (leg.legKind === "stopToStation") {
-      const p = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
+      const p = getMapPointForRouteIndex(points, route, leg.fromStopIndex, mapOptions);
       fromStop = p.stop;
       x1 = hybrid ? p.dotX : p.x;
       y1 = hybrid ? p.dotY : p.y;
@@ -937,10 +986,10 @@ function applyMapViewBox(svgEl, points, legs, showStation, containerAspect) {
 
 function refitMapToColumn(svgEl, points, legs, showStation) {
   const container = svgEl?.parentElement;
-  const review = document.getElementById("route-review");
-  if (!container || !review) return;
+  if (!container || !svgEl) return;
   const cw = container.clientWidth;
-  const ch = review.clientHeight;
+  let ch = container.clientHeight;
+  if (!ch) ch = svgEl.getBoundingClientRect().height;
   if (!cw || !ch) return;
   applyMapViewBox(svgEl, points, legs, showStation, cw / ch);
 }
@@ -993,7 +1042,7 @@ function renderMapStopSvg(point, hybrid) {
       `;
 }
 
-function getMapStopIndexAfterLeg(legIndex, routeLegs, route) {
+function getMapStopIndexAfterLeg(legIndex, routeLegs, route, mapOptions = {}) {
   const leg = routeLegs[legIndex];
   if (!leg) return null;
   let routeIdx = null;
@@ -1003,7 +1052,7 @@ function getMapStopIndexAfterLeg(legIndex, routeLegs, route) {
     routeIdx = leg.fromStopIndex;
   }
   if (routeIdx == null) return null;
-  return getMapPointIndexForRouteIndex(route, routeIdx);
+  return getMapPointIndexForRouteIndex(route, routeIdx, mapOptions);
 }
 
 function createTraceArrow(routeLayer) {
@@ -1158,7 +1207,7 @@ function drawMap(svgEl, route, options = {}) {
 
     const legComplete = () => {
       if (isStale()) return;
-      const stopIdx = getMapStopIndexAfterLeg(legIndex, routeLegs, route);
+      const stopIdx = getMapStopIndexAfterLeg(legIndex, routeLegs, route, mapOptions);
       if (stopIdx != null) revealStop(stopIdx);
       runLeg(legIndex + 1);
     };

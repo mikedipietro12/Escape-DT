@@ -5157,6 +5157,294 @@
             ],
             "walkFromStation": 22,
             "goto": "A latte and a croissant."
+        },
+        {
+            "id": "s182",
+            "slug": "fish-market-studio-2",
+            "name": "Fish Market Studio",
+            "categories": [
+                "shopping"
+            ],
+            "tags": [
+                "vintage",
+                "clothing",
+                "unisex"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "This vintage shop specializes in \"designer brands\" and newer wave vintage trends like y2k. Check out their website for some cool look books and inspo.",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 370
+            },
+            "lat": 49.2636956,
+            "lng": -123.1007171,
+            "googlePlaceId": "ChIJOTgsQ0pzhlQRD7dNF0YpjzQ",
+            "placeholderColor": "1cdee4",
+            "_googleTypes": [
+                "thrift_store",
+                "discount_store",
+                "clothing_store",
+                "home_goods_store",
+                "store",
+                "point_of_interest",
+                "service",
+                "establishment"
+            ],
+            "walkFromStation": 17
+        },
+        {
+            "id": "s183",
+            "slug": "pulpfiction-books",
+            "name": "Pulpfiction Books",
+            "categories": [
+                "shopping"
+            ],
+            "tags": [
+                "books",
+                "new",
+                "used"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "A great selection of new and used books from a local staple.",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 371
+            },
+            "lat": 49.2634978,
+            "lng": -123.1007118,
+            "googlePlaceId": "ChIJPdbO0OFzhlQRt9tlnn4oqTo",
+            "placeholderColor": "6d719e",
+            "_googleTypes": [
+                "book_store",
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 18
+        },
+        {
+            "id": "s184",
+            "slug": "mintage-mall",
+            "name": "Mintage Mall",
+            "categories": [
+                "shopping"
+            ],
+            "tags": [
+                "vintage",
+                "clothing",
+                "shoes",
+                "accessories"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "Mintage Mall is a collection of vintage sellers upstairs in a historic building. You can get lost in here for hours looking through all the different offerings from many of the cities best pickers.",
+            "crossStreet": "E Broadway",
+            "coords": {
+                "y": 374
+            },
+            "lat": 49.2630484,
+            "lng": -123.1001486,
+            "googlePlaceId": "ChIJSznINDRzhlQRi9rMJwBqQLo",
+            "placeholderColor": "9da6c3",
+            "_googleTypes": [
+                "clothing_store",
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 19
+        },
+        {
+            "id": "s185",
+            "slug": "aj-s-brooklyn-pizza-joint",
+            "name": "AJ's Brooklyn Pizza Joint",
+            "categories": [
+                "food",
+                "drinks"
+            ],
+            "tags": [
+                "pizza",
+                "beer",
+                "grab and go",
+                "sit down"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "AJs is easily my favorite pizza on Main Street. With so many different pies to choose from and a staff that always is attentive and quick, it's a no brainer this place is ALWAYS busy.",
+            "crossStreet": "E Broadway",
+            "coords": {
+                "y": 369,
+                "x": 175
+            },
+            "lat": 49.2629708,
+            "lng": -123.0983689,
+            "googlePlaceId": "ChIJfxEFW19xhlQRyoSxEEQ6-sw",
+            "placeholderColor": "9b6922",
+            "_googleTypes": [
+                "pizza_restaurant",
+                "restaurant",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
+            "goto": "Bar pie!",
+            "walkFromStation": 20
+        },
+        {
+            "id": "s186",
+            "slug": "carp-sushi-and-bowl",
+            "name": "Carp Sushi&Bowl",
+            "categories": [
+                "food"
+            ],
+            "tags": [
+                "sushi",
+                "curry",
+                "japanese"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$",
+            "timeOfDay": [
+                "afternoon",
+                "evening"
+            ],
+            "description": "A great spot for a quick roll or a bowl, Carp has some fresh sushi and great flavors",
+            "crossStreet": "Prince Edward St",
+            "coords": {
+                "y": 375
+            },
+            "lat": 49.2629708,
+            "lng": -123.0983689,
+            "googlePlaceId": "ChIJoac1yFhxhlQRT1fC8s3S4MQ",
+            "placeholderColor": "64bfd2",
+            "_googleTypes": [
+                "sushi_restaurant",
+                "japanese_restaurant",
+                "restaurant",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 20,
+            "goto": "Chirashi or Poke bowl"
+        },
+        {
+            "id": "s187",
+            "slug": "the-lido",
+            "name": "The Lido",
+            "categories": [
+                "drinks"
+            ],
+            "tags": [
+                "late night",
+                "cocktails",
+                "bar",
+                "music"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$",
+            "timeOfDay": [
+                "evening"
+            ],
+            "description": "This cash only locals establishment is a great spot for a late night cocktail. You'll run into an eclectic group of people in this spot.",
+            "crossStreet": "E Broadway",
+            "coords": {
+                "y": 374,
+                "x": 175
+            },
+            "lat": 49.2629708,
+            "lng": -123.0983689,
+            "googlePlaceId": "ChIJI2xMGFlxhlQRKMfvhhkaFOk",
+            "placeholderColor": "7ee0fa",
+            "_googleTypes": [
+                "bar",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 20,
+            "goto": "Bar specials."
+        },
+        {
+            "id": "s189",
+            "slug": "prince-edward-park",
+            "name": "Prince Edward Park",
+            "categories": [
+                "hangout"
+            ],
+            "tags": [
+                "spray park",
+                "playground",
+                "park"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "Free",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "A cute little park just off Main with a  spray park and playground for kids.",
+            "crossStreet": "Prince Edward St",
+            "coords": {
+                "y": 449
+            },
+            "lat": 49.2516013,
+            "lng": -123.0976251,
+            "googlePlaceId": "ChIJm9c-2_tzhlQRCZ0h-hxuSaw",
+            "placeholderColor": "d78fc2",
+            "_googleTypes": [
+                "park",
+                "tourist_attraction",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 41
+        },
+        {
+            "id": "s190",
+            "slug": "dude",
+            "name": "Dude Chilling",
+            "categories": [
+                "hangout"
+            ],
+            "tags": [
+                "park",
+                "playground"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "Free",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "The iconic Dude Chilling park, just off main, a perfect spot to throw down the blanket, play some bocce, drink a bottle of wine, and hang out with locals.",
+            "crossStreet": "Brunswick St",
+            "coords": {
+                "y": 449
+            },
+            "lat": 49.2516013,
+            "lng": -123.0976251,
+            "googlePlaceId": "ChIJ4bD6IF9xhlQRslSTYK4lOfM",
+            "placeholderColor": "1ce079",
+            "_googleTypes": [
+                "city_park",
+                "tourist_attraction",
+                "park",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 41
         }
     ]
 }

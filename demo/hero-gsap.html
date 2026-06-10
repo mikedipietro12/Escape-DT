@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero animation lab — GSAP</title>
+  <link rel="stylesheet" href="hero-anim-lab.css">
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through a local server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>http://localhost:3000/demo/hero-gsap.html</code>.
+    (GSAP loads from a CDN, so you also need internet.)
+  </p>
+
+  <header class="lab-header">
+    <h1>Hero animation lab — GSAP</h1>
+    <p>
+      Timeline variants for the mascot + speech bubble intro. Demo only — the landing page is unchanged.
+      Also try the <a href="hero-blob.html">blob &amp; deform</a>, <a href="hero-jello.html">jello</a>,
+      and <a href="hero-combined.html">combined</a> demos.
+    </p>
+  </header>
+
+  <div class="lab-stage">
+    <div class="hero-stage">
+      <div class="hero-figure">
+        <img class="hero-logo" id="hero-logo" src="/assets/hero/shy-spring.png"
+             alt="Escape the Downtown mascot" width="360" height="360" decoding="async">
+      </div>
+      <div class="speech-bubble-wrap" id="speech-wrap">
+        <div class="speech-bubble" id="speech-bubble">
+          <div class="speech-skin" id="speech-skin"><i class="speech-tail"></i></div>
+          <p class="speech-line" id="speech-line">
+            10 years, hundreds of kilometres, one East Van. I&rsquo;m a local photographer who&rsquo;s
+            walked every block of these neighbourhoods. Here are the places I keep coming back to,
+            and now I want to share them with you.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lab-controls">
+    <h2>Intro variant</h2>
+    <div class="btn-row" id="variant-row">
+      <button type="button" data-variant="current" class="is-active">Current (recreated)</button>
+      <button type="button" data-variant="elastic">Elastic pop</button>
+      <button type="button" data-variant="typewriter">Typewriter</button>
+      <button type="button" data-variant="bounce">Bounce in</button>
+    </div>
+
+    <h2>Playback</h2>
+    <div class="btn-row">
+      <button type="button" id="replay-btn" class="btn-replay">Replay</button>
+    </div>
+    <label style="margin-top:0.6rem;">
+      Speed
+      <input type="range" id="speed" min="0.1" max="2" step="0.05" value="1">
+      <output id="speed-out">1.00&times;</output>
+    </label>
+
+    <h2>Season</h2>
+    <div class="btn-row" id="season-row">
+      <button type="button" data-season="winter">Winter</button>
+      <button type="button" data-season="spring" class="is-active">Spring</button>
+      <button type="button" data-season="summer">Summer</button>
+      <button type="button" data-season="fall">Fall</button>
+    </div>
+
+    <p class="lab-note">
+      Every variant is one <code>gsap.timeline()</code>; after it finishes, idle "breathing" loops start
+      (mascot + bubble), mirroring the live pulse. The Typewriter variant uses the SplitText plugin
+      (free since GSAP&nbsp;3.13). Drag Speed down to study the motion in slow-mo.
+    </p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script src="hero-gsap.js"></script>
+</body>
+</html>

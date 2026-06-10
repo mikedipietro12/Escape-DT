@@ -1,0 +1,19 @@
+{
+  "_note": "Arterial grid for Chinatown route map. lng/lat anchor each column (N–S) and row (E–W). Extend by appending streets; layout interpolates automatically.",
+  "verticalStreets": [
+    { "id": "carrall", "name": "Carrall St", "lng": -123.1036, "aliases": ["carrall", "carrall st"] },
+    { "id": "columbia", "name": "Columbia St", "lng": -123.1019, "aliases": ["columbia", "columbia st"] },
+    { "id": "main", "name": "Main St", "lng": -123.1004, "aliases": ["main", "main st", "main street"] },
+    { "id": "gore", "name": "Gore Ave", "lng": -123.0972, "aliases": ["gore", "gore ave", "gore avenue"] },
+    { "id": "glen", "name": "Glen Dr", "lng": -123.0919, "aliases": ["glen", "glen dr", "glen drive"] }
+  ],
+  "horizontalStreets": [
+    { "id": "powell", "name": "Powell St", "lat": 49.2834, "aliases": ["powell", "powell st", "e powell"] },
+    { "id": "hastings", "name": "E Hastings St", "lat": 49.28115, "aliases": ["hastings", "e hastings", "e hastings st"] },
+    { "id": "pender", "name": "E Pender St", "lat": 49.28025, "aliases": ["pender", "e pender", "e pender st"] },
+    { "id": "keefer", "name": "Keefer St", "lat": 49.27935, "aliases": ["keefer", "keefer st"] },
+    { "id": "georgia", "name": "E Georgia St", "lat": 49.27835, "aliases": ["georgia", "e georgia", "e georgia st"] },
+    { "id": "union", "name": "Union St", "lat": 49.27735, "aliases": ["union", "union st"] },
+    { "id": "prior", "name": "Prior St", "lat": 49.27615, "aliases": ["prior", "prior st"] }
+  ]
+}

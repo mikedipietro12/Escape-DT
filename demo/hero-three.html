@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero animation lab — three.js + GSAP</title>
+  <link rel="stylesheet" href="hero-anim-lab.css">
+  <style>
+    /* Full-viewport ambient particle layer behind everything */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .lab-header,
+    .lab-stage,
+    .lab-controls,
+    .demo-warn {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* The mascot lives in a square WebGL canvas instead of an <img> */
+    .hero-figure {
+      --hero-figure-width: min(220px, 44vw);
+    }
+
+    #mascot-canvas {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through a local server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>http://localhost:3000/demo/hero-three.html</code>.
+    (GSAP and three.js load from a CDN, so you also need internet.)
+  </p>
+
+  <header class="lab-header">
+    <h1>Hero animation lab — three.js + GSAP</h1>
+    <p>
+      The mascot is a textured plane in a WebGL scene (move your pointer for parallax tilt);
+      seasonal particles drift across the page; GSAP still drives all the choreography.
+      Back to the <a href="hero-gsap.html">pure GSAP demo</a>.
+    </p>
+  </header>
+
+  <div class="lab-stage">
+    <div class="hero-stage">
+      <div class="hero-figure">
+        <canvas id="mascot-canvas" aria-label="Escape the Downtown mascot"></canvas>
+      </div>
+      <div class="speech-bubble-wrap" id="speech-wrap">
+        <div class="speech-bubble" id="speech-bubble">
+          <div class="speech-skin" id="speech-skin"><i class="speech-tail"></i></div>
+          <p class="speech-line" id="speech-line">
+            10 years, hundreds of kilometres, one East Van. I&rsquo;m a local photographer who&rsquo;s
+            walked every block of these neighbourhoods. Here are the places I keep coming back to,
+            and now I want to share them with you.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lab-controls">
+    <h2>Playback</h2>
+    <div class="btn-row">
+      <button type="button" id="replay-btn" class="btn-replay">Replay intro</button>
+    </div>
+
+    <h2>Season</h2>
+    <div class="btn-row" id="season-row">
+      <button type="button" data-season="winter">Winter (snow)</button>
+      <button type="button" data-season="spring" class="is-active">Spring (petals)</button>
+      <button type="button" data-season="summer">Summer (motes)</button>
+      <button type="button" data-season="fall">Fall (leaves)</button>
+    </div>
+
+    <label style="margin-top:0.6rem;">
+      Particles
+      <input type="range" id="density" min="0" max="240" step="10" value="120">
+      <output id="density-out">120</output>
+    </label>
+
+    <p class="lab-note">
+      Division of labour: <strong>three.js</strong> renders the mascot plane and the particle field;
+      <strong>GSAP</strong> animates the intro timeline, the idle float, and the DOM speech bubble
+      (text stays in HTML for accessibility and crispness). GSAP tweens three.js object properties
+      (<code>mesh.scale</code>, <code>mesh.position</code>) exactly like CSS ones.
+    </p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+  </script>
+  <script type="module" src="hero-three.js"></script>
+</body>
+</html>

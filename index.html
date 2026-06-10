@@ -1712,6 +1712,12 @@
       overflow: visible;
     }
     .map-line { stroke: var(--ink); stroke-width: 2; }
+    .map-grid-line { fill: none; stroke: rgba(0, 0, 0, 0.14); stroke-width: 1.5; }
+    .map-grid-line--shaped { stroke-linecap: butt; stroke-linejoin: miter; }
+    .map-street-label { font-size: 9px; fill: rgba(0, 0, 0, 0.38); letter-spacing: 0.03em; pointer-events: none; }
+    .map-street-label--h-gap { dominant-baseline: hanging; }
+    .map-street-label--v-gap { dominant-baseline: central; }
+    .map-stop-num { font-size: 11px; font-weight: 500; letter-spacing: 0.02em; }
     .map-text { font-family: inherit; font-size: 10px; fill: var(--ink); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
     .map-path { 
       stroke-width: 4; 
@@ -2940,6 +2946,7 @@
   <script src="js/season-theme.js"></script>
   <script src="js/east-village-map.js"></script>
   <script src="js/mount-pleasant-map.js"></script>
+  <script src="js/chinatown-map.js"></script>
   <!-- Animated hero: set data-hero-bubble="off" on <html> or ?hero=static to revert; remove link + js/landing-hero.js to remove entirely -->
   <link rel="stylesheet" href="css/landing-hero.css">
   <script>document.documentElement.classList.add("hero-anim-js");</script>
@@ -3986,6 +3993,18 @@
           NEIGHBORHOODS = {};
         }
         STOPS = hydrateStops(stopsData.stops || []);
+        try {
+          const chinatownRes = await fetch("data/chinatown-draft.json", { cache: "no-store" });
+          if (chinatownRes.ok) {
+            const chinatownData = await chinatownRes.json();
+            STOPS = STOPS.concat(hydrateStops(chinatownData.stops || []));
+          }
+        } catch (_) {
+          /* draft optional */
+        }
+        if (window.ChinatownMap?.loadGridConfig) {
+          await window.ChinatownMap.loadGridConfig("data/chinatown-grid.json");
+        }
         if (stopsData.station) {
           STATION_LAT = stopsData.station.lat;
           STATION_LNG = stopsData.station.lng;
@@ -4149,9 +4168,20 @@
       ],
     };
     const STEP_D_FOOD_TYPE_TAG_DENYLIST = new Set([
-      "sit down", "grab and go", "take out", "patio", "tvs", "cookies",
-      "bar", "cocktails", "wine", "beer", "dinner", "lunch", "late night",
-      "snacks", "baked goods", "shops", "art gallery", "activities", "park",
+      // Service style & format (primary food filters or non-cuisine)
+      "sit down", "grab and go", "take out", "share plates", "hot table",
+      // Meal times & dining concepts
+      "breakfast", "brunch", "dinner", "lunch", "late night", "diner",
+      "happy hour", "farm to table",
+      // Drinks & bar (primary drinks filters or establishment type)
+      "bar", "pub", "dive bar", "sake bar", "cocktails", "wine", "natural wine",
+      "beer", "sake", "juice", "tea",
+      // Coffee / snacks / baked (other category filters)
+      "patio", "tvs", "cookies", "snacks", "baked goods",
+      // Hangout & shopping product tags on multi-category stops
+      "shops", "art gallery", "activities", "park", "hang out",
+      "books", "cards", "clothing", "gifts", "glassware", "kitchenware",
+      "shoes", "soap", "stationary", "bulk", "convenience", "kitchen", "grill",
       ...CANONICAL_CATEGORIES,
     ]);
 
@@ -4722,7 +4752,7 @@
       if (!state.landingAreaId) state.landingAreaId = DEFAULT_LANDING_AREA;
       state.expandedSpotId = null;
       state.p3Filters = defaultP3Filters();
-      state.p3SortOrder = isHorizontalMapArea() ? "west-east" : "south-north";
+      state.p3SortOrder = isHorizontalMapArea() || isChinatownArea() ? "west-east" : "south-north";
       state.p3SortOpen = false;
       state.pathContext = 'See All Spots';
       showStep('P3');
@@ -4885,6 +4915,9 @@
       if (isHorizontalMapArea()) {
         return "Select one or two stops for this category — sorted west to east along Hastings, closest to your first pick";
       }
+      if (isChinatownArea()) {
+        return "Select one or two stops for this category — sorted west to east on the grid, closest to your first pick";
+      }
       if (isMountPleasantArea()) {
         return "Select one or two stops for this category — sorted by walk from Main Street–Science World station";
       }
@@ -4943,7 +4976,7 @@
 
     function getCategoryStops(catId) {
       const list = activeAreaStops().filter((s) => stopMatchesCategory(s, catId));
-      if (isHorizontalMapArea()) {
+      if (isHorizontalMapArea() || isChinatownArea()) {
         return list.sort((a, b) => a.lng - b.lng);
       }
       if (!activeAreaUsesSkytrain()) {
@@ -5262,11 +5295,13 @@
     function getAreaBrandName() {
       if (isHorizontalMapArea()) return "East Village";
       if (isMountPleasantArea()) return "Mount Pleasant";
+      if (isChinatownArea()) return "Chinatown";
       return "Commercial Drive";
     }
 
     function getRouteSpineLabel() {
       if (isMountPleasantArea()) return "Main Street";
+      if (isChinatownArea()) return "Chinatown grid";
       if (isHorizontalMapArea()) return "E Hastings";
       return "the Drive";
     }
@@ -5290,6 +5325,10 @@
       return activeAreaNeighborhood() === "mount-pleasant";
     }
 
+    function isChinatownArea() {
+      return activeAreaNeighborhood() === "chinatown";
+    }
+
     function activeAreaStops() {
       const nbh = activeAreaNeighborhood();
       return STOPS.filter((s) => (s.neighborhood || "commercial") === nbh);
@@ -5298,6 +5337,7 @@
     function getRouteAreaSubtitle() {
       if (isHorizontalMapArea()) return "E Hastings";
       if (isMountPleasantArea()) return "Main St";
+      if (isChinatownArea()) return "Chinatown";
       return "";
     }
 
@@ -5309,6 +5349,7 @@
       }
       if (isHorizontalMapArea()) return `YOUR EAST VILLAGE ROUTE — ${n} ${word}`;
       if (isMountPleasantArea()) return `YOUR MOUNT PLEASANT ROUTE — ${n} ${word}`;
+      if (isChinatownArea()) return `YOUR CHINATOWN ROUTE — ${n} ${word}`;
       return `YOUR COMMERCIAL DRIVE ROUTE — ${n} STOPS`;
     }
 
@@ -5458,6 +5499,17 @@
       };
     }
 
+    function getChinatownMapOptions(endpointOpts = {}) {
+      const station = getActiveStation();
+      return {
+        grid: true,
+        stationLat: station.lat,
+        stationLng: station.lng,
+        stationLabel: station.name,
+        ...endpointOpts,
+      };
+    }
+
     function getUserRouteMapOptions() {
       if (isHorizontalMapArea()) {
         applyDefaultRouteEndpointsIfMissing();
@@ -5478,11 +5530,19 @@
             endAtStation: true,
           });
         }
+        if (isChinatownArea()) {
+          return getChinatownMapOptions({
+            startAtStation: true,
+            endAtStation: true,
+          });
+        }
         return { startAtStation: true, endAtStation: true };
       }
       if (!isRouteFinalizeV2Enabled()) {
         if (state.routeStart === "firstStop") return { startAtFirstStop: true };
-        return isMountPleasantArea() ? getMountPleasantMapOptions() : {};
+        if (isMountPleasantArea()) return getMountPleasantMapOptions();
+        if (isChinatownArea()) return getChinatownMapOptions();
+        return {};
       }
       applyDefaultRouteEndpointsIfMissing();
       const endpointOpts = {
@@ -5491,6 +5551,9 @@
       };
       if (isMountPleasantArea()) {
         return getMountPleasantMapOptions(endpointOpts);
+      }
+      if (isChinatownArea()) {
+        return getChinatownMapOptions(endpointOpts);
       }
       return endpointOpts;
     }
@@ -5504,6 +5567,7 @@
 
     function getTotalsStyleForMapOptions(mapOptions = {}) {
       if (mapOptions.horizontal) return "linear";
+      if (mapOptions.grid) return "linear";
       if (isRouteFinalizeV2Enabled()) {
         const opts = normalizeMapOptions(mapOptions);
         return opts.startAtStation && opts.endAtStation
@@ -5559,6 +5623,9 @@
       if (mapOptions.mpVertical && window.MountPleasantMap) {
         return MountPleasantMap.getRouteWalkLegs(route, mapOptions);
       }
+      if (mapOptions.grid && window.ChinatownMap) {
+        return ChinatownMap.getRouteWalkLegs(route, mapOptions);
+      }
       const station = getActiveStation();
       const opts = normalizeMapOptions(mapOptions);
       if (!route.length) return [];
@@ -5599,6 +5666,9 @@
       if (mapOptions.mpVertical && window.MountPleasantMap) {
         return MountPleasantMap.getRouteWalkLegs(route, mapOptions);
       }
+      if (mapOptions.grid && window.ChinatownMap) {
+        return ChinatownMap.getRouteWalkLegs(route, mapOptions);
+      }
       if (isRouteFinalizeV2Enabled()) {
         return getRouteLegsV2(route, mapOptions);
       }
@@ -5608,6 +5678,13 @@
     function getRouteWalkTotals(route, mapOptions = {}) {
       if (mapOptions.horizontal && window.EastVillageMap) {
         const legs = EastVillageMap.getRouteWalkLegs(route, mapOptions);
+        if (!legs.length) return { totalKm: 0, totalMin: 0, legs: [] };
+        const totalKm = legs.reduce((sum, leg) => sum + leg.km, 0);
+        const totalMin = legs.reduce((sum, leg) => sum + leg.minutes, 0);
+        return { totalKm, totalMin, legs };
+      }
+      if (mapOptions.grid && window.ChinatownMap) {
+        const legs = ChinatownMap.getRouteWalkLegs(route, mapOptions);
         if (!legs.length) return { totalKm: 0, totalMin: 0, legs: [] };
         const totalKm = legs.reduce((sum, leg) => sum + leg.km, 0);
         const totalMin = legs.reduce((sum, leg) => sum + leg.minutes, 0);
@@ -6121,7 +6198,7 @@
       if (!reviewEl) return;
       reviewEl.classList.toggle(
         "route-review--stacked",
-        !!(mapOptions && mapOptions.horizontal)
+        !!(mapOptions && (mapOptions.horizontal || mapOptions.grid))
       );
     }
 
@@ -6577,6 +6654,10 @@
         EastVillageMap.drawMap(svg, route, options);
         return;
       }
+      if (mapOptions.grid && window.ChinatownMap) {
+        ChinatownMap.drawMap(svg, route, options);
+        return;
+      }
       if (mapOptions.mpVertical && window.MountPleasantMap) {
         MountPleasantMap.drawMap(svg, route, options);
         return;
@@ -6986,6 +7067,11 @@
         else if (state.routeStart === "firstStop") params.set("rs", "first");
         if (state.routeEnd === "west") params.set("re", "west");
         else if (state.routeEnd === "lastStop") params.set("re", "last");
+      } else if (mapOptions.grid || isChinatownArea()) {
+        params.set("area", "chinatown");
+        const opts = normalizeMapOptions(mapOptions);
+        if (!opts.startAtStation) params.set("rs", "first");
+        if (!opts.endAtStation) params.set("re", "last");
       } else if (mapOptions.mpVertical || isMountPleasantArea()) {
         params.set("area", "mount-pleasant");
         const opts = normalizeMapOptions(mapOptions);
@@ -7182,6 +7268,10 @@
           rs === "east" ? "east" : rs === "first" ? "firstStop" : "west";
         state.routeEnd =
           re === "west" ? "west" : re === "last" ? "lastStop" : "east";
+      } else if (areaParam === "chinatown" || resolved[0]?.neighborhood === "chinatown") {
+        state.landingAreaId = "chinatown";
+        state.routeStart = rs === "first" ? "firstStop" : "station";
+        state.routeEnd = re === "last" ? "lastStop" : "station";
       } else if (areaParam === "mount-pleasant" || resolved[0]?.neighborhood === "mount-pleasant") {
         state.landingAreaId = "mount-pleasant";
         state.routeStart = rs === "first" ? "firstStop" : "station";
@@ -7797,6 +7887,7 @@
 
     function sortStopsGeographic(stops) {
       if (isHorizontalMapArea()) return sortStopsForHorizontalRoute(stops);
+      if (isChinatownArea()) return sortStopsForHorizontalRoute(stops);
       return sortStopsNorthSouth(stops);
     }
 
@@ -8500,6 +8591,8 @@
           desc.textContent = "Add spots from All Spots to build your route.";
         } else if (isHorizontalMapArea()) {
           desc.textContent = `${route.length} stop${route.length === 1 ? "" : "s"} sorted west to east along E Hastings for walking. Tap × on a stop to remove it.`;
+        } else if (isChinatownArea()) {
+          desc.textContent = `${route.length} stop${route.length === 1 ? "" : "s"} sorted west to east on the Chinatown grid for walking. Tap × on a stop to remove it.`;
         } else if (isMountPleasantArea()) {
           desc.textContent = `${route.length} stop${route.length === 1 ? "" : "s"} sorted south from Main Street–Science World for walking. Tap × on a stop to remove it.`;
         } else {
@@ -8528,6 +8621,8 @@
           ? `Showing ${filtered.length} of ${areaTotal} spots. `
           : isHorizontalMapArea()
             ? "Browse every East Village recommendation along E Hastings and side streets. "
+            : isChinatownArea()
+              ? "Browse every Chinatown, Japantown, and Strathcona spot on the grid. "
             : isMountPleasantArea()
               ? "Browse every Mount Pleasant recommendation along Main Street and side streets. "
               : "";
@@ -8680,6 +8775,8 @@
       showStep("LANDING");
     });
   </script>
-  <script src="js/landing-hero.js"></script>
+  <!-- Jello hero (GSAP + WebGL): revert by swapping these two tags back to js/landing-hero.js -->
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/landing-hero-jello.js"></script>
 </body>
 </html>

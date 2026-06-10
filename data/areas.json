@@ -81,8 +81,26 @@
       "id": "chinatown",
       "neighborhood": "chinatown",
       "title": "Explore Chinatown",
-      "label": "Coming soon",
-      "comingSoon": true
+      "label": "",
+      "comingSoon": true,
+      "pathsIntro": "Choose one of the following options and end up with a personalized route to explore Chinatown, Japantown, and Strathcona on the grid.",
+      "paths": [
+        {
+          "start": "path1",
+          "title": "Choose Your Own Adventure",
+          "label": "Build your own route by time and vibe. Pick stops along Main, Pender, Georgia, and side streets — get a shareable grid route map."
+        },
+        {
+          "start": "path3",
+          "title": "See All Spots",
+          "label": "Browse and filter every Chinatown spot, build a visit list, and open it in Google Maps."
+        },
+        {
+          "start": "path2",
+          "title": "See My Suggested Routes",
+          "label": "Curated walks for pre- and post-match nights, late bites, and Chinatown bar-hopping."
+        }
+      ]
     }
   }
 }

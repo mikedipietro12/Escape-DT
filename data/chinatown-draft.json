@@ -1,4 +1,1393 @@
 {
-  "_note": "DRAFT, not loaded by the app. Chinatown stops are staged here so they stay out of the live app until multi-area filtering / the horizontal route map ships. Add stops with `npm run enrich -- <list> --neighborhood chinatown --write` (a plain list of place names works — no CSV needed) or the admin editor (npm run admin). Pending per stop: descriptions, photos, real cross streets, category/cost review (see _review per stop). See AGENTS.md roadmap.",
-  "stops": []
+  "_note": "DRAFT, not loaded by the app. Chinatown stops staged for grid route map. Pending: crossStreet (intersection format e.g. Main & Pender), descriptions, photos, cost/category review (_review). Imported from CHINATOWN.txt.",
+  "stops": [
+    {
+      "id": "s136",
+      "slug": "say-hey-cafe",
+      "name": "Say Hey Cafe",
+      "categories": [
+        "coffee"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 382
+      },
+      "lat": 49.2803208,
+      "lng": -123.1010711,
+      "googlePlaceId": null,
+      "placeholderColor": "981185",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s137",
+      "slug": "the-boxcar",
+      "name": "The Boxcar",
+      "categories": [
+        "drinks"
+      ],
+      "tags": [
+        "beer"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "afternoon",
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 269
+      },
+      "lat": 49.2765155,
+      "lng": -123.100149,
+      "googlePlaceId": null,
+      "placeholderColor": "ad8e00",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 5
+    },
+    {
+      "id": "s138",
+      "slug": "mortadella",
+      "name": "Mortadella",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 272
+      },
+      "lat": 49.2765971,
+      "lng": -123.1000924,
+      "googlePlaceId": null,
+      "placeholderColor": "f7be04",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 5
+    },
+    {
+      "id": "s139",
+      "slug": "the-american",
+      "name": "The American",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 262
+      },
+      "lat": 49.2762792,
+      "lng": -123.0996041,
+      "googlePlaceId": null,
+      "placeholderColor": "483c19",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 4
+    },
+    {
+      "id": "s140",
+      "slug": "torafuku",
+      "name": "Torafuku",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 251
+      },
+      "lat": 49.2758915,
+      "lng": -123.0996085,
+      "googlePlaceId": null,
+      "placeholderColor": "690337",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 4
+    },
+    {
+      "id": "s141",
+      "slug": "bodega-on-main",
+      "name": "Bodega on Main",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 239
+      },
+      "lat": 49.2754776,
+      "lng": -123.0997094,
+      "googlePlaceId": null,
+      "placeholderColor": "3afc1b",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 3
+    },
+    {
+      "id": "s142",
+      "slug": "hunnybee-bruncheonette",
+      "name": "Hunnybee Bruncheonette",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 305
+      },
+      "lat": 49.277734,
+      "lng": -123.097148,
+      "googlePlaceId": null,
+      "placeholderColor": "a093cd",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 7
+    },
+    {
+      "id": "s143",
+      "slug": "the-program-fitness",
+      "name": "The Program Fitness",
+      "categories": [
+        "hangout"
+      ],
+      "tags": [
+        "activities"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 310
+      },
+      "lat": 49.2778912,
+      "lng": -123.0971855,
+      "googlePlaceId": null,
+      "placeholderColor": "aee177",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 7
+    },
+    {
+      "id": "s144",
+      "slug": "gore-street-vintage",
+      "name": "Gore Street Vintage",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [
+        "vintage"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 326
+      },
+      "lat": 49.2784276,
+      "lng": -123.0972542,
+      "googlePlaceId": null,
+      "placeholderColor": "f7bcd0",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 8
+    },
+    {
+      "id": "s145",
+      "slug": "phnom-penh-restaurant",
+      "name": "Phnom Penh Restaurant",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 327
+      },
+      "lat": 49.2784534,
+      "lng": -123.0982266,
+      "googlePlaceId": null,
+      "placeholderColor": "13ad5a",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 7
+    },
+    {
+      "id": "s146",
+      "slug": "ramen-butcher",
+      "name": "Ramen Butcher",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 333
+      },
+      "lat": 49.2786804,
+      "lng": -123.0987252,
+      "googlePlaceId": null,
+      "placeholderColor": "cc53b3",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 8
+    },
+    {
+      "id": "s147",
+      "slug": "straight-brooklyn-pizza",
+      "name": "Straight Brooklyn Pizza",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 334
+      },
+      "lat": 49.2786962,
+      "lng": -123.0995335,
+      "googlePlaceId": null,
+      "placeholderColor": "6b1666",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 8
+    },
+    {
+      "id": "s148",
+      "slug": "london-pub",
+      "name": "London Pub",
+      "categories": [
+        "drinks"
+      ],
+      "tags": [
+        "beer"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "afternoon",
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 327
+      },
+      "lat": 49.2784656,
+      "lng": -123.0995789,
+      "googlePlaceId": null,
+      "placeholderColor": "166647",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 7
+    },
+    {
+      "id": "s149",
+      "slug": "los-sapos-tacos",
+      "name": "Los Sapos Tacos",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 353
+      },
+      "lat": 49.2793553,
+      "lng": -123.0991317,
+      "googlePlaceId": null,
+      "placeholderColor": "51beda",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 8
+    },
+    {
+      "id": "s150",
+      "slug": "friend-of-a-friend",
+      "name": "friend of a friend",
+      "categories": [
+        "hangout"
+      ],
+      "tags": [
+        "art gallery"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 353
+      },
+      "lat": 49.2793367,
+      "lng": -123.0975183,
+      "googlePlaceId": null,
+      "placeholderColor": "78ab16",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 9
+    },
+    {
+      "id": "s151",
+      "slug": "keefer-bar",
+      "name": "Keefer Bar",
+      "categories": [
+        "drinks"
+      ],
+      "tags": [
+        "cocktails"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "afternoon",
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 361
+      },
+      "lat": 49.27961,
+      "lng": -123.1013292,
+      "googlePlaceId": null,
+      "placeholderColor": "49e57a",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 9
+    },
+    {
+      "id": "s152",
+      "slug": "annabelle-s",
+      "name": "Annabelle's",
+      "categories": [
+        "coffee"
+      ],
+      "tags": [
+        "sit down"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 345
+      },
+      "lat": 49.2790817,
+      "lng": -123.1018716,
+      "googlePlaceId": null,
+      "placeholderColor": "b77352",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 8
+    },
+    {
+      "id": "s153",
+      "slug": "andy-livingstone-park",
+      "name": "Andy Livingstone Park",
+      "categories": [
+        "hangout"
+      ],
+      "tags": [
+        "park"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 328
+      },
+      "lat": 49.2785062,
+      "lng": -123.1033615,
+      "googlePlaceId": null,
+      "placeholderColor": "4c47d3",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 8
+    },
+    {
+      "id": "s154",
+      "slug": "the-plaza-skatepark",
+      "name": "The Plaza Skatepark",
+      "categories": [
+        "hangout"
+      ],
+      "tags": [
+        "activities"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 292
+      },
+      "lat": 49.2772882,
+      "lng": -123.1024551,
+      "googlePlaceId": null,
+      "placeholderColor": "4f859d",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 6
+    },
+    {
+      "id": "s155",
+      "slug": "between-2-buns",
+      "name": "Between 2 Buns",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 389
+      },
+      "lat": 49.2805674,
+      "lng": -123.101967,
+      "googlePlaceId": null,
+      "placeholderColor": "493026",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s156",
+      "slug": "dd-mau",
+      "name": "DD Mau",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 387
+      },
+      "lat": 49.2805137,
+      "lng": -123.1007844,
+      "googlePlaceId": null,
+      "placeholderColor": "463358",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s157",
+      "slug": "pizza-coming-soon",
+      "name": "Pizza Coming Soon",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 387
+      },
+      "lat": 49.2805063,
+      "lng": -123.1001523,
+      "googlePlaceId": null,
+      "placeholderColor": "7123fa",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s158",
+      "slug": "hmpl",
+      "name": "HMPL",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 395
+      },
+      "lat": 49.2807735,
+      "lng": -123.1021552,
+      "googlePlaceId": null,
+      "placeholderColor": "e1a09e",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s159",
+      "slug": "mello",
+      "name": "Mello",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 395
+      },
+      "lat": 49.2807735,
+      "lng": -123.1021552,
+      "googlePlaceId": null,
+      "placeholderColor": "7b9591",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s160",
+      "slug": "alibi-room",
+      "name": "Alibi Room",
+      "categories": [
+        "drinks"
+      ],
+      "tags": [
+        "beer"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "afternoon",
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 395
+      },
+      "lat": 49.2807735,
+      "lng": -123.1021552,
+      "googlePlaceId": null,
+      "placeholderColor": "848bb3",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s161",
+      "slug": "bar-tartare",
+      "name": "Bar TarTare",
+      "categories": [
+        "drinks"
+      ],
+      "tags": [
+        "cocktails"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "afternoon",
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 477
+      },
+      "lat": 49.2835448,
+      "lng": -123.1028315,
+      "googlePlaceId": null,
+      "placeholderColor": "ebce75",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 14
+    },
+    {
+      "id": "s162",
+      "slug": "ask-for-luigi",
+      "name": "Ask for Luigi",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 477
+      },
+      "lat": 49.2835448,
+      "lng": -123.1028315,
+      "googlePlaceId": null,
+      "placeholderColor": "c66d82",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 14
+    },
+    {
+      "id": "s163",
+      "slug": "st-lawrence",
+      "name": "St. Lawrence",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 477
+      },
+      "lat": 49.2835448,
+      "lng": -123.1028315,
+      "googlePlaceId": null,
+      "placeholderColor": "ff356e",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 14
+    },
+    {
+      "id": "s164",
+      "slug": "dosanko",
+      "name": "Dosanko",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 459
+      },
+      "lat": 49.2829258,
+      "lng": -123.0919095,
+      "googlePlaceId": null,
+      "placeholderColor": "18647e",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 15
+    },
+    {
+      "id": "s165",
+      "slug": "the-heatley",
+      "name": "The Heatley",
+      "categories": [
+        "drinks"
+      ],
+      "tags": [
+        "beer"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "afternoon",
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 402
+      },
+      "lat": 49.2809911,
+      "lng": -123.0897372,
+      "googlePlaceId": null,
+      "placeholderColor": "140c7d",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 14
+    },
+    {
+      "id": "s166",
+      "slug": "maclean-park",
+      "name": "MacLean Park",
+      "categories": [
+        "hangout"
+      ],
+      "tags": [
+        "park"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 337
+      },
+      "lat": 49.2788157,
+      "lng": -123.0884454,
+      "googlePlaceId": null,
+      "placeholderColor": "6447fe",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 13
+    },
+    {
+      "id": "s167",
+      "slug": "finch-s-market",
+      "name": "Finch's Market",
+      "categories": [
+        "coffee"
+      ],
+      "tags": [
+        "sit down"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 330
+      },
+      "lat": 49.2785798,
+      "lng": -123.0933606,
+      "googlePlaceId": null,
+      "placeholderColor": "280162",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s168",
+      "slug": "benny-foods",
+      "name": "Benny Foods",
+      "categories": [
+        "groceries"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 295
+      },
+      "lat": 49.2773796,
+      "lng": -123.0918949,
+      "googlePlaceId": null,
+      "placeholderColor": "0ef3e6",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 9
+    },
+    {
+      "id": "s169",
+      "slug": "kissa-tanto",
+      "name": "Kissa Tanto",
+      "categories": [
+        "drinks",
+        "food"
+      ],
+      "tags": [
+        "sit down",
+        "cocktails"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "afternoon",
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 386
+      },
+      "lat": 49.2804665,
+      "lng": -123.0981257,
+      "googlePlaceId": null,
+      "placeholderColor": "b30a7c",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s170",
+      "slug": "bao-bei",
+      "name": "Bao Bei",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 365
+      },
+      "lat": 49.2797469,
+      "lng": -123.1005921,
+      "googlePlaceId": null,
+      "placeholderColor": "5370e3",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 9
+    },
+    {
+      "id": "s171",
+      "slug": "new-town-bakery",
+      "name": "New Town Bakery",
+      "categories": [
+        "food"
+      ],
+      "tags": [
+        "grab and go"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 381
+      },
+      "lat": 49.2803036,
+      "lng": -123.1011414,
+      "googlePlaceId": null,
+      "placeholderColor": "38be09",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s172",
+      "slug": "bagheera",
+      "name": "Bagheera",
+      "categories": [
+        "drinks"
+      ],
+      "tags": [
+        "cocktails",
+        "sit down"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "afternoon",
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 373
+      },
+      "lat": 49.2800341,
+      "lng": -123.0993665,
+      "googlePlaceId": null,
+      "placeholderColor": "6ff7fd",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 9
+    },
+    {
+      "id": "s173",
+      "slug": "propaganda",
+      "name": "Propaganda",
+      "categories": [
+        "coffee"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 387
+      },
+      "lat": 49.2804897,
+      "lng": -123.0990112,
+      "googlePlaceId": null,
+      "placeholderColor": "1800a4",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 10
+    },
+    {
+      "id": "s174",
+      "slug": "union-market",
+      "name": "Union Market",
+      "categories": [
+        "coffee",
+        "hangout"
+      ],
+      "tags": [
+        "sit down"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 290
+      },
+      "lat": 49.2772132,
+      "lng": -123.086955,
+      "googlePlaceId": null,
+      "placeholderColor": "6b5a35",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 13
+    },
+    {
+      "id": "s175",
+      "slug": "strathcona-park",
+      "name": "Strathcona Park",
+      "categories": [
+        "hangout"
+      ],
+      "tags": [
+        "park"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 231
+      },
+      "lat": 49.2752345,
+      "lng": -123.0855911,
+      "googlePlaceId": null,
+      "placeholderColor": "74b9c5",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 13
+    },
+    {
+      "id": "s176",
+      "slug": "la-casa-gelato",
+      "name": "La Casa Gelato",
+      "categories": [
+        "food"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 285
+      },
+      "lat": 49.2770583,
+      "lng": -123.0816196,
+      "googlePlaceId": null,
+      "placeholderColor": "fd47ca",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 17
+    },
+    {
+      "id": "s177",
+      "slug": "rise-up-marketplace",
+      "name": "Rise Up Marketplace",
+      "categories": [
+        "food",
+        "groceries"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 324
+      },
+      "lat": 49.2783511,
+      "lng": -123.0790454,
+      "googlePlaceId": null,
+      "placeholderColor": "6febab",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 20
+    },
+    {
+      "id": "s178",
+      "slug": "the-garden-strathcona",
+      "name": "The Garden Strathcona",
+      "categories": [
+        "coffee"
+      ],
+      "tags": [
+        "sit down"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 400
+      },
+      "lat": 49.280944,
+      "lng": -123.0856286,
+      "googlePlaceId": null,
+      "placeholderColor": "717e1b",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 17
+    },
+    {
+      "id": "s179",
+      "slug": "prototype-coffee",
+      "name": "Prototype Coffee",
+      "categories": [
+        "coffee"
+      ],
+      "tags": [],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "morning",
+        "afternoon"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 410
+      },
+      "lat": 49.2812774,
+      "lng": -123.0852931,
+      "googlePlaceId": null,
+      "placeholderColor": "8f65fa",
+      "_review": [
+        "crossStreet",
+        "cost",
+        "tags"
+      ],
+      "walkFromStation": 17
+    },
+    {
+      "id": "s180",
+      "slug": "strathcona-beer-company",
+      "name": "Strathcona Beer Company",
+      "categories": [
+        "drinks"
+      ],
+      "tags": [
+        "beer"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "afternoon",
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "",
+      "coords": {
+        "y": 409
+      },
+      "lat": 49.2812549,
+      "lng": -123.0850594,
+      "googlePlaceId": null,
+      "placeholderColor": "9da124",
+      "_review": [
+        "crossStreet",
+        "cost"
+      ],
+      "walkFromStation": 17
+    },
+    {
+      "id": "s188",
+      "slug": "the-irish-heather-shebeen",
+      "name": "The Irish Heather Shebeen",
+      "categories": [
+        "food",
+        "drinks"
+      ],
+      "tags": [
+        "beer",
+        "pub food",
+        "irish"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "evening"
+      ],
+      "description": "For the best pint of Guinness and tasty curry fries, with a side of local hooligans, this is your spot.",
+      "crossStreet": "E Georgia St",
+      "coords": {
+        "y": 327
+      },
+      "lat": 49.2784524,
+      "lng": -123.0980908,
+      "googlePlaceId": "ChIJLYrYS3dxhlQR9V5fbgh0_YY",
+      "placeholderColor": "316d42",
+      "_googleTypes": [
+        "irish_pub",
+        "gastropub",
+        "pub",
+        "irish_restaurant",
+        "bar",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "walkFromStation": 11,
+      "goto": "In the description!"
+    }
+  ]
 }
