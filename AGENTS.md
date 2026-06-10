@@ -20,6 +20,22 @@
 >
 > **Local test before deploy:** temporarily set `comingSoon: false` on the area card, then `npm run dev` → Explore Mount Pleasant.
 
+> **Roadmap / not yet built — route-map cross streets (Commercial + Main).** Faded intersection markers on the **vertical** hybrid maps only ([`index.html`](index.html) Commercial logic; [`js/mount-pleasant-map.js`](js/mount-pleasant-map.js) + demo [`demo/mount-pleasant-hybrid-paths.html`](demo/mount-pleasant-hybrid-paths.html)). **Not** Hastings (horizontal map).
+>
+> **Visual:** At each relevant intersection, a **light grey horizontal bar** (cross street running east–west across the map). **Light, muted label text** on one side of the spine (same side convention as stop labels — east/west off-spine stops anchor end; spine stops anchor start). Bars sit **behind** the route legs and stop dots (new SVG layer, e.g. `map-cross-street-layer`, inserted before `map-route-layer`).
+>
+> **Animation:** Each bar **draws slowly left → right** (reuse `stroke-dasharray` / `stroke-dashoffset` pattern from route leg animation; slower than legs — tune in demo first). Text fades in after (or with) its bar.
+>
+> **Route-scoped only:** Show cross streets **in the context of the active route** — not the full spine catalogue. Derive from stops on the current route:
+> - Collect unique cross-street labels (Commercial: raw `crossStreet` or spine-side extract; Main: existing `mapLabelCrossStreet()` in [`js/mount-pleasant-map.js`](js/mount-pleasant-map.js)).
+> - Position **Y** from the stop’s map point (`walkFromStation` → layout Y); dedupe stops sharing the same label at the same band.
+> - **Bar X span:** wide enough to read as an intersection (e.g. viewBox min → max, or spine ± off-spine tier width) — confirm in demo.
+> - Do **not** render bars for off-route intersections or empty routes.
+>
+> **Prototype first:** [`demo/commercial-hybrid-paths.js`](demo/commercial-hybrid-paths.js) and [`demo/mount-pleasant-hybrid-paths.js`](demo/mount-pleasant-hybrid-paths.js), then port to live app. Print/PDF static map (`renderMapStaticSvg` / finalize view) should show bars without animation.
+>
+> **CSS:** New classes e.g. `.map-cross-street`, `.map-cross-street-label` — light grey stroke (`#ccc` or `rgba(0,0,0,0.12)`), smaller/lighter than `.map-text` on stops.
+
 **Source of truth:** `data/stops.json` (not inline data in `index.html`).
 
 **Photos (optional at add time):** Stops appear on the site without photos. Until files exist, **omit** `images` / `image` and set `placeholderColor` (6-char hex, no `#`). When photos are ready, save under `assets/stops/<slug>.jpg` (hero), optional `<slug>-2.jpg`, `<slug>-3.jpg`, … and reference in JSON as `"images": ["assets/stops/<slug>.jpg", ...]`. A lone `"image"` path still works (treated as a one-item gallery). Keep `slug` stable so filenames match later.
@@ -262,6 +278,7 @@ Spots on **Victoria Street** (east of Commercial Drive) still use `neighborhood:
 | South return to first stop or SkyTrain | Tiny curve onto a parallel line just left of the spine, then curve back at destination |
 | Off-spine (Victoria, Venables, Frances) | Rounded quadratic corners at spine junctions — **both** onto and back from Commercial |
 | Animated route draw | Trace arrowhead at the drawing tip |
+| Cross streets (planned) | Route-scoped faded horizontal bars + side labels; L→R draw — see roadmap callout at top |
 
 Mount Pleasant uses the same hybrid model in `js/mount-pleasant-map.js` (station at **top**, route runs **south**, west off-spine tiers).
 
