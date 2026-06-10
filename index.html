@@ -2939,6 +2939,7 @@
   </style>
   <script src="js/season-theme.js"></script>
   <script src="js/east-village-map.js"></script>
+  <script src="js/mount-pleasant-map.js"></script>
   <!-- Animated hero: set data-hero-bubble="off" on <html> or ?hero=static to revert; remove link + js/landing-hero.js to remove entirely -->
   <link rel="stylesheet" href="css/landing-hero.css">
   <script>document.documentElement.classList.add("hero-anim-js");</script>
@@ -3052,11 +3053,11 @@
         <p class="label">This sets how your route map and Google Maps directions are drawn.</p>
 
         <div class="route-finalize-section">
-          <h2 class="route-finalize-heading">Where would you like to start on the drive?</h2>
+          <h2 class="route-finalize-heading" id="route-finalize-start-heading">Where would you like to start on the drive?</h2>
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="start" data-value="station"
             onclick="selectRouteFinalizeChoice('start', 'station')"
             onkeydown="routeFinalizeCardKeydown(event, 'start', 'station')">
-            <h2 class="choice-title">Commercial-Broadway Skytrain station</h2>
+            <h2 class="choice-title" id="route-finalize-start-station-title">Commercial-Broadway Skytrain station</h2>
             <span class="choice-desc">I'll take the Skytrain and start walking from there</span>
           </div>
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="start" data-value="firstStop"
@@ -3072,7 +3073,7 @@
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="end" data-value="station"
             onclick="selectRouteFinalizeChoice('end', 'station')"
             onkeydown="routeFinalizeCardKeydown(event, 'end', 'station')">
-            <h2 class="choice-title">Bring me back to Commercial-Broadway Skytrain station</h2>
+            <h2 class="choice-title" id="route-finalize-end-station-title">Bring me back to Commercial-Broadway Skytrain station</h2>
           </div>
           <div class="card route-finalize-card" role="button" tabindex="0" data-route-choice="end" data-value="lastStop"
             onclick="selectRouteFinalizeChoice('end', 'lastStop')"
@@ -4505,7 +4506,21 @@
       }
     }
 
+    function updateRouteFinalizeStationLabels() {
+      const station = getActiveStation();
+      const spine = isMountPleasantArea() ? "Main Street" : "the drive";
+      const startHeading = document.getElementById("route-finalize-start-heading");
+      const startTitle = document.getElementById("route-finalize-start-station-title");
+      const endTitle = document.getElementById("route-finalize-end-station-title");
+      if (startHeading) {
+        startHeading.textContent = `Where would you like to start on ${spine}?`;
+      }
+      if (startTitle) startTitle.textContent = station.name;
+      if (endTitle) endTitle.textContent = `Bring me back to ${station.name}`;
+    }
+
     function updateRouteFinalizeUi() {
+      updateRouteFinalizeStationLabels();
       document.querySelectorAll(".route-finalize-card").forEach((card) => {
         const kind = card.getAttribute("data-route-choice");
         const value = card.getAttribute("data-value");
@@ -4870,6 +4885,9 @@
       if (isHorizontalMapArea()) {
         return "Select one or two stops for this category — sorted west to east along Hastings, closest to your first pick";
       }
+      if (isMountPleasantArea()) {
+        return "Select one or two stops for this category — sorted by walk from Main Street–Science World station";
+      }
       return "Select one or two stops for this category, locations appear in geographic distance from Commercial-Broadway Skytrain station";
     }
 
@@ -5211,9 +5229,47 @@
     }
 
     // --- STEP E ---
-    const STATION_DISPLAY_NAME = "Commercial-Broadway Skytrain station";
-    const STATION_WALK_LABEL = STATION_DISPLAY_NAME;
     const WALK_SPEED_KMH = 5;
+
+    function getActiveStation() {
+      const nbh = activeAreaNeighborhood();
+      if (nbh === "commercial") {
+        return {
+          lat: STATION_LAT,
+          lng: STATION_LNG,
+          name: "Commercial-Broadway Skytrain station",
+        };
+      }
+      const hood = NEIGHBORHOODS[nbh];
+      if (hood?.station?.lat != null && hood?.station?.lng != null) {
+        return {
+          lat: hood.station.lat,
+          lng: hood.station.lng,
+          name: hood.station.name || hood.title || nbh,
+        };
+      }
+      return {
+        lat: STATION_LAT,
+        lng: STATION_LNG,
+        name: "Commercial-Broadway Skytrain station",
+      };
+    }
+
+    function getStationDisplayName() {
+      return getActiveStation().name;
+    }
+
+    function getAreaBrandName() {
+      if (isHorizontalMapArea()) return "East Village";
+      if (isMountPleasantArea()) return "Mount Pleasant";
+      return "Commercial Drive";
+    }
+
+    function getRouteSpineLabel() {
+      if (isMountPleasantArea()) return "Main Street";
+      if (isHorizontalMapArea()) return "E Hastings";
+      return "the Drive";
+    }
 
     function usesSkytrainStation(nbh) {
       const id = String(nbh || "commercial").toLowerCase();
@@ -5230,13 +5286,19 @@
       return activeAreaNeighborhood() === "hastings-sunrise";
     }
 
+    function isMountPleasantArea() {
+      return activeAreaNeighborhood() === "mount-pleasant";
+    }
+
     function activeAreaStops() {
       const nbh = activeAreaNeighborhood();
       return STOPS.filter((s) => (s.neighborhood || "commercial") === nbh);
     }
 
     function getRouteAreaSubtitle() {
-      return isHorizontalMapArea() ? "E Hastings" : "";
+      if (isHorizontalMapArea()) return "E Hastings";
+      if (isMountPleasantArea()) return "Main St";
+      return "";
     }
 
     function getRouteSummaryTitle(route) {
@@ -5246,6 +5308,7 @@
         return `SHARED ROUTE — ${n} ${word}`;
       }
       if (isHorizontalMapArea()) return `YOUR EAST VILLAGE ROUTE — ${n} ${word}`;
+      if (isMountPleasantArea()) return `YOUR MOUNT PLEASANT ROUTE — ${n} ${word}`;
       return `YOUR COMMERCIAL DRIVE ROUTE — ${n} STOPS`;
     }
 
@@ -5319,13 +5382,15 @@
     }
 
     function getStopWalkFromStation(stop) {
-      const km = haversineKm(STATION_LAT, STATION_LNG, stop.lat, stop.lng);
+      const station = getActiveStation();
+      const km = haversineKm(station.lat, station.lng, stop.lat, stop.lng);
       const minutes = stop.walkFromStation ?? Math.max(1, Math.round((km / WALK_SPEED_KMH) * 60));
       return { km, minutes };
     }
 
     function isStopSouthOfStation(stop) {
-      return stop.lat < STATION_LAT - 1e-5;
+      const station = getActiveStation();
+      return stop.lat < station.lat - 1e-5;
     }
 
     function sortStopsNorthSouth(stops) {
@@ -5382,6 +5447,17 @@
       return state.routeStart === "firstStop" || state.routeEnd === "lastStop";
     }
 
+    function getMountPleasantMapOptions(endpointOpts = {}) {
+      const station = getActiveStation();
+      return {
+        mpVertical: true,
+        stationLat: station.lat,
+        stationLng: station.lng,
+        stationLabel: station.name,
+        ...endpointOpts,
+      };
+    }
+
     function getUserRouteMapOptions() {
       if (isHorizontalMapArea()) {
         applyDefaultRouteEndpointsIfMissing();
@@ -5396,17 +5472,27 @@
         return { startAtStation: false, endAtStation: false };
       }
       if (!isRouteStartPromptEnabled()) {
+        if (isMountPleasantArea()) {
+          return getMountPleasantMapOptions({
+            startAtStation: true,
+            endAtStation: true,
+          });
+        }
         return { startAtStation: true, endAtStation: true };
       }
       if (!isRouteFinalizeV2Enabled()) {
         if (state.routeStart === "firstStop") return { startAtFirstStop: true };
-        return {};
+        return isMountPleasantArea() ? getMountPleasantMapOptions() : {};
       }
       applyDefaultRouteEndpointsIfMissing();
-      return {
+      const endpointOpts = {
         startAtStation: state.routeStart === "station",
         endAtStation: state.routeEnd === "station",
       };
+      if (isMountPleasantArea()) {
+        return getMountPleasantMapOptions(endpointOpts);
+      }
+      return endpointOpts;
     }
 
     function getEffectiveMapOptions(plan) {
@@ -5436,11 +5522,12 @@
     }
 
     function getRouteLegsLegacy(route, mapOptions = {}) {
+      const station = getActiveStation();
       if (!route.length) return [];
       const legs = [];
       if (!mapOptions.startAtFirstStop) {
         legs.push({
-          ...getWalkLeg(STATION_LAT, STATION_LNG, route[0].lat, route[0].lng),
+          ...getWalkLeg(station.lat, station.lng, route[0].lat, route[0].lng),
           label: `To ${route[0].name}`,
           legKind: "stationToStop",
           toStopIndex: 0,
@@ -5460,8 +5547,8 @@
       }
       const last = route[route.length - 1];
       legs.push({
-        ...getWalkLeg(last.lat, last.lng, STATION_LAT, STATION_LNG),
-        label: `Back to ${STATION_WALK_LABEL}`,
+        ...getWalkLeg(last.lat, last.lng, station.lat, station.lng),
+        label: `Back to ${station.name}`,
         legKind: "stopToStation",
         fromStopIndex: route.length - 1,
       });
@@ -5469,12 +5556,16 @@
     }
 
     function getRouteLegsV2(route, mapOptions = {}) {
+      if (mapOptions.mpVertical && window.MountPleasantMap) {
+        return MountPleasantMap.getRouteWalkLegs(route, mapOptions);
+      }
+      const station = getActiveStation();
       const opts = normalizeMapOptions(mapOptions);
       if (!route.length) return [];
       const legs = [];
       if (opts.startAtStation) {
         legs.push({
-          ...getWalkLeg(STATION_LAT, STATION_LNG, route[0].lat, route[0].lng),
+          ...getWalkLeg(station.lat, station.lng, route[0].lat, route[0].lng),
           label: `To ${route[0].name}`,
           legKind: "stationToStop",
           toStopIndex: 0,
@@ -5495,8 +5586,8 @@
       if (opts.endAtStation) {
         const last = route[route.length - 1];
         legs.push({
-          ...getWalkLeg(last.lat, last.lng, STATION_LAT, STATION_LNG),
-          label: `Back to ${STATION_WALK_LABEL}`,
+          ...getWalkLeg(last.lat, last.lng, station.lat, station.lng),
+          label: `Back to ${station.name}`,
           legKind: "stopToStation",
           fromStopIndex: route.length - 1,
         });
@@ -5505,6 +5596,9 @@
     }
 
     function getRouteLegs(route, mapOptions = {}) {
+      if (mapOptions.mpVertical && window.MountPleasantMap) {
+        return MountPleasantMap.getRouteWalkLegs(route, mapOptions);
+      }
       if (isRouteFinalizeV2Enabled()) {
         return getRouteLegsV2(route, mapOptions);
       }
@@ -5514,6 +5608,13 @@
     function getRouteWalkTotals(route, mapOptions = {}) {
       if (mapOptions.horizontal && window.EastVillageMap) {
         const legs = EastVillageMap.getRouteWalkLegs(route, mapOptions);
+        if (!legs.length) return { totalKm: 0, totalMin: 0, legs: [] };
+        const totalKm = legs.reduce((sum, leg) => sum + leg.km, 0);
+        const totalMin = legs.reduce((sum, leg) => sum + leg.minutes, 0);
+        return { totalKm, totalMin, legs };
+      }
+      if (mapOptions.mpVertical && window.MountPleasantMap) {
+        const legs = MountPleasantMap.getRouteWalkLegs(route, mapOptions);
         if (!legs.length) return { totalKm: 0, totalMin: 0, legs: [] };
         const totalKm = legs.reduce((sum, leg) => sum + leg.km, 0);
         const totalMin = legs.reduce((sum, leg) => sum + leg.minutes, 0);
@@ -6476,6 +6577,10 @@
         EastVillageMap.drawMap(svg, route, options);
         return;
       }
+      if (mapOptions.mpVertical && window.MountPleasantMap) {
+        MountPleasantMap.drawMap(svg, route, options);
+        return;
+      }
 
       const gen = ++mapAnimationGeneration;
       const isStale = () => gen !== mapAnimationGeneration;
@@ -6724,7 +6829,7 @@
       const { totalKm, totalMin } = getRouteWalkTotals(route, mapOpts);
       const opts = normalizeMapOptions(mapOpts);
       const disclaimer = opts.endAtStation
-        ? `Straight-line estimates between stops in visit order, including return to ${STATION_DISPLAY_NAME}. Does not include time spent at locations.`
+        ? `Straight-line estimates between stops in visit order, including return to ${getStationDisplayName()}. Does not include time spent at locations.`
         : "Straight-line estimates between stops in visit order. Does not include time spent at locations.";
       el.innerHTML = `
         <div>Total walking (your route order): ~${formatKm(totalKm)} km · ~${totalMin} min</div>
@@ -6853,12 +6958,13 @@
       } else {
         route = getFinalRoute();
         mapOptions = getUserRouteMapOptions();
+        const brand = getAreaBrandName();
         if (state.pathContext === "Shared route") {
-          title = isHorizontalMapArea() ? "Shared East Village route" : "Shared Commercial Drive route";
+          title = `Shared ${brand} route`;
         } else if (state.pathContext === "See All Spots") {
-          title = isHorizontalMapArea() ? "East Village visit list" : "Commercial Drive visit list";
+          title = `${brand} visit list`;
         } else {
-          title = isHorizontalMapArea() ? "East Village route" : "Commercial Drive route";
+          title = `${brand} route`;
         }
       }
       return {
@@ -6880,6 +6986,11 @@
         else if (state.routeStart === "firstStop") params.set("rs", "first");
         if (state.routeEnd === "west") params.set("re", "west");
         else if (state.routeEnd === "lastStop") params.set("re", "last");
+      } else if (mapOptions.mpVertical || isMountPleasantArea()) {
+        params.set("area", "mount-pleasant");
+        const opts = normalizeMapOptions(mapOptions);
+        if (!opts.startAtStation) params.set("rs", "first");
+        if (!opts.endAtStation) params.set("re", "last");
       } else {
         const opts = normalizeMapOptions(mapOptions);
         if (!opts.startAtStation) params.set("rs", "first");
@@ -6897,7 +7008,7 @@
         planKey: ctx.planKey || undefined,
       });
       const shareTitle = `${ctx.title} — Escape DT`;
-      const areaLabel = isHorizontalMapArea() ? "East Village" : "Commercial Drive";
+      const areaLabel = getAreaBrandName();
       const shareText = `A ${ctx.route.length}-stop ${areaLabel} route from Escape DT`;
       if (navigator.share) {
         navigator
@@ -7071,7 +7182,12 @@
           rs === "east" ? "east" : rs === "first" ? "firstStop" : "west";
         state.routeEnd =
           re === "west" ? "west" : re === "last" ? "lastStop" : "east";
+      } else if (areaParam === "mount-pleasant" || resolved[0]?.neighborhood === "mount-pleasant") {
+        state.landingAreaId = "mount-pleasant";
+        state.routeStart = rs === "first" ? "firstStop" : "station";
+        state.routeEnd = re === "last" ? "lastStop" : "station";
       } else {
+        state.landingAreaId = state.landingAreaId || DEFAULT_LANDING_AREA;
         state.routeStart = rs === "first" ? "firstStop" : "station";
         state.routeEnd = re === "last" ? "lastStop" : "station";
       }
@@ -7234,12 +7350,14 @@
       let dest;
       let waypointStops = [];
 
+      const station = getActiveStation();
+      const stationCoords = `${station.lat},${station.lng}`;
       if (opts.startAtFirstStop) {
         origin = `${resolved[0].lat},${resolved[0].lng}`;
-        dest = `${STATION_LAT},${STATION_LNG}`;
+        dest = stationCoords;
         waypointStops = resolved.slice(1);
       } else {
-        origin = `${STATION_LAT},${STATION_LNG}`;
+        origin = stationCoords;
         dest = `${resolved[resolved.length - 1].lat},${resolved[resolved.length - 1].lng}`;
         waypointStops = resolved.slice(0, -1);
       }
@@ -7300,7 +7418,13 @@
       const opts = normalizeMapOptions(
         mapOptions || resolveOpenGoogleMapsOptions()
       );
-      const station = `${STATION_LAT},${STATION_LNG}`;
+      const activeStation = mapOptions?.mpVertical
+        ? {
+            lat: mapOptions.stationLat,
+            lng: mapOptions.stationLng,
+          }
+        : getActiveStation();
+      const station = `${activeStation.lat},${activeStation.lng}`;
       const first = `${resolved[0].lat},${resolved[0].lng}`;
       const last = `${resolved[resolved.length - 1].lat},${resolved[resolved.length - 1].lng}`;
 
@@ -7445,7 +7569,10 @@
     function renderP2PlanPicker() {
       const container = document.getElementById("p2-plan-picker");
       if (!container) return;
-      const ids = PLAN_ORDER.filter((id) => PLANS[id]);
+      const nbh = activeAreaNeighborhood();
+      const ids = PLAN_ORDER.filter(
+        (id) => PLANS[id] && (PLANS[id].neighborhood || "commercial") === nbh
+      );
       if (!ids.length) {
         container.innerHTML = `<p class="label">Plans are loading…</p>`;
         return;
@@ -7881,7 +8008,7 @@
       const walkLine = usesSkytrainStation(spot.neighborhood)
         ? (() => {
             const { km, minutes } = getStopWalkFromStation(spot);
-            return `<div class="p3-card__expand-meta walk-line">${costPart}~${formatKm(km)} km · ~${minutes} min from ${STATION_WALK_LABEL}</div>`;
+            return `<div class="p3-card__expand-meta walk-line">${costPart}~${formatKm(km)} km · ~${minutes} min from ${getStationDisplayName()}</div>`;
           })()
         : spot.costLabel
           ? `<div class="p3-card__expand-meta walk-line">${escapeHtml(spot.costLabel)}</div>`
@@ -7931,7 +8058,7 @@
       if (usesSkytrainStation(spot.neighborhood)) {
         const { minutes } = getStopWalkFromStation(spot);
         tags.push(
-          `<span class="tag">${minutes} min from ${STATION_WALK_LABEL}</span>`
+          `<span class="tag">${minutes} min from ${getStationDisplayName()}</span>`
         );
       }
       return tags.join("");
@@ -8373,6 +8500,8 @@
           desc.textContent = "Add spots from All Spots to build your route.";
         } else if (isHorizontalMapArea()) {
           desc.textContent = `${route.length} stop${route.length === 1 ? "" : "s"} sorted west to east along E Hastings for walking. Tap × on a stop to remove it.`;
+        } else if (isMountPleasantArea()) {
+          desc.textContent = `${route.length} stop${route.length === 1 ? "" : "s"} sorted south from Main Street–Science World for walking. Tap × on a stop to remove it.`;
         } else {
           desc.textContent = `${route.length} stop${route.length === 1 ? "" : "s"} sorted north to south along the Drive for walking. Tap × on a stop to remove it.`;
         }
@@ -8399,7 +8528,9 @@
           ? `Showing ${filtered.length} of ${areaTotal} spots. `
           : isHorizontalMapArea()
             ? "Browse every East Village recommendation along E Hastings and side streets. "
-            : "";
+            : isMountPleasantArea()
+              ? "Browse every Mount Pleasant recommendation along Main Street and side streets. "
+              : "";
         const routeNote = routeCount > 0
           ? `${routeCount} on your route — tap the bar below to review and reorder. `
           : "";

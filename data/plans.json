@@ -5,7 +5,10 @@
     "quick-sip-shop",
     "quick-sip-shop-2",
     "half-a-day-mid-morning",
-    "half-a-day-evening"
+    "half-a-day-evening",
+    "mp-quick-quebec",
+    "mp-main-vintage-brew",
+    "mp-evening-crawl"
   ],
   "plans": {
     "world-cup-day": {
@@ -163,6 +166,81 @@
         { "type": "stops", "ids": ["s10", "s35", "s17", "s11"] }
       ],
       "stops": ["s27", "s28", "s7", "s26", "s25", "s12", "s10", "s35", "s17", "s11"]
+    },
+    "mp-quick-quebec": {
+      "neighborhood": "mount-pleasant",
+      "title": "Quick Quebec Hop (Near the Station)",
+      "duration": "45 mins",
+      "description": "A tight loop west of Main — drinks, skate shop, ice cream, and juice, all within a few blocks of SkyTrain.",
+      "introduction": "Get off at Main Street–Science World and you are minutes from one of the best little clusters on the strip. Start with a drink at The Narrow, poke into Antisocial if you want to browse boards, then duck west on Quebec for Earnest and Glory. Everything here is walkable without committing to a long south crawl.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "Get off at Main Street–Science World and walk up to The Narrow — a classic Mount Pleasant patio stop. From there, Antisocial is right on Main if you want to peek at decks and gear."
+        },
+        { "type": "stops", "ids": ["s70", "s71"] },
+        {
+          "type": "prose",
+          "text": "Hop west on Quebec for Earnest ice cream and Glory Juice — two neighbors that are easy to combine on a short loop."
+        },
+        { "type": "stops", "ids": ["s73", "s74"] }
+      ],
+      "stops": ["s70", "s71", "s73", "s74"]
+    },
+    "mp-main-vintage-brew": {
+      "neighborhood": "mount-pleasant",
+      "title": "Main Street Vintage & Brewery Loop",
+      "duration": "1.5–2 hours",
+      "description": "Coffee on Main, vintage on the west side, a park detour, then 33 Acres — a mid-neighborhood loop with room to browse.",
+      "introduction": "This walk stays in the heart of Mount Pleasant: coffee on the spine, vintage and greenery off to the west, then a brewery before you head back toward the station. Good for an afternoon when you want shops and a sit-down pint, not a marathon south on Main.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "Start on Main at Gene Coffee Bar — espresso and a bite before the browsing begins."
+        },
+        { "type": "stops", "ids": ["s90"] },
+        {
+          "type": "prose",
+          "text": "Cut west for Mount Pleasant Vintage, then Jonathan Rogers Park if you want a breather on the grass."
+        },
+        { "type": "stops", "ids": ["s76", "s78"] },
+        {
+          "type": "prose",
+          "text": "Finish the west loop at 33 Acres on Ontario, then come back to Main for food around 6th."
+        },
+        { "type": "stops", "ids": ["s79", "s81"] }
+      ],
+      "stops": ["s90", "s76", "s78", "s79", "s81"]
+    },
+    "mp-evening-crawl": {
+      "neighborhood": "mount-pleasant",
+      "title": "Evening Crawl South on Main",
+      "duration": "2 hours",
+      "description": "Tapas, live music, cocktails, sushi, and a park nightcap — a southbound Main Street evening.",
+      "introduction": "Work your way south on Main as the evening picks up: small plates and wine at Como, a show or drink at Fox Cabaret, cocktails at Tocador, then sushi and a stroll through Mount Pleasant Park on the way back toward SkyTrain.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "Ease into the night at Como Taperia — share plates and a glass before the block gets busier."
+        },
+        { "type": "stops", "ids": ["s85"] },
+        {
+          "type": "prose",
+          "text": "Fox Cabaret is a few doors south if you want live music or a drink in a classic room."
+        },
+        { "type": "stops", "ids": ["s82"] },
+        {
+          "type": "prose",
+          "text": "Keep south for Tocador cocktails, then Kingsway for Toshi if you want sushi before the park."
+        },
+        { "type": "stops", "ids": ["s92", "s98"] },
+        {
+          "type": "prose",
+          "text": "Wind down at Mount Pleasant Park — benches, trees, and a slow walk back toward the station."
+        },
+        { "type": "stops", "ids": ["s99"] }
+      ],
+      "stops": ["s85", "s82", "s92", "s98", "s99"]
     }
   }
 }

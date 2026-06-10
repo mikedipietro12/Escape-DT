@@ -80,6 +80,34 @@
       color: var(--ink-muted);
       margin: -0.25rem 0 1rem;
     }
+
+    /* Slightly tighter than Commercial — west labels sit in a narrow column */
+    #route-map .map-line {
+      stroke-width: 1.5;
+    }
+
+    #route-map .map-path {
+      stroke-width: 3;
+    }
+
+    #route-map .map-stop {
+      stroke-width: 2;
+    }
+
+    #route-map .map-text {
+      font-size: 8.5px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+
+    #route-map .map-stop-label {
+      font-size: 8.5px;
+    }
+
+    #route-map .map-spine-label {
+      font-size: 7.5px;
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
@@ -104,13 +132,24 @@
       <label>
         Sample route
         <select id="preset-select">
-          <option value="west-crawl">West crawl (Purebread → Vintage → park → brewery)</option>
-          <option value="mixed-main-quebec">Main ↔ Quebec (6th Ave → Earnest → 5th Ave)</option>
-          <option value="quebec-hop">Quebec hop (Earnest → Glory → Federal)</option>
-          <option value="spine-north">Main spine north (Antisocial → 6th cluster → 10th)</option>
-          <option value="full-west-loop">Spine + west loop</option>
-          <option value="south-parks">South end (Toshi → Mount Pleasant Park → back)</option>
-          <option value="backtrack">Backtrack (Narrow → Antisocial → Narrow)</option>
+          <optgroup label="Station bookends (default)">
+            <option value="west-crawl">West crawl (Purebread → Vintage → park → brewery)</option>
+            <option value="mixed-main-quebec">Main ↔ Quebec (6th Ave → Earnest → 5th Ave)</option>
+            <option value="quebec-hop">Quebec hop (Earnest → Glory → Federal)</option>
+            <option value="spine-north">Main spine north (Antisocial → 6th cluster → 10th)</option>
+            <option value="full-west-loop">Spine + west loop</option>
+            <option value="south-parks">South end (Toshi → Mount Pleasant Park → back)</option>
+            <option value="backtrack">Backtrack (Narrow → Antisocial → Narrow)</option>
+          </optgroup>
+          <optgroup label="No station — first stop → last stop">
+            <option value="mid-main-hop">Mid-Main hop (5th → 6th → Earnest)</option>
+            <option value="south-west-walk">South/west (Toshi → Purebread → Rogers Park)</option>
+            <option value="west-to-brewery">West to brewery (Vintage → park → 33 Acres)</option>
+          </optgroup>
+          <optgroup label="Mixed endpoints">
+            <option value="from-station-end-south">From station, end south (→ Toshi → park)</option>
+            <option value="start-south-end-station">Start at Toshi, return to station</option>
+          </optgroup>
         </select>
       </label>
       <button type="button" id="btn-replay">Replay map</button>
@@ -132,11 +171,12 @@
     <aside class="demo-notes">
       <h2>Off-Main animation (locked)</h2>
       <ul>
-        <li><strong>Spine Y</strong> — station at the top; stops spaced south (down) by latitude. Southernmost stop in the route anchors the bottom (try <em>Spine + west loop</em>).</li>
+        <li><strong>Spine Y</strong> — with station bookends, the station anchors the top and stops spread south by latitude. <strong>No-station</strong> routes frame only the stops on the route (north at top). The Main spine line hides when every stop is off-Main.</li>
         <li><strong>West tiers</strong> — <code>125</code> Quebec/Kingsway · <code>115</code> W 7th / Quebec 10th · <code>108</code> Ontario / W 8th · <code>100</code> Columbia.</li>
         <li><strong>West ↔ west</strong> — grid legs: down/up the side column, then across (not diagonals). Try <em>West crawl</em>.</li>
         <li><strong>Main ↔ off-Main</strong> — rounded L via the Main spine.</li>
-        <li><strong>Labels</strong> — off-Main names sit to the left of the pin; tight clusters stagger vertically.</li>
+        <li><strong>Labels</strong> — off-Main names sit to the left of the pin; tight clusters stagger vertically. ViewBox refits from measured text so labels are not clipped.</li>
+        <li><strong>Endpoints</strong> — try the <em>No station</em> and <em>Mixed endpoints</em> presets (same as live app <code>rs=first</code> / <code>re=last</code>).</li>
       </ul>
     </aside>
   </div>

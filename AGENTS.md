@@ -6,9 +6,19 @@
 >
 > Enrich tooling: `npm run enrich -- <csv> --neighborhood hastings-sunrise` (Google Places key in `.env`). `hastings-sunrise` is already a valid id in `data/neighborhoods.json`.
 
-> **Roadmap / not yet built — Mount Pleasant (Main Street).** Staging works like Hastings: draft file only (`data/mount-pleasant-draft.json`), **not** in `data/stops.json` until you open the area in the app. When you ship it, use the **vertical** route map (same model as Commercial Drive), not the Hastings horizontal map. SkyTrain anchor: **Main Street–Science World** (`station` on `mount-pleasant` in `data/neighborhoods.json`). Enrich fills walking minutes from that station via Google Directions (needs Directions API on the same key as Places).
+> **Mount Pleasant (Main Street) — wired, hidden until deploy.** 53 stops live in `data/stops.json` (`neighborhood: "mount-pleasant"`). Vertical hybrid route map in `js/mount-pleasant-map.js` (demo: `demo/mount-pleasant-hybrid-paths.html`). Landing card stays **Coming soon** (`comingSoon: true` in `data/areas.json`) until photos are uploaded and you say **let's deploy**. SkyTrain anchor: **Main Street–Science World** in `data/neighborhoods.json`. Three pre-built plans in `data/plans.json` (`mp-quick-quebec`, `mp-main-vintage-brew`, `mp-evening-crawl`).
 >
-> Enrich: `npm run enrich -- <list.txt> --neighborhood mount-pleasant --write` or the admin editor (`npm run admin`). Off–Main Street stops: say so when you add them (cross street / `coords.x` — same idea as Victoria off Commercial; see **Main Street (off-spine)** below).
+> Enrich: `npm run enrich -- <list.txt> --neighborhood mount-pleasant --write` appends to `stops.json`. Admin (`npm run admin`) edits MP stops there. Off–Main Street stops: cross street / `coords.x` — see **Main Street (off-spine)** below.
+>
+> **Deploy Mount Pleasant** (when photos are ready):
+> 1. Upload photos via `npm run admin` (or drop `assets/stops/<slug>.jpg` and set `images` in JSON).
+> 2. `npm run compress:photos -- --write`
+> 3. In `data/areas.json`, remove `comingSoon` and clear `label` on `mount-pleasant`.
+> 4. Append all MP slugs to `pilotSpotSlugs` and plan keys (`mp-quick-quebec`, `mp-main-vintage-brew`, `mp-evening-crawl`) to `seoPlanSlugs` in `seo.config.json`; update site meta copy; run `npm run build`.
+> 5. `npm run test:data` and `npm run test:seo`
+> 6. Commit generated SEO files and deploy.
+>
+> **Local test before deploy:** temporarily set `comingSoon: false` on the area card, then `npm run dev` → Explore Mount Pleasant.
 
 **Source of truth:** `data/stops.json` (not inline data in `index.html`).
 
@@ -116,7 +126,7 @@ When you add stops outside Commercial Drive, set `neighborhood` to one of these 
 
 - `commercial` (live)
 - `hastings-sunrise` (Hastings-Sunrise / East Village — draft)
-- `mount-pleasant` (Mount Pleasant — draft)
+- `mount-pleasant` (Mount Pleasant — live in `stops.json`; landing card hidden until deploy)
 - `chinatown` (Chinatown — draft)
 
 Draft neighborhoods are staged in their own `data/<id>-draft.json` file (not loaded by the live app). Enrich them straight from a list of place names: `npm run enrich -- <list.txt> --neighborhood <id> --write`.
@@ -253,9 +263,9 @@ Spots on **Victoria Street** (east of Commercial Drive) still use `neighborhood:
 | Off-spine (Victoria, Venables, Frances) | Rounded quadratic corners at spine junctions — **both** onto and back from Commercial |
 | Animated route draw | Trace arrowhead at the drawing tip |
 
-Mount Pleasant vertical map should mirror this model when it ships.
+Mount Pleasant uses the same hybrid model in `js/mount-pleasant-map.js` (station at **top**, route runs **south**, west off-spine tiers).
 
-### Main Street (off-spine) — Mount Pleasant draft
+### Main Street (off-spine) — Mount Pleasant
 
 Spots on **Main Street** use `neighborhood: "mount-pleasant"`. Side-street or parallel-avenue locations (not on the Main spine) should be called out when you add them — same pattern as Victoria off Commercial:
 
@@ -267,7 +277,7 @@ Spots on **Main Street** use `neighborhood: "mount-pleasant"`. Side-street or pa
 | `coords.x` | Optional east/west offset from the Main spine when the live vertical map ships (Commercial uses `~175` east; Mount Pleasant conventions TBD when the first off-spine stops land). |
 | `coords.y` | Browse sort by latitude band among Mount Pleasant peers in the draft file. |
 
-**Route map (when live):** vertical spine on Main, with L-shaped legs to off-spine stops (mirror Commercial + Victoria). Not built until Mount Pleasant opens in the app.
+**Route map:** vertical spine on Main, with L-shaped legs to off-spine stops (mirror Commercial + Victoria). Live in the app when the area card is unlocked.
 
 ---
 
@@ -421,8 +431,8 @@ Then open the printed `http://localhost:3001/`. It runs on its own port (3001) s
 
 **What it edits:**
 
-- Loads `data/stops.json` (live) **plus every draft file** (`data/hastings-sunrise-draft.json`, `data/mount-pleasant-draft.json`, `data/chinatown-draft.json`) into one searchable list. Each stop is tagged `live` or `draft`.
-- Saves each stop back to **its own file**, routed by `neighborhood`: `hastings-sunrise` → Hastings draft, `mount-pleasant` → Mount Pleasant draft, `chinatown` → Chinatown draft; everything else → `stops.json`. (Changing a stop's neighborhood moves it between files automatically.) This keeps not-yet-live neighborhoods out of the app until the horizontal route-map / multi-area feature ships.
+- Loads `data/stops.json` (live) **plus every draft file** (`data/chinatown-draft.json`, …) into one searchable list. Each stop is tagged `live` or `draft`.
+- Saves each stop back to **its own file**, routed by `neighborhood`: `chinatown` → Chinatown draft; everything else (including `mount-pleasant`) → `stops.json`. (Changing a stop's neighborhood moves it between files automatically.)
 - **Adding another draft neighborhood later:** create `data/<id>-draft.json` (`{ "_note": "…", "stops": [] }`) and add an entry to the `DRAFTS` array in `scripts/admin-server.mjs` (and `DRAFT_FILES` in `scripts/enrich-from-google.mjs`).
 - File formatting is preserved (`stops.json` 4-space, draft 2-space) and per-stop meta (`_review`, `_googleTypes`) plus top-level keys (`station`, `version`, `_note`) are kept intact.
 

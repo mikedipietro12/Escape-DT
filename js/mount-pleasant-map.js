@@ -1,13 +1,19 @@
 /**
- * Mount Pleasant (Main Street) — hybrid route map trial demo.
- *
- * Same aesthetic as Commercial Drive hybrid paths:
- * - Spine: station at top; Main runs south (down). Stops spaced by latitude.
- * - Off-spine (west of Main today): rounded L-shapes at spine junctions — mirrors Victoria/Frances.
- * - Return to station uses the gold left parallel lane (upward).
- *
- * Data: data/mount-pleasant-draft.json. Station: Main Street–Science World.
+ * Mount Pleasant (Main Street) vertical hybrid route map.
+ * Loaded by index.html; exposes window.MountPleasantMap.
  */
+(function () {
+  const DEFAULT_STATION_LAT = 49.273056;
+  const DEFAULT_STATION_LNG = -123.100278;
+  const DEFAULT_STATION_LABEL = "Main Street–Science World Station";
+
+  function getStation(mapOptions = {}) {
+    return {
+      lat: mapOptions.stationLat ?? DEFAULT_STATION_LAT,
+      lng: mapOptions.stationLng ?? DEFAULT_STATION_LNG,
+      label: mapOptions.stationLabel ?? DEFAULT_STATION_LABEL,
+    };
+  }
 
 const WALK_SPEED_KMH = 5;
 
@@ -36,7 +42,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 
 const MAP_LEG_COLORS_BASE = ["#3d8f4a", "#52a362", "#6ab87a", "#84cc94", "#9ad4a8"];
 const MAP_BACKWARD_COLOR = "#c9a227";
-const STATION_WALK_LABEL = "Main Street–Science World Station";
+
 
 const PRESETS = {
   "spine-north": {
@@ -102,11 +108,6 @@ const PRESETS = {
 const MAP_LABEL_FONT_SIZE = 8.5;
 const MAP_LABEL_CHAR_WIDTH = 5.35;
 
-let STATION_LAT = 49.273056;
-let STATION_LNG = -123.100278;
-let allStops = [];
-let currentRoute = [];
-let currentMapOptions = { startAtStation: true, endAtStation: true };
 const mapAnimationGeneration = { map: 0 };
 
 function normalizeMapOptions(mapOptions = {}) {
@@ -301,14 +302,16 @@ function isStopOffSpine(stop) {
   return Math.abs(getStopMapX(stop) - MAP.xCenter) > 5;
 }
 
-function getStopWalkFromStation(stop) {
-  const km = haversineKm(STATION_LAT, STATION_LNG, stop.lat, stop.lng);
+function getStopWalkFromStation(stop, mapOptions = {}) {
+  const station = getStation(mapOptions);
+  const km = haversineKm(station.lat, station.lng, stop.lat, stop.lng);
   const minutes = stop.walkFromStation ?? Math.max(1, Math.round((km / WALK_SPEED_KMH) * 60));
   return { km, minutes };
 }
 
-function isStopSouthOfStation(stop) {
-  return stop.lat < STATION_LAT - 1e-5;
+function isStopSouthOfStation(stop, mapOptions = {}) {
+  const station = getStation(mapOptions);
+  return stop.lat < station.lat - 1e-5;
 }
 
 function applyStopLabelLayout(points) {
@@ -338,14 +341,15 @@ function alignOffMainMapPoints(points) {
   return points;
 }
 
-function layoutRouteMapPointsFromStation(route) {
+function layoutRouteMapPointsFromStation(route, mapOptions = {}) {
+  const station = getStation(mapOptions);
   const routeLats = route.map((s) => s.lat);
   const minLat = Math.min(...routeLats);
-  const latSpan = STATION_LAT - minLat;
+  const latSpan = station.lat - minLat;
   const safeSpan = latSpan > 1e-6 ? latSpan : 1e-6;
 
   return route.map((stop, idx) => {
-    const t = Math.max(0, Math.min(1, (STATION_LAT - stop.lat) / safeSpan));
+    const t = Math.max(0, Math.min(1, (station.lat - stop.lat) / safeSpan));
     const y = MAP.yStation + t * MAP.yRouteSpan;
     const x = getStopMapX(stop);
     return { stop, x, y, idx };
@@ -588,12 +592,13 @@ function getHybridLegPathD(a, b) {
 }
 
 function getRouteLegs(route, mapOptions = {}) {
+  const station = getStation(mapOptions);
   const opts = normalizeMapOptions(mapOptions);
   if (!route.length) return [];
   const legs = [];
   if (opts.startAtStation) {
     legs.push({
-      ...getWalkLeg(STATION_LAT, STATION_LNG, route[0].lat, route[0].lng),
+      ...getWalkLeg(station.lat, station.lng, route[0].lat, route[0].lng),
       label: `To ${route[0].name}`,
       legKind: "stationToStop",
       toStopIndex: 0,
@@ -614,8 +619,8 @@ function getRouteLegs(route, mapOptions = {}) {
   if (opts.endAtStation) {
     const last = route[route.length - 1];
     legs.push({
-      ...getWalkLeg(last.lat, last.lng, STATION_LAT, STATION_LNG),
-      label: `Back to ${STATION_WALK_LABEL}`,
+      ...getWalkLeg(last.lat, last.lng, station.lat, station.lng),
+      label: `Back to ${station.label}`,
       legKind: "stopToStation",
       fromStopIndex: route.length - 1,
     });
@@ -764,24 +769,23 @@ function shouldDrawSpineLine(points, showStation) {
   return routeHasOnSpineStops(points);
 }
 
-function getSpineLineExtent(points, showStation, viewBoxRect) {
+function getSpineLineExtent(points, showStation) {
   if (!shouldDrawSpineLine(points, showStation)) return null;
+  const allYs = points.map((p) => p.dotY ?? p.y);
   const spineYs = points
     .filter((p) => !isStopOffSpine(p.stop))
     .map((p) => p.dotY ?? p.y);
   const pad = 24;
+  if (!allYs.length) return null;
+  const routeMaxY = Math.max(...allYs);
+  const routeMinY = Math.min(...allYs);
   if (showStation) {
-    const y2 = viewBoxRect
-      ? viewBoxRect.minY + viewBoxRect.h - MAP.viewBoxBottomPad
-      : Math.max(...points.map((p) => p.dotY ?? p.y), MAP.yStation) + pad;
-    return { y1: MAP.yStation, y2 };
+    return { y1: MAP.yStation, y2: routeMaxY + pad };
   }
   if (spineYs.length) {
     return { y1: Math.min(...spineYs) - pad, y2: Math.max(...spineYs) + pad };
   }
-  const allYs = points.map((p) => p.dotY ?? p.y);
-  if (!allYs.length) return null;
-  return { y1: Math.min(...allYs) - pad, y2: Math.max(...allYs) + pad };
+  return { y1: routeMinY - pad, y2: routeMaxY + pad };
 }
 
 function estimateLabelWidth(text) {
@@ -890,18 +894,15 @@ function collectMapContentBounds(points, legs, showStation) {
 }
 
 function computeMapViewBox(points, legs, showStation, containerAspect, measured = null) {
-  const spine = getMapSpineBounds(points, showStation, true);
   const { xs, ys } = collectMapContentBounds(points, legs, showStation);
   if (!xs.length) return MAP.defaultViewBox;
 
   const pad = MAP.viewBoxPad;
   const contentMinX = Math.min(...xs) - pad;
   let minY = showStation
-    ? MAP.yStation - MAP.viewBoxNorthPad
+    ? Math.min(MAP.yStation - MAP.viewBoxNorthPad, ...ys) - pad
     : Math.min(...ys) - pad;
-  let maxY = showStation
-    ? Math.max(spine.y2 + MAP.viewBoxBottomPad, MAP.yStation + MAP.yRouteSpan * 0.35, ...ys)
-    : Math.max(...ys) + pad;
+  let maxY = Math.max(...ys) + pad + (showStation ? MAP.viewBoxBottomPad : 0);
 
   let rect = expandViewBoxRect(
     {
@@ -923,8 +924,7 @@ function applyMapViewBox(svgEl, points, legs, showStation, containerAspect) {
   const viewBox = computeMapViewBox(points, legs, showStation, containerAspect, measured);
   svgEl.setAttribute("viewBox", viewBox);
   const spineLine = svgEl.querySelector(".map-line");
-  const viewBoxRect = parseViewBox(viewBox);
-  const spineExtent = getSpineLineExtent(points, showStation, viewBoxRect);
+  const spineExtent = getSpineLineExtent(points, showStation);
   if (spineLine && spineExtent) {
     spineLine.setAttribute("y1", spineExtent.y1);
     spineLine.setAttribute("y2", spineExtent.y2);
@@ -1194,142 +1194,17 @@ function ensureAllStopsVisible(svgEl, points) {
   });
 }
 
-function resolvePreset(presetKey) {
-  const preset = PRESETS[presetKey];
-  if (!preset) {
-    return { route: [], mapOptions: normalizeMapOptions({}) };
+
+  function getRouteWalkLegs(route, mapOptions = {}) {
+    return getRouteLegs(route, mapOptions);
   }
-  return {
-    route: preset.ids.map((id) => allStops.find((s) => s.id === id)).filter(Boolean),
-    mapOptions: normalizeMapOptions(preset),
+
+  window.MountPleasantMap = {
+    MAP,
+    drawMap,
+    getRouteMapLayout,
+    getRouteWalkLegs,
+    getWalkLeg,
+    haversineKm,
   };
-}
-
-function placeholderImg(color) {
-  return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='100%25' height='100%25' fill='%23${color || "cccccc"}'/%3E%3C/svg%3E`;
-}
-
-function renderDemoRouteSummary(route, mapOptions = currentMapOptions) {
-  const summaryEl = document.getElementById("route-export-summary");
-  const cardsEl = document.getElementById("route-cards");
-  const totalsEl = document.getElementById("route-totals");
-  if (!cardsEl) return;
-
-  const opts = normalizeMapOptions(mapOptions);
-  const uniqueRoute = route.filter(
-    (stop, idx, arr) => arr.findIndex((s) => s.id === stop.id) === idx
-  );
-  const endpointNote = !opts.startAtStation && !opts.endAtStation
-    ? " · first stop → last stop"
-    : !opts.startAtStation
-      ? " · starts at first stop"
-      : !opts.endAtStation
-        ? " · ends at last stop"
-        : "";
-  if (summaryEl) {
-    summaryEl.textContent = `YOUR MOUNT PLEASANT ROUTE — ${uniqueRoute.length} STOP${uniqueRoute.length === 1 ? "" : "S"}${endpointNote}`;
-  }
-
-  cardsEl.innerHTML = route
-    .map((stop, idx) => {
-      const color = stop.placeholderColor || "cccccc";
-      const label = mapLabelCrossStreet(stop.crossStreet, stop);
-      return `
-        <div class="route-card">
-          <img src="${placeholderImg(color)}" alt="" width="100" height="100" />
-          <div class="content">
-            <h3>${idx + 1}. ${escapeHtml(stop.name)}</h3>
-            <div class="meta">${escapeHtml(label)}</div>
-          </div>
-        </div>`;
-    })
-    .join("");
-
-  if (totalsEl && route.length) {
-    const walkLegs = getRouteLegs(route, mapOptions);
-    const totalKm = walkLegs.reduce((sum, leg) => sum + leg.km, 0);
-    const totalMin = walkLegs.reduce((sum, leg) => sum + leg.minutes, 0);
-    totalsEl.innerHTML = `
-      <div>Total walking (your route order): ~${formatKm(totalKm)} km · ~${totalMin} min</div>
-      <div class="walk-disclaimer">Illustrated map is schematic; use Google Maps for turn-by-turn walking.</div>`;
-  } else if (totalsEl) {
-    totalsEl.innerHTML = "";
-  }
-}
-
-function replayMap() {
-  const cardsEl = document.getElementById("route-cards");
-  if (cardsEl) cardsEl.innerHTML = "";
-  const mapOptions = currentMapOptions;
-  const showStation = shouldShowStation(mapOptions);
-  drawMap(document.getElementById("route-map"), currentRoute, {
-    mapOptions,
-    onComplete: () => {
-      renderDemoRouteSummary(currentRoute, mapOptions);
-      requestAnimationFrame(() => {
-        const svg = document.getElementById("route-map");
-        const layout = getRouteMapLayout(currentRoute, { hybrid: true, ...mapOptions });
-        ensureAllStopsVisible(svg, layout.points);
-        refitMapToColumn(svg, layout.points, layout.legs, showStation);
-      });
-    },
-  });
-}
-
-async function init() {
-  const warnEl = document.getElementById("demo-warn");
-  const mapEl = document.getElementById("route-map");
-
-  if (window.location.protocol === "file:") {
-    if (warnEl) warnEl.hidden = false;
-    return;
-  }
-
-  try {
-    const [draftRes, hoodRes] = await Promise.all([
-      fetch("/data/mount-pleasant-draft.json"),
-      fetch("/data/neighborhoods.json"),
-    ]);
-    if (!draftRes.ok) throw new Error(`draft HTTP ${draftRes.status}`);
-    if (!hoodRes.ok) throw new Error(`neighborhoods HTTP ${hoodRes.status}`);
-    const draft = await draftRes.json();
-    const hoods = await hoodRes.json();
-    const station = hoods.neighborhoods?.["mount-pleasant"]?.station;
-    STATION_LAT = station?.lat ?? STATION_LAT;
-    STATION_LNG = station?.lng ?? STATION_LNG;
-    allStops = (draft.stops || []).filter((s) => s.neighborhood === "mount-pleasant");
-  } catch (err) {
-    if (warnEl) warnEl.hidden = false;
-    document.querySelector(".demo-shell")?.insertAdjacentHTML(
-      "afterbegin",
-      `<p class="demo-banner" style="border-color:#c00">Could not load Mount Pleasant draft stops (${escapeHtml(err.message)}). From the repo root run <code>npm run dev</code>, then open <code>http://localhost:3000/demo/mount-pleasant-hybrid-paths.html</code>.</p>`
-    );
-    if (mapEl) {
-      mapEl.innerHTML =
-        '<text class="map-text" x="20" y="40">Start the dev server to load stop data.</text>';
-    }
-    return;
-  }
-
-  const presetSelect = document.getElementById("preset-select");
-  const replay = () => {
-    const resolved = resolvePreset(presetSelect.value);
-    currentRoute = resolved.route;
-    currentMapOptions = resolved.mapOptions;
-    replayMap();
-  };
-
-  presetSelect.addEventListener("change", replay);
-  document.getElementById("btn-replay").addEventListener("click", replay);
-  window.addEventListener("resize", () => {
-    if (!currentRoute.length) return;
-    const svg = document.getElementById("route-map");
-    const showStation = shouldShowStation(currentMapOptions);
-    const layout = getRouteMapLayout(currentRoute, { hybrid: true, ...currentMapOptions });
-    refitMapToColumn(svg, layout.points, layout.legs, showStation);
-  });
-  presetSelect.value = "west-crawl";
-  replay();
-}
-
-init();
+})();

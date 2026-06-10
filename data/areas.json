@@ -56,8 +56,26 @@
       "id": "mount-pleasant",
       "neighborhood": "mount-pleasant",
       "title": "Explore Mount Pleasant",
-      "label": "Coming soon",
-      "comingSoon": true
+      "label": "",
+      "comingSoon": false,
+      "pathsIntro": "Choose one of the following options and end up with a personalized route to explore Mount Pleasant along Main Street and side streets.",
+      "paths": [
+        {
+          "start": "path2",
+          "title": "See My Suggested Routes",
+          "label": "Curated walks along Main Street — coffee, vintage, breweries, and more."
+        },
+        {
+          "start": "path1",
+          "title": "Choose Your Own Adventure",
+          "label": "Build your own route by time and vibe. Pick stops on Main and side streets — get a shareable vertical route map."
+        },
+        {
+          "start": "path3",
+          "title": "See All Spots",
+          "label": "Browse and filter every Mount Pleasant spot, build a visit list, and open it in Google Maps."
+        }
+      ]
     },
     "chinatown": {
       "id": "chinatown",
