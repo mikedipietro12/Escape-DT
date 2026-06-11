@@ -8,6 +8,8 @@
     "half-a-day-evening",
     "mp-full-day-main",
     "mp-kids-afternoon-main",
+    "mp-afternoon-main",
+    "mp-evening-main",
     "chinatown-pre-post-match"
   ],
   "plans": {
@@ -304,6 +306,102 @@
         "s128",
         "s189",
         "s191"
+      ]
+    },
+    "mp-afternoon-main": {
+      "neighborhood": "mount-pleasant",
+      "title": "A Quick Afternoon in Mt. Pleasant",
+      "duration": "2-4 hours",
+      "description": "See what Mt. Pleasant has to offer, get a quick snack, and maybe an early dinner — this is the plan for you.",
+      "introduction": "The purpose of this plan is to give you a good variety of spots to check out. Even if you aren't necessarily into some of the shops, this plan will give you a good insight into what this neighbourhood has been about for years.\n\nOnce you get off the Skytrain, you can head to Brassneck and get a couple small pours to sample what a Pacific Northwest Craft Brewery has to offer. Their beers have historically been flavourful and unique.\n\nThen, head across the street to Antisocial Skateboard shop, a long-standing hub for a vibrant and diverse skateboarding community. They have iconic shop tee's, art, and magazines if you aren't a skateboarder yourself.\n\nFrom there, head up the street to get to the vintage shopping block, where you can head into any of Fish Market Studio, Pulpfiction Books, F as in Frank, Glory days, or Mintage Mall, to browse what some of the best vintage pickers in the city have to offer.\n\nIf you're feeling a bit hungry, at this point, maybe you want to stop at Carp Sushi for a roll or bowl before heading to the next few stops. If sushi isn't your thing, then Federal Store is not too far away, where you can grab a baked good or sandwich.\n\nFrom there, you can walk down to Neptoon Records, taking either Quebec (to see what the local neighborhoods are like) or Main, if you want to stop in at a few more shops on the way.\n\nOnce you are at Main, you can check out Eugene Choo, Woo to See you, Collage Collage, or the Sellution, depending on what you are interested in.\n\nAt this point, you're probably ready to head back to the Skytrain.\n\nIf you are leaving from your last stop, maybe another snack at Liberty Bakery or Coco Et Olive.\n\nIf you've enjoyed your time in the neighbourhood, and want to keep exploring, check out my \"Evening in Mt. Pleasant\" for recommendations on bars, restaurants, and late night activities.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "The purpose of this plan is to give you a good variety of spots to check out. Even if you aren't necessarily into some of the shops, this plan will give you a good insight into what this neighbourhood has been about for years.\n\nOnce you get off the Skytrain, you can head to Brassneck and get a couple small pours to sample what a Pacific Northwest Craft Brewery has to offer. Their beers have historically been flavourful and unique."
+        },
+        { "type": "stops", "ids": ["s83"] },
+        {
+          "type": "prose",
+          "text": "Then, head across the street to Antisocial Skateboard shop, a long-standing hub for a vibrant and diverse skateboarding community. They have iconic shop tee's, art, and magazines if you aren't a skateboarder yourself."
+        },
+        { "type": "stops", "ids": ["s71"] },
+        {
+          "type": "prose",
+          "text": "From there, head up the street to get to the vintage shopping block, where you can head into any of Fish Market Studio, Pulpfiction Books, F as in Frank, Glory days, or Mintage Mall, to browse what some of the best vintage pickers in the city have to offer."
+        },
+        { "type": "stops", "layout": "or", "ids": ["s182", "s183", "s87", "s88", "s184"] },
+        {
+          "type": "prose",
+          "text": "If you're feeling a bit hungry, at this point, maybe you want to stop at Carp Sushi for a roll or bowl before heading to the next few stops. If sushi isn't your thing, then Federal Store is not too far away, where you can grab a baked good or sandwich."
+        },
+        { "type": "stops", "layout": "or", "ids": ["s186", "s80"] },
+        {
+          "type": "prose",
+          "text": "From there, you can walk down to Neptoon Records, taking either Quebec (to see what the local neighborhoods are like) or Main, if you want to stop in at a few more shops on the way."
+        },
+        { "type": "stops", "ids": ["s107"] },
+        {
+          "type": "prose",
+          "text": "Once you are at Main, you can check out Eugene Choo, Woo to See you, Collage Collage, or the Sellution, depending on what you are interested in."
+        },
+        { "type": "stops", "layout": "or", "ids": ["s117", "s116", "s120", "s108"] },
+        {
+          "type": "prose",
+          "text": "At this point, you're probably ready to head back to the Skytrain.\n\nIf you are leaving from your last stop, maybe another snack at Liberty Bakery or Coco Et Olive.\n\nIf you've enjoyed your time in the neighbourhood, and want to keep exploring, check out my \"Evening in Mt. Pleasant\" for recommendations on bars, restaurants, and late night activities."
+        },
+        { "type": "stops", "layout": "or", "ids": ["s121", "s134"] }
+      ],
+      "stops": [
+        "s83",
+        "s71",
+        "s182",
+        "s183",
+        "s87",
+        "s88",
+        "s184",
+        "s186",
+        "s80",
+        "s107",
+        "s117",
+        "s116",
+        "s120",
+        "s108",
+        "s121",
+        "s134"
+      ]
+    },
+    "mp-evening-main": {
+      "neighborhood": "mount-pleasant",
+      "title": "Evening in Mt. Pleasant",
+      "duration": "2-4 hours",
+      "description": "Grab dinner, hang out in a park, or find a bar after dinner — Mt. Pleasant has you covered.",
+      "introduction": "If you've been looking for a neighbourhood to grab dinner, hang out in a park, or bar after dinner, Mt. Pleasant could be a great option. In this guide I'll give you a bunch of options for dinner, drinks, and hang out options.\n\nMount Pleasant has so many great restaurants, bars, and venues, so it's really hard to come up with a cohesive list, but as of right now, these are some of my favourite spots.\n\nIf I was heading in for dinner, I'd first stop off at 33a for a beer or non-alcoholic beverage, they do both, extraordinarily well, and their patio is large with a pretty quick turn-over. If they are too busy, you can always try Brassneck if beer is what you are after.\n\nThen, I would head to either AJs for pizza, Como for tapas, or Sushi Hil for sushi. Depending on your budget and cuisine preference, you cannot go wrong with any of those choices.\n\nAfter dinner, there are lots of options if you are looking to stick around the area for a bit longer and grab another couple of drinks or bites.\n\nIf you are wanting to stay close to AJs or Como, you can head to Mount Pleasant Vintage, who's always got great cocktails and a good energy. If you are at Sushi Hil, then within a stones throw is Good Thief for cocktails, or if you want a real unique experience, head up to Shameful Tiki Room for a one of a kind night.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "If you've been looking for a neighbourhood to grab dinner, hang out in a park, or bar after dinner, Mt. Pleasant could be a great option. In this guide I'll give you a bunch of options for dinner, drinks, and hang out options.\n\nMount Pleasant has so many great restaurants, bars, and venues, so it's really hard to come up with a cohesive list, but as of right now, these are some of my favourite spots.\n\nIf I was heading in for dinner, I'd first stop off at 33a for a beer or non-alcoholic beverage, they do both, extraordinarily well, and their patio is large with a pretty quick turn-over. If they are too busy, you can always try Brassneck if beer is what you are after."
+        },
+        { "type": "stops", "layout": "or", "ids": ["s79", "s83"] },
+        {
+          "type": "prose",
+          "text": "Then, I would head to either AJs for pizza, Como for tapas, or Sushi Hil for sushi. Depending on your budget and cuisine preference, you cannot go wrong with any of those choices."
+        },
+        { "type": "stops", "layout": "or", "ids": ["s185", "s85", "s100"] },
+        {
+          "type": "prose",
+          "text": "After dinner, there are lots of options if you are looking to stick around the area for a bit longer and grab another couple of drinks or bites.\n\nIf you are wanting to stay close to AJs or Como, you can head to Mount Pleasant Vintage, who's always got great cocktails and a good energy. If you are at Sushi Hil, then within a stones throw is Good Thief for cocktails, or if you want a real unique experience, head up to Shameful Tiki Room for a one of a kind night."
+        },
+        { "type": "stops", "layout": "or", "ids": ["s76", "s129", "s103"] }
+      ],
+      "stops": [
+        "s79",
+        "s83",
+        "s185",
+        "s85",
+        "s100",
+        "s76",
+        "s129",
+        "s103"
       ]
     },
     "chinatown-pre-post-match": {
