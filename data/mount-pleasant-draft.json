@@ -1,4 +1,39 @@
 {
   "_note": "ARCHIVED — Mount Pleasant stops now live in data/stops.json (neighborhood: mount-pleasant). This file is kept for reference only; the app and admin editor load MP stops from stops.json.",
-  "stops": []
+  "stops": [
+    {
+      "id": "s191",
+      "slug": "riley-park-little-mountain",
+      "name": "Riley Park–Little Mountain",
+      "categories": [],
+      "tags": [],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Riley Park–Little Mountain",
+      "coords": {
+        "y": 441
+      },
+      "lat": 49.2528834,
+      "lng": -123.1007084,
+      "googlePlaceId": "ChIJr0HorPVzhlQR6M3HWpdakAQ",
+      "placeholderColor": "2f8335",
+      "_googleTypes": [
+        "neighborhood",
+        "political"
+      ],
+      "_review": [
+        "description",
+        "cost",
+        "categories",
+        "crossStreet",
+        "timeOfDay?",
+        "tags"
+      ],
+      "walkFromStation": 36
+    }
+  ]
 }

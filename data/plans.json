@@ -6,10 +6,8 @@
     "quick-sip-shop-2",
     "half-a-day-mid-morning",
     "half-a-day-evening",
-    "mp-quick-quebec",
-    "mp-main-vintage-brew",
-    "mp-evening-crawl",
     "mp-full-day-main",
+    "mp-kids-afternoon-main",
     "chinatown-pre-post-match"
   ],
   "plans": {
@@ -33,7 +31,7 @@
           "type": "prose",
           "text": "Post game, head further down the Drive and get some fried chicken from Mogu or Downlow while you observe ecstatic winners parading their colours around the neighborhood."
         },
-        { "type": "stops", "ids": ["s21", "s22"] },
+        { "type": "stops", "ids": ["s21", "s22"], "layout": "or" },
         {
           "type": "prose",
           "text": "If you're in the mood for celebration, I'd say an ice cream from Earnest is probably in order. From there, you can walk back to the skytrain, or hang around the drive and see where the night takes you!"
@@ -165,84 +163,10 @@
           "type": "prose",
           "text": "At this point, depending on time, you could head back to the drive and grab a drink at the Charlattan patio or Havana patio before heading to Nomo Nomo (reservation recommended) for dinner. If Nomo Nomo is all booked up, Cozen is a great back-up where you can dine-in or take out and eat in one of the many parks or the piazza in the neighborhood."
         },
-        { "type": "stops", "ids": ["s10", "s35", "s17", "s11"] }
+        { "type": "stops", "layout": "or", "ids": ["s10", "s35"] },
+        { "type": "stops", "layout": "or", "ids": ["s17", "s11"] }
       ],
       "stops": ["s27", "s28", "s7", "s26", "s25", "s12", "s10", "s35", "s17", "s11"]
-    },
-    "mp-quick-quebec": {
-      "neighborhood": "mount-pleasant",
-      "title": "Quick Quebec Hop (Near the Station)",
-      "duration": "45 mins",
-      "description": "A tight loop west of Main — drinks, skate shop, ice cream, and juice, all within a few blocks of SkyTrain.",
-      "introduction": "Get off at Main Street–Science World and you are minutes from one of the best little clusters on the strip. Start with a drink at The Narrow, poke into Antisocial if you want to browse boards, then duck west on Quebec for Earnest and Glory. Everything here is walkable without committing to a long south crawl.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "Get off at Main Street–Science World and walk up to The Narrow — a classic Mount Pleasant patio stop. From there, Antisocial is right on Main if you want to peek at decks and gear."
-        },
-        { "type": "stops", "ids": ["s70", "s71"] },
-        {
-          "type": "prose",
-          "text": "Hop west on Quebec for Earnest ice cream and Glory Juice — two neighbors that are easy to combine on a short loop."
-        },
-        { "type": "stops", "ids": ["s73", "s74"] }
-      ],
-      "stops": ["s70", "s71", "s73", "s74"]
-    },
-    "mp-main-vintage-brew": {
-      "neighborhood": "mount-pleasant",
-      "title": "Main Street Vintage & Brewery Loop",
-      "duration": "1.5–2 hours",
-      "description": "Coffee on Main, vintage on the west side, a park detour, then 33 Acres — a mid-neighborhood loop with room to browse.",
-      "introduction": "This walk stays in the heart of Mount Pleasant: coffee on the spine, vintage and greenery off to the west, then a brewery before you head back toward the station. Good for an afternoon when you want shops and a sit-down pint, not a marathon south on Main.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "Start on Main at Gene Coffee Bar — espresso and a bite before the browsing begins."
-        },
-        { "type": "stops", "ids": ["s90"] },
-        {
-          "type": "prose",
-          "text": "Cut west for Mount Pleasant Vintage, then Jonathan Rogers Park if you want a breather on the grass."
-        },
-        { "type": "stops", "ids": ["s76", "s78"] },
-        {
-          "type": "prose",
-          "text": "Finish the west loop at 33 Acres on Ontario, then come back to Main for food around 6th."
-        },
-        { "type": "stops", "ids": ["s79", "s81"] }
-      ],
-      "stops": ["s90", "s76", "s78", "s79", "s81"]
-    },
-    "mp-evening-crawl": {
-      "neighborhood": "mount-pleasant",
-      "title": "Evening Crawl South on Main",
-      "duration": "2 hours",
-      "description": "Tapas, live music, cocktails, sushi, and a park nightcap — a southbound Main Street evening.",
-      "introduction": "Work your way south on Main as the evening picks up: small plates and wine at Como, a show or drink at Fox Cabaret, cocktails at Tocador, then sushi and a stroll through Mount Pleasant Park on the way back toward SkyTrain.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "Ease into the night at Como Taperia — share plates and a glass before the block gets busier."
-        },
-        { "type": "stops", "ids": ["s85"] },
-        {
-          "type": "prose",
-          "text": "Fox Cabaret is a few doors south if you want live music or a drink in a classic room."
-        },
-        { "type": "stops", "ids": ["s82"] },
-        {
-          "type": "prose",
-          "text": "Keep south for Tocador cocktails, then Kingsway for Toshi if you want sushi before the park."
-        },
-        { "type": "stops", "ids": ["s92", "s98"] },
-        {
-          "type": "prose",
-          "text": "Wind down at Mount Pleasant Park — benches, trees, and a slow walk back toward the station."
-        },
-        { "type": "stops", "ids": ["s99"] }
-      ],
-      "stops": ["s85", "s82", "s92", "s98", "s99"]
     },
     "mp-full-day-main": {
       "neighborhood": "mount-pleasant",
@@ -331,6 +255,57 @@
         "s73"
       ]
     },
+    "mp-kids-afternoon-main": {
+      "neighborhood": "mount-pleasant",
+      "routeMap": "first-to-last",
+      "title": "Kids afternoon on Main",
+      "duration": "2-4 hours",
+      "description": "Kids and parents both get their taste of Mount Pleasant in this route",
+      "introduction": "I love taking my kid into the city. We always find so much to do, try new foods, discover new parks, and of course, hit up some toy shops. If you are wanting to come into Mount Pleasant for a few hours, eat and drink, but also have some spots for your kids to engage and burn some energy as well, this one is for you.\n\nUnfortunately, Main Street-Science World is a bit of a hike up to get to the spots I'm suggesting, so for this one, you'll want to try and find parking off Main somewhere. I'd start further South, as our first stop will be Coco Et Olive, where you can grab a snack for the kiddo and a coffee for yourself and head over to the picnic benches next door to safely enjoy.\n\nOnce you're ready to shop a bit, you can walk a few meters over to Collage Collage, where there are tonnes of great books, toys, art supplies, and activities for kids.\n\nYou can then head a bit further up the street to check out Front & Company Gift shop, with tonnes of fun things for the kids to check out, stickers, small toys and gifts, and stuffies galore.\n\nIf you want one more shopping stop before hitting a park, you can be brave and head over to Granville Island Toy Company, but be warned, you might get stuck in there for a bit.\n\nIf you're needing lunch before the park, you can meander back over to Liberty, Traffic, or Las Tortas, where you can find lots of different sandwiches and lunch options.\n\nThen, if it's a warm summer day and you're still looking to burn some energy, you could end the trip with a visit to Prince Edward Park, where they have a playground and splash pad. If you're looking to stay dry, Riley Park is a good option as well.",
+      "narrative": [
+        {
+          "type": "prose",
+          "text": "I love taking my kid into the city. We always find so much to do, try new foods, discover new parks, and of course, hit up some toy shops. If you are wanting to come into Mount Pleasant for a few hours, eat and drink, but also have some spots for your kids to engage and burn some energy as well, this one is for you.\n\nUnfortunately, Main Street-Science World is a bit of a hike up to get to the spots I'm suggesting, so for this one, you'll want to try and find parking off Main somewhere. I'd start further South, as our first stop will be Coco Et Olive, where you can grab a snack for the kiddo and a coffee for yourself and head over to the picnic benches next door to safely enjoy."
+        },
+        { "type": "stops", "ids": ["s134"] },
+        {
+          "type": "prose",
+          "text": "Once you're ready to shop a bit, you can walk a few meters over to Collage Collage, where there are tonnes of great books, toys, art supplies, and activities for kids."
+        },
+        { "type": "stops", "ids": ["s120"] },
+        {
+          "type": "prose",
+          "text": "You can then head a bit further up the street to check out Front & Company Gift shop, with tonnes of fun things for the kids to check out, stickers, small toys and gifts, and stuffies galore."
+        },
+        { "type": "stops", "ids": ["s125"] },
+        {
+          "type": "prose",
+          "text": "If you want one more shopping stop before hitting a park, you can be brave and head over to Granville Island Toy Company, but be warned, you might get stuck in there for a bit."
+        },
+        { "type": "stops", "ids": ["s101"] },
+        {
+          "type": "prose",
+          "text": "If you're needing lunch before the park, you can meander back over to Liberty, Traffic, or Las Tortas, where you can find lots of different sandwiches and lunch options."
+        },
+        { "type": "stops", "layout": "or", "ids": ["s121", "s127", "s128"] },
+        {
+          "type": "prose",
+          "text": "Then, if it's a warm summer day and you're still looking to burn some energy, you could end the trip with a visit to Prince Edward Park, where they have a playground and splash pad. If you're looking to stay dry, Riley Park is a good option as well."
+        },
+        { "type": "stops", "layout": "or", "ids": ["s189", "s191"] }
+      ],
+      "stops": [
+        "s134",
+        "s120",
+        "s125",
+        "s101",
+        "s121",
+        "s127",
+        "s128",
+        "s189",
+        "s191"
+      ]
+    },
     "chinatown-pre-post-match": {
       "neighborhood": "chinatown",
       "title": "Chinatown Pre & Post-Match",
@@ -356,7 +331,7 @@
           "type": "prose",
           "text": "Then, depending on your mood, Chinatown has lots of late night spots. If you are looking for cocktail centric bar with dark vibes and good music, you can head to Keefer Bar. If you are looking for something more upscale, maybe Bagheera or Bao Bei would suit your needs. If you are looking for a much younger scene, London Pub is your gateway to some pool, darts, and dancing. Or, if you're looking for a fun post-match rowdy crowd and a few pints of guiness, the Irish Heather has to be your stop."
         },
-        { "type": "stops", "ids": ["s151", "s172", "s170", "s148", "s188"] }
+        { "type": "stops", "layout": "or", "ids": ["s151", "s172", "s170", "s148", "s188"] }
       ],
       "stops": ["s137", "s138", "s155", "s151", "s172", "s170", "s148", "s188"]
     }

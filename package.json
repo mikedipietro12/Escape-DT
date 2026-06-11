@@ -11,6 +11,7 @@
     "enrich": "node scripts/enrich-from-google.mjs",
     "gotos": "node scripts/add-gotos.mjs",
     "cleanup:tags": "node scripts/cleanup-tags.mjs --write",
+    "fill:main-cross-streets": "node scripts/fill-main-cross-streets.mjs --write",
     "compress:photos": "node scripts/compress-stop-photos.mjs --write"
   },
   "devDependencies": {

@@ -220,6 +220,22 @@ function isMapStopWestOffset(x) {
   return x < MAP.xCenter - 5;
 }
 
+/** Spine (Main) labels sit left of the line; east off-spine labels sit right of their dot. */
+function getMapStopLabelPlacement(x) {
+  if (isMapStopEastOffset(x)) {
+    return { labelX: x + 12, labelAnchor: "start" };
+  }
+  return { labelX: x - 10, labelAnchor: "end" };
+}
+
+function getMapStopLabelBounds(x, text) {
+  const width = estimateLabelWidth(text);
+  if (isMapStopEastOffset(x)) {
+    return { x0: x + 12, x1: x + 12 + width };
+  }
+  return { x0: x - 10 - width, x1: x - 10 };
+}
+
 function getMapLegColor(leg) {
   if (leg.isBackward) return MAP_BACKWARD_COLOR;
   const colors = getMapLegColors();
@@ -252,7 +268,14 @@ function getStopMapZone(stop) {
   const explicit = stop.coords?.x;
   if (explicit != null && explicit < MAP.xCenter - 5) return "westOffMain";
   if (explicit != null && explicit > MAP.xCenter + 5) return "eastOffMain";
-  if (isWestOffMainCrossStreet(stop.crossStreet)) return "westOffMain";
+  // Keyword labels (e.g. "Main St & Kingsway") only pull a stop off the spine
+  // when its pin actually sits west of Main.
+  if (
+    isWestOffMainCrossStreet(stop.crossStreet) &&
+    (stop.lng == null || westLngDelta(stop.lng) > 0.0008)
+  ) {
+    return "westOffMain";
+  }
   if (isEastOffMainCrossStreet(stop.crossStreet)) return "eastOffMain";
   if (stop.lng != null && westLngDelta(stop.lng) > 0.0015) return "westOffMain";
   return "spine";
@@ -317,35 +340,36 @@ function isStopSouthOfStation(stop, mapOptions = {}) {
 }
 
 function applyStopLabelLayout(points) {
-  const labelGap = 15;
-  /** Only stack labels when pins share a latitude band — not when the route backtracks north. */
-  const labelStackBand = 40;
-  const westLabels = [];
-  const eastLabels = [];
+  /** Vertical space one label line needs (.map-stop-label renders at 11px). */
+  const lineGap = 13;
+  const placed = [];
 
-  function stackLabel(baseY, sideLabels) {
-    let offset = 0;
-    for (const prev of sideLabels) {
-      if (Math.abs(prev.baseY - baseY) > labelStackBand) continue;
-      const prevBottom = prev.baseY + prev.offset + 10;
-      const needed = prevBottom + labelGap - (baseY + offset);
-      if (needed > 0) offset += needed;
-    }
-    sideLabels.push({ baseY, offset });
-    return offset;
+  function labelExtent(point) {
+    const x = point.dotX ?? point.x;
+    return getMapStopLabelBounds(x, getStopLabelText(point));
   }
 
-  points.forEach((point) => {
-    point.labelOffsetY = 0;
-    const x = point.dotX ?? point.x;
-    if (isMapStopWestOffset(x)) {
+  /** Stack labels that would visually collide at the same latitude band. */
+  [...points]
+    .sort((a, b) => (a.dotY ?? a.y) - (b.dotY ?? b.y))
+    .forEach((point) => {
       const baseY = point.dotY ?? point.y;
-      point.labelOffsetY = stackLabel(baseY, westLabels);
-    } else if (isMapStopEastOffset(x)) {
-      const baseY = point.dotY ?? point.y;
-      point.labelOffsetY = stackLabel(baseY, eastLabels);
-    }
-  });
+      const { x0, x1 } = labelExtent(point);
+      let y = baseY;
+      let collided = true;
+      while (collided) {
+        collided = false;
+        for (const prev of placed) {
+          if (x1 < prev.x0 || x0 > prev.x1) continue;
+          if (Math.abs(y - prev.y) < lineGap) {
+            y = prev.y + lineGap;
+            collided = true;
+          }
+        }
+      }
+      point.labelOffsetY = y - baseY;
+      placed.push({ x0, x1, y });
+    });
   return points;
 }
 
@@ -405,25 +429,36 @@ function stopsShareMapLocation(a, b) {
   return getStopMapLocationKey(a) === getStopMapLocationKey(b);
 }
 
-/** Consecutive route stops that share a map dot (exact geo/mapLocation or same cluster band). */
+/** Consecutive route stops that share a map dot (same geo/mapLocation, or same off-spine intersection). */
 function stopsShareMapCluster(a, b, mapOptions = {}) {
   if (stopsShareMapLocation(a, b)) return true;
   if (!a || !b) return false;
   if (getStopMapZone(a) !== getStopMapZone(b)) return false;
-  if (isStopOffSpine(a) || isStopOffSpine(b)) {
-    if (Math.abs(getStopMapX(a) - getStopMapX(b)) > 10) return false;
-    if (
-      mapLabelCrossStreet(a.crossStreet, a) !== mapLabelCrossStreet(b.crossStreet, b)
-    ) {
-      return false;
-    }
-  }
-  if (a.walkFromStation != null && b.walkFromStation != null) {
-    return (
-      Math.abs(a.walkFromStation - b.walkFromStation) <= MAP.clusterWalkMinutes
-    );
-  }
-  return Math.abs(Number(a.lat) - Number(b.lat)) < 0.0008;
+  if (Math.abs(getStopMapX(a) - getStopMapX(b)) > 10) return false;
+  const labelA = mapLabelCrossStreet(a.crossStreet, a);
+  const labelB = mapLabelCrossStreet(b.crossStreet, b);
+  return Boolean(labelA) && labelA === labelB;
+}
+
+/**
+ * Keep dots in the same column at least a dot-diameter apart, regardless of
+ * route order (revisits land on earlier dots otherwise). Works north→south so
+ * geographic order is preserved.
+ */
+function separateNearbyMapPoints(points) {
+  const minGap = 9;
+  const lastYByColumn = new Map();
+  [...points]
+    .sort((a, b) => a.y - b.y)
+    .forEach((point) => {
+      const column = Math.round(point.x / 10);
+      const lastY = lastYByColumn.get(column);
+      if (lastY != null && point.y < lastY + minGap) {
+        point.y = lastY + minGap;
+      }
+      lastYByColumn.set(column, point.y);
+    });
+  return points;
 }
 
 function buildRouteMapPointGroups(route, mapOptions = {}) {
@@ -446,7 +481,9 @@ function buildRouteMapPoints(route, mapOptions = {}) {
   if (!route.length) return [];
   const groups = buildRouteMapPointGroups(route, mapOptions);
   const representatives = groups.map((group) => group.stop);
-  const rawPoints = layoutRouteMapPoints(representatives, mapOptions);
+  const rawPoints = separateNearbyMapPoints(
+    layoutRouteMapPoints(representatives, mapOptions)
+  );
   const points = rawPoints.map((point, mapIdx) => ({
     ...point,
     mapIdx,
@@ -914,14 +951,8 @@ function collectMapContentBounds(points, legs, showStation) {
     const x = p.dotX;
     const y = p.dotY;
     const labelY = y + (p.labelOffsetY || 0);
-    const east = isMapStopEastOffset(x);
-    const west = isMapStopWestOffset(x);
-    const labelW = estimateLabelWidth(getStopLabelText(p));
-    if (east || west) {
-      xs.push(x - 10 - labelW, x + 10);
-    } else {
-      xs.push(x - 10, x + 12 + labelW);
-    }
+    const { x0, x1 } = getMapStopLabelBounds(x, getStopLabelText(p));
+    xs.push(x0, x1, x - 8, x + 8);
     ys.push(y - 8, y + 8, labelY - 8, labelY + 10);
   });
 
@@ -1028,11 +1059,8 @@ function renderMapStopSvg(point, hybrid) {
   const x = hybrid ? point.dotX : point.x;
   const y = hybrid ? point.dotY : point.y;
   const labelOffsetY = point.labelOffsetY || 0;
-  const east = isMapStopEastOffset(x);
-  const west = isMapStopWestOffset(x);
-  const labelX = east || west ? x - 10 : x + 12;
+  const { labelX, labelAnchor } = getMapStopLabelPlacement(x);
   const labelY = y + 3 + labelOffsetY;
-  const labelAnchor = east || west ? "end" : "start";
   const label = mapLabelCrossStreet(s.crossStreet, s);
   return `
         <g class="map-stop-group map-stop-group--hidden" data-stop-index="${mapIdx}">
