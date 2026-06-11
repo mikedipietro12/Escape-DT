@@ -540,6 +540,10 @@ a {
   content: " ▴";
 }
 
+.static-footer__details:not([open]) .static-footer__panel {
+  display: none;
+}
+
 .static-footer__panel {
   padding-top: 1rem;
 }
