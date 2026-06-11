@@ -35,6 +35,14 @@ function parseJsonLd(html) {
   JSON.parse(m[1]);
 }
 
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 // --- file checks ---
 assertIncludes(read("robots.txt"), "Sitemap: https://explore.seasonsofeastvan.com/sitemap.xml", "robots.txt sitemap URL");
 assertIncludes(read("sitemap.xml"), "<loc>https://explore.seasonsofeastvan.com/</loc>", "sitemap homepage");
@@ -64,7 +72,7 @@ for (const planKey of seoPlanSlugs) {
     continue;
   }
   const html = read(planPath);
-  assertIncludes(html, `<h1>${plan.title}</h1>`, `${planKey} h1`);
+  assertIncludes(html, `<h1>${escapeHtml(plan.title)}</h1>`, `${planKey} h1`);
   assertIncludes(html, "Open interactive guide", `${planKey} CTA`);
   try {
     parseJsonLd(html);
@@ -117,9 +125,10 @@ const faviconTarget = path.join(root, "assets", "favicon.png");
 if (fs.existsSync(faviconTarget)) ok("favicon file exists");
 else fail("favicon file missing at assets/favicon.png");
 
-const logo = path.join(root, "assets", "logo.png");
-if (fs.existsSync(logo)) ok("og logo file exists");
-else fail("assets/logo.png missing (OG image)");
+const ogImageRel = (config.ogImage || "assets/logo.png").replace(/^\//, "");
+const ogImageFile = path.join(root, ogImageRel.split("/").join(path.sep));
+if (fs.existsSync(ogImageFile)) ok(`og image file exists (${ogImageRel})`);
+else fail(`og image missing (${ogImageRel})`);
 
 // --- HTTP smoke test ---
 function serve() {
@@ -165,7 +174,7 @@ const routes = [
   ["/", "homepage"],
   ["/robots.txt", "robots"],
   ["/sitemap.xml", "sitemap"],
-  ["/assets/logo.png", "logo png"],
+  [`/${ogImageRel}`, "og image"],
   ...pilotSlugs.map((slug) => [`/spots/${slug}/`, `${slug} spot`]),
   ...seoPlanSlugs.map((key) => [`/plans/${key}/`, `${key} plan`]),
 ];

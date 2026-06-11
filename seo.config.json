@@ -2,14 +2,18 @@
   "gaMeasurementId": "G-0X33RPR7Q5",
   "siteUrl": "https://explore.seasonsofeastvan.com",
   "siteName": "Escape the Downtown",
-  "title": "Explore East Van | Escape the Downtown · Seasons of East Van",
-  "description": "Explore Commercial Drive with Seasons of East Van. Curated walks from Commercial–Broadway SkyTrain—build your own route or follow pre-built plans from a local guide.",
+  "title": "East Van Restaurants & Bars | Commercial Drive Guide · Escape the Downtown",
+  "description": "East Vancouver food and drink guide for Commercial Drive — local picks for restaurants, bars, coffee, and hidden gems. Build a walk from SkyTrain or follow curated routes from a neighbourhood photographer.",
   "locale": "en_CA",
-  "ogImage": "assets/logo.png",
+  "ogImage": "assets/hero/shy-summer.png",
   "publisherName": "Seasons of East Van",
   "publisherUrl": "https://www.seasonsofeastvan.com",
   "seoPlanSlugs": [
-    "world-cup-day"
+    "world-cup-day",
+    "quick-sip-shop",
+    "quick-sip-shop-2",
+    "half-a-day-mid-morning",
+    "half-a-day-evening"
   ],
   "pilotSpotSlugs": [
     "alterior",
