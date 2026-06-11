@@ -57,7 +57,7 @@
       "neighborhood": "mount-pleasant",
       "title": "Explore Mount Pleasant",
       "label": "",
-      "comingSoon": false,
+      "comingSoon": true,
       "pathsIntro": "Choose one of the following options and end up with a personalized route to explore Mount Pleasant along Main Street and side streets.",
       "paths": [
         {
