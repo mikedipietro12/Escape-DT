@@ -13,8 +13,67 @@
     "quick-sip-shop",
     "quick-sip-shop-2",
     "half-a-day-mid-morning",
-    "half-a-day-evening"
+    "half-a-day-evening",
+    "mp-full-day-main",
+    "mp-kids-afternoon-main",
+    "chinatown-pre-post-match"
   ],
+  "seoFooter": {
+    "toggleLabel": "Browse spots & routes on the Drive",
+    "lead": "East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer",
+    "routeSlugs": [
+      "quick-sip-shop",
+      "quick-sip-shop-2",
+      "half-a-day-mid-morning",
+      "half-a-day-evening",
+      "world-cup-day"
+    ],
+    "columns": [
+      {
+        "heading": "Bars & drinks",
+        "ariaLabel": "Bars and drinks on Commercial Drive",
+        "spotSlugs": [
+          "superflux",
+          "livia-forno-e-vino",
+          "the-charlatan",
+          "havana",
+          "nomo-nomo"
+        ]
+      },
+      {
+        "heading": "Restaurants",
+        "ariaLabel": "Restaurants on Commercial Drive",
+        "spotSlugs": [
+          "magari-by-oca",
+          "belli-pizza",
+          "dont-argue-pizza",
+          "sula-indian-restaurant",
+          "mogu-fried-chicken"
+        ]
+      },
+      {
+        "heading": "Coffee",
+        "ariaLabel": "Coffee on Commercial Drive",
+        "spotSlugs": [
+          "prado-cafe",
+          "jj-bean",
+          "caffe-la-tana",
+          "bump-n-grind"
+        ]
+      },
+      {
+        "heading": "Places",
+        "ariaLabel": "Places on Commercial Drive",
+        "spotSlugs": [
+          "alterior",
+          "vintage-sponsor",
+          "slice-of-life-art-gallery",
+          "grandview-park",
+          "equinox-gallery"
+        ]
+      }
+    ]
+  },
   "pilotSpotSlugs": [
     "alterior",
     "audiopile",

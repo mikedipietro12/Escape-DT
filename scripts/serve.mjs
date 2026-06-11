@@ -29,7 +29,8 @@ const types = {
 };
 
 const server = http.createServer((req, res) => {
-  const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
+  let urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
+  if (urlPath.endsWith("/")) urlPath += "index.html";
   const rel = urlPath === "/" ? "/index.html" : urlPath;
   const filePath = path.normalize(path.join(root, rel));
   if (!filePath.startsWith(root)) {

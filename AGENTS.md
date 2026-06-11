@@ -14,7 +14,7 @@
 > 1. Upload photos via `npm run admin` (or drop `assets/stops/<slug>.jpg` and set `images` in JSON).
 > 2. `npm run compress:photos -- --write`
 > 3. In `data/areas.json`, remove `comingSoon` and clear `label` on `mount-pleasant`.
-> 4. Append all MP slugs to `pilotSpotSlugs` and plan keys (`mp-quick-quebec`, `mp-main-vintage-brew`, `mp-evening-crawl`) to `seoPlanSlugs` in `seo.config.json`; update site meta copy; run `npm run build`.
+> 4. Update site meta copy in `seo.config.json` if needed; run `npm run build` (static spot + plan pages are generated automatically from `data/stops.json` and `data/plans.json`).
 > 5. `npm run test:data` and `npm run test:seo`
 > 6. Commit generated SEO files and deploy.
 >
@@ -163,7 +163,7 @@ One place name per line (or a Google Takeout CSV). Dry run omits `--write` → `
 
 ## SEO build (before deploy)
 
-**Config:** `seo.config.json` (site URL, meta copy, `pilotSpotSlugs` for static spot pages).
+**Config:** `seo.config.json` (site URL, meta copy, optional `seoFooter` curation). **Source of truth for pages:** every stop in `data/stops.json` and every plan key in `data/plans.json` → `planOrder`.
 
 **Command** (from repo root):
 
@@ -175,14 +175,18 @@ This runs `scripts/build-seo.mjs` and:
 
 - Writes `robots.txt` and `sitemap.xml` at the repo root
 - Regenerates the `<!-- build:seo-head -->` block in `index.html` (meta, Open Graph, JSON-LD)
-- Regenerates `spots/<slug>/index.html` for each slug in `pilotSpotSlugs`
-- Regenerates `plans/<plan-key>/index.html` for each key in `seoPlanSlugs` (from `data/plans.json`)
+- Regenerates `spots/<slug>/index.html` for **every stop** in `data/stops.json`
+- Regenerates `plans/<plan-key>/index.html` for **every key** in `planOrder` (falls back to `seoPlanSlugs` in config, then all `plans` keys)
 
-**When to run:** After changing `seo.config.json`, `data/stops.json` (descriptions/names for pilot spots), `data/plans.json` (for SEO plan pages), or when adding a slug to `pilotSpotSlugs` / `seoPlanSlugs`. Commit the generated files with your deploy.
+**When to run:** After changing `data/stops.json`, `data/plans.json`, or `seo.config.json` (site meta / footer). Commit the generated files with your deploy.
 
-**Adding more static spot pages:** append the new stop’s `slug` to `pilotSpotSlugs` in `seo.config.json` (currently all stops in `data/stops.json`), then `npm run build`. The interactive app (`index.html`) is unchanged unless you add deep links later.
+**New location → static spot page:** add the stop to `data/stops.json` (normal add-location workflow), then `npm run build`. No manual slug list — `/spots/<slug>/` is created automatically. Spot copy uses the stop’s `neighborhood` (Commercial Drive, Mount Pleasant, Hastings-Sunrise, etc.).
 
-**Adding a crawlable pre-built plan page:** add the plan to `data/plans.json`, append its key to `seoPlanSlugs`, then `npm run build` → `/plans/<plan-key>/` (story + stop list; links to `/spots/<slug>/` when the stop is in `pilotSpotSlugs`).
+**New pre-built plan → static plan page:** add the plan to `data/plans.json` and include its key in `planOrder`, then `npm run build` → `/plans/<plan-key>/` (narrative + stop cards linking to `/spots/<slug>/` when those stops live in `stops.json`). Set `plan.neighborhood` when the route is not Commercial Drive.
+
+**Agent checklist (locations & plans):** after editing `data/stops.json` or `data/plans.json`, run `npm run build`, then `npm run test:seo`. Commit generated `spots/`, `plans/`, `sitemap.xml`, `robots.txt`, and the SEO blocks in `index.html`.
+
+**Optional config:** `pilotSpotSlugs` in `seo.config.json` is legacy — the build no longer uses it for page generation. `seoFooter.routeSlugs` / `columns[].spotSlugs` are still hand-curated footer links on the homepage and static pages (Commercial Drive picks today).
 
 ---
 
@@ -383,6 +387,7 @@ Example:
 1. Read `data/plans.json` and `data/stops.json`; every ID in `stops` must exist in `stops.json`.
 2. Keep array order as the intended walking route (station → …).
 3. Do not add `lat`/`lng` to plans — only IDs.
+4. Add the plan key to `planOrder` if new; run `npm run build` and `npm run test:seo` so `/plans/<key>/` is generated.
 
 ---
 
@@ -534,3 +539,4 @@ Optional: walk minutes from station
 5. Tell user to preview via `npx serve .` → Explore Commercial Drive → See All Spots (and category pickers, e.g. Coffee).
 6. **Bulk:** process all `---` blocks in one edit; assign unique `placeholderColor` per stop.
 7. Remove `_test` flag and test entries when done.
+8. Run `npm run build` (and `npm run test:seo`) so `/spots/<slug>/` is generated for the new stop(s).

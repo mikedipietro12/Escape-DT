@@ -37,19 +37,49 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/alterior/</loc>
+    <loc>https://explore.seasonsofeastvan.com/plans/mp-full-day-main/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/plans/mp-kids-afternoon-main/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/plans/chinatown-pre-post-match/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/jj-bean/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/audiopile/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/rollzzy/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/bar-corso/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/prado-cafe/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/skewers-souvlaki-pita-bar/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/la-grotta-del-formaggio/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -61,43 +91,25 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/bench/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/mintage/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/blind-rabbit/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/loulas/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/bomber-brewing/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/bar-corso/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/book-section/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/bump-n-grind/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/caffe-la-tana/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/canterbury/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-charlatan/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -109,13 +121,43 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/dachi-restaurant-and-natural-wine/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/alterior/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/doe-coffee-roasters/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/vintage-sponsor/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/livia-forno-e-vino/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/mediterranean-specialty-foods-turkish-market/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/sula-indian-restaurant/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/nomo-nomo/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/magari-by-oca/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -127,49 +169,85 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/sweet-cherubim/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/mogu-fried-chicken/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://explore.seasonsofeastvan.com/spots/downlow-chicken-shack/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/earnest/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/kin-kao/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/east-cafe/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/east-end-billiards/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/easy-shop/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/equinox-gallery/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/flourist/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/caffe-la-tana/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://explore.seasonsofeastvan.com/spots/fun-haus/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/slice-of-life-art-gallery/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/audiopile/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/canterbury/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-drive-skateshop/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/bump-n-grind/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/book-section/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/mah/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/victoria-park/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -187,67 +265,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/iron-dog-books/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/it-s-okay/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/jackalopes-neighbourhood-dive/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/jj-bean/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/kin-kao/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/la-grotta-del-formaggio/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/livia-forno-e-vino/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/loulas/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/magari-by-oca/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/mah/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/mediterranean-specialty-foods-turkish-market/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/easy-shop/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -259,97 +277,37 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/mintage/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/bench/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/mogu-fried-chicken/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/flourist/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/niwa-restaurant/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/equinox-gallery/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/nomo-nomo/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/earnest/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/obanhmi/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/woodland-park/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/pallet-coffee-roasters-semlin-drive/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/pandora-park/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/pantitlan/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/parallel-49-brewing-company/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/plain-jane-ice-cream/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/prado-cafe/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/rollzzy/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/skewers-souvlaki-pita-bar/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/slice-of-life-art-gallery/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/strange-fellows/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/sula-indian-restaurant/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/bomber-brewing/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -361,7 +319,133 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/sweet-cherubim/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/strange-fellows/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/mums/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/hackspace-mini-cinema/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-burrow/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/st-augustines/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/gatley/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-courts/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/truck-stop-cafe/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/fujiya-clark-drive/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/kasko-frame-works/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/bosa-foods/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/butter-and-jazz-vintage-thrift/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/sneaky-pete-s-pool-cafe/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/yama-cafe/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/pallet-coffee-roasters-semlin-drive/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/niwa-restaurant/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/parallel-49-brewing-company/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/pandora-park/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/east-end-billiards/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/east-cafe/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/blind-rabbit/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/tamam-fine-palestinian-cuisine/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -379,43 +463,421 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/tamam-fine-palestinian-cuisine/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/it-s-okay/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/the-charlatan/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/pantitlan/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/the-drive-skateshop/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/dachi-restaurant-and-natural-wine/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/victoria-park/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/doe-coffee-roasters/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/vintage-sponsor/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/jackalopes-neighbourhood-dive/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/woodland-park/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/obanhmi/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://explore.seasonsofeastvan.com/spots/yama-cafe/</loc>
+    <loc>https://explore.seasonsofeastvan.com/spots/plain-jane-ice-cream/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/iron-dog-books/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-narrow-lounge/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/antisocial-skateboard-shop/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/earnest-ice-cream-quebec-st/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/glory-juice-co/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/purebread-bakery-coffee/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/mount-pleasant-vintage/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/jonathan-rogers-park/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/33-acres-brewing-company/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-federal-store-luncheonette-and-grocer/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/superbaba-vancouver/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/fox-cabaret/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/brassneck-brewery/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/cultivate-tea/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/como-taperia/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/budgies-burritos/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/f-as-in-frank-vintage-clothing/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/glorydays-fine-goods/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/rath-art-supplies/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/gene-coffee-bar/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-corner-store/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/tocador/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/onigiri-ya-at-maruhachi-gaiden/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/49th-parallel-cafe-and-lucky-s-doughnuts-main-street/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/burgoo/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/urban-source/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/toshi-sushi/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/mount-pleasant-park/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/sushi-hil/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-granville-island-toy-company/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/anh-and-chi/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/good-thief/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/suyo-modern-peruvian/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/welk-s/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/neptoon-records/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-sellution-quality/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/woo-to-see-you/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/eugene-choo/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/collage-collage/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/liberty-bakery-cafe/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/exile-guitars/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-soap-dispensary/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/front-and-company/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/front-and-company-gift-store/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/kotn/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/trafiq-cafe-and-bakery/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/las-tortas-mexican-gourmet-sandwiches/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-shameful-tiki-room/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/red-cat-records/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/hunter-and-hare-main-st/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/east-is-east/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/bunker-apparel-goods/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/coco-et-olive/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/thierry-mount-pleasant/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/fish-market-studio-2/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/pulpfiction-books/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/mintage-mall/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/aj-s-brooklyn-pizza-joint/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/carp-sushi-and-bowl/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/the-lido/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/prince-edward-park/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/dude/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://explore.seasonsofeastvan.com/spots/riley-park/</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

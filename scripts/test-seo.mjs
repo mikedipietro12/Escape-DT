@@ -8,9 +8,13 @@ const PORT = Number(process.env.SEO_TEST_PORT) || 3457;
 
 const config = JSON.parse(fs.readFileSync(path.join(root, "seo.config.json"), "utf8"));
 const { stops } = JSON.parse(fs.readFileSync(path.join(root, "data", "stops.json"), "utf8"));
-const pilotSlugs = config.pilotSpotSlugs || [];
-const seoPlanSlugs = config.seoPlanSlugs || [];
 const plans = JSON.parse(fs.readFileSync(path.join(root, "data", "plans.json"), "utf8"));
+const spotSlugs = stops.map((s) => s.slug).filter(Boolean);
+const planKeys = plans.planOrder?.length
+  ? plans.planOrder
+  : config.seoPlanSlugs?.length
+    ? config.seoPlanSlugs
+    : Object.keys(plans.plans || {});
 
 const checks = [];
 function ok(msg) {
@@ -47,7 +51,7 @@ function escapeHtml(s) {
 assertIncludes(read("robots.txt"), "Sitemap: https://explore.seasonsofeastvan.com/sitemap.xml", "robots.txt sitemap URL");
 assertIncludes(read("sitemap.xml"), "<loc>https://explore.seasonsofeastvan.com/</loc>", "sitemap homepage");
 
-for (const slug of pilotSlugs) {
+for (const slug of spotSlugs) {
   assertIncludes(
     read("sitemap.xml"),
     `<loc>https://explore.seasonsofeastvan.com/spots/${slug}/</loc>`,
@@ -55,7 +59,7 @@ for (const slug of pilotSlugs) {
   );
 }
 
-for (const planKey of seoPlanSlugs) {
+for (const planKey of planKeys) {
   assertIncludes(
     read("sitemap.xml"),
     `<loc>https://explore.seasonsofeastvan.com/plans/${planKey}/</loc>`,
@@ -73,7 +77,7 @@ for (const planKey of seoPlanSlugs) {
   }
   const html = read(planPath);
   assertIncludes(html, `<h1>${escapeHtml(plan.title)}</h1>`, `${planKey} h1`);
-  assertIncludes(html, "Open interactive guide", `${planKey} CTA`);
+  assertIncludes(html, "Build this route in the guide", `${planKey} CTA`);
   try {
     parseJsonLd(html);
     ok(`${planKey} JSON-LD parses`);
@@ -96,7 +100,7 @@ try {
   fail(`index JSON-LD parses — ${e.message}`);
 }
 
-for (const slug of pilotSlugs) {
+for (const slug of spotSlugs) {
   const stop = stops.find((s) => s.slug === slug);
   if (!stop) {
     fail(`stop missing in stops.json: ${slug}`);
@@ -108,8 +112,8 @@ for (const slug of pilotSlugs) {
     continue;
   }
   const spot = read(spotPath);
-  assertIncludes(spot, `<h1>${stop.name}</h1>`, `${slug} h1`);
-  assertIncludes(spot, "Open interactive guide", `${slug} CTA`);
+  assertIncludes(spot, `<h1 class="choice-title">${escapeHtml(stop.name)}</h1>`, `${slug} h1`);
+  assertIncludes(spot, "Add to route in guide", `${slug} CTA`);
   if (config.gaMeasurementId) {
     assertIncludes(spot, config.gaMeasurementId, `${slug} Google Analytics`);
   }
@@ -175,8 +179,8 @@ const routes = [
   ["/robots.txt", "robots"],
   ["/sitemap.xml", "sitemap"],
   [`/${ogImageRel}`, "og image"],
-  ...pilotSlugs.map((slug) => [`/spots/${slug}/`, `${slug} spot`]),
-  ...seoPlanSlugs.map((key) => [`/plans/${key}/`, `${key} plan`]),
+  ...spotSlugs.map((slug) => [`/spots/${slug}/`, `${slug} spot`]),
+  ...planKeys.map((key) => [`/plans/${key}/`, `${key} plan`]),
 ];
 
 for (const [route, label] of routes) {
@@ -198,5 +202,5 @@ for (const c of checks) {
   console.log((c.pass ? "PASS" : "FAIL") + " — " + c.msg);
   if (!c.pass) failed++;
 }
-console.log(`\n${checks.length - failed}/${checks.length} passed (${pilotSlugs.length} pilot spots)`);
+console.log(`\n${checks.length - failed}/${checks.length} passed (${spotSlugs.length} spot pages, ${planKeys.length} plan pages)`);
 process.exit(failed ? 1 : 0);
