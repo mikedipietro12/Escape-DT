@@ -755,6 +755,13 @@ ${gotoBlock}${crossMeta}${walkLine}
   });
 }
 
+function injectHomeTitle(indexHtml, title) {
+  if (!/<title>[\s\S]*?<\/title>/.test(indexHtml)) {
+    throw new Error("Could not find <title> in index.html");
+  }
+  return indexHtml.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(title)}</title>`);
+}
+
 function injectHomeHead(indexHtml, headBlock) {
   if (indexHtml.includes(MARKER_START)) {
     const re = new RegExp(
@@ -801,6 +808,7 @@ fs.writeFileSync(
 const headBlock = buildHomeHead(config, stops, spotSlugSet);
 const footerBlock = buildHomeSeoFooter(config, stops);
 let indexHtml = fs.readFileSync(indexPath, "utf8");
+indexHtml = injectHomeTitle(indexHtml, config.title);
 indexHtml = injectHomeHead(indexHtml, headBlock);
 indexHtml = injectHomeFooter(indexHtml, footerBlock);
 fs.writeFileSync(indexPath, indexHtml);
