@@ -1803,6 +1803,44 @@
     .map-stop-group--hidden {
       opacity: 0;
     }
+    .map-stop-group--hidden .map-stop-cluster-dot {
+      animation: none;
+    }
+    .map-stop-cluster-dot {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .map-stop-group--cluster:not(.map-stop-group--hidden) .map-stop-cluster-dot:not(.map-stop-cluster-dot--static) {
+      animation: map-cluster-dot-settle 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .map-stop-group--cluster:not(.map-stop-group--hidden) .map-stop-cluster-dot:nth-child(2) {
+      animation-delay: 0.07s;
+    }
+    .map-stop-group--cluster:not(.map-stop-group--hidden) .map-stop-cluster-dot:nth-child(3) {
+      animation-delay: 0.14s;
+    }
+    .map-stop-group--cluster:not(.map-stop-group--hidden) .map-stop-cluster-dot:nth-child(4) {
+      animation-delay: 0.21s;
+    }
+    .map-stop-cluster-dot--static {
+      transform: translate(calc(var(--cx) * 1px), calc((var(--cy) + var(--off)) * 1px));
+    }
+    @keyframes map-cluster-dot-settle {
+      0% {
+        transform: translate(calc(var(--cx) * 1px), calc(var(--cy) * 1px)) scale(1.65);
+        opacity: 0.82;
+      }
+      100% {
+        transform: translate(calc(var(--cx) * 1px), calc((var(--cy) + var(--off)) * 1px)) scale(1);
+        opacity: 1;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .map-stop-group--cluster .map-stop-cluster-dot {
+        animation: none;
+        transform: translate(calc(var(--cx) * 1px), calc((var(--cy) + var(--off)) * 1px));
+      }
+    }
     .map-spine-label { font-size: 9px; opacity: 0.75; }
     .map-stop-label { font-size: 11px; letter-spacing: 0.04em; }
 
@@ -4807,7 +4845,7 @@
       if (!state.landingAreaId) state.landingAreaId = DEFAULT_LANDING_AREA;
       state.expandedSpotId = null;
       state.p3Filters = defaultP3Filters();
-      state.p3SortOrder = isHorizontalMapArea() || isChinatownArea() ? "west-east" : "south-north";
+      state.p3SortOrder = defaultP3SortOrder();
       state.p3SortOpen = false;
       state.pathContext = 'See All Spots';
       showStep('P3');
@@ -5386,6 +5424,12 @@
 
     function isChinatownArea() {
       return activeAreaNeighborhood() === "chinatown";
+    }
+
+    function defaultP3SortOrder() {
+      if (isHorizontalMapArea() || isChinatownArea()) return "west-east";
+      if (isMountPleasantArea()) return "north-south";
+      return "south-north";
     }
 
     function activeAreaStops() {
@@ -8147,6 +8191,15 @@
           html += `<button type="button" class="p3-sort-option${eastActive ? " active" : ""}" onclick="setP3SortOrder('east-west')">`;
           html += `<span class="p3-sort-option__title">Sort by East to West</span>`;
           html += `<span class="p3-sort-option__desc">Starts at Renfrew and moves west along Hastings.</span>`;
+          html += `</button>`;
+        } else if (isMountPleasantArea()) {
+          html += `<button type="button" class="p3-sort-option${northActive ? " active" : ""}" onclick="setP3SortOrder('north-south')">`;
+          html += `<span class="p3-sort-option__title">Sort by North to South</span>`;
+          html += `<span class="p3-sort-option__desc">Starts closer to Main Street–Science World and moves south along Main.</span>`;
+          html += `</button>`;
+          html += `<button type="button" class="p3-sort-option${southActive ? " active" : ""}" onclick="setP3SortOrder('south-north')">`;
+          html += `<span class="p3-sort-option__title">Sort by South to North</span>`;
+          html += `<span class="p3-sort-option__desc">Starts closer to 33rd &amp; Main and moves north toward SkyTrain.</span>`;
           html += `</button>`;
         } else {
           html += `<button type="button" class="p3-sort-option${southActive ? " active" : ""}" onclick="setP3SortOrder('south-north')">`;

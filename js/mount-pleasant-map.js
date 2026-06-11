@@ -1052,19 +1052,48 @@ function formatMapStopNumberLabel(point) {
   return first === last ? `${first}` : `${first}–${last}`;
 }
 
-function renderMapStopSvg(point, hybrid) {
+/** Vertical offsets (px) when several route stops share one intersection dot. */
+function getClusterDotOffsets(count) {
+  if (count <= 1) return [0];
+  if (count === 2) return [-3, 3];
+  if (count === 3) return [-4, 0, 4];
+  const span = Math.min(5, 2 + Math.floor(count / 2));
+  return Array.from({ length: count }, (_, i) =>
+    Math.round((i / (count - 1) - 0.5) * 2 * span)
+  );
+}
+
+function renderMapStopDots(x, y, clusterCount, animateCluster) {
+  if (clusterCount <= 1) {
+    return `<circle class="map-stop" cx="${x}" cy="${y}" r="4" />`;
+  }
+  const staticClass = animateCluster ? "" : " map-stop-cluster-dot--static";
+  return getClusterDotOffsets(clusterCount)
+    .map(
+      (off) => `
+          <g class="map-stop-cluster-dot${staticClass}" style="--cx:${x};--cy:${y};--off:${off}">
+            <circle class="map-stop" cx="0" cy="0" r="4" />
+          </g>`
+    )
+    .join("");
+}
+
+function renderMapStopSvg(point, hybrid, { animateCluster = true } = {}) {
   const s = point.stop;
   const mapIdx = point.mapIdx ?? point.idx;
   const numLabel = formatMapStopNumberLabel(point);
+  const routeIndices = point.routeIndices || [point.idx];
+  const clusterCount = routeIndices.length;
   const x = hybrid ? point.dotX : point.x;
   const y = hybrid ? point.dotY : point.y;
   const labelOffsetY = point.labelOffsetY || 0;
   const { labelX, labelAnchor } = getMapStopLabelPlacement(x);
   const labelY = y + 3 + labelOffsetY;
   const label = mapLabelCrossStreet(s.crossStreet, s);
+  const clusterClass = clusterCount > 1 ? " map-stop-group--cluster" : "";
   return `
-        <g class="map-stop-group map-stop-group--hidden" data-stop-index="${mapIdx}">
-          <circle class="map-stop" cx="${x}" cy="${y}" r="4" />
+        <g class="map-stop-group map-stop-group--hidden${clusterClass}" data-stop-index="${mapIdx}" data-cluster-count="${clusterCount}">
+          ${renderMapStopDots(x, y, clusterCount, animateCluster)}
           <text class="map-text map-stop-label" x="${labelX}" y="${labelY}" text-anchor="${labelAnchor}">${numLabel}. ${escapeHtml(label)}</text>
         </g>
       `;
@@ -1198,6 +1227,7 @@ function drawMap(svgEl, route, options = {}) {
   const routeLayer = svgEl.querySelector(".map-route-layer");
   const overlayLayer = svgEl.querySelector(".map-overlay-layer");
   const traceArrow = createTraceArrow(routeLayer);
+  const animateCluster = (options.legDuration ?? MAP.legDurationMs) > 0;
 
   if (!route.length) {
     options.onComplete?.();
@@ -1210,7 +1240,10 @@ function drawMap(svgEl, route, options = {}) {
       requestAnimationFrame(() => existing.classList.remove("map-stop-group--hidden"));
       return;
     }
-    overlayLayer.insertAdjacentHTML("beforeend", renderMapStopSvg(points[stopIndex], true));
+    overlayLayer.insertAdjacentHTML(
+      "beforeend",
+      renderMapStopSvg(points[stopIndex], true, { animateCluster })
+    );
     const g = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
     requestAnimationFrame(() => g?.classList.remove("map-stop-group--hidden"));
   }
@@ -1219,6 +1252,11 @@ function drawMap(svgEl, route, options = {}) {
     points.forEach((_, idx) => revealStop(idx));
     options.onComplete?.();
     return;
+  }
+
+  // Route starts at the first stop — show it (and any cluster dots) before the arrow draws.
+  if (!mapOptions.startAtStation && points.length) {
+    revealStop(0);
   }
 
   function runLeg(legIndex) {
@@ -1264,7 +1302,10 @@ function ensureAllStopsVisible(svgEl, points) {
     const mapIdx = point.mapIdx ?? idx;
     let g = overlayLayer.querySelector(`[data-stop-index="${mapIdx}"]`);
     if (!g) {
-      overlayLayer.insertAdjacentHTML("beforeend", renderMapStopSvg(point, true));
+      overlayLayer.insertAdjacentHTML(
+        "beforeend",
+        renderMapStopSvg(point, true, { animateCluster: false })
+      );
       g = overlayLayer.querySelector(`[data-stop-index="${mapIdx}"]`);
     }
     g?.classList.remove("map-stop-group--hidden");
