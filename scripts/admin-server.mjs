@@ -29,6 +29,10 @@ const STOPS = {
   rel: path.join("data", "stops.json"),
   indent: 4,
 };
+const PLANS = {
+  rel: path.join("data", "plans.json"),
+  indent: 4,
+};
 // Draft files keep not-yet-live neighborhoods out of data/stops.json (which the
 // app loads wholesale). Each one is keyed to a neighborhood id so saving a stop
 // routes it to the right file. Add a new entry here to stage another area.
@@ -517,6 +521,277 @@ async function handleWalkFromStation(req, res) {
   }
 }
 
+function loadPlansFile() {
+  try {
+    return readJson(PLANS.rel);
+  } catch (err) {
+    console.warn(`Could not read ${PLANS.rel}: ${err.message}`);
+    return { version: 2, planOrder: [], plans: {} };
+  }
+}
+
+function writePlansFile(data) {
+  writeJson(PLANS, data);
+}
+
+function loadAllStopIds() {
+  const { stops } = loadAll();
+  return new Set(stops.map((s) => s.id).filter(Boolean));
+}
+
+function asStopIdArray(ids) {
+  if (Array.isArray(ids)) return ids.map((id) => String(id).trim()).filter(Boolean);
+  if (typeof ids === "string") {
+    const t = ids.trim();
+    if (!t) return [];
+    if (/^s\d+$/i.test(t)) return [t];
+    return t.split(/,\s*/).map((x) => x.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+function slugifyPlanKey(title) {
+  return String(title || "")
+    .trim()
+    .toLowerCase()
+    .replace(/['']/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 64) || "new-plan";
+}
+
+function uniquePlanKey(base, existingKeys) {
+  let key = base;
+  let n = 2;
+  while (existingKeys.has(key)) {
+    key = `${base}-${n}`;
+    n += 1;
+  }
+  return key;
+}
+
+function deriveStopsFromNarrative(narrative) {
+  const stops = [];
+  const seen = new Set();
+  for (const segment of narrative || []) {
+    if (!segment || segment.type !== "stops") continue;
+    for (const id of asStopIdArray(segment.ids)) {
+      if (!id || seen.has(id)) continue;
+      seen.add(id);
+      stops.push(id);
+    }
+  }
+  return stops;
+}
+
+function collectNarrativeStopIds(narrative) {
+  const ids = new Set();
+  for (const segment of narrative || []) {
+    if (segment?.type === "stops") {
+      for (const id of asStopIdArray(segment.ids)) if (id) ids.add(id);
+    }
+  }
+  return ids;
+}
+
+function normalizePlanNeighborhood(value) {
+  const hood = String(value || "commercial").trim().toLowerCase();
+  return hood || "commercial";
+}
+
+function validatePlanPayload(plan, key, knownStopIds, neighborhoodsData) {
+  const errors = [];
+  const warnings = [];
+
+  if (!String(plan.title || "").trim()) errors.push("Title is required");
+
+  const neighborhood = normalizePlanNeighborhood(plan.neighborhood);
+  if (!neighborhoodsData?.neighborhoods?.[neighborhood]) {
+    errors.push(`Unknown neighborhood "${neighborhood}"`);
+  }
+
+  const narrative = Array.isArray(plan.narrative) ? plan.narrative : [];
+  for (let i = 0; i < narrative.length; i += 1) {
+    const seg = narrative[i];
+    if (!seg || typeof seg !== "object") {
+      errors.push(`Narrative segment ${i + 1} is invalid`);
+      continue;
+    }
+    if (seg.type === "prose") {
+      if (!String(seg.text || "").trim()) {
+        warnings.push(`Narrative segment ${i + 1} (prose) is empty`);
+      }
+    } else if (seg.type === "stops") {
+      const ids = asStopIdArray(seg.ids);
+      if (!ids.length) {
+        errors.push(`Narrative segment ${i + 1} (stops) has no stops`);
+      } else {
+        for (const id of ids) {
+          if (!knownStopIds.has(id)) errors.push(`Unknown stop id in narrative: ${id}`);
+        }
+        if (seg.layout === "or" && ids.length < 2) {
+          warnings.push(`Narrative segment ${i + 1}: "or" layout needs 2+ stops`);
+        }
+      }
+    } else {
+      errors.push(`Narrative segment ${i + 1} has unknown type "${seg.type}"`);
+    }
+  }
+
+  const narrativeIds = collectNarrativeStopIds(narrative);
+  const prevStops = asStopIdArray(plan.stops);
+  const mapOnly = prevStops.filter((id) => !narrativeIds.has(id));
+  if (mapOnly.length) {
+    warnings.push(
+      `These stops were in the route but not in narrative (removed on save): ${mapOnly.join(", ")}`
+    );
+  }
+
+  return { errors, warnings, neighborhood, narrative, derivedStops: deriveStopsFromNarrative(narrative) };
+}
+
+function buildPlanSummary(data) {
+  const order = data.planOrder?.length
+    ? data.planOrder
+    : Object.keys(data.plans || {});
+  return order
+    .map((key) => {
+      const plan = data.plans?.[key];
+      if (!plan) return null;
+      return {
+        key,
+        title: plan.title || key,
+        duration: plan.duration || "",
+        neighborhood: normalizePlanNeighborhood(plan.neighborhood),
+        stopCount: (plan.stops || []).length,
+      };
+    })
+    .filter(Boolean);
+}
+
+function handleGetPlans(res) {
+  const data = loadPlansFile();
+  sendJson(res, 200, {
+    ...data,
+    summary: buildPlanSummary(data),
+  });
+}
+
+function handleGetPlansRefs(res) {
+  const neighborhoodsData = readJson(path.join("data", "neighborhoods.json"));
+  sendJson(res, 200, {
+    neighborhoods: neighborhoodsData,
+    categories: CANONICAL_CATEGORIES,
+  });
+}
+
+async function handleCreatePlan(req, res) {
+  let body;
+  try {
+    body = JSON.parse(await readBody(req));
+  } catch {
+    return sendJson(res, 400, { error: "Invalid JSON body" });
+  }
+
+  const title = String(body.title || "").trim();
+  if (!title) return sendJson(res, 400, { error: "Title is required" });
+
+  const neighborhoodsData = readJson(path.join("data", "neighborhoods.json"));
+  const neighborhood = normalizePlanNeighborhood(body.neighborhood);
+  if (!neighborhoodsData?.neighborhoods?.[neighborhood]) {
+    return sendJson(res, 400, { error: `Unknown neighborhood "${neighborhood}"` });
+  }
+
+  const data = loadPlansFile();
+  if (!data.plans || typeof data.plans !== "object") data.plans = {};
+  if (!Array.isArray(data.planOrder)) data.planOrder = [];
+
+  const existingKeys = new Set([...Object.keys(data.plans), ...data.planOrder]);
+  const baseKey = slugifyPlanKey(title);
+  const key = uniquePlanKey(baseKey, existingKeys);
+
+  const plan = {
+    title,
+    duration: String(body.duration || "").trim(),
+    description: String(body.description || "").trim(),
+    introduction: "",
+    narrative: [],
+    stops: [],
+    neighborhood,
+  };
+
+  data.plans[key] = plan;
+  if (!data.planOrder.includes(key)) data.planOrder.push(key);
+
+  try {
+    writePlansFile(data);
+  } catch (err) {
+    return sendJson(res, 500, { error: `Write failed: ${err.message}` });
+  }
+
+  console.log(`created plan ${key} "${title}"`);
+  sendJson(res, 200, { ok: true, key, plan });
+}
+
+async function handleSavePlan(req, res, key) {
+  let body;
+  try {
+    body = JSON.parse(await readBody(req));
+  } catch {
+    return sendJson(res, 400, { error: "Invalid JSON body" });
+  }
+
+  if (!body || typeof body !== "object") {
+    return sendJson(res, 400, { error: "Body must be a plan object" });
+  }
+
+  const data = loadPlansFile();
+  if (!data.plans?.[key]) {
+    return sendJson(res, 404, { error: "Plan not found — create it first via POST /api/plans" });
+  }
+
+  const knownStopIds = loadAllStopIds();
+  const neighborhoodsData = readJson(path.join("data", "neighborhoods.json"));
+  const { errors, warnings, neighborhood, narrative, derivedStops } = validatePlanPayload(
+    body,
+    key,
+    knownStopIds,
+    neighborhoodsData
+  );
+  if (errors.length) {
+    return sendJson(res, 400, { error: errors.join("; "), errors });
+  }
+
+  const plan = {
+    title: String(body.title || "").trim(),
+    duration: String(body.duration || "").trim(),
+    description: String(body.description || "").trim(),
+    introduction: String(body.introduction || "").trim(),
+    narrative: narrative.map((seg) => {
+      if (seg.type === "prose") {
+        return { type: "prose", text: String(seg.text || "").trim() };
+      }
+      const ids = asStopIdArray(seg.ids);
+      const out = { type: "stops", ids };
+      if (seg.layout === "or" && ids.length > 1) out.layout = "or";
+      return out;
+    }),
+    stops: derivedStops,
+  };
+  if (neighborhood !== "commercial") plan.neighborhood = neighborhood;
+
+  data.plans[key] = plan;
+
+  try {
+    writePlansFile(data);
+  } catch (err) {
+    return sendJson(res, 500, { error: `Write failed: ${err.message}` });
+  }
+
+  console.log(`saved plan ${key} "${plan.title}"`);
+  sendJson(res, 200, { ok: true, key, plan, warnings });
+}
+
 async function handleEnrichStop(req, res) {
   let body;
   try {
@@ -559,6 +834,40 @@ const server = http.createServer(async (req, res) => {
   if (urlPath === "/api/stops" && req.method === "GET") {
     try {
       return handleGetStops(res);
+    } catch (err) {
+      return sendJson(res, 500, { error: err.message });
+    }
+  }
+
+  if (urlPath === "/api/plans" && req.method === "GET") {
+    try {
+      return handleGetPlans(res);
+    } catch (err) {
+      return sendJson(res, 500, { error: err.message });
+    }
+  }
+
+  if (urlPath === "/api/plans/refs" && req.method === "GET") {
+    try {
+      return handleGetPlansRefs(res);
+    } catch (err) {
+      return sendJson(res, 500, { error: err.message });
+    }
+  }
+
+  if (urlPath === "/api/plans" && req.method === "POST") {
+    try {
+      return await handleCreatePlan(req, res);
+    } catch (err) {
+      return sendJson(res, 500, { error: err.message });
+    }
+  }
+
+  const planSaveMatch = /^\/api\/plan\/([^/]+)$/.exec(urlPath);
+  if (planSaveMatch && (req.method === "POST" || req.method === "PUT")) {
+    const planKey = decodeURIComponent(planSaveMatch[1]);
+    try {
+      return await handleSavePlan(req, res, planKey);
     } catch (err) {
       return sendJson(res, 500, { error: err.message });
     }
@@ -627,8 +936,9 @@ server.on("clientError", (err, socket) => {
 });
 
 server.listen(port, () => {
-  console.log(`Escape DT stop editor: http://localhost:${port}/`);
+  console.log(`Escape DT stop editor:  http://localhost:${port}/`);
+  console.log(`Escape DT plans editor: http://localhost:${port}/admin-plans.html`);
   const draftList = DRAFTS.map((d) => `${d.rel} (${d.neighborhood} draft)`).join(" + ");
-  console.log(`Editing: ${STOPS.rel} (live) + ${draftList}`);
+  console.log(`Editing: ${STOPS.rel} (live) + ${draftList}, ${PLANS.rel}`);
   console.log("Local only — do not deploy. Ctrl+C to stop.");
 });

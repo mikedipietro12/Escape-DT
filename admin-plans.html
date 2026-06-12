@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plans Editor · Escape DT (local)</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png" sizes="64x64">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #6b6b6b;
+      --line: #e2e2e2;
+      --bg: #f6f6f4;
+      --panel: #ffffff;
+      --accent: #2563eb;
+      --accent-soft: #e8efff;
+      --warn: #b45309;
+      --warn-soft: #fff4e2;
+      --ok: #15803d;
+      --danger: #b91c1c;
+      --list-panel-width: 240px;
+      --picker-panel-width: 260px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1rem;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
+      z-index: 5;
+    }
+    header h1 { font-size: 1rem; margin: 0; font-weight: 700; }
+    header .badge-local {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: var(--warn-soft);
+      color: var(--warn);
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid #f1d9ad;
+    }
+    header .spacer { flex: 1; }
+    header a.nav-link {
+      font-size: 0.85rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    header a.nav-link:hover { text-decoration: underline; }
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 0.45rem 0.8rem;
+      border-radius: 7px;
+    }
+    button:hover { border-color: #c7c7c7; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    button.primary:hover { background: #1d4fd0; }
+    button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.ghost { background: transparent; }
+    button.sm { padding: 0.25rem 0.5rem; font-size: 0.78rem; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: var(--list-panel-width) 6px 1fr 6px var(--picker-panel-width);
+      grid-template-rows: minmax(0, 1fr);
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .layout-resizer {
+      position: relative;
+      z-index: 2;
+      cursor: col-resize;
+      touch-action: none;
+      background: transparent;
+    }
+    .layout-resizer::after {
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0; left: 2px;
+      width: 1px;
+      background: var(--line);
+    }
+    .layout-resizer:hover::after,
+    .layout-resizer.dragging::after {
+      left: 1px; width: 3px; background: var(--accent);
+    }
+    body.resizing-panel { cursor: col-resize; user-select: none; }
+    body.resizing-panel * { cursor: col-resize !important; }
+
+    .list-panel, .picker-panel {
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .list-controls {
+      padding: 0.7rem;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 0.45rem;
+    }
+    .list-controls input[type="search"], .list-controls select {
+      width: 100%;
+      padding: 0.4rem 0.5rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font: inherit;
+    }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .filter-chip {
+      font-size: 0.72rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .filter-chip.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .pill {
+      font-size: 0.68rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .pill.cat { background: #f0f4ff; color: #3b4f8a; border-color: #d4dff7; }
+    .pill.hood { background: #f5f5f5; }
+
+    .scroll-list { flex: 1; overflow-y: auto; min-height: 0; }
+    .list-empty { padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+    .plan-row {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+    }
+    .plan-row:hover { background: #fafafa; }
+    .plan-row.active { background: var(--accent-soft); }
+    .plan-row .row-top { display: flex; align-items: baseline; gap: 0.4rem; }
+    .plan-row .row-name { font-weight: 600; font-size: 0.88rem; flex: 1; min-width: 0; }
+    .plan-row .row-key { font-size: 0.68rem; color: var(--muted); font-family: ui-monospace, monospace; }
+    .plan-row .row-meta { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.3rem; }
+
+    .editor-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .editor-panel {
+      flex: 1 1 0;
+      overflow-y: auto;
+      min-height: 0;
+      padding: 1rem 1.2rem;
+      padding-bottom: calc(3.5rem + 1px);
+    }
+    .editor-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--muted);
+    }
+    .editor-empty[hidden] { display: none !important; }
+    .field { margin-bottom: 0.85rem; }
+    .field label { display: block; font-weight: 600; font-size: 0.78rem; margin-bottom: 0.25rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+    .field input[type="text"], .field textarea, .field select {
+      width: 100%;
+      padding: 0.5rem 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      font: inherit;
+    }
+    .field textarea { min-height: 70px; resize: vertical; }
+    .field textarea.tall { min-height: 120px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .field-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+    .field-actions { display: flex; gap: 0.5rem; margin-top: 0.35rem; flex-wrap: wrap; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 1.2rem 0 0.6rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--line);
+    }
+    .section-head h2 { font-size: 0.9rem; margin: 0; flex: 1; }
+    .typeahead-wrap { position: relative; flex: 1; max-width: 280px; }
+    .typeahead-wrap input { width: 100%; padding: 0.35rem 0.5rem; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
+    .typeahead-menu {
+      position: absolute;
+      top: 100%;
+      left: 0; right: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 10;
+      display: none;
+    }
+    .typeahead-menu.open { display: block; }
+    .typeahead-item {
+      padding: 0.45rem 0.55rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .typeahead-item:hover, .typeahead-item.active { background: var(--accent-soft); }
+    .typeahead-item .sub { font-size: 0.72rem; color: var(--muted); }
+
+    .narrative-list { display: grid; gap: 0.65rem; }
+    .seg-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+    .seg-card.active-group { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .seg-card.drag-over { border-color: var(--accent); background: var(--accent-soft); }
+    .seg-head {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.55rem;
+      background: #fafafa;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .seg-drag { cursor: grab; padding: 0 0.2rem; user-select: none; color: #aaa; }
+    .seg-drag:active { cursor: grabbing; }
+    .seg-type { font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; flex: 1; }
+    .seg-body { padding: 0.55rem; }
+    .seg-body textarea { width: 100%; min-height: 90px; border: 1px solid var(--line); border-radius: 6px; padding: 0.45rem; font: inherit; resize: vertical; }
+
+    .stop-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; min-height: 2rem; align-items: center; }
+    .stop-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.45rem;
+      background: #f0f4ff;
+      border: 1px solid #d4dff7;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: grab;
+    }
+    .stop-chip.dragging { opacity: 0.4; }
+    .stop-chip .chip-id { font-size: 0.68rem; color: var(--muted); font-family: ui-monospace, monospace; }
+    .stop-chip button {
+      border: none;
+      background: none;
+      padding: 0 0.15rem;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .stop-chip button:hover { color: var(--danger); }
+    .seg-empty { color: var(--muted); font-size: 0.82rem; font-style: italic; }
+
+    .stop-row {
+      padding: 0.55rem 0.7rem;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+    }
+    .stop-row:hover { background: #fafafa; }
+    .stop-row.added { opacity: 0.45; }
+    .stop-row .row-top { display: flex; gap: 0.35rem; align-items: baseline; }
+    .stop-row .row-name { font-weight: 600; font-size: 0.85rem; flex: 1; }
+    .stop-row .row-id { font-size: 0.68rem; color: var(--muted); font-family: ui-monospace, monospace; }
+
+    .save-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 4;
+      flex-shrink: 0;
+      background: var(--panel);
+      border-top: 1px solid var(--line);
+      padding: 0.7rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
+    }
+    .save-bar[hidden] { display: none !important; }
+    .save-bar .dirty { color: var(--warn); font-size: 0.8rem; }
+    .save-bar .dirty.is-saving { color: var(--muted); }
+    .save-bar .saved { color: var(--ok); font-size: 0.8rem; }
+    .save-bar .warn-msg { color: var(--warn); font-size: 0.78rem; flex: 1; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+    }
+    .modal-overlay[hidden] { display: none; }
+    .modal {
+      background: var(--panel);
+      border-radius: 10px;
+      width: min(420px, 92vw);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+    .modal-head { padding: 1rem 1.2rem 0.5rem; font-weight: 700; }
+    .modal-body { padding: 0.5rem 1.2rem 1rem; display: grid; gap: 0.65rem; }
+    .modal-foot { padding: 0.75rem 1.2rem; border-top: 1px solid var(--line); display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+    #toast {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: var(--ink);
+      color: #fff;
+      padding: 0.6rem 0.9rem;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: 0.2s;
+      pointer-events: none;
+      z-index: 40;
+      max-width: 360px;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.error { background: var(--danger); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Plans Editor</h1>
+    <span class="badge-local">local only</span>
+    <div class="spacer"></div>
+    <a class="nav-link" href="/">Stop editor</a>
+    <button id="reload" class="ghost">Reload</button>
+  </header>
+
+  <div class="layout">
+    <aside class="list-panel">
+      <div class="list-controls">
+        <input type="search" id="plan-search" placeholder="Search plans…" autocomplete="off">
+        <select id="plan-filter-neighborhood">
+          <option value="">All neighborhoods</option>
+        </select>
+        <button type="button" id="new-plan" class="primary">+ New plan</button>
+        <span id="list-count" class="field-hint"></span>
+      </div>
+      <div class="scroll-list" id="plan-list"></div>
+    </aside>
+
+    <div class="layout-resizer" id="resizer-left" aria-hidden="true"></div>
+
+    <section class="editor-wrap">
+      <main class="editor-panel" id="editor-panel">
+        <div class="editor-empty" id="editor-empty">Select a plan from the list</div>
+        <form id="plan-form" hidden>
+          <div class="field-row">
+            <div class="field">
+              <label for="plan-key">Plan key</label>
+              <input type="text" id="plan-key" readonly>
+            </div>
+            <div class="field">
+              <label for="plan-neighborhood">Neighborhood</label>
+              <select id="plan-neighborhood"></select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="plan-title">Title</label>
+              <input type="text" id="plan-title" required>
+            </div>
+            <div class="field">
+              <label for="plan-duration">Duration</label>
+              <input type="text" id="plan-duration" placeholder="e.g. 45 mins">
+            </div>
+          </div>
+          <div class="field">
+            <label for="plan-description">Description (picker teaser)</label>
+            <textarea id="plan-description" rows="2"></textarea>
+          </div>
+          <div class="field">
+            <label for="plan-introduction">Introduction (SEO / static fallback)</label>
+            <textarea id="plan-introduction" class="tall" rows="4"></textarea>
+            <div class="field-actions">
+              <button type="button" id="build-intro" class="sm">Build from narrative prose</button>
+            </div>
+          </div>
+
+          <div class="section-head">
+            <h2>Narrative</h2>
+            <div class="typeahead-wrap">
+              <input type="text" id="typeahead" placeholder="Type stop name…" autocomplete="off">
+              <div class="typeahead-menu" id="typeahead-menu"></div>
+            </div>
+            <button type="button" id="add-prose" class="sm">+ Prose</button>
+            <button type="button" id="add-stops" class="sm">+ Stop group</button>
+          </div>
+          <p class="field-hint">Click a stop group to make it active — sidebar clicks and type-ahead add stops there.</p>
+          <div class="narrative-list" id="narrative-list"></div>
+        </form>
+      </main>
+      <div class="save-bar" id="save-bar" hidden>
+        <button type="submit" class="primary" id="save-btn" form="plan-form">Save plan</button>
+        <span class="dirty" id="dirty-label" hidden aria-live="polite">Unsaved changes</span>
+        <span class="saved" id="saved-label" hidden>Saved</span>
+        <span class="warn-msg" id="warn-label" hidden></span>
+      </div>
+    </section>
+
+    <div class="layout-resizer" id="resizer-right" aria-hidden="true"></div>
+
+    <aside class="picker-panel">
+      <div class="list-controls">
+        <select id="stop-filter-neighborhood">
+          <option value="">Neighborhood…</option>
+        </select>
+        <input type="search" id="stop-search" placeholder="Search stops…" autocomplete="off">
+        <select id="stop-sort">
+          <option value="name">Sort: name</option>
+          <option value="cross">Sort: cross street</option>
+          <option value="id">Sort: id</option>
+        </select>
+        <div class="filter-section">
+          <span class="field-hint" style="text-transform:uppercase;font-weight:600;letter-spacing:0.04em;">Categories</span>
+          <div class="filter-chips" id="filter-categories"></div>
+        </div>
+        <span id="picker-count" class="field-hint"></span>
+      </div>
+      <div class="scroll-list" id="stop-picker"></div>
+    </aside>
+  </div>
+
+  <div class="modal-overlay" id="new-overlay" hidden>
+    <div class="modal" role="dialog" aria-labelledby="new-title">
+      <div class="modal-head" id="new-title">New plan</div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="new-title-input">Title</label>
+          <input type="text" id="new-title-input" required>
+        </div>
+        <div class="field">
+          <label for="new-duration">Duration</label>
+          <input type="text" id="new-duration" placeholder="e.g. 1.5–2 hours">
+        </div>
+        <div class="field">
+          <label for="new-description">Description</label>
+          <textarea id="new-description" rows="2"></textarea>
+        </div>
+        <div class="field">
+          <label for="new-neighborhood">Neighborhood</label>
+          <select id="new-neighborhood"></select>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" id="new-cancel">Cancel</button>
+        <button type="button" id="new-submit" class="primary">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    const $ = (sel) => document.querySelector(sel);
+
+    const state = {
+      planOrder: [],
+      plans: {},
+      summary: [],
+      stops: [],
+      refs: { neighborhoods: { neighborhoodOrder: [], neighborhoods: {} }, categories: [] },
+      selectedKey: null,
+      draft: null,
+      dirty: false,
+      activeSegIndex: null,
+      filterCategories: new Set(),
+      drag: { type: null, segIndex: null, chipIndex: null },
+    };
+
+    function escapeHtml(str) {
+      return String(str == null ? "" : str)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function neighborhoodTitle(id) {
+      return state.refs.neighborhoods?.neighborhoods?.[id]?.title || id;
+    }
+
+    function planNeighborhood(plan) {
+      return (plan?.neighborhood || "commercial").toLowerCase();
+    }
+
+    function isDraftSource(source) {
+      return source && source !== "stops";
+    }
+
+    function stopsForNeighborhood(hood) {
+      const id = (hood || "commercial").toLowerCase();
+      return state.stops.filter((s) => {
+        const sn = (s.neighborhood || "commercial").toLowerCase();
+        if (sn !== id) return false;
+        if (s._source === "stops") return true;
+        return isDraftSource(s._source);
+      });
+    }
+
+    function pickerNeighborhood() {
+      const sel = $("#stop-filter-neighborhood");
+      if (sel?.value) return sel.value.toLowerCase();
+      if (state.draft) return planNeighborhood(state.draft);
+      return "commercial";
+    }
+
+    function syncPickerNeighborhoodToPlan() {
+      if (!state.draft) return;
+      $("#stop-filter-neighborhood").value = planNeighborhood(state.draft);
+    }
+
+    function stopById(id) {
+      return state.stops.find((s) => s.id === id);
+    }
+
+    const AUTO_SAVE_MS = 700;
+    let autoSaveTimer = null;
+    let autoSavePromise = null;
+    let savedFlagTimer = null;
+
+    function setDirty(v, message) {
+      state.dirty = v;
+      const flag = $("#dirty-label");
+      if (v) {
+        flag.hidden = false;
+        flag.textContent = message || "Unsaved changes";
+        flag.classList.toggle("is-saving", message === "Saving…");
+        $("#saved-label").hidden = true;
+      } else {
+        flag.hidden = true;
+        flag.textContent = "";
+        flag.classList.remove("is-saving");
+      }
+    }
+
+    function flashSaved() {
+      $("#saved-label").hidden = false;
+      clearTimeout(savedFlagTimer);
+      savedFlagTimer = setTimeout(() => {
+        if (!state.dirty) $("#saved-label").hidden = true;
+      }, 2200);
+    }
+
+    function canAutoSave() {
+      if (!state.selectedKey || !state.draft) return false;
+      syncDraftFromForm();
+      if (!String(state.draft.title || "").trim()) return false;
+      for (const seg of state.draft.narrative || []) {
+        if (seg?.type === "stops" && !(seg.ids || []).length) return false;
+      }
+      return true;
+    }
+
+    function scheduleAutoSave() {
+      if (!state.selectedKey || $("#plan-form").hidden) return;
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        autoSaveTimer = null;
+        runAutoSave({ quiet: true });
+      }, AUTO_SAVE_MS);
+      setDirty(true);
+    }
+
+    async function runAutoSave({ quiet = true } = {}) {
+      if (!state.selectedKey || !state.draft || $("#plan-form").hidden) return false;
+      if (!canAutoSave()) return false;
+
+      if (autoSavePromise) return autoSavePromise;
+
+      setDirty(true, "Saving…");
+      $("#save-btn").disabled = true;
+
+      autoSavePromise = (async () => {
+        try {
+          const payload = buildPayload();
+          const res = await fetch(`/api/plan/${encodeURIComponent(state.selectedKey)}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Save failed");
+
+          state.plans[state.selectedKey] = data.plan;
+          state.draft = clonePlan(data.plan);
+          setDirty(false);
+          flashSaved();
+          if (data.warnings?.length) {
+            $("#warn-label").textContent = data.warnings.join(" · ");
+            $("#warn-label").hidden = false;
+          } else {
+            $("#warn-label").hidden = true;
+          }
+          renderPlanList();
+          if (!quiet) toast("Saved");
+          return true;
+        } catch (err) {
+          setDirty(true, "Save failed — try Save");
+          if (!quiet) toast(err.message, true);
+          throw err;
+        } finally {
+          autoSavePromise = null;
+          $("#save-btn").disabled = false;
+        }
+      })();
+
+      return autoSavePromise;
+    }
+
+    async function leaveCurrentPlan() {
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = null;
+      if (autoSavePromise) {
+        try {
+          await autoSavePromise;
+        } catch {
+          return false;
+        }
+      }
+      if (!state.dirty) return true;
+      if (canAutoSave()) {
+        try {
+          await runAutoSave({ quiet: true });
+          return !state.dirty;
+        } catch {
+          return false;
+        }
+      }
+      return confirm("You have unsaved changes. Discard them?");
+    }
+
+    function toast(msg, isError) {
+      const el = $("#toast");
+      el.textContent = msg;
+      el.classList.toggle("error", !!isError);
+      el.classList.add("show");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => el.classList.remove("show"), 3200);
+    }
+
+    function clonePlan(plan) {
+      return JSON.parse(JSON.stringify(plan));
+    }
+
+    function getFilteredPlans() {
+      const q = $("#plan-search").value.trim().toLowerCase();
+      const hoodFilter = ($("#plan-filter-neighborhood").value || "").toLowerCase();
+      const order = state.planOrder.length ? state.planOrder : Object.keys(state.plans);
+      return order.filter((key) => {
+        const plan = state.plans[key];
+        if (!plan) return false;
+        if (hoodFilter && planNeighborhood(plan) !== hoodFilter) return false;
+        if (!q) return true;
+        return key.includes(q) || (plan.title || "").toLowerCase().includes(q);
+      });
+    }
+
+    function renderPlanList() {
+      const list = $("#plan-list");
+      const filtered = getFilteredPlans();
+      $("#list-count").textContent = `${filtered.length} plan${filtered.length === 1 ? "" : "s"}`;
+
+      if (!filtered.length) {
+        list.innerHTML = '<div class="list-empty">No plans match.</div>';
+        return;
+      }
+
+      list.innerHTML = filtered.map((key) => {
+        const plan = state.plans[key];
+        const hood = planNeighborhood(plan);
+        const stops = (plan.stops || []).length;
+        return `
+          <div class="plan-row ${key === state.selectedKey ? "active" : ""}" data-key="${escapeHtml(key)}">
+            <div class="row-top">
+              <span class="row-name">${escapeHtml(plan.title || key)}</span>
+            </div>
+            <div class="row-key">${escapeHtml(key)}</div>
+            <div class="row-meta">
+              ${plan.duration ? `<span class="pill">${escapeHtml(plan.duration)}</span>` : ""}
+              <span class="pill hood">${escapeHtml(neighborhoodTitle(hood))}</span>
+              <span class="pill">${stops} stop${stops === 1 ? "" : "s"}</span>
+            </div>
+          </div>`;
+      }).join("");
+
+      list.querySelectorAll(".plan-row").forEach((row) => {
+        row.addEventListener("click", () => selectPlan(row.dataset.key));
+      });
+    }
+
+    function populateNeighborhoodSelects() {
+      const order = state.refs.neighborhoods?.neighborhoodOrder || [];
+      const opts = order.map((id) =>
+        `<option value="${escapeHtml(id)}">${escapeHtml(neighborhoodTitle(id))}</option>`
+      ).join("");
+      $("#plan-neighborhood").innerHTML = opts;
+      $("#new-neighborhood").innerHTML = opts;
+      $("#stop-filter-neighborhood").innerHTML = opts;
+      $("#plan-filter-neighborhood").innerHTML =
+        `<option value="">All neighborhoods</option>${opts}`;
+    }
+
+    function renderCategoryFilter() {
+      const wrap = $("#filter-categories");
+      wrap.innerHTML = (state.refs.categories || []).map((c) =>
+        `<button type="button" class="filter-chip ${state.filterCategories.has(c) ? "on" : ""}" data-c="${escapeHtml(c)}">${escapeHtml(c)}</button>`
+      ).join("");
+      wrap.querySelectorAll(".filter-chip").forEach((ch) => {
+        ch.addEventListener("click", () => {
+          if (state.filterCategories.has(ch.dataset.c)) state.filterCategories.delete(ch.dataset.c);
+          else state.filterCategories.add(ch.dataset.c);
+          renderStopPicker();
+          renderCategoryFilter();
+        });
+      });
+    }
+
+    function getFilteredPickerStops() {
+      if (!state.draft) return [];
+      const q = $("#stop-search").value.trim().toLowerCase();
+      const sort = $("#stop-sort").value;
+      let list = stopsForNeighborhood(pickerNeighborhood());
+      if (state.filterCategories.size) {
+        list = list.filter((s) =>
+          (s.categories || []).some((c) => state.filterCategories.has(c))
+        );
+      }
+      if (q) {
+        list = list.filter((s) =>
+          (s.name || "").toLowerCase().includes(q) ||
+          (s.crossStreet || "").toLowerCase().includes(q) ||
+          (s.id || "").toLowerCase().includes(q)
+        );
+      }
+      list.sort((a, b) => {
+        if (sort === "cross") {
+          return (a.crossStreet || "").localeCompare(b.crossStreet || "");
+        }
+        if (sort === "id") return (a.id || "").localeCompare(b.id || "");
+        return (a.name || "").localeCompare(b.name || "");
+      });
+      return list;
+    }
+
+    function activeGroupIds() {
+      if (state.activeSegIndex == null || !state.draft?.narrative) return new Set();
+      const seg = state.draft.narrative[state.activeSegIndex];
+      if (!seg || seg.type !== "stops") return new Set();
+      return new Set(seg.ids || []);
+    }
+
+    function renderStopPicker() {
+      const list = $("#stop-picker");
+      if (!state.draft) {
+        list.innerHTML = '<div class="list-empty">Select a plan first.</div>';
+        $("#picker-count").textContent = "";
+        return;
+      }
+      const filtered = getFilteredPickerStops();
+      const inGroup = activeGroupIds();
+      $("#picker-count").textContent = `${filtered.length} stop${filtered.length === 1 ? "" : "s"} in ${neighborhoodTitle(pickerNeighborhood())}`;
+
+      if (!filtered.length) {
+        list.innerHTML = '<div class="list-empty">No stops match.</div>';
+        return;
+      }
+
+      list.innerHTML = filtered.map((s) => {
+        const added = inGroup.has(s.id);
+        const draft = isDraftSource(s._source);
+        return `
+          <div class="stop-row ${added ? "added" : ""}" data-id="${escapeHtml(s.id)}">
+            <div class="row-top">
+              <span class="row-name">${escapeHtml(s.name)}</span>
+              <span class="row-id">${escapeHtml(s.id)}</span>
+            </div>
+            <div class="row-meta">
+              ${(s.categories || []).map((c) => `<span class="pill cat">${escapeHtml(c)}</span>`).join("")}
+              ${s.crossStreet ? `<span class="pill">${escapeHtml(s.crossStreet)}</span>` : ""}
+              ${draft ? '<span class="pill">draft</span>' : ""}
+            </div>
+          </div>`;
+      }).join("");
+
+      list.querySelectorAll(".stop-row").forEach((row) => {
+        row.addEventListener("click", () => addStopToPlan(row.dataset.id));
+      });
+    }
+
+    function ensureActiveStopGroup() {
+      if (!state.draft) return null;
+      if (!Array.isArray(state.draft.narrative)) state.draft.narrative = [];
+      if (state.activeSegIndex != null) {
+        const seg = state.draft.narrative[state.activeSegIndex];
+        if (seg?.type === "stops") return state.activeSegIndex;
+      }
+      state.draft.narrative.push({ type: "stops", ids: [] });
+      state.activeSegIndex = state.draft.narrative.length - 1;
+      return state.activeSegIndex;
+    }
+
+    function addStopToPlan(stopId) {
+      if (!state.draft || !stopId) return;
+      const idx = ensureActiveStopGroup();
+      const seg = state.draft.narrative[idx];
+      if (!seg.ids.includes(stopId)) seg.ids.push(stopId);
+      scheduleAutoSave();
+      renderNarrative();
+      renderStopPicker();
+    }
+
+    function removeStopFromSegment(segIndex, chipIndex) {
+      const seg = state.draft.narrative[segIndex];
+      if (!seg?.ids) return;
+      seg.ids.splice(chipIndex, 1);
+      if (seg.layout === "or" && seg.ids.length < 2) delete seg.layout;
+      scheduleAutoSave();
+      renderNarrative();
+      renderStopPicker();
+    }
+
+    function toggleOrGroup(segIndex) {
+      const seg = state.draft.narrative[segIndex];
+      if (!seg || seg.type !== "stops" || (seg.ids || []).length < 2) return;
+      if (seg.layout === "or") delete seg.layout;
+      else seg.layout = "or";
+      scheduleAutoSave();
+      renderNarrative();
+    }
+
+    function removeSegment(segIndex) {
+      state.draft.narrative.splice(segIndex, 1);
+      if (state.activeSegIndex === segIndex) state.activeSegIndex = null;
+      else if (state.activeSegIndex > segIndex) state.activeSegIndex -= 1;
+      scheduleAutoSave();
+      renderNarrative();
+    }
+
+    function moveSegment(from, to) {
+      if (from === to || from < 0 || to < 0) return;
+      const arr = state.draft.narrative;
+      if (from >= arr.length || to >= arr.length) return;
+      const [item] = arr.splice(from, 1);
+      arr.splice(to, 0, item);
+      if (state.activeSegIndex === from) state.activeSegIndex = to;
+      else if (state.activeSegIndex > from && state.activeSegIndex <= to) state.activeSegIndex -= 1;
+      else if (state.activeSegIndex < from && state.activeSegIndex >= to) state.activeSegIndex += 1;
+      scheduleAutoSave();
+      renderNarrative();
+    }
+
+    function moveChip(segIndex, from, to) {
+      const seg = state.draft.narrative[segIndex];
+      if (!seg?.ids || from === to) return;
+      const [item] = seg.ids.splice(from, 1);
+      seg.ids.splice(to, 0, item);
+      scheduleAutoSave();
+      renderNarrative();
+    }
+
+    function renderNarrative() {
+      const wrap = $("#narrative-list");
+      const narrative = state.draft?.narrative || [];
+      if (!narrative.length) {
+        wrap.innerHTML = '<div class="list-empty">No segments yet — add prose or a stop group.</div>';
+        return;
+      }
+
+      wrap.innerHTML = narrative.map((seg, i) => {
+        const isActive = i === state.activeSegIndex;
+        const isStops = seg.type === "stops";
+        const typeLabel = isStops ? (seg.layout === "or" ? "Stops (or)" : "Stops") : "Prose";
+        let body = "";
+        if (isStops) {
+          const chips = (seg.ids || []).map((id, ci) => {
+            const stop = stopById(id);
+            const name = stop?.name || id;
+            return `
+              <span class="stop-chip" draggable="true" data-seg="${i}" data-chip="${ci}">
+                <span>${escapeHtml(name)}</span>
+                <span class="chip-id">${escapeHtml(id)}</span>
+                <button type="button" data-remove-seg="${i}" data-remove-chip="${ci}" title="Remove">&times;</button>
+              </span>`;
+          }).join("");
+          body = `<div class="stop-chips">${chips || '<span class="seg-empty">Click stops in the picker or use type-ahead</span>'}</div>`;
+        } else {
+          body = `<textarea data-seg-text="${i}" placeholder="Paragraph text…">${escapeHtml(seg.text || "")}</textarea>`;
+        }
+
+        const orBtn = isStops && (seg.ids || []).length >= 2
+          ? `<button type="button" class="sm" data-or="${i}">${seg.layout === "or" ? "Or group ✓" : "Or group"}</button>`
+          : "";
+
+        return `
+          <div class="seg-card ${isActive && isStops ? "active-group" : ""}" data-seg-index="${i}" draggable="true">
+            <div class="seg-head">
+              <span class="seg-drag" title="Drag to reorder">⠿</span>
+              <span class="seg-type">${typeLabel}</span>
+              ${orBtn}
+              <button type="button" class="sm" data-remove-seg-only="${i}">Remove</button>
+            </div>
+            <div class="seg-body">${body}</div>
+          </div>`;
+      }).join("");
+
+      wrap.querySelectorAll(".seg-card").forEach((card) => {
+        const idx = Number(card.dataset.segIndex);
+        card.addEventListener("click", (e) => {
+          if (e.target.closest("button, textarea, .stop-chip")) return;
+          if (state.draft.narrative[idx]?.type === "stops") {
+            state.activeSegIndex = idx;
+            renderNarrative();
+            renderStopPicker();
+          }
+        });
+      });
+
+      wrap.querySelectorAll("[data-seg-text]").forEach((ta) => {
+        ta.addEventListener("input", (e) => {
+          const i = Number(e.target.dataset.segText);
+          state.draft.narrative[i].text = e.target.value;
+          scheduleAutoSave();
+        });
+      });
+
+      wrap.querySelectorAll("[data-remove-seg-only]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          removeSegment(Number(btn.dataset.removeSegOnly));
+        });
+      });
+
+      wrap.querySelectorAll("[data-or]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleOrGroup(Number(btn.dataset.or));
+        });
+      });
+
+      wrap.querySelectorAll("[data-remove-seg]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          removeStopFromSegment(Number(btn.dataset.removeSeg), Number(btn.dataset.removeChip));
+        });
+      });
+
+      // Segment drag
+      wrap.querySelectorAll(".seg-card").forEach((card) => {
+        card.addEventListener("dragstart", (e) => {
+          if (e.target.closest(".stop-chip")) return;
+          state.drag = { type: "segment", segIndex: Number(card.dataset.segIndex) };
+          card.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+        });
+        card.addEventListener("dragend", () => {
+          card.classList.remove("dragging");
+          wrap.querySelectorAll(".drag-over").forEach((el) => el.classList.remove("drag-over"));
+          state.drag = { type: null, segIndex: null, chipIndex: null };
+        });
+        card.addEventListener("dragover", (e) => {
+          if (state.drag.type !== "segment") return;
+          e.preventDefault();
+          card.classList.add("drag-over");
+        });
+        card.addEventListener("dragleave", () => card.classList.remove("drag-over"));
+        card.addEventListener("drop", (e) => {
+          e.preventDefault();
+          card.classList.remove("drag-over");
+          if (state.drag.type === "segment") {
+            moveSegment(state.drag.segIndex, Number(card.dataset.segIndex));
+          }
+        });
+      });
+
+      // Chip drag within segment
+      wrap.querySelectorAll(".stop-chip").forEach((chip) => {
+        chip.addEventListener("dragstart", (e) => {
+          e.stopPropagation();
+          state.drag = {
+            type: "chip",
+            segIndex: Number(chip.dataset.seg),
+            chipIndex: Number(chip.dataset.chip),
+          };
+          chip.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+        });
+        chip.addEventListener("dragend", () => {
+          chip.classList.remove("dragging");
+          state.drag = { type: null, segIndex: null, chipIndex: null };
+        });
+        chip.addEventListener("dragover", (e) => {
+          if (state.drag.type !== "chip") return;
+          if (Number(chip.dataset.seg) !== state.drag.segIndex) return;
+          e.preventDefault();
+          e.stopPropagation();
+        });
+        chip.addEventListener("drop", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (state.drag.type === "chip" && Number(chip.dataset.seg) === state.drag.segIndex) {
+            moveChip(state.drag.segIndex, state.drag.chipIndex, Number(chip.dataset.chip));
+          }
+        });
+      });
+    }
+
+    function syncFormFromDraft() {
+      if (!state.draft || !state.selectedKey) return;
+      $("#plan-key").value = state.selectedKey;
+      $("#plan-neighborhood").value = planNeighborhood(state.draft);
+      syncPickerNeighborhoodToPlan();
+      $("#plan-title").value = state.draft.title || "";
+      $("#plan-duration").value = state.draft.duration || "";
+      $("#plan-description").value = state.draft.description || "";
+      $("#plan-introduction").value = state.draft.introduction || "";
+      renderNarrative();
+      renderStopPicker();
+    }
+
+    function syncDraftFromForm() {
+      if (!state.draft) return;
+      state.draft.title = $("#plan-title").value.trim();
+      state.draft.duration = $("#plan-duration").value.trim();
+      state.draft.description = $("#plan-description").value.trim();
+      state.draft.introduction = $("#plan-introduction").value.trim();
+      const hood = $("#plan-neighborhood").value || "commercial";
+      if (hood === "commercial") delete state.draft.neighborhood;
+      else state.draft.neighborhood = hood;
+    }
+
+    function buildPayload() {
+      syncDraftFromForm();
+      return {
+        title: state.draft.title,
+        duration: state.draft.duration,
+        description: state.draft.description,
+        introduction: state.draft.introduction,
+        neighborhood: planNeighborhood(state.draft),
+        narrative: state.draft.narrative || [],
+        stops: state.draft.stops || [],
+      };
+    }
+
+    async function selectPlan(key) {
+      if (key === state.selectedKey) return;
+      if (!(await leaveCurrentPlan())) return;
+      state.selectedKey = key;
+      state.draft = clonePlan(state.plans[key] || {});
+      if (!Array.isArray(state.draft.narrative)) state.draft.narrative = [];
+      state.activeSegIndex = state.draft.narrative.findIndex((s) => s.type === "stops");
+      if (state.activeSegIndex < 0) state.activeSegIndex = null;
+      setDirty(false);
+      $("#warn-label").hidden = true;
+      $("#editor-empty").hidden = true;
+      $("#plan-form").hidden = false;
+      $("#save-bar").hidden = false;
+      syncFormFromDraft();
+      renderPlanList();
+    }
+
+    async function savePlan(e) {
+      e.preventDefault();
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = null;
+      try {
+        await runAutoSave({ quiet: false });
+      } catch {
+        /* toast shown in runAutoSave */
+      }
+    }
+
+    // Type-ahead
+    function typeaheadMatches(q) {
+      if (!state.draft || !q) return [];
+      const lower = q.toLowerCase();
+      return stopsForNeighborhood(pickerNeighborhood())
+        .filter((s) => (s.name || "").toLowerCase().includes(lower))
+        .slice(0, 8);
+    }
+
+    function renderTypeaheadMenu(matches) {
+      const menu = $("#typeahead-menu");
+      if (!matches.length) {
+        menu.classList.remove("open");
+        menu.innerHTML = "";
+        return;
+      }
+      menu.innerHTML = matches.map((s, i) =>
+        `<div class="typeahead-item ${i === 0 ? "active" : ""}" data-id="${escapeHtml(s.id)}">
+          ${escapeHtml(s.name)}
+          <div class="sub">${escapeHtml(s.id)}${s.crossStreet ? " · " + escapeHtml(s.crossStreet) : ""}</div>
+        </div>`
+      ).join("");
+      menu.classList.add("open");
+      menu.querySelectorAll(".typeahead-item").forEach((item) => {
+        item.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          pickTypeahead(item.dataset.id);
+        });
+      });
+    }
+
+    function pickTypeahead(id) {
+      $("#typeahead").value = "";
+      $("#typeahead-menu").classList.remove("open");
+      addStopToPlan(id);
+    }
+
+    let typeaheadIndex = 0;
+    $("#typeahead").addEventListener("input", () => {
+      typeaheadIndex = 0;
+      renderTypeaheadMenu(typeaheadMatches($("#typeahead").value.trim()));
+    });
+    $("#typeahead").addEventListener("keydown", (e) => {
+      const menu = $("#typeahead-menu");
+      const items = [...menu.querySelectorAll(".typeahead-item")];
+      if (e.key === "ArrowDown" && items.length) {
+        e.preventDefault();
+        typeaheadIndex = Math.min(typeaheadIndex + 1, items.length - 1);
+        items.forEach((el, i) => el.classList.toggle("active", i === typeaheadIndex));
+      } else if (e.key === "ArrowUp" && items.length) {
+        e.preventDefault();
+        typeaheadIndex = Math.max(typeaheadIndex - 1, 0);
+        items.forEach((el, i) => el.classList.toggle("active", i === typeaheadIndex));
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        if (items.length) pickTypeahead(items[typeaheadIndex]?.dataset.id || items[0].dataset.id);
+        else {
+          const q = $("#typeahead").value.trim().toLowerCase();
+          const exact = stopsForNeighborhood(pickerNeighborhood()).find((s) => (s.name || "").toLowerCase() === q);
+          if (exact) pickTypeahead(exact.id);
+        }
+      } else if (e.key === "Escape") {
+        menu.classList.remove("open");
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".typeahead-wrap")) $("#typeahead-menu").classList.remove("open");
+    });
+
+    $("#add-prose").addEventListener("click", () => {
+      if (!state.draft) return;
+      state.draft.narrative.push({ type: "prose", text: "" });
+      scheduleAutoSave();
+      renderNarrative();
+    });
+
+    $("#add-stops").addEventListener("click", () => {
+      if (!state.draft) return;
+      state.draft.narrative.push({ type: "stops", ids: [] });
+      state.activeSegIndex = state.draft.narrative.length - 1;
+      setDirty(true);
+      renderNarrative();
+      renderStopPicker();
+    });
+
+    $("#build-intro").addEventListener("click", () => {
+      if (!state.draft) return;
+      const prose = (state.draft.narrative || [])
+        .filter((s) => s.type === "prose" && String(s.text || "").trim())
+        .map((s) => String(s.text).trim());
+      $("#plan-introduction").value = prose.join("\n\n");
+      scheduleAutoSave();
+    });
+
+    $("#plan-neighborhood").addEventListener("change", () => {
+      if (!state.draft) return;
+      const newHood = $("#plan-neighborhood").value;
+      const oldHood = planNeighborhood(state.draft);
+      if (newHood === oldHood) return;
+      const usedIds = new Set();
+      for (const seg of state.draft.narrative || []) {
+        if (seg.type === "stops") for (const id of seg.ids || []) usedIds.add(id);
+      }
+      const bad = [...usedIds].filter((id) => {
+        const s = stopById(id);
+        return s && (s.neighborhood || "commercial") !== newHood;
+      });
+      if (bad.length) {
+        const ok = confirm(
+          `This plan references ${bad.length} stop(s) outside ${neighborhoodTitle(newHood)}. Change neighborhood anyway?`
+        );
+        if (!ok) {
+          $("#plan-neighborhood").value = oldHood;
+          return;
+        }
+      }
+      if (newHood === "commercial") delete state.draft.neighborhood;
+      else state.draft.neighborhood = newHood;
+      syncPickerNeighborhoodToPlan();
+      scheduleAutoSave();
+      renderStopPicker();
+    });
+
+    ["plan-title", "plan-duration", "plan-description", "plan-introduction"].forEach((id) => {
+      $("#" + id).addEventListener("input", scheduleAutoSave);
+    });
+
+    // New plan modal
+    async function openNewModal() {
+      if (!(await leaveCurrentPlan())) return;
+      $("#new-title-input").value = "";
+      $("#new-duration").value = "";
+      $("#new-description").value = "";
+      $("#new-neighborhood").value = "commercial";
+      $("#new-overlay").hidden = false;
+      $("#new-title-input").focus();
+    }
+
+    function closeNewModal() {
+      $("#new-overlay").hidden = true;
+    }
+
+    async function submitNewPlan() {
+      const title = $("#new-title-input").value.trim();
+      if (!title) { toast("Title is required", true); return; }
+      const btn = $("#new-submit");
+      btn.disabled = true;
+      try {
+        const res = await fetch("/api/plans", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title,
+            duration: $("#new-duration").value.trim(),
+            description: $("#new-description").value.trim(),
+            neighborhood: $("#new-neighborhood").value,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Create failed");
+        state.plans[data.key] = data.plan;
+        if (!state.planOrder.includes(data.key)) state.planOrder.push(data.key);
+        closeNewModal();
+        state.dirty = false;
+        await selectPlan(data.key);
+        toast(`Created ${data.key}`);
+      } catch (err) {
+        toast(err.message, true);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    $("#new-plan").addEventListener("click", openNewModal);
+    $("#new-cancel").addEventListener("click", closeNewModal);
+    $("#new-submit").addEventListener("click", submitNewPlan);
+    $("#new-overlay").addEventListener("click", (e) => {
+      if (e.target === $("#new-overlay")) closeNewModal();
+    });
+
+    $("#plan-form").addEventListener("submit", savePlan);
+    $("#plan-search").addEventListener("input", renderPlanList);
+    $("#plan-filter-neighborhood").addEventListener("change", renderPlanList);
+    $("#stop-search").addEventListener("input", renderStopPicker);
+    $("#stop-sort").addEventListener("change", renderStopPicker);
+    $("#stop-filter-neighborhood").addEventListener("change", renderStopPicker);
+    $("#reload").addEventListener("click", async () => {
+      if (!(await leaveCurrentPlan())) return;
+      load();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+        e.preventDefault();
+        if (state.selectedKey) savePlan(e);
+      }
+    });
+
+    // Panel resizers
+    function setupResizer(handle, cssVar, min, max) {
+      let startX = 0;
+      let startW = 0;
+      handle.addEventListener("mousedown", (e) => {
+        startX = e.clientX;
+        startW = parseInt(getComputedStyle(document.documentElement).getPropertyValue(cssVar), 10) || min;
+        document.body.classList.add("resizing-panel");
+        handle.classList.add("dragging");
+        const onMove = (ev) => {
+          const delta = ev.clientX - startX;
+          const w = handle.id === "resizer-left"
+            ? startW + delta
+            : startW - delta;
+          document.documentElement.style.setProperty(cssVar, `${Math.min(max, Math.max(min, w))}px`);
+        };
+        const onUp = () => {
+          document.body.classList.remove("resizing-panel");
+          handle.classList.remove("dragging");
+          window.removeEventListener("mousemove", onMove);
+          window.removeEventListener("mouseup", onUp);
+        };
+        window.addEventListener("mousemove", onMove);
+        window.addEventListener("mouseup", onUp);
+      });
+    }
+    setupResizer($("#resizer-left"), "--list-panel-width", 200, 480);
+    setupResizer($("#resizer-right"), "--picker-panel-width", 200, 480);
+
+    async function load() {
+      const [plansRes, stopsRes, refsRes] = await Promise.all([
+        fetch("/api/plans"),
+        fetch("/api/stops"),
+        fetch("/api/plans/refs"),
+      ]);
+      const plansData = await plansRes.json();
+      const stopsData = await stopsRes.json();
+      const refsData = await refsRes.json();
+
+      state.planOrder = plansData.planOrder || [];
+      state.plans = plansData.plans || {};
+      state.summary = plansData.summary || [];
+      state.stops = stopsData.stops || [];
+      state.refs.neighborhoods = refsData.neighborhoods || state.refs.neighborhoods;
+      state.refs.categories = refsData.categories || [];
+
+      populateNeighborhoodSelects();
+      renderCategoryFilter();
+      renderPlanList();
+
+      const prev = state.selectedKey;
+      if (prev && state.plans[prev]) {
+        state.draft = clonePlan(state.plans[prev]);
+        syncFormFromDraft();
+      } else {
+        state.selectedKey = null;
+        state.draft = null;
+        $("#editor-empty").hidden = false;
+        $("#plan-form").hidden = true;
+        $("#save-bar").hidden = true;
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

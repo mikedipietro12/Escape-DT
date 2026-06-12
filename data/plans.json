@@ -1,437 +1,809 @@
 {
-  "version": 2,
-  "planOrder": [
-    "world-cup-day",
-    "quick-sip-shop",
-    "quick-sip-shop-2",
-    "half-a-day-mid-morning",
-    "half-a-day-evening",
-    "mp-full-day-main",
-    "mp-kids-afternoon-main",
-    "mp-afternoon-main",
-    "mp-evening-main",
-    "chinatown-pre-post-match"
-  ],
-  "plans": {
-    "world-cup-day": {
-      "title": "A World Cup Day on the Drive (Off Downtown)",
-      "duration": "3–5 hours",
-      "description": "Get out of downtown and come to Little Italy for a game.",
-      "introduction": "I've been lucky enough to experience Italy winning the Euros on Commercial Drive. The energy is unlike anything else you will experience. Unfortunately, as many of you know, Italy did not make this year's World Cup, but trust me, that won't affect the Drive. There is still a plethora of spots to check out to get all of your World Cup culture, grab a coffee, watch a game, and support some local businesses who are equally as excited about the World Cup. The neighborhood is home to the Portuguese Club, a Turkish/Mediterranean grocer, and many, many soccer fans.\n\nFor me, I'd start the day early-ish. Head to the Drive on the Skytrain and walk up to Prado for a quick espresso and a \"cookie with no name\" to get the belly ready for the nerves of the day. From there, you can walk around and find a spot for lunch or to watch the game. Don't Argue would be a great spot to get a slice of pizza, and if you can nab a table, you can likely watch a game (it's a small space, and will likely be tight). From there, you can wander to the Charlatan or any other bar or restaurant on the Drive; I'm sure most will be playing the game!\n\nPost game, head further down the Drive and get some fried chicken from Mogu or Downlow while you observe ecstatic winners parading their colours around the neighborhood.\n\nIf you're in the mood for celebration, I'd say an ice cream from Earnest is probably in order. From there, you can walk back to the skytrain, or hang around the drive and see where the night takes you!",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "I've been lucky enough to experience Italy winning the Euros on Commercial Drive. The energy is unlike anything else you will experience. Unfortunately, as many of you know, Italy did not make this year's World Cup, but trust me, that won't affect the Drive. There is still a plethora of spots to check out to get all of your World Cup culture, grab a coffee, watch a game, and support some local businesses who are equally as excited about the World Cup. The neighborhood is home to the Portuguese Club, a Turkish/Mediterranean grocer, and many, many soccer fans.\n\nFor me, I'd start the day early-ish. Head to the Drive on the Skytrain and walk up to Prado for a quick espresso and a \"cookie with no name\" to get the belly ready for the nerves of the day."
+    "version": 2,
+    "planOrder": [
+        "world-cup-day",
+        "quick-sip-shop",
+        "quick-sip-shop-2",
+        "half-a-day-mid-morning",
+        "half-a-day-evening",
+        "mp-full-day-main",
+        "mp-kids-afternoon-main",
+        "mp-afternoon-main",
+        "mp-evening-main",
+        "chinatown-pre-post-match"
+    ],
+    "plans": {
+        "world-cup-day": {
+            "title": "A World Cup Day on the Drive (Off Downtown)",
+            "duration": "3–5 hours",
+            "description": "Get out of downtown and come to Little Italy for a game.",
+            "introduction": "I've been lucky enough to experience Italy winning the Euros on Commercial Drive. The energy is unlike anything else you will experience. Unfortunately, as many of you know, Italy did not make this year's World Cup, but trust me, that won't affect the Drive. There is still a plethora of spots to check out to get all of your World Cup culture, grab a coffee, watch a game, and support some local businesses who are equally as excited about the World Cup. The neighborhood is home to the Portuguese Club, a Turkish/Mediterranean grocer, and many, many soccer fans.\n\nFor me, I'd start the day early-ish. Head to the Drive on the Skytrain and walk up to Prado for a quick espresso and a \"cookie with no name\" to get the belly ready for the nerves of the day. From there, you can walk around and find a spot for lunch or to watch the game. Don't Argue would be a great spot to get a slice of pizza, and if you can nab a table, you can likely watch a game (it's a small space, and will likely be tight). From there, you can wander to the Charlatan or any other bar or restaurant on the Drive; I'm sure most will be playing the game!\n\nPost game, head further down the Drive and get some fried chicken from Mogu or Downlow while you observe ecstatic winners parading their colours around the neighborhood.\n\nIf you're in the mood for celebration, I'd say an ice cream from Earnest is probably in order. From there, you can walk back to the skytrain, or hang around the drive and see where the night takes you!",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "I've been lucky enough to experience Italy winning the Euros on Commercial Drive. The energy is unlike anything else you will experience. Unfortunately, as many of you know, Italy did not make this year's World Cup, but trust me, that won't affect the Drive. There is still a plethora of spots to check out to get all of your World Cup culture, grab a coffee, watch a game, and support some local businesses who are equally as excited about the World Cup. The neighborhood is home to the Portuguese Club, a Turkish/Mediterranean grocer, and many, many soccer fans.\n\nFor me, I'd start the day early-ish. Head to the Drive on the Skytrain and walk up to Prado for a quick espresso and a \"cookie with no name\" to get the belly ready for the nerves of the day."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s3"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "From there, you can walk around and find a spot for lunch or to watch the game. Don't Argue would be a great spot to get a slice of pizza, and if you can nab a table, you can likely watch a game (it's a small space, and will likely be tight). From there, you can wander to the Charlatan or any other bar or restaurant on the Drive; I'm sure most will be playing the game!"
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s19",
+                        "s10"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Post game, head further down the Drive and get some fried chicken from Mogu or Downlow while you observe ecstatic winners parading their colours around the neighborhood."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s21",
+                        "s22"
+                    ],
+                    "layout": "or"
+                },
+                {
+                    "type": "prose",
+                    "text": "If you're in the mood for celebration, I'd say an ice cream from Earnest is probably in order. From there, you can walk back to the skytrain, or hang around the drive and see where the night takes you!"
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s41"
+                    ]
+                }
+            ],
+            "stops": [
+                "s3",
+                "s19",
+                "s10",
+                "s21",
+                "s22",
+                "s41"
+            ]
         },
-        { "type": "stops", "ids": ["s3"] },
-        {
-          "type": "prose",
-          "text": "From there, you can walk around and find a spot for lunch or to watch the game. Don't Argue would be a great spot to get a slice of pizza, and if you can nab a table, you can likely watch a game (it's a small space, and will likely be tight). From there, you can wander to the Charlatan or any other bar or restaurant on the Drive; I'm sure most will be playing the game!"
+        "quick-sip-shop": {
+            "title": "Quick Sip & Shop (Stay Close to Train)",
+            "duration": "45-60 mins",
+            "description": "If you have under an hour, here's a quick taste of what Commercial has to offer.",
+            "introduction": "Once you get off the Skytrain, head north towards the mountains. Stop in at JJ bean and grab a chocolate chip cookie (or a Krispie raisin), grab a quick shot of espresso. If you wanted to spend a bit more time (or need a second coffee), head up to Prado for another drink and some people watching on the corner. You can pop into Audiopile or Canterbury Tales if you want to take a look, but if time is really limited, keep walking down to Mintage. In Mintage, you will find some amazing vintage clothing, from t-shirts, to vintage dresses, cowboy boots to running vests. An amazing spot to just walk around even if you're not shopping.",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "Once you get off the Skytrain, head north towards the mountains. Stop in at JJ bean and grab a chocolate chip cookie (or a Krispie raisin), grab a quick shot of espresso."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s1"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "If you wanted to spend a bit more time (or need a second coffee), head up to Prado for another drink and some people watching on the corner."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s3"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "You can pop into Audiopile or Canterbury Tales if you want to take a look, but if time is really limited, keep walking down to Mintage."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s27",
+                        "s28"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "In Mintage, you will find some amazing vintage clothing, from t-shirts, to vintage dresses, cowboy boots to running vests. An amazing spot to just walk around even if you're not shopping."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s7"
+                    ]
+                }
+            ],
+            "stops": [
+                "s1",
+                "s3",
+                "s27",
+                "s28",
+                "s7"
+            ]
         },
-        { "type": "stops", "ids": ["s19", "s10"] },
-        {
-          "type": "prose",
-          "text": "Post game, head further down the Drive and get some fried chicken from Mogu or Downlow while you observe ecstatic winners parading their colours around the neighborhood."
+        "quick-sip-shop-2": {
+            "title": "Quick Sip & Shop 2 (Start in the North)",
+            "duration": "45-60 mins",
+            "description": "Starting at the opposite end of the Skytrain and working your way back to the train. Coffee, shopping, art, and a nice walk.",
+            "introduction": "If you have the ability to start in the north end, this would probably be my preferred quick stop. Start with getting a coffee at La Tana (either to stay or go), then pop into Alterior, in there you can check out locally made clothing and some specially curated brands you've never seen anywhere else. While you are in Alterior, you can also check out Vintage Sponsor; easily one of the best vintage shops in the city, I can't even go in there without buying something. Head upstairs and check out Book Section, a free library and book shop. If you have the time, pop into Slice of Life or Fun Haus. Slice if you are looking to browse some art and some locally made gifts. Fun Haus if you want to see some collectabiles and more vintange clothing. At this point, it's likely time to head towards the train, which would be about a 20 minute walk south where you will be tempted by so many more spots!",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "If you have the ability to start in the north end, this would probably be my preferred quick stop. Start with getting a coffee at La Tana (either to stay or go),"
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s24"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "then pop into Alterior, in there you can check out locally made clothing and some specially curated brands you've never seen anywhere else. While you are in Alterior, you can also check out Vintage Sponsor; easily one of the best vintage shops in the city, I can't even go in there without buying something."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s12"
+                    ]
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s13"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Head upstairs and check out Book Section, a free library and book shop."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s31"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "If you have the time, pop into Slice of Life or Fun Haus. Slice if you are looking to browse some art and some locally made gifts. Fun Haus if you want to see some collectabiles and more vintange clothing."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s26",
+                        "s25"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "At this point, it's likely time to head towards the train, which would be about a 20 minute walk south where you will be tempted by so many more spots!"
+                }
+            ],
+            "routeMap": "start-north",
+            "stops": [
+                "s24",
+                "s12",
+                "s13",
+                "s31",
+                "s26",
+                "s25"
+            ]
         },
-        { "type": "stops", "ids": ["s21", "s22"], "layout": "or" },
-        {
-          "type": "prose",
-          "text": "If you're in the mood for celebration, I'd say an ice cream from Earnest is probably in order. From there, you can walk back to the skytrain, or hang around the drive and see where the night takes you!"
+        "half-a-day-mid-morning": {
+            "title": "Half A Day On Commercial (Food & Shopping) — Mid-Morning",
+            "duration": "2-5 Hours",
+            "description": "This plan is for people who aren't in a rush, and might need a quick lunch while they shop around the neighborhood.",
+            "introduction": "If you are wanting to spend a few hours in the neighborhood, early-mid day this route is for you. It'll first get you walking a bit off the path of Commercial to head to Mah Milk Bar. From the Skytrain station, you can start walking north, and then at any point, hang a right to head down one of the side streets until you get to Victoria. Keep walking North down Victoria and enjoy this century old neighborhood with some unique houses and massive trees. If you're feeling really adventurous,  you can take another right at some point and go up to Lakewood for some more beautiful and unique architecture. Once you get to Grant & Victoria, head into Mah and grab a coffee and snack. You can eat it there or go across the street to Victoria Park to enjoy some sun in a local neighborhood hangout spot. Once you're done your coffee, you can head back to Commercial to grab a slice of pizza from Don't Argue. Eat it our front with the locals, or, walk down to Grandview Park for some mountain views and people watching. From there, head down the street towards Venables and stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making, and if you're feeling hungry after all that walking, walk one more block north to hit up Cafe La Tana for a delicious Italian lunch. At this point, if you're finding yourself with some time, you can head back to the drive and stop in at Havanas for a snack or drink, while you meander your way back to the Skytrain station.",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "If you are wanting to spend a few hours in the neighborhood, early-mid day this route is for you. It'll first get you walking a bit off the path of Commercial to head to Mah Milk Bar. From the Skytrain station, you can start walking north, and then at any point, hang a right to head down one of the side streets until you get to Victoria. Keep walking North down Victoria and enjoy this century old neighborhood with some unique houses and massive trees. If you're feeling really adventurous,  you can take another right at some point and go up to Lakewood for some more beautiful and unique architecture. Once you get to Grant & Victoria, head into Mah and grab a coffee and snack. You can eat it there or go across the street to Victoria Park to enjoy some sun in a local neighborhood hangout spot."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s32"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Once you're done your coffee, you can head back to Commercial to grab a slice of pizza from Don't Argue. Eat it our front with the locals, or, walk down to Grandview Park for some mountain views and people watching."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s19",
+                        "s34"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "From there, head down the street towards Venables and stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making,"
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s26",
+                        "s25",
+                        "s12"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "and if you're feeling hungry after all that walking, walk one more block north to hit up Cafe La Tana for a delicious Italian lunch."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s24"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "At this point, if you're finding yourself with some time, you can head back to the drive and stop in at Havanas for a snack or drink, while you meander your way back to the Skytrain station."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s35"
+                    ]
+                }
+            ],
+            "stops": [
+                "s32",
+                "s33",
+                "s19",
+                "s34",
+                "s26",
+                "s25",
+                "s12",
+                "s24",
+                "s35"
+            ]
         },
-        { "type": "stops", "ids": ["s41"] }
-      ],
-      "stops": ["s3", "s19", "s10", "s21", "s22", "s41"]
-    },
-    "quick-sip-shop": {
-      "title": "Quick Sip & Shop (Stay Close to Train)",
-      "duration": "45-60 mins",
-      "description": "If you have under an hour, here's a quick taste of what Commercial has to offer.",
-      "introduction": "Once you get off the Skytrain, head north towards the mountains. Stop in at JJ bean and grab a chocolate chip cookie (or a Krispie raisin), grab a quick shot of espresso. If you wanted to spend a bit more time (or need a second coffee), head up to Prado for another drink and some people watching on the corner. You can pop into Audiopile or Canterbury Tales if you want to take a look, but if time is really limited, keep walking down to Mintage. In Mintage, you will find some amazing vintage clothing, from t-shirts, to vintage dresses, cowboy boots to running vests. An amazing spot to just walk around even if you're not shopping.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "Once you get off the Skytrain, head north towards the mountains. Stop in at JJ bean and grab a chocolate chip cookie (or a Krispie raisin), grab a quick shot of espresso."
+        "half-a-day-evening": {
+            "title": "Half A Day On Commercial (Food & Shopping) — Evening",
+            "duration": "2-5 Hours",
+            "description": "This plan is for people who aren't in a rush and want to check out the neighborhood, stop for a drink or afternoon treat, do some shopping, and settle in for a later dinner.",
+            "introduction": "If you are wanting to spend a few hours in the neighborhood and will want to take in some shopping before deciding on a place to eat, this plan would be for you! Start by getting off the Skytrain and enjoying a walk down Commercial to take in the sights and sounds. If you're into records or books, the first two stops would be Canterbury and Audiopile. From there, continue north for your first vintage shop at Mintage, where you will find all kinds of great vintage items for any shape, size, and style. Once you're done there, keep heading towards the mountains and stop for a treat at one of the many coffee shops or corner stores to keep yourself fueled for an early evening of shopping. Once you get to Venables, stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making. At this point, depending on time, you could head back to the drive and grab a drink at the Charlattan patio or Havana patio before heading to Nomo Nomo (reservation recommended) for dinner. If Nomo Nomo is all booked up, Cozen is a great back-up where you can dine-in or take out and eat in one of the many parks or the piazza in the neighborhood.",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "If you are wanting to spend a few hours in the neighborhood and will want to take in some shopping before deciding on a place to eat, this plan would be for you! Start by getting off the Skytrain and enjoying a walk down Commercial to take in the sights and sounds. If you're into records or books, the first two stops would be Canterbury and Audiopile."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s27",
+                        "s28"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "From there, continue north for your first vintage shop at Mintage, where you will find all kinds of great vintage items for any shape, size, and style."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s7"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Once you're done there, keep heading towards the mountains and stop for a treat at one of the many coffee shops or corner stores to keep yourself fueled for an early evening of shopping. Once you get to Venables, stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s26",
+                        "s25",
+                        "s12"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "At this point, depending on time, you could head back to the drive and grab a drink at the Charlattan patio or Havana patio before heading to Nomo Nomo (reservation recommended) for dinner. If Nomo Nomo is all booked up, Cozen is a great back-up where you can dine-in or take out and eat in one of the many parks or the piazza in the neighborhood."
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s10",
+                        "s35"
+                    ]
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s17",
+                        "s11"
+                    ]
+                }
+            ],
+            "stops": [
+                "s27",
+                "s28",
+                "s7",
+                "s26",
+                "s25",
+                "s12",
+                "s10",
+                "s35",
+                "s17",
+                "s11"
+            ]
         },
-        { "type": "stops", "ids": ["s1"] },
-        {
-          "type": "prose",
-          "text": "If you wanted to spend a bit more time (or need a second coffee), head up to Prado for another drink and some people watching on the corner."
+        "mp-full-day-main": {
+            "neighborhood": "mount-pleasant",
+            "title": "Full day (Vintage, Shopping, Eating & Drinking) on Main",
+            "duration": "All day",
+            "description": "If you are looking to spend breakfast, lunch, and dinner all in Mount Pleasant, this route is for you",
+            "introduction": "Mount Pleasant has so many great spots and this plan will take you from the Skytrain, all the way up Main, and back, with a mix of eating, shopping, and exploring.\n\nWhen you get off the Main-Street Science World Skytrain, you can head up the street to enter into the district with all the shops. Stop off at GENE coffee bar for a quick drink and take in the views of where you came from.\n\nYou can then shop around in that close vicinity, F as in Frank, Glory Days, Fish Market Studio, Pulp fiction books, and Mintage Mall.\n\nOnce you've had enough shopping, it might be time for another coffee, tea or light snack and a perfect chance to rest your legs while you recharge for the next leg of the walk. Head up to Federal Store just off Main street to grab a seat on the patio and watch the bikes wizz by.\n\nOnce you're done, if you want some more shopping, Corner Store will be waiting for you before you head back onto Main to see what else the neighborhood has in store.\n\nYou can then continue heading further South, stopping in more vintage shops on the west side of the road, or head straight to Woo to See you and Eugene Choo for new clothes expertly curated.\n\nBy this time, you're probably starving for lunch, so it would be a good chance to stop at Anh and Chi for lunch before you continue further down for a bit more shopping and browsing.\n\nAfter lunch, you can keep walking down Main to check out, Exile, Front & Company & their gift shop.\n\nBy this point, you may be shopped out, so it would be a good time to grab a snack at Liberty Cafe, enjoy the patio, recharge in the sun, and prepare for an evening of drinking and adventure.\n\nSince you already ate at a restaurant at lunch, I'd recommend heading to AJs or Superbaba. But call ahead and order because we are heading for dinner in the park. Once you pick up your food, keep walking west where you will find 33A and B and pick up a six pack so you can enjoy some early evening sun at Jonathan Rogers park.\n\nAfter a couple beers and pizza, if you still have room for ice cream, you can walk off that evening meal and head to Earnest Ice cream, where you can then head towards the seawall for a quick view of the city and mountains before heading back to the skytrain station.",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "Mount Pleasant has so many great spots and this plan will take you from the Skytrain, all the way up Main, and back, with a mix of eating, shopping, and exploring.\n\nWhen you get off the Main-Street Science World Skytrain, you can head up the street to enter into the district with all the shops. Stop off at GENE coffee bar for a quick drink and take in the views of where you came from."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s90"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "You can then shop around in that close vicinity, F as in Frank, Glory Days, Fish Market Studio, Pulp fiction books, and Mintage Mall."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s87",
+                        "s88",
+                        "s182",
+                        "s183",
+                        "s184",
+                        "s89"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Once you've had enough shopping, it might be time for another coffee, tea or light snack and a perfect chance to rest your legs while you recharge for the next leg of the walk. Head up to Federal Store just off Main street to grab a seat on the patio and watch the bikes wizz by."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s80"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Once you're done, if you want some more shopping, Corner Store will be waiting for you before you head back onto Main to see what else the neighborhood has in store."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s91"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "By this time, you're probably starving for lunch, so it would be a good chance to stop at Anh and Chi for lunch before you continue further down for a bit more shopping and browsing."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s102"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "You can then continue heading further South — head straight to Woo to See you and Eugene Choo for new clothes expertly curated."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s116",
+                        "s117"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "After lunch, you can keep walking down Main to check out Exile, Front & Company & their gift shop."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s122",
+                        "s124",
+                        "s125"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "By this point, you may be shopped out, so it would be a good time to grab a snack at Liberty Cafe, enjoy the patio, recharge in the sun, and prepare for an evening of drinking and adventure."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s121"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Since you already ate at a restaurant at lunch, I'd recommend heading to AJs or Superbaba. But call ahead and order because we are heading for dinner in the park."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s185",
+                        "s81"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Once you pick up your food, keep walking west where you will find 33A and B and pick up a six pack so you can enjoy some early evening sun at Jonathan Rogers park."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s79",
+                        "s78"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "After a couple beers and pizza, if you still have room for ice cream, you can walk off that evening meal and head to Earnest Ice cream, where you can then head towards the seawall for a quick view of the city and mountains before heading back to the skytrain station."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s73"
+                    ]
+                }
+            ],
+            "stops": [
+                "s90",
+                "s87",
+                "s88",
+                "s182",
+                "s183",
+                "s184",
+                "s89",
+                "s80",
+                "s91",
+                "s102",
+                "s116",
+                "s117",
+                "s122",
+                "s124",
+                "s125",
+                "s121",
+                "s185",
+                "s81",
+                "s79",
+                "s78",
+                "s73"
+            ]
         },
-        { "type": "stops", "ids": ["s3"] },
-        {
-          "type": "prose",
-          "text": "You can pop into Audiopile or Canterbury Tales if you want to take a look, but if time is really limited, keep walking down to Mintage."
+        "mp-kids-afternoon-main": {
+            "neighborhood": "mount-pleasant",
+            "routeMap": "first-to-last",
+            "title": "Kids afternoon on Main",
+            "duration": "2-4 hours",
+            "description": "Kids and parents both get their taste of Mount Pleasant in this route",
+            "introduction": "I love taking my kid into the city. We always find so much to do, try new foods, discover new parks, and of course, hit up some toy shops. If you are wanting to come into Mount Pleasant for a few hours, eat and drink, but also have some spots for your kids to engage and burn some energy as well, this one is for you.\n\nUnfortunately, Main Street-Science World is a bit of a hike up to get to the spots I'm suggesting, so for this one, you'll want to try and find parking off Main somewhere. I'd start further South, as our first stop will be Coco Et Olive, where you can grab a snack for the kiddo and a coffee for yourself and head over to the picnic benches next door to safely enjoy.\n\nOnce you're ready to shop a bit, you can walk a few meters over to Collage Collage, where there are tonnes of great books, toys, art supplies, and activities for kids.\n\nYou can then head a bit further up the street to check out Front & Company Gift shop, with tonnes of fun things for the kids to check out, stickers, small toys and gifts, and stuffies galore.\n\nIf you want one more shopping stop before hitting a park, you can be brave and head over to Granville Island Toy Company, but be warned, you might get stuck in there for a bit.\n\nIf you're needing lunch before the park, you can meander back over to Liberty, Traffic, or Las Tortas, where you can find lots of different sandwiches and lunch options.\n\nThen, if it's a warm summer day and you're still looking to burn some energy, you could end the trip with a visit to Prince Edward Park, where they have a playground and splash pad. If you're looking to stay dry, Riley Park is a good option as well.",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "I love taking my kid into the city. We always find so much to do, try new foods, discover new parks, and of course, hit up some toy shops. If you are wanting to come into Mount Pleasant for a few hours, eat and drink, but also have some spots for your kids to engage and burn some energy as well, this one is for you.\n\nUnfortunately, Main Street-Science World is a bit of a hike up to get to the spots I'm suggesting, so for this one, you'll want to try and find parking off Main somewhere. I'd start further South, as our first stop will be Coco Et Olive, where you can grab a snack for the kiddo and a coffee for yourself and head over to the picnic benches next door to safely enjoy."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s134"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Once you're ready to shop a bit, you can walk a few meters over to Collage Collage, where there are tonnes of great books, toys, art supplies, and activities for kids."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s120"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "You can then head a bit further up the street to check out Front & Company Gift shop, with tonnes of fun things for the kids to check out, stickers, small toys and gifts, and stuffies galore."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s125"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "If you want one more shopping stop before hitting a park, you can be brave and head over to Granville Island Toy Company, but be warned, you might get stuck in there for a bit."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s101"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "If you're needing lunch before the park, you can meander back over to Liberty, Traffic, or Las Tortas, where you can find lots of different sandwiches and lunch options."
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s121",
+                        "s127",
+                        "s128"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Then, if it's a warm summer day and you're still looking to burn some energy, you could end the trip with a visit to Prince Edward Park, where they have a playground and splash pad. If you're looking to stay dry, Riley Park is a good option as well."
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s189",
+                        "s191"
+                    ]
+                }
+            ],
+            "stops": [
+                "s134",
+                "s120",
+                "s125",
+                "s101",
+                "s121",
+                "s127",
+                "s128",
+                "s189",
+                "s191"
+            ]
         },
-        { "type": "stops", "ids": ["s27", "s28"] },
-        {
-          "type": "prose",
-          "text": "In Mintage, you will find some amazing vintage clothing, from t-shirts, to vintage dresses, cowboy boots to running vests. An amazing spot to just walk around even if you're not shopping."
+        "mp-afternoon-main": {
+            "neighborhood": "mount-pleasant",
+            "title": "A Quick Afternoon in Mt. Pleasant",
+            "duration": "2-4 hours",
+            "description": "See what Mt. Pleasant has to offer, get a quick snack, and maybe an early dinner — this is the plan for you.",
+            "introduction": "The purpose of this plan is to give you a good variety of spots to check out. Even if you aren't necessarily into some of the shops, this plan will give you a good insight into what this neighbourhood has been about for years.\n\nOnce you get off the Skytrain, you can head to Brassneck and get a couple small pours to sample what a Pacific Northwest Craft Brewery has to offer. Their beers have historically been flavourful and unique.\n\nThen, head across the street to Antisocial Skateboard shop, a long-standing hub for a vibrant and diverse skateboarding community. They have iconic shop tee's, art, and magazines if you aren't a skateboarder yourself.\n\nFrom there, head up the street to get to the vintage shopping block, where you can head into any of Fish Market Studio, Pulpfiction Books, F as in Frank, Glory days, or Mintage Mall, to browse what some of the best vintage pickers in the city have to offer.\n\nIf you're feeling a bit hungry, at this point, maybe you want to stop at Carp Sushi for a roll or bowl before heading to the next few stops. If sushi isn't your thing, then Federal Store is not too far away, where you can grab a baked good or sandwich.\n\nFrom there, you can walk down to Neptoon Records, taking either Quebec (to see what the local neighborhoods are like) or Main, if you want to stop in at a few more shops on the way.\n\nOnce you are at Main, you can check out Eugene Choo, Woo to See you, Collage Collage, or the Sellution, depending on what you are interested in.\n\nAt this point, you're probably ready to head back to the Skytrain.\n\nIf you are leaving from your last stop, maybe another snack at Liberty Bakery or Coco Et Olive.\n\nIf you've enjoyed your time in the neighbourhood, and want to keep exploring, check out my \"Evening in Mt. Pleasant\" for recommendations on bars, restaurants, and late night activities.",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "The purpose of this plan is to give you a good variety of spots to check out. Even if you aren't necessarily into some of the shops, this plan will give you a good insight into what this neighbourhood has been about for years.\n\nOnce you get off the Skytrain, you can head to Brassneck and get a couple small pours to sample what a Pacific Northwest Craft Brewery has to offer. Their beers have historically been flavourful and unique."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s83"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Then, head across the street to Antisocial Skateboard shop, a long-standing hub for a vibrant and diverse skateboarding community. They have iconic shop tee's, art, and magazines if you aren't a skateboarder yourself."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s71"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "From there, head up the street to get to the vintage shopping block, where you can head into any of Fish Market Studio, Pulpfiction Books, F as in Frank, Glory days, or Mintage Mall, to browse what some of the best vintage pickers in the city have to offer."
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s182",
+                        "s183",
+                        "s87",
+                        "s88",
+                        "s184"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "If you're feeling a bit hungry, at this point, maybe you want to stop at Carp Sushi for a roll or bowl before heading to the next few stops. If sushi isn't your thing, then Federal Store is not too far away, where you can grab a baked good or sandwich."
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s186",
+                        "s80"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "From there, you can walk down to Neptoon Records, taking either Quebec (to see what the local neighborhoods are like) or Main, if you want to stop in at a few more shops on the way."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s107"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Once you are at Main, you can check out Eugene Choo, Woo to See you, Collage Collage, or the Sellution, depending on what you are interested in."
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s117",
+                        "s116",
+                        "s120",
+                        "s108"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "At this point, you're probably ready to head back to the Skytrain.\n\nIf you are leaving from your last stop, maybe another snack at Liberty Bakery or Coco Et Olive.\n\nIf you've enjoyed your time in the neighbourhood, and want to keep exploring, check out my \"Evening in Mt. Pleasant\" for recommendations on bars, restaurants, and late night activities."
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s121",
+                        "s134"
+                    ]
+                }
+            ],
+            "stops": [
+                "s83",
+                "s71",
+                "s182",
+                "s183",
+                "s87",
+                "s88",
+                "s184",
+                "s186",
+                "s80",
+                "s107",
+                "s117",
+                "s116",
+                "s120",
+                "s108",
+                "s121",
+                "s134"
+            ]
         },
-        { "type": "stops", "ids": ["s7"] }
-      ],
-      "stops": ["s1", "s3", "s27", "s28", "s7"]
-    },
-    "quick-sip-shop-2": {
-      "title": "Quick Sip & Shop 2 (Start in the North)",
-      "duration": "45-60 mins",
-      "description": "Starting at the opposite end of the Skytrain and working your way back to the train. Coffee, shopping, art, and a nice walk.",
-      "introduction": "If you have the ability to start in the north end, this would probably be my preferred quick stop. Start with getting a coffee at La Tana (either to stay or go), then pop into Alterior, in there you can check out locally made clothing and some specially curated brands you've never seen anywhere else. While you are in Alterior, you can also check out Vintage Sponsor; easily one of the best vintage shops in the city, I can't even go in there without buying something. Head upstairs and check out Book Section, a free library and book shop. If you have the time, pop into Slice of Life or Fun Haus. Slice if you are looking to browse some art and some locally made gifts. Fun Haus if you want to see some collectabiles and more vintange clothing. At this point, it's likely time to head towards the train, which would be about a 20 minute walk south where you will be tempted by so many more spots!",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "If you have the ability to start in the north end, this would probably be my preferred quick stop. Start with getting a coffee at La Tana (either to stay or go),"
+        "mp-evening-main": {
+            "neighborhood": "mount-pleasant",
+            "title": "Evening in Mt. Pleasant",
+            "duration": "2-4 hours",
+            "description": "Grab dinner, hang out in a park, or find a bar after dinner — Mt. Pleasant has you covered.",
+            "introduction": "If you've been looking for a neighbourhood to grab dinner, hang out in a park, or bar after dinner, Mt. Pleasant could be a great option. In this guide I'll give you a bunch of options for dinner, drinks, and hang out options.\n\nMount Pleasant has so many great restaurants, bars, and venues, so it's really hard to come up with a cohesive list, but as of right now, these are some of my favourite spots.\n\nIf I was heading in for dinner, I'd first stop off at 33a for a beer or non-alcoholic beverage, they do both, extraordinarily well, and their patio is large with a pretty quick turn-over. If they are too busy, you can always try Brassneck if beer is what you are after.\n\nThen, I would head to either AJs for pizza, Como for tapas, or Sushi Hil for sushi. Depending on your budget and cuisine preference, you cannot go wrong with any of those choices.\n\nAfter dinner, there are lots of options if you are looking to stick around the area for a bit longer and grab another couple of drinks or bites.\n\nIf you are wanting to stay close to AJs or Como, you can head to Mount Pleasant Vintage, who's always got great cocktails and a good energy. If you are at Sushi Hil, then within a stones throw is Good Thief for cocktails, or if you want a real unique experience, head up to Shameful Tiki Room for a one of a kind night.",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "If you've been looking for a neighbourhood to grab dinner, hang out in a park, or bar after dinner, Mt. Pleasant could be a great option. In this guide I'll give you a bunch of options for dinner, drinks, and hang out options.\n\nMount Pleasant has so many great restaurants, bars, and venues, so it's really hard to come up with a cohesive list, but as of right now, these are some of my favourite spots.\n\nIf I was heading in for dinner, I'd first stop off at 33a for a beer or non-alcoholic beverage, they do both, extraordinarily well, and their patio is large with a pretty quick turn-over. If they are too busy, you can always try Brassneck if beer is what you are after."
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s79",
+                        "s83"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Then, I would head to either AJs for pizza, Como for tapas, or Sushi Hil for sushi. Depending on your budget and cuisine preference, you cannot go wrong with any of those choices."
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s185",
+                        "s85",
+                        "s100"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "After dinner, there are lots of options if you are looking to stick around the area for a bit longer and grab another couple of drinks or bites.\n\nIf you are wanting to stay close to AJs or Como, you can head to Mount Pleasant Vintage, who's always got great cocktails and a good energy. If you are at Sushi Hil, then within a stones throw is Good Thief for cocktails, or if you want a real unique experience, head up to Shameful Tiki Room for a one of a kind night."
+                },
+                {
+                    "type": "stops",
+                    "layout": "or",
+                    "ids": [
+                        "s76",
+                        "s129",
+                        "s103"
+                    ]
+                }
+            ],
+            "stops": [
+                "s79",
+                "s83",
+                "s185",
+                "s85",
+                "s100",
+                "s76",
+                "s129",
+                "s103"
+            ]
         },
-        { "type": "stops", "ids": ["s24"] },
-        {
-          "type": "prose",
-          "text": "then pop into Alterior, in there you can check out locally made clothing and some specially curated brands you've never seen anywhere else. While you are in Alterior, you can also check out Vintage Sponsor; easily one of the best vintage shops in the city, I can't even go in there without buying something."
-        },
-        { "type": "stops", "ids": ["s12"] },
-        { "type": "stops", "ids": ["s13"] },
-        {
-          "type": "prose",
-          "text": "Head upstairs and check out Book Section, a free library and book shop."
-        },
-        { "type": "stops", "ids": ["s31"] },
-        {
-          "type": "prose",
-          "text": "If you have the time, pop into Slice of Life or Fun Haus. Slice if you are looking to browse some art and some locally made gifts. Fun Haus if you want to see some collectabiles and more vintange clothing."
-        },
-        { "type": "stops", "ids": ["s26", "s25"] },
-        {
-          "type": "prose",
-          "text": "At this point, it's likely time to head towards the train, which would be about a 20 minute walk south where you will be tempted by so many more spots!"
+        "chinatown-pre-post-match": {
+            "title": "Chinatown Pre & Post-Match",
+            "duration": "90 min before, 90 min after",
+            "description": "This is our pre and post-Whitecaps match ritual",
+            "introduction": "If you are heading to a late afternoon or evening Whitecaps game, concert, (or I guess Canucks...) this is a great route to get you some good drinks and food before the game, and then some options for post game celebration. Chinatown is a close enough walk and a quick skytrain from downtown, and definitely worth exploring for its unique restaurants and bars.\n\nFor the Whitecaps specifically, It's about a 30 minute walk from Chinatown to the stadiums, and it's always a fun walk over while the rest of the locals cross the bridge or take the seawall after their own pre-game rituals.\n\nFirst, we always get off the skytrain and head to The Boxcar, where you can get a Good Company and company, before picking one of their fantastic cocktails. To soak up some of that fun, it's worth ordering a slice from their neighbor, Mortadella and then wrapping up to head over the bridge to the game.\n\nPost game, if you are looking for another bite to eat before heading off for more fun, I'd suggest a burger at Between 2 Buns. Then, depending on your mood, Chinatown has lots of late night spots. If you are looking for cocktail centric bar with dark vibes and good music, you can head to Keefer Bar. If you are looking for something more upscale, maybe Bagheera or Bao Bei would suit your needs. If you are looking for a much younger scene, London Pub is your gateway to some pool, darts, and dancing. Or, if you're looking for a fun post-match rowdy crowd and a few pints of guiness, the Irish Heather has to be your stop.",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "If you are heading to a late afternoon or evening Whitecaps game, concert, (or I guess Canucks...) this is a great route to get you some good drinks and food before the game, and then some options for post game celebration. Chinatown is a close enough walk and a quick skytrain from downtown, and definitely worth exploring for its unique restaurants and bars.\n\nFor the Whitecaps specifically, It's about a 30 minute walk from Chinatown to the stadiums, and it's always a fun walk over while the rest of the locals cross the bridge or take the seawall after their own pre-game rituals."
+                },
+                {
+                    "type": "prose",
+                    "text": "First, we always get off the skytrain and head to The Boxcar, where you can get a Good Company and company, before picking one of their fantastic cocktails. To soak up some of that fun, it's worth ordering a slice from their neighbor, Mortadella and then wrapping up to head over the bridge to the game."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s137",
+                        "s138"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Post game, if you are looking for another bite to eat before heading off for more fun, I'd suggest a burger at Between 2 Buns."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s155"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Then, depending on your mood, Chinatown has lots of late night spots. If you are looking for cocktail centric bar with dark vibes and good music, you can head to Keefer Bar. If you are looking for something more upscale, maybe Bagheera or Bao Bei would suit your needs. If you are looking for a much younger scene, London Pub is your gateway to some pool, darts, and dancing. Or, if you're looking for a fun post-match rowdy crowd and a few pints of guiness, the Irish Heather has to be your stop."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s151",
+                        "s172",
+                        "s170",
+                        "s148",
+                        "s188"
+                    ],
+                    "layout": "or"
+                }
+            ],
+            "stops": [
+                "s137",
+                "s138",
+                "s155",
+                "s151",
+                "s172",
+                "s170",
+                "s148",
+                "s188"
+            ],
+            "neighborhood": "chinatown"
         }
-      ],
-      "routeMap": "start-north",
-      "stops": ["s24", "s12", "s13", "s31", "s26", "s25"]
-    },
-    "half-a-day-mid-morning": {
-      "title": "Half A Day On Commercial (Food & Shopping) — Mid-Morning",
-      "duration": "2-5 Hours",
-      "description": "This plan is for people who aren't in a rush, and might need a quick lunch while they shop around the neighborhood.",
-      "introduction": "If you are wanting to spend a few hours in the neighborhood, early-mid day this route is for you. It'll first get you walking a bit off the path of Commercial to head to Mah Milk Bar. From the Skytrain station, you can start walking north, and then at any point, hang a right to head down one of the side streets until you get to Victoria. Keep walking North down Victoria and enjoy this century old neighborhood with some unique houses and massive trees. If you're feeling really adventurous,  you can take another right at some point and go up to Lakewood for some more beautiful and unique architecture. Once you get to Grant & Victoria, head into Mah and grab a coffee and snack. You can eat it there or go across the street to Victoria Park to enjoy some sun in a local neighborhood hangout spot. Once you're done your coffee, you can head back to Commercial to grab a slice of pizza from Don't Argue. Eat it our front with the locals, or, walk down to Grandview Park for some mountain views and people watching. From there, head down the street towards Venables and stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making, and if you're feeling hungry after all that walking, walk one more block north to hit up Cafe La Tana for a delicious Italian lunch. At this point, if you're finding yourself with some time, you can head back to the drive and stop in at Havanas for a snack or drink, while you meander your way back to the Skytrain station.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "If you are wanting to spend a few hours in the neighborhood, early-mid day this route is for you. It'll first get you walking a bit off the path of Commercial to head to Mah Milk Bar. From the Skytrain station, you can start walking north, and then at any point, hang a right to head down one of the side streets until you get to Victoria. Keep walking North down Victoria and enjoy this century old neighborhood with some unique houses and massive trees. If you're feeling really adventurous,  you can take another right at some point and go up to Lakewood for some more beautiful and unique architecture. Once you get to Grant & Victoria, head into Mah and grab a coffee and snack. You can eat it there or go across the street to Victoria Park to enjoy some sun in a local neighborhood hangout spot."
-        },
-        { "type": "stops", "ids": ["s32"] },
-        {
-          "type": "prose",
-          "text": "Once you're done your coffee, you can head back to Commercial to grab a slice of pizza from Don't Argue. Eat it our front with the locals, or, walk down to Grandview Park for some mountain views and people watching."
-        },
-        { "type": "stops", "ids": ["s19", "s34"] },
-        {
-          "type": "prose",
-          "text": "From there, head down the street towards Venables and stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making,"
-        },
-        { "type": "stops", "ids": ["s26", "s25", "s12"] },
-        {
-          "type": "prose",
-          "text": "and if you're feeling hungry after all that walking, walk one more block north to hit up Cafe La Tana for a delicious Italian lunch."
-        },
-        { "type": "stops", "ids": ["s24"] },
-        {
-          "type": "prose",
-          "text": "At this point, if you're finding yourself with some time, you can head back to the drive and stop in at Havanas for a snack or drink, while you meander your way back to the Skytrain station."
-        },
-        { "type": "stops", "ids": ["s35"] }
-      ],
-      "stops": ["s32", "s33", "s19", "s34", "s26", "s25", "s12", "s24", "s35"]
-    },
-    "half-a-day-evening": {
-      "title": "Half A Day On Commercial (Food & Shopping) — Evening",
-      "duration": "2-5 Hours",
-      "description": "This plan is for people who aren't in a rush and want to check out the neighborhood, stop for a drink or afternoon treat, do some shopping, and settle in for a later dinner.",
-      "introduction": "If you are wanting to spend a few hours in the neighborhood and will want to take in some shopping before deciding on a place to eat, this plan would be for you! Start by getting off the Skytrain and enjoying a walk down Commercial to take in the sights and sounds. If you're into records or books, the first two stops would be Canterbury and Audiopile. From there, continue north for your first vintage shop at Mintage, where you will find all kinds of great vintage items for any shape, size, and style. Once you're done there, keep heading towards the mountains and stop for a treat at one of the many coffee shops or corner stores to keep yourself fueled for an early evening of shopping. Once you get to Venables, stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making. At this point, depending on time, you could head back to the drive and grab a drink at the Charlattan patio or Havana patio before heading to Nomo Nomo (reservation recommended) for dinner. If Nomo Nomo is all booked up, Cozen is a great back-up where you can dine-in or take out and eat in one of the many parks or the piazza in the neighborhood.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "If you are wanting to spend a few hours in the neighborhood and will want to take in some shopping before deciding on a place to eat, this plan would be for you! Start by getting off the Skytrain and enjoying a walk down Commercial to take in the sights and sounds. If you're into records or books, the first two stops would be Canterbury and Audiopile."
-        },
-        { "type": "stops", "ids": ["s27", "s28"] },
-        {
-          "type": "prose",
-          "text": "From there, continue north for your first vintage shop at Mintage, where you will find all kinds of great vintage items for any shape, size, and style."
-        },
-        { "type": "stops", "ids": ["s7"] },
-        {
-          "type": "prose",
-          "text": "Once you're done there, keep heading towards the mountains and stop for a treat at one of the many coffee shops or corner stores to keep yourself fueled for an early evening of shopping. Once you get to Venables, stop off at Slice of Life, Fun Haus, and Alterior, three spots that I can't get enough of! Shop around, check out all the local talent in both vintage picking and art making."
-        },
-        { "type": "stops", "ids": ["s26", "s25", "s12"] },
-        {
-          "type": "prose",
-          "text": "At this point, depending on time, you could head back to the drive and grab a drink at the Charlattan patio or Havana patio before heading to Nomo Nomo (reservation recommended) for dinner. If Nomo Nomo is all booked up, Cozen is a great back-up where you can dine-in or take out and eat in one of the many parks or the piazza in the neighborhood."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s10", "s35"] },
-        { "type": "stops", "layout": "or", "ids": ["s17", "s11"] }
-      ],
-      "stops": ["s27", "s28", "s7", "s26", "s25", "s12", "s10", "s35", "s17", "s11"]
-    },
-    "mp-full-day-main": {
-      "neighborhood": "mount-pleasant",
-      "title": "Full day (Vintage, Shopping, Eating & Drinking) on Main",
-      "duration": "All day",
-      "description": "If you are looking to spend breakfast, lunch, and dinner all in Mount Pleasant, this route is for you",
-      "introduction": "Mount Pleasant has so many great spots and this plan will take you from the Skytrain, all the way up Main, and back, with a mix of eating, shopping, and exploring.\n\nWhen you get off the Main-Street Science World Skytrain, you can head up the street to enter into the district with all the shops. Stop off at GENE coffee bar for a quick drink and take in the views of where you came from.\n\nYou can then shop around in that close vicinity, F as in Frank, Glory Days, Fish Market Studio, Pulp fiction books, and Mintage Mall.\n\nOnce you've had enough shopping, it might be time for another coffee, tea or light snack and a perfect chance to rest your legs while you recharge for the next leg of the walk. Head up to Federal Store just off Main street to grab a seat on the patio and watch the bikes wizz by.\n\nOnce you're done, if you want some more shopping, Corner Store will be waiting for you before you head back onto Main to see what else the neighborhood has in store.\n\nYou can then continue heading further South, stopping in more vintage shops on the west side of the road, or head straight to Woo to See you and Eugene Choo for new clothes expertly curated.\n\nBy this time, you're probably starving for lunch, so it would be a good chance to stop at Anh and Chi for lunch before you continue further down for a bit more shopping and browsing.\n\nAfter lunch, you can keep walking down Main to check out, Exile, Front & Company & their gift shop.\n\nBy this point, you may be shopped out, so it would be a good time to grab a snack at Liberty Cafe, enjoy the patio, recharge in the sun, and prepare for an evening of drinking and adventure.\n\nSince you already ate at a restaurant at lunch, I'd recommend heading to AJs or Superbaba. But call ahead and order because we are heading for dinner in the park. Once you pick up your food, keep walking west where you will find 33A and B and pick up a six pack so you can enjoy some early evening sun at Jonathan Rogers park.\n\nAfter a couple beers and pizza, if you still have room for ice cream, you can walk off that evening meal and head to Earnest Ice cream, where you can then head towards the seawall for a quick view of the city and mountains before heading back to the skytrain station.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "Mount Pleasant has so many great spots and this plan will take you from the Skytrain, all the way up Main, and back, with a mix of eating, shopping, and exploring.\n\nWhen you get off the Main-Street Science World Skytrain, you can head up the street to enter into the district with all the shops. Stop off at GENE coffee bar for a quick drink and take in the views of where you came from."
-        },
-        { "type": "stops", "ids": ["s90"] },
-        {
-          "type": "prose",
-          "text": "You can then shop around in that close vicinity, F as in Frank, Glory Days, Fish Market Studio, Pulp fiction books, and Mintage Mall."
-        },
-        { "type": "stops", "ids": ["s87", "s88", "s182", "s183", "s184", "s89"] },
-        {
-          "type": "prose",
-          "text": "Once you've had enough shopping, it might be time for another coffee, tea or light snack and a perfect chance to rest your legs while you recharge for the next leg of the walk. Head up to Federal Store just off Main street to grab a seat on the patio and watch the bikes wizz by."
-        },
-        { "type": "stops", "ids": ["s80"] },
-        {
-          "type": "prose",
-          "text": "Once you're done, if you want some more shopping, Corner Store will be waiting for you before you head back onto Main to see what else the neighborhood has in store."
-        },
-        { "type": "stops", "ids": ["s91"] },
-        {
-          "type": "prose",
-          "text": "By this time, you're probably starving for lunch, so it would be a good chance to stop at Anh and Chi for lunch before you continue further down for a bit more shopping and browsing."
-        },
-        { "type": "stops", "ids": ["s102"] },
-        {
-          "type": "prose",
-          "text": "You can then continue heading further South — head straight to Woo to See you and Eugene Choo for new clothes expertly curated."
-        },
-        { "type": "stops", "ids": ["s116", "s117"] },
-        {
-          "type": "prose",
-          "text": "After lunch, you can keep walking down Main to check out Exile, Front & Company & their gift shop."
-        },
-        { "type": "stops", "ids": ["s122", "s124", "s125"] },
-        {
-          "type": "prose",
-          "text": "By this point, you may be shopped out, so it would be a good time to grab a snack at Liberty Cafe, enjoy the patio, recharge in the sun, and prepare for an evening of drinking and adventure."
-        },
-        { "type": "stops", "ids": ["s121"] },
-        {
-          "type": "prose",
-          "text": "Since you already ate at a restaurant at lunch, I'd recommend heading to AJs or Superbaba. But call ahead and order because we are heading for dinner in the park."
-        },
-        { "type": "stops", "ids": ["s185", "s81"] },
-        {
-          "type": "prose",
-          "text": "Once you pick up your food, keep walking west where you will find 33A and B and pick up a six pack so you can enjoy some early evening sun at Jonathan Rogers park."
-        },
-        { "type": "stops", "ids": ["s79", "s78"] },
-        {
-          "type": "prose",
-          "text": "After a couple beers and pizza, if you still have room for ice cream, you can walk off that evening meal and head to Earnest Ice cream, where you can then head towards the seawall for a quick view of the city and mountains before heading back to the skytrain station."
-        },
-        { "type": "stops", "ids": ["s73"] }
-      ],
-      "stops": [
-        "s90",
-        "s87",
-        "s88",
-        "s182",
-        "s183",
-        "s184",
-        "s89",
-        "s80",
-        "s91",
-        "s102",
-        "s116",
-        "s117",
-        "s122",
-        "s124",
-        "s125",
-        "s121",
-        "s185",
-        "s81",
-        "s79",
-        "s78",
-        "s73"
-      ]
-    },
-    "mp-kids-afternoon-main": {
-      "neighborhood": "mount-pleasant",
-      "routeMap": "first-to-last",
-      "title": "Kids afternoon on Main",
-      "duration": "2-4 hours",
-      "description": "Kids and parents both get their taste of Mount Pleasant in this route",
-      "introduction": "I love taking my kid into the city. We always find so much to do, try new foods, discover new parks, and of course, hit up some toy shops. If you are wanting to come into Mount Pleasant for a few hours, eat and drink, but also have some spots for your kids to engage and burn some energy as well, this one is for you.\n\nUnfortunately, Main Street-Science World is a bit of a hike up to get to the spots I'm suggesting, so for this one, you'll want to try and find parking off Main somewhere. I'd start further South, as our first stop will be Coco Et Olive, where you can grab a snack for the kiddo and a coffee for yourself and head over to the picnic benches next door to safely enjoy.\n\nOnce you're ready to shop a bit, you can walk a few meters over to Collage Collage, where there are tonnes of great books, toys, art supplies, and activities for kids.\n\nYou can then head a bit further up the street to check out Front & Company Gift shop, with tonnes of fun things for the kids to check out, stickers, small toys and gifts, and stuffies galore.\n\nIf you want one more shopping stop before hitting a park, you can be brave and head over to Granville Island Toy Company, but be warned, you might get stuck in there for a bit.\n\nIf you're needing lunch before the park, you can meander back over to Liberty, Traffic, or Las Tortas, where you can find lots of different sandwiches and lunch options.\n\nThen, if it's a warm summer day and you're still looking to burn some energy, you could end the trip with a visit to Prince Edward Park, where they have a playground and splash pad. If you're looking to stay dry, Riley Park is a good option as well.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "I love taking my kid into the city. We always find so much to do, try new foods, discover new parks, and of course, hit up some toy shops. If you are wanting to come into Mount Pleasant for a few hours, eat and drink, but also have some spots for your kids to engage and burn some energy as well, this one is for you.\n\nUnfortunately, Main Street-Science World is a bit of a hike up to get to the spots I'm suggesting, so for this one, you'll want to try and find parking off Main somewhere. I'd start further South, as our first stop will be Coco Et Olive, where you can grab a snack for the kiddo and a coffee for yourself and head over to the picnic benches next door to safely enjoy."
-        },
-        { "type": "stops", "ids": ["s134"] },
-        {
-          "type": "prose",
-          "text": "Once you're ready to shop a bit, you can walk a few meters over to Collage Collage, where there are tonnes of great books, toys, art supplies, and activities for kids."
-        },
-        { "type": "stops", "ids": ["s120"] },
-        {
-          "type": "prose",
-          "text": "You can then head a bit further up the street to check out Front & Company Gift shop, with tonnes of fun things for the kids to check out, stickers, small toys and gifts, and stuffies galore."
-        },
-        { "type": "stops", "ids": ["s125"] },
-        {
-          "type": "prose",
-          "text": "If you want one more shopping stop before hitting a park, you can be brave and head over to Granville Island Toy Company, but be warned, you might get stuck in there for a bit."
-        },
-        { "type": "stops", "ids": ["s101"] },
-        {
-          "type": "prose",
-          "text": "If you're needing lunch before the park, you can meander back over to Liberty, Traffic, or Las Tortas, where you can find lots of different sandwiches and lunch options."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s121", "s127", "s128"] },
-        {
-          "type": "prose",
-          "text": "Then, if it's a warm summer day and you're still looking to burn some energy, you could end the trip with a visit to Prince Edward Park, where they have a playground and splash pad. If you're looking to stay dry, Riley Park is a good option as well."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s189", "s191"] }
-      ],
-      "stops": [
-        "s134",
-        "s120",
-        "s125",
-        "s101",
-        "s121",
-        "s127",
-        "s128",
-        "s189",
-        "s191"
-      ]
-    },
-    "mp-afternoon-main": {
-      "neighborhood": "mount-pleasant",
-      "title": "A Quick Afternoon in Mt. Pleasant",
-      "duration": "2-4 hours",
-      "description": "See what Mt. Pleasant has to offer, get a quick snack, and maybe an early dinner — this is the plan for you.",
-      "introduction": "The purpose of this plan is to give you a good variety of spots to check out. Even if you aren't necessarily into some of the shops, this plan will give you a good insight into what this neighbourhood has been about for years.\n\nOnce you get off the Skytrain, you can head to Brassneck and get a couple small pours to sample what a Pacific Northwest Craft Brewery has to offer. Their beers have historically been flavourful and unique.\n\nThen, head across the street to Antisocial Skateboard shop, a long-standing hub for a vibrant and diverse skateboarding community. They have iconic shop tee's, art, and magazines if you aren't a skateboarder yourself.\n\nFrom there, head up the street to get to the vintage shopping block, where you can head into any of Fish Market Studio, Pulpfiction Books, F as in Frank, Glory days, or Mintage Mall, to browse what some of the best vintage pickers in the city have to offer.\n\nIf you're feeling a bit hungry, at this point, maybe you want to stop at Carp Sushi for a roll or bowl before heading to the next few stops. If sushi isn't your thing, then Federal Store is not too far away, where you can grab a baked good or sandwich.\n\nFrom there, you can walk down to Neptoon Records, taking either Quebec (to see what the local neighborhoods are like) or Main, if you want to stop in at a few more shops on the way.\n\nOnce you are at Main, you can check out Eugene Choo, Woo to See you, Collage Collage, or the Sellution, depending on what you are interested in.\n\nAt this point, you're probably ready to head back to the Skytrain.\n\nIf you are leaving from your last stop, maybe another snack at Liberty Bakery or Coco Et Olive.\n\nIf you've enjoyed your time in the neighbourhood, and want to keep exploring, check out my \"Evening in Mt. Pleasant\" for recommendations on bars, restaurants, and late night activities.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "The purpose of this plan is to give you a good variety of spots to check out. Even if you aren't necessarily into some of the shops, this plan will give you a good insight into what this neighbourhood has been about for years.\n\nOnce you get off the Skytrain, you can head to Brassneck and get a couple small pours to sample what a Pacific Northwest Craft Brewery has to offer. Their beers have historically been flavourful and unique."
-        },
-        { "type": "stops", "ids": ["s83"] },
-        {
-          "type": "prose",
-          "text": "Then, head across the street to Antisocial Skateboard shop, a long-standing hub for a vibrant and diverse skateboarding community. They have iconic shop tee's, art, and magazines if you aren't a skateboarder yourself."
-        },
-        { "type": "stops", "ids": ["s71"] },
-        {
-          "type": "prose",
-          "text": "From there, head up the street to get to the vintage shopping block, where you can head into any of Fish Market Studio, Pulpfiction Books, F as in Frank, Glory days, or Mintage Mall, to browse what some of the best vintage pickers in the city have to offer."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s182", "s183", "s87", "s88", "s184"] },
-        {
-          "type": "prose",
-          "text": "If you're feeling a bit hungry, at this point, maybe you want to stop at Carp Sushi for a roll or bowl before heading to the next few stops. If sushi isn't your thing, then Federal Store is not too far away, where you can grab a baked good or sandwich."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s186", "s80"] },
-        {
-          "type": "prose",
-          "text": "From there, you can walk down to Neptoon Records, taking either Quebec (to see what the local neighborhoods are like) or Main, if you want to stop in at a few more shops on the way."
-        },
-        { "type": "stops", "ids": ["s107"] },
-        {
-          "type": "prose",
-          "text": "Once you are at Main, you can check out Eugene Choo, Woo to See you, Collage Collage, or the Sellution, depending on what you are interested in."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s117", "s116", "s120", "s108"] },
-        {
-          "type": "prose",
-          "text": "At this point, you're probably ready to head back to the Skytrain.\n\nIf you are leaving from your last stop, maybe another snack at Liberty Bakery or Coco Et Olive.\n\nIf you've enjoyed your time in the neighbourhood, and want to keep exploring, check out my \"Evening in Mt. Pleasant\" for recommendations on bars, restaurants, and late night activities."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s121", "s134"] }
-      ],
-      "stops": [
-        "s83",
-        "s71",
-        "s182",
-        "s183",
-        "s87",
-        "s88",
-        "s184",
-        "s186",
-        "s80",
-        "s107",
-        "s117",
-        "s116",
-        "s120",
-        "s108",
-        "s121",
-        "s134"
-      ]
-    },
-    "mp-evening-main": {
-      "neighborhood": "mount-pleasant",
-      "title": "Evening in Mt. Pleasant",
-      "duration": "2-4 hours",
-      "description": "Grab dinner, hang out in a park, or find a bar after dinner — Mt. Pleasant has you covered.",
-      "introduction": "If you've been looking for a neighbourhood to grab dinner, hang out in a park, or bar after dinner, Mt. Pleasant could be a great option. In this guide I'll give you a bunch of options for dinner, drinks, and hang out options.\n\nMount Pleasant has so many great restaurants, bars, and venues, so it's really hard to come up with a cohesive list, but as of right now, these are some of my favourite spots.\n\nIf I was heading in for dinner, I'd first stop off at 33a for a beer or non-alcoholic beverage, they do both, extraordinarily well, and their patio is large with a pretty quick turn-over. If they are too busy, you can always try Brassneck if beer is what you are after.\n\nThen, I would head to either AJs for pizza, Como for tapas, or Sushi Hil for sushi. Depending on your budget and cuisine preference, you cannot go wrong with any of those choices.\n\nAfter dinner, there are lots of options if you are looking to stick around the area for a bit longer and grab another couple of drinks or bites.\n\nIf you are wanting to stay close to AJs or Como, you can head to Mount Pleasant Vintage, who's always got great cocktails and a good energy. If you are at Sushi Hil, then within a stones throw is Good Thief for cocktails, or if you want a real unique experience, head up to Shameful Tiki Room for a one of a kind night.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "If you've been looking for a neighbourhood to grab dinner, hang out in a park, or bar after dinner, Mt. Pleasant could be a great option. In this guide I'll give you a bunch of options for dinner, drinks, and hang out options.\n\nMount Pleasant has so many great restaurants, bars, and venues, so it's really hard to come up with a cohesive list, but as of right now, these are some of my favourite spots.\n\nIf I was heading in for dinner, I'd first stop off at 33a for a beer or non-alcoholic beverage, they do both, extraordinarily well, and their patio is large with a pretty quick turn-over. If they are too busy, you can always try Brassneck if beer is what you are after."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s79", "s83"] },
-        {
-          "type": "prose",
-          "text": "Then, I would head to either AJs for pizza, Como for tapas, or Sushi Hil for sushi. Depending on your budget and cuisine preference, you cannot go wrong with any of those choices."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s185", "s85", "s100"] },
-        {
-          "type": "prose",
-          "text": "After dinner, there are lots of options if you are looking to stick around the area for a bit longer and grab another couple of drinks or bites.\n\nIf you are wanting to stay close to AJs or Como, you can head to Mount Pleasant Vintage, who's always got great cocktails and a good energy. If you are at Sushi Hil, then within a stones throw is Good Thief for cocktails, or if you want a real unique experience, head up to Shameful Tiki Room for a one of a kind night."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s76", "s129", "s103"] }
-      ],
-      "stops": [
-        "s79",
-        "s83",
-        "s185",
-        "s85",
-        "s100",
-        "s76",
-        "s129",
-        "s103"
-      ]
-    },
-    "chinatown-pre-post-match": {
-      "neighborhood": "chinatown",
-      "title": "Chinatown Pre & Post-Match",
-      "duration": "90 min before, 90 min after",
-      "description": "This is our pre and post-Whitecaps match ritual",
-      "introduction": "If you are heading to a late afternoon or evening Whitecaps game (or I guess Canucks...) this is a great route to get you some good drinks and food before the game, and then some options for post game celebration. It's about a 30 minute walk from Chinatown to the stadiums, and it's always a fun walk over while the rest of the locals cross the bridge or take the seawall after their own pre-game rituals.\n\nFirst, we always get off the skytrain and head to The Boxcar, where you can get a Good Company and company, before picking one of their fantastic cocktails. To soak up some of that fun, it's worth ordering a slice from their neighbor, Mortadella and then wrapping up to head over the bridge to the game.\n\nPost game, if you are looking for another bite to eat before heading off for more fun, I'd suggest a burger at Between 2 Buns. Then, depending on your mood, Chinatown has lots of late night spots. If you are looking for cocktail centric bar with dark vibes and good music, you can head to Keefer Bar. If you are looking for something more upscale, maybe Bagheera or Bao Bei would suit your needs. If you are looking for a much younger scene, London Pub is your gateway to some pool, darts, and dancing. Or, if you're looking for a fun post-match rowdy crowd and a few pints of guiness, the Irish Heather has to be your stop.",
-      "narrative": [
-        {
-          "type": "prose",
-          "text": "If you are heading to a late afternoon or evening Whitecaps game (or I guess Canucks...) this is a great route to get you some good drinks and food before the game, and then some options for post game celebration. It's about a 30 minute walk from Chinatown to the stadiums, and it's always a fun walk over while the rest of the locals cross the bridge or take the seawall after their own pre-game rituals."
-        },
-        {
-          "type": "prose",
-          "text": "First, we always get off the skytrain and head to The Boxcar, where you can get a Good Company and company, before picking one of their fantastic cocktails. To soak up some of that fun, it's worth ordering a slice from their neighbor, Mortadella and then wrapping up to head over the bridge to the game."
-        },
-        { "type": "stops", "ids": ["s137", "s138"] },
-        {
-          "type": "prose",
-          "text": "Post game, if you are looking for another bite to eat before heading off for more fun, I'd suggest a burger at Between 2 Buns."
-        },
-        { "type": "stops", "ids": ["s155"] },
-        {
-          "type": "prose",
-          "text": "Then, depending on your mood, Chinatown has lots of late night spots. If you are looking for cocktail centric bar with dark vibes and good music, you can head to Keefer Bar. If you are looking for something more upscale, maybe Bagheera or Bao Bei would suit your needs. If you are looking for a much younger scene, London Pub is your gateway to some pool, darts, and dancing. Or, if you're looking for a fun post-match rowdy crowd and a few pints of guiness, the Irish Heather has to be your stop."
-        },
-        { "type": "stops", "layout": "or", "ids": ["s151", "s172", "s170", "s148", "s188"] }
-      ],
-      "stops": ["s137", "s138", "s155", "s151", "s172", "s170", "s148", "s188"]
     }
-  }
 }
