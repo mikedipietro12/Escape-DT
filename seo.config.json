@@ -21,7 +21,8 @@
     "chinatown-pre-post-match"
   ],
   "seoFooter": {
-    "toggleLabel": "Browse spots & routes on the Drive",
+    "toggleLabel": "More info",
+    "experienceCredit": "Web experience brought to you by",
     "lead": "East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer",
     "routeSlugs": [
       "quick-sip-shop",

@@ -332,6 +332,12 @@ ${planItems}
 ${columns}`;
 }
 
+function buildExperienceCreditHtml(footer, publisherUrl, creditClass) {
+  const prefix = footer.experienceCredit || "Web experience brought to you by";
+  const publisherDisplay = publisherUrl.replace(/^https?:\/\//, "");
+  return `<p class="${creditClass}">${escapeHtml(prefix)} <a href="${escapeHtml(publisherUrl)}" rel="noopener noreferrer">${escapeHtml(publisherDisplay)}</a></p>`;
+}
+
 function buildHomeSeoFooter(config, stops) {
   const footer = config.seoFooter || {};
   const toggleLabel = footer.toggleLabel || "Browse spots & routes on the Drive";
@@ -357,6 +363,7 @@ ${grid}
         </div>
       </div>
     </details>
+    ${buildExperienceCreditHtml(footer, publisherUrl, "site-seo-footer__credit")}
     <p class="site-seo-footer__credit">Part of <a href="${escapeHtml(publisherUrl)}" rel="noopener noreferrer">Seasons of East Van</a> · <a href="/sitemap.xml">Sitemap</a></p>
   </footer>
 ${FOOTER_MARKER_END}`;
@@ -386,6 +393,7 @@ ${grid}
           </div>
         </div>
       </details>
+      ${buildExperienceCreditHtml(footer, publisherUrl, "static-footer__credit")}
       <p class="static-footer__credit">Part of <a href="${escapeHtml(guideUrl)}">${escapeHtml(config.siteName)}</a> · <a href="${escapeHtml(publisherUrl)}" rel="noopener noreferrer">Seasons of East Van</a> · <a href="${escapeHtml(absoluteUrl(config.siteUrl, "/sitemap.xml"))}">Sitemap</a></p>
     </div>
   </footer>`;
