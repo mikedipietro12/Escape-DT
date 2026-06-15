@@ -26,10 +26,17 @@
       "placeholderColor": "981185",
       "_review": [
         "crossStreet",
-        "cost",
         "tags"
       ],
-      "walkFromStation": 10
+      "walkFromStation": 10,
+      "images": [
+        "assets/stops/say-hey-cafe.jpg",
+        "assets/stops/say-hey-cafe-2.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 13
+      }
     },
     {
       "id": "s137",
@@ -203,10 +210,16 @@
       "placeholderColor": "a093cd",
       "_review": [
         "crossStreet",
-        "cost",
         "tags"
       ],
-      "walkFromStation": 7
+      "walkFromStation": 7,
+      "images": [
+        "assets/stops/hunnybee-bruncheonette.jpg"
+      ],
+      "heroFocus": {
+        "x": 51,
+        "y": 82
+      }
     },
     {
       "id": "s143",
@@ -263,10 +276,13 @@
       "googlePlaceId": null,
       "placeholderColor": "f7bcd0",
       "_review": [
-        "crossStreet",
-        "cost"
+        "crossStreet"
       ],
-      "walkFromStation": 8
+      "walkFromStation": 8,
+      "images": [
+        "assets/stops/gore-street-vintage-2.jpg",
+        "assets/stops/gore-street-vintage.jpg"
+      ]
     },
     {
       "id": "s145",
@@ -292,10 +308,12 @@
       "placeholderColor": "13ad5a",
       "_review": [
         "crossStreet",
-        "cost",
         "tags"
       ],
-      "walkFromStation": 7
+      "walkFromStation": 7,
+      "images": [
+        "assets/stops/phnom-penh-restaurant.jpg"
+      ]
     },
     {
       "id": "s146",
@@ -440,10 +458,16 @@
       "googlePlaceId": null,
       "placeholderColor": "78ab16",
       "_review": [
-        "crossStreet",
-        "cost"
+        "crossStreet"
       ],
-      "walkFromStation": 9
+      "walkFromStation": 9,
+      "images": [
+        "assets/stops/friend-of-a-friend.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 0
+      }
     },
     {
       "id": "s151",
@@ -502,10 +526,17 @@
       "googlePlaceId": null,
       "placeholderColor": "b77352",
       "_review": [
-        "crossStreet",
-        "cost"
+        "crossStreet"
       ],
-      "walkFromStation": 8
+      "walkFromStation": 8,
+      "images": [
+        "assets/stops/annabelle-s.jpg",
+        "assets/stops/annabelle-s-2.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 16
+      }
     },
     {
       "id": "s153",
@@ -591,10 +622,12 @@
       "placeholderColor": "493026",
       "_review": [
         "crossStreet",
-        "cost",
         "tags"
       ],
-      "walkFromStation": 10
+      "walkFromStation": 10,
+      "images": [
+        "assets/stops/between-2-buns.jpg"
+      ]
     },
     {
       "id": "s156",
@@ -620,10 +653,16 @@
       "placeholderColor": "463358",
       "_review": [
         "crossStreet",
-        "cost",
         "tags"
       ],
-      "walkFromStation": 10
+      "walkFromStation": 10,
+      "images": [
+        "assets/stops/dd-mau.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 0
+      }
     },
     {
       "id": "s157",
@@ -677,10 +716,14 @@
       "googlePlaceId": null,
       "placeholderColor": "e1a09e",
       "_review": [
-        "crossStreet",
-        "cost"
+        "crossStreet"
       ],
-      "walkFromStation": 10
+      "walkFromStation": 10,
+      "images": [
+        "assets/stops/hmpl.jpg",
+        "assets/stops/hmpl-2.jpg",
+        "assets/stops/hmpl-3.jpg"
+      ]
     },
     {
       "id": "s159",
@@ -706,10 +749,16 @@
       "placeholderColor": "7b9591",
       "_review": [
         "crossStreet",
-        "cost",
         "tags"
       ],
-      "walkFromStation": 10
+      "walkFromStation": 10,
+      "images": [
+        "assets/stops/mello.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 30
+      }
     },
     {
       "id": "s160",
@@ -976,18 +1025,20 @@
       "placeholderColor": "0ef3e6",
       "_review": [
         "crossStreet",
-        "cost",
         "tags"
       ],
-      "walkFromStation": 9
+      "walkFromStation": 9,
+      "images": [
+        "assets/stops/benny-foods.jpg"
+      ]
     },
     {
       "id": "s169",
       "slug": "kissa-tanto",
       "name": "Kissa Tanto",
       "categories": [
-        "drinks",
-        "food"
+        "food",
+        "drinks"
       ],
       "tags": [
         "sit down",
@@ -1009,10 +1060,16 @@
       "googlePlaceId": null,
       "placeholderColor": "b30a7c",
       "_review": [
-        "crossStreet",
-        "cost"
+        "crossStreet"
       ],
-      "walkFromStation": 10
+      "walkFromStation": 10,
+      "images": [
+        "assets/stops/kissa-tanto.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 17
+      }
     },
     {
       "id": "s170",
@@ -1069,10 +1126,13 @@
       "googlePlaceId": null,
       "placeholderColor": "38be09",
       "_review": [
-        "crossStreet",
-        "cost"
+        "crossStreet"
       ],
-      "walkFromStation": 10
+      "walkFromStation": 10,
+      "images": [
+        "assets/stops/new-town-bakery.jpg",
+        "assets/stops/new-town-bakery-2.jpg"
+      ]
     },
     {
       "id": "s172",
@@ -1131,10 +1191,12 @@
       "placeholderColor": "1800a4",
       "_review": [
         "crossStreet",
-        "cost",
         "tags"
       ],
-      "walkFromStation": 10
+      "walkFromStation": 10,
+      "images": [
+        "assets/stops/propaganda.jpg"
+      ]
     },
     {
       "id": "s174",

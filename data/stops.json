@@ -2458,7 +2458,10 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "goto": "Grab lunch or ice cream from a spot on Hastings and hang out."
+            "goto": "Grab lunch or ice cream from a spot on Hastings and hang out.",
+            "images": [
+                "assets/stops/pandora-park.jpg"
+            ]
         },
         {
             "id": "s51",
@@ -3142,7 +3145,17 @@
                 "establishment"
             ],
             "walkFromStation": 10,
-            "goto": "Shop tee's, hardware, magazines."
+            "goto": "Shop tee's, hardware, magazines.",
+            "images": [
+                "assets/stops/antisocial-skateboard-shop.jpg",
+                "assets/stops/antisocial-skateboard-shop-2.jpg",
+                "assets/stops/antisocial-skateboard-shop-3.jpg",
+                "assets/stops/antisocial-skateboard-shop-4.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 42
+            }
         },
         {
             "id": "s73",
@@ -3221,7 +3234,14 @@
                 "establishment"
             ],
             "walkFromStation": 8,
-            "goto": "#7"
+            "goto": "#7",
+            "images": [
+                "assets/stops/glory-juice-co.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 76
+            }
         },
         {
             "id": "s75",
@@ -3267,7 +3287,10 @@
                 "establishment"
             ],
             "walkFromStation": 13,
-            "goto": "Cookies & croissants."
+            "goto": "Cookies & croissants.",
+            "images": [
+                "assets/stops/purebread-bakery-coffee.jpg"
+            ]
         },
         {
             "id": "s76",
@@ -3501,7 +3524,14 @@
                 "establishment"
             ],
             "walkFromStation": 16,
-            "goto": "Check their listings for local bands and shows."
+            "goto": "Check their listings for local bands and shows.",
+            "images": [
+                "assets/stops/fox-cabaret.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 55
+            }
         },
         {
             "id": "s83",
@@ -3577,7 +3607,19 @@
                 "establishment"
             ],
             "walkFromStation": 15,
-            "goto": "Their choice, they never steer me wrong."
+            "goto": "Their choice, they never steer me wrong.",
+            "images": [
+                "assets/stops/cultivate-tea-2.jpg",
+                "assets/stops/cultivate-tea.jpg",
+                "assets/stops/cultivate-tea-3.jpg",
+                "assets/stops/cultivate-tea-4.jpg",
+                "assets/stops/cultivate-tea-5.jpg",
+                "assets/stops/cultivate-tea-6.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 67
+            }
         },
         {
             "id": "s85",
@@ -3619,7 +3661,15 @@
                 "establishment"
             ],
             "walkFromStation": 15,
-            "goto": "Order one (or two) of every dish."
+            "goto": "Order one (or two) of every dish.",
+            "images": [
+                "assets/stops/como-taperia.jpg",
+                "assets/stops/como-taperia-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 82
+            }
         },
         {
             "id": "s86",
@@ -3726,7 +3776,11 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 20
+            "walkFromStation": 20,
+            "images": [
+                "assets/stops/glorydays-fine-goods.jpg",
+                "assets/stops/glorydays-fine-goods-2.jpg"
+            ]
         },
         {
             "id": "s89",
@@ -3762,7 +3816,17 @@
                 "establishment"
             ],
             "walkFromStation": 18,
-            "goto": "Locally made water colour mini-cubes."
+            "goto": "Locally made water colour mini-cubes.",
+            "images": [
+                "assets/stops/rath-art-supplies.jpg",
+                "assets/stops/rath-art-supplies-2.jpg",
+                "assets/stops/rath-art-supplies-3.jpg",
+                "assets/stops/rath-art-supplies-4.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 100
+            }
         },
         {
             "id": "s90",
@@ -3802,7 +3866,12 @@
                 "establishment"
             ],
             "walkFromStation": 17,
-            "goto": "Coffee on the bench out front people watching and taking in mountain views."
+            "goto": "Coffee on the bench out front people watching and taking in mountain views.",
+            "images": [
+                "assets/stops/gene-coffee-bar.jpg",
+                "assets/stops/gene-coffee-bar-2.jpg",
+                "assets/stops/gene-coffee-bar-3.jpg"
+            ]
         },
         {
             "id": "s91",
@@ -3838,7 +3907,14 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 20
+            "walkFromStation": 20,
+            "images": [
+                "assets/stops/the-corner-store.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 100
+            }
         },
         {
             "id": "s92",
@@ -3879,7 +3955,11 @@
                 "establishment"
             ],
             "walkFromStation": 20,
-            "goto": "Bird Conspiracy & a couple comidas."
+            "goto": "Bird Conspiracy & a couple comidas.",
+            "images": [
+                "assets/stops/tocador.jpg",
+                "assets/stops/tocador-2.jpg"
+            ]
         },
         {
             "id": "s94",
@@ -3917,7 +3997,14 @@
                 "establishment"
             ],
             "walkFromStation": 24,
-            "goto": "Cha-shu Tsuke-men or a couple Onigiri"
+            "goto": "Cha-shu Tsuke-men or a couple Onigiri",
+            "images": [
+                "assets/stops/onigiri-ya-at-maruhachi-gaiden.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 73
+            }
         },
         {
             "id": "s95",
@@ -3995,7 +4082,14 @@
                 "establishment"
             ],
             "walkFromStation": 28,
-            "goto": "Lobster bisque or Burgoo burger"
+            "goto": "Lobster bisque or Burgoo burger",
+            "images": [
+                "assets/stops/burgoo.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 66
+            }
         },
         {
             "id": "s97",
@@ -4030,7 +4124,14 @@
                 "establishment"
             ],
             "walkFromStation": 29,
-            "goto": "Check out what they have out front!"
+            "goto": "Check out what they have out front!",
+            "images": [
+                "assets/stops/urban-source.jpg",
+                "assets/stops/urban-source-2.jpg",
+                "assets/stops/urban-source-3.jpg",
+                "assets/stops/urban-source-4.jpg",
+                "assets/stops/urban-source-5.jpg"
+            ]
         },
         {
             "id": "s98",
@@ -4153,7 +4254,10 @@
                 "establishment"
             ],
             "walkFromStation": 32,
-            "goto": "Chirashi, or whatever the server recommends that night!"
+            "goto": "Chirashi, or whatever the server recommends that night!",
+            "images": [
+                "assets/stops/sushi-hil.jpg"
+            ]
         },
         {
             "id": "s101",
@@ -4187,7 +4291,12 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 31
+            "walkFromStation": 31,
+            "images": [
+                "assets/stops/the-granville-island-toy-company.jpg",
+                "assets/stops/the-granville-island-toy-company-2.jpg",
+                "assets/stops/the-granville-island-toy-company-3.jpg"
+            ]
         },
         {
             "id": "s102",
@@ -4266,7 +4375,10 @@
                 "establishment"
             ],
             "walkFromStation": 32,
-            "goto": "Best Kept Secret"
+            "goto": "Best Kept Secret",
+            "images": [
+                "assets/stops/good-thief.jpg"
+            ]
         },
         {
             "id": "s104",
@@ -4361,7 +4473,10 @@
                 "establishment"
             ],
             "walkFromStation": 35,
-            "goto": "Anything!"
+            "goto": "Anything!",
+            "images": [
+                "assets/stops/welk-s.jpg"
+            ]
         },
         {
             "id": "s107",
@@ -4398,7 +4513,14 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 36
+            "walkFromStation": 36,
+            "images": [
+                "assets/stops/neptoon-records.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 49
+            }
         },
         {
             "id": "s108",
@@ -4439,7 +4561,16 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 36
+            "walkFromStation": 36,
+            "images": [
+                "assets/stops/the-sellution-quality.jpg",
+                "assets/stops/the-sellution-quality-2.jpg",
+                "assets/stops/the-sellution-quality-3.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 69
+            }
         },
         {
             "id": "s116",
@@ -4473,7 +4604,15 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 36
+            "walkFromStation": 36,
+            "images": [
+                "assets/stops/woo-to-see-you.jpg",
+                "assets/stops/woo-to-see-you-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 31
+            }
         },
         {
             "id": "s117",
@@ -4510,7 +4649,16 @@
                 "service",
                 "establishment"
             ],
-            "walkFromStation": 36
+            "walkFromStation": 36,
+            "images": [
+                "assets/stops/eugene-choo.jpg",
+                "assets/stops/eugene-choo-2.jpg",
+                "assets/stops/eugene-choo-3.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 56
+            }
         },
         {
             "id": "s120",
@@ -4598,7 +4746,16 @@
                 "establishment"
             ],
             "walkFromStation": 39,
-            "goto": "A slice of quiche, a cookie, and a coffee"
+            "goto": "A slice of quiche, a cookie, and a coffee",
+            "images": [
+                "assets/stops/liberty-bakery-cafe-3.jpg",
+                "assets/stops/liberty-bakery-cafe.jpg",
+                "assets/stops/liberty-bakery-cafe-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 49,
+                "y": 79
+            }
         },
         {
             "id": "s122",
@@ -4635,7 +4792,14 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 39
+            "walkFromStation": 39,
+            "images": [
+                "assets/stops/exile-guitars.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 73
+            }
         },
         {
             "id": "s123",
@@ -4676,7 +4840,16 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 39
+            "walkFromStation": 39,
+            "images": [
+                "assets/stops/the-soap-dispensary.jpg",
+                "assets/stops/the-soap-dispensary-2.jpg",
+                "assets/stops/the-soap-dispensary-3.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 43
+            }
         },
         {
             "id": "s124",
@@ -4716,7 +4889,14 @@
                 "establishment"
             ],
             "walkFromStation": 39,
-            "goto": "I always take a look at the shoes."
+            "goto": "I always take a look at the shoes.",
+            "images": [
+                "assets/stops/front-and-company.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 24
+            }
         },
         {
             "id": "s125",
@@ -4754,7 +4934,15 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 39
+            "walkFromStation": 39,
+            "images": [
+                "assets/stops/front-and-company-gift-store-2.jpg",
+                "assets/stops/front-and-company-gift-store.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 72
+            }
         },
         {
             "id": "s126",
@@ -4789,7 +4977,14 @@
                 "establishment"
             ],
             "walkFromStation": 39,
-            "goto": "Tank tops and tees. Their socks are super comfy too."
+            "goto": "Tank tops and tees. Their socks are super comfy too.",
+            "images": [
+                "assets/stops/kotn.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 66
+            }
         },
         {
             "id": "s127",
@@ -5103,7 +5298,16 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 39
+            "walkFromStation": 39,
+            "images": [
+                "assets/stops/coco-et-olive.jpg",
+                "assets/stops/coco-et-olive-2.jpg",
+                "assets/stops/coco-et-olive-3.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 15
+            }
         },
         {
             "id": "s135",
@@ -5155,7 +5359,15 @@
                 "establishment"
             ],
             "walkFromStation": 20,
-            "goto": "A latte and a croissant."
+            "goto": "A latte and a croissant.",
+            "images": [
+                "assets/stops/thierry-mount-pleasant.jpg",
+                "assets/stops/thierry-mount-pleasant-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 48
+            }
         },
         {
             "id": "s182",
@@ -5193,7 +5405,14 @@
                 "service",
                 "establishment"
             ],
-            "walkFromStation": 18
+            "walkFromStation": 18,
+            "images": [
+                "assets/stops/fish-market-studio-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 33
+            }
         },
         {
             "id": "s183",
@@ -5262,7 +5481,17 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 19
+            "walkFromStation": 19,
+            "images": [
+                "assets/stops/mintage-mall-2.jpg",
+                "assets/stops/mintage-mall.jpg",
+                "assets/stops/mintage-mall-3.jpg",
+                "assets/stops/mintage-mall-4.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 54
+            }
         },
         {
             "id": "s185",
@@ -5340,7 +5569,11 @@
                 "establishment"
             ],
             "walkFromStation": 20,
-            "goto": "Chirashi or Poke bowl"
+            "goto": "Chirashi or Poke bowl",
+            "images": [
+                "assets/stops/carp-sushi-and-bowl.jpg",
+                "assets/stops/carp-sushi-and-bowl-2.jpg"
+            ]
         },
         {
             "id": "s187",
