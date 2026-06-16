@@ -1020,9 +1020,25 @@ function applyMapViewBox(svgEl, points, legs, showStation, containerAspect) {
   return viewBox;
 }
 
+function isRouteMapMobileView() {
+  return typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+}
+
+function applyRouteMapViewportMode(svgEl) {
+  if (!svgEl) return;
+  svgEl.setAttribute(
+    "preserveAspectRatio",
+    isRouteMapMobileView() ? "xMidYMid slice" : "xMidYMid meet"
+  );
+}
+
 function refitMapToColumn(svgEl, points, legs, showStation) {
   const container = svgEl?.parentElement;
   if (!container || !svgEl) return;
+  if (isRouteMapMobileView()) {
+    applyRouteMapViewportMode(svgEl);
+    return;
+  }
   const cw = container.clientWidth;
   let ch = container.clientHeight;
   if (!ch) ch = svgEl.getBoundingClientRect().height;
@@ -1218,6 +1234,7 @@ function drawMap(svgEl, route, options = {}) {
     "viewBox",
     route.length ? computeMapViewBox(points, legs, showStation) : MAP.defaultViewBox
   );
+  applyRouteMapViewportMode(svgEl);
   requestAnimationFrame(() => {
     if (!isStale() && route.length) refitMapToColumn(svgEl, points, legs, showStation);
   });

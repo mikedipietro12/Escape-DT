@@ -1735,21 +1735,70 @@
       .map-split .route-list,
       .route-review.route-phase-summary .route-summary,
       .route-review.route-phase-map:not(.route-review--stacked) .route-summary { width: 60%; display: block; }
+      .route-review.route-phase-summary .map-container svg,
+      .route-review.route-phase-map:not(.route-review--stacked) .map-container svg {
+        max-height: 70vh;
+      }
+      /* Route final + plan pages: wider canvas, roomier gutters on desktop */
+      .container:has(#step-P2-PLAN.active),
+      .container:has(#step-E.active),
+      .container:has(#step-ROUTE-START.active) {
+        max-width: 1080px;
+        padding-left: 2.75rem;
+        padding-right: 2.75rem;
+      }
+      #step-E .route-review.route-phase-summary,
+      #step-E .route-review.route-phase-map:not(.route-review--stacked),
+      #step-P2-PLAN .route-review.route-phase-summary,
+      #step-P2-PLAN .route-review.route-phase-map:not(.route-review--stacked) {
+        gap: 3.5rem;
+      }
+      #step-E .route-review.route-phase-summary .map-container,
+      #step-E .route-review.route-phase-map:not(.route-review--stacked) .map-container,
+      #step-P2-PLAN .route-review.route-phase-summary .map-container,
+      #step-P2-PLAN .route-review.route-phase-map:not(.route-review--stacked) .map-container {
+        width: 48%;
+      }
+      #step-E .route-review.route-phase-summary .route-summary,
+      #step-E .route-review.route-phase-map:not(.route-review--stacked) .route-summary,
+      #step-P2-PLAN .route-review.route-phase-summary .route-summary,
+      #step-P2-PLAN .route-review.route-phase-map:not(.route-review--stacked) .route-summary {
+        width: 52%;
+        max-width: none;
+        padding-left: 0.5rem;
+      }
+      #step-P2-PLAN .plan-narrative {
+        margin-bottom: 3rem;
+      }
+      #step-P2-PLAN .plan-narrative__stops {
+        gap: 0.85rem;
+        margin-bottom: 2rem;
+      }
+      #step-ROUTE-START .route-finalize-heading {
+        margin: 1.5rem 0 0.85rem;
+      }
+      #step-ROUTE-START .route-finalize-section {
+        margin-bottom: 0.75rem;
+      }
+      #step-ROUTE-START .card {
+        padding: 1.65rem 2rem;
+      }
     }
     .route-review.route-phase-map {
       align-items: center;
     }
     @media (max-width: 767px) {
-      .route-review.route-phase-map .map-container {
-        max-width: min(100%, 18rem);
+      .route-review .map-container {
+        max-width: 100%;
         width: 100%;
+        height: min(72vh, 34rem);
+        overflow: hidden;
       }
-      .route-review.route-phase-map .map-container svg {
-        max-height: min(50vh, 22rem);
-      }
-      #step-E .route-review:not(.route-review--stacked) .map-container svg,
-      #step-P2-PLAN .route-review:not(.route-review--stacked) .map-container svg {
-        max-height: min(48vh, 20rem);
+      .route-review .map-container svg {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        overflow: hidden;
       }
     }
     .route-review.route-phase-map .route-summary {
@@ -7246,6 +7295,18 @@
       return `${minX} ${minY} ${w} ${h}`;
     }
 
+    function isRouteMapMobileView() {
+      return window.matchMedia("(max-width: 767px)").matches;
+    }
+
+    function applyRouteMapViewportMode(svgEl) {
+      if (!svgEl) return;
+      svgEl.setAttribute(
+        "preserveAspectRatio",
+        isRouteMapMobileView() ? "xMidYMid slice" : "xMidYMid meet"
+      );
+    }
+
     function getRouteMapLayout(route, mapOptions = {}) {
       const station = { x: MAP.xCenter, y: MAP.yStation };
       const routeLegs = getRouteLegs(route, mapOptions);
@@ -7840,6 +7901,7 @@
         "viewBox",
         route.length ? computeMapViewBox(points, legs, showStation) : MAP.defaultViewBox
       );
+      applyRouteMapViewportMode(svg);
 
       const crossStreetLayer = svg.querySelector(".map-cross-street-layer");
       const routeLayer = svg.querySelector(".map-route-layer");
@@ -8003,10 +8065,12 @@
       const mapOptions = options.mapOptions || {};
       if (mapOptions.horizontal && window.EastVillageMap) {
         EastVillageMap.drawMap(svg, route, options);
+        applyRouteMapViewportMode(svg);
         return;
       }
       if (mapOptions.grid && window.ChinatownMap) {
         ChinatownMap.drawMap(svg, route, options);
+        applyRouteMapViewportMode(svg);
         return;
       }
       if (mapOptions.mpVertical && window.MountPleasantMap) {
