@@ -1,14 +1,10 @@
 /**
- * Commercial Drive — hybrid route map (reference demo; live app uses same logic in index.html).
- *
- * Canonical reference for the next live illustrated route map:
- * - Spine: straight legs on the center column; south returns to station or route start
- *   use a tiny curve onto a parallel line just left of the spine (gold when southbound).
- * - Off-spine: rounded corners at Victoria / Venables / Frances junctions (both directions).
- * - Animated draw: trace arrowhead on the route layer.
- *
- * Supersedes curved-lanes and stacked-lanes for spine behaviour. Port into index.html when ready.
+ * Commercial Drive hybrid map — shared geometry/layout core for demos.
+ * Forked from demo/commercial-hybrid-paths.js (live demo unchanged).
+ * Prototype demos import this module; do not auto-init.
  */
+(function () {
+  "use strict";
 
 const WALK_SPEED_KMH = 5;
 
@@ -16,6 +12,8 @@ const MAP = {
   xCenter: 150,
   xEast: 175,
   xWest: 125,
+  xMaclean: 138,
+  xClark: 115,
   xVenablesWest: 108,
   xVenablesEast: 114,
   yNorth: 50,
@@ -36,42 +34,8 @@ const MAP_LEG_COLORS_BASE = ["#3d8f4a", "#52a362", "#6ab87a", "#84cc94", "#9ad4a
 const MAP_BACKWARD_COLOR = "#c9a227";
 const STATION_WALK_LABEL = "Commercial–Broadway Station";
 
-const PRESETS = {
-  backtrack: {
-    label: "Backtrack (Prado → JJ Bean → Don't Argue)",
-    ids: ["s3", "s1", "s19"],
-  },
-  victoria: {
-    label: "Victoria walk (JJ → Mah → Park → pizza)",
-    ids: ["s1", "s32", "s33", "s19"],
-  },
-  venables: {
-    label: "Venables hop (Slice → Alterior → Fun Haus)",
-    ids: ["s26", "s12", "s25"],
-  },
-  "half-day": {
-    label: "Half-day mid-morning (Victoria + Venables + spine)",
-    ids: ["s32", "s33", "s19", "s34", "s26", "s25", "s12", "s24"],
-  },
-  "south-loop": {
-    label: "South of station (JJ → Equinox → back)",
-    ids: ["s1", "s40", "s1"],
-  },
-  "world-cup": {
-    label: "World Cup day (north crawl, then south)",
-    ids: ["s3", "s19", "s10", "s21", "s22", "s41"],
-  },
-  "frances-return": {
-    label: "Frances return (Earnest → Don't Argue)",
-    ids: ["s41", "s19"],
-  },
-};
-
 let STATION_LAT = 49.2634;
 let STATION_LNG = -123.0694;
-let allStops = [];
-let currentRoute = [];
-const mapAnimationGeneration = { map: 0 };
 
 function escapeHtml(str) {
   return String(str ?? "")
@@ -166,6 +130,17 @@ function isMapStopWestOffset(x) {
   return x < MAP.xCenter - 5;
 }
 
+/** East off-spine labels sit right of the dot; west off-spine and spine labels sit left/right of spine column. */
+function getMapStopLabelPlacement(x) {
+  if (isMapStopEastOffset(x)) {
+    return { labelX: x + 12, labelAnchor: "start" };
+  }
+  if (isMapStopWestOffset(x)) {
+    return { labelX: x - 12, labelAnchor: "end" };
+  }
+  return { labelX: x + 15, labelAnchor: "start" };
+}
+
 function getMapLegColor(leg) {
   if (leg.isBackward) return MAP_BACKWARD_COLOR;
   const colors = getMapLegColors();
@@ -180,11 +155,349 @@ function isFrancesCrossStreet(crossStreet) {
   return /\bfrances\b/i.test(String(crossStreet || ""));
 }
 
+function isClarkCrossStreet(crossStreet) {
+  return /\bclark\b/i.test(String(crossStreet || ""));
+}
+
+function isMacleanCrossStreet(crossStreet) {
+  return /\bmaclean\b/i.test(String(crossStreet || ""));
+}
+
+/** Editorial parallel columns west/east of Commercial (prototype + route map). */
+const COMMERCIAL_PARALLEL_STREETS = {
+  victoria: { label: "Victoria", x: MAP.xEast, side: "east" },
+  maclean: { label: "Maclean", x: MAP.xMaclean, side: "west", endsAtVenables: true },
+  frances: { label: "Frances", x: MAP.xWest, side: "west", endsAtVenables: true },
+  clark: { label: "Clark", x: MAP.xClark, side: "west" },
+};
+
+const COMMERCIAL_PARALLEL_BY_SLUG = {
+  earnest: "frances",
+  "woodland-park": "maclean",
+};
+
+function isCommercialParallelZone(zone) {
+  return zone in COMMERCIAL_PARALLEL_STREETS;
+}
+
+function getStopParallelStreet(stop) {
+  const zone = getStopMapZone(stop);
+  return isCommercialParallelZone(zone) ? zone : null;
+}
+
+function getParallelStreetDrawSpec(streetId, spineBounds, options = {}) {
+  const street = COMMERCIAL_PARALLEL_STREETS[streetId];
+  if (!street) return null;
+  const drawFromY =
+    spineBounds?.y1 != null ? Math.min(MAP.yNorth, spineBounds.y1) : MAP.yNorth;
+  let drawToY =
+    spineBounds?.y2 != null ? Math.max(MAP.yStation, spineBounds.y2) : MAP.yStation;
+
+  if (street.endsAtVenables) {
+    const venablesY = options.venablesY ?? getVenablesCrossStreetY(options.allStops, options.route);
+    if (venablesY != null) {
+      drawToY = Math.min(drawToY, venablesY);
+    }
+  }
+
+  if (drawToY < drawFromY) drawToY = drawFromY;
+
+  const labelX = street.side === "east" ? street.x + 9 : street.x - 9;
+  const span = drawToY - drawFromY;
+  const labelYRatio = street.labelYRatio ?? 0.5;
+  return {
+    key: streetId,
+    streetX: street.x,
+    drawFromY,
+    drawToY,
+    label: street.label,
+    labelVertical: true,
+    labelX,
+    labelY: drawFromY + span * labelYRatio,
+    labelAnchor: "middle",
+  };
+}
+
+/** Perpendicular east–west cross streets on the Commercial spine (prototype). */
+const COMMERCIAL_SPINE_CROSS_STREETS = [
+  {
+    id: "venables",
+    label: "Venables",
+    matchCrossStreet: (cs) => /\bvenables\b/i.test(cs) && !/woodland|clark/i.test(cs),
+  },
+  {
+    id: "first",
+    label: "1st",
+    matchCrossStreet: (cs) => /\b1st\b/i.test(cs),
+  },
+  {
+    id: "twelfth",
+    label: "12th",
+    matchCrossStreet: (cs) => /\b12th\b/i.test(cs),
+  },
+];
+
+let commercialWalkExtents = null;
+
+function initCommercialWalkExtents(stops) {
+  const commercial = (stops || []).filter((s) => (s.neighborhood || "commercial") === "commercial");
+  const northKm = commercial
+    .filter((s) => !isStopSouthOfStation(s))
+    .map((s) => getStopWalkFromStation(s).km);
+  const southKm = commercial
+    .filter((s) => isStopSouthOfStation(s))
+    .map((s) => getStopWalkFromStation(s).km);
+  commercialWalkExtents = {
+    northKm: Math.max(0.001, ...(northKm.length ? northKm : [0.001])),
+    southKm: Math.max(0.001, ...(southKm.length ? southKm : [0.001])),
+  };
+}
+
+function stopToCanonicalMapY(stop) {
+  if (!commercialWalkExtents) return MAP.yStation;
+  const { km } = getStopWalkFromStation(stop);
+  if (isStopSouthOfStation(stop)) {
+    return MAP.yStation + (km / commercialWalkExtents.southKm) * MAP.ySouthSpan;
+  }
+  return MAP.yStation - (km / commercialWalkExtents.northKm) * MAP.ySpan;
+}
+
+function stopToRouteMapY(stop, furthestDist) {
+  const dist = getStopWalkFromStation(stop).km;
+  const scale = Math.max(furthestDist, 0.0001);
+  if (isStopSouthOfStation(stop)) {
+    return MAP.yStation + (dist / scale) * MAP.ySouthSpan;
+  }
+  return MAP.yStation - (dist / scale) * MAP.ySpan;
+}
+
+function getVenablesCrossStreetY(allStops, route) {
+  if (!route?.length) return null;
+  const commercial = (allStops || []).filter(
+    (s) => (s.neighborhood || "commercial") === "commercial"
+  );
+  const ref = COMMERCIAL_SPINE_CROSS_STREETS.find((r) => r.id === "venables");
+  if (!ref) return null;
+  const matches = commercial.filter((s) => ref.matchCrossStreet(s.crossStreet || ""));
+  if (!matches.length) return null;
+  const rep = matches.find((s) => !isStopOffSpine(s)) || matches[0];
+  const furthestDist = Math.max(
+    ...route.map((s) => getStopWalkFromStation(s).km),
+    0.0001
+  );
+  return stopToRouteMapY(rep, furthestDist);
+}
+
+function getCommercialSpineCrossStreetCatalog(stops) {
+  if (!commercialWalkExtents) initCommercialWalkExtents(stops);
+  const commercial = (stops || []).filter((s) => (s.neighborhood || "commercial") === "commercial");
+  return COMMERCIAL_SPINE_CROSS_STREETS.map((ref) => {
+    const matches = commercial.filter((s) => ref.matchCrossStreet(s.crossStreet || ""));
+    if (!matches.length) return null;
+    const ys = matches.map((s) => stopToCanonicalMapY(s)).sort((a, b) => a - b);
+    const y = ys[Math.floor(ys.length / 2)];
+    return {
+      id: ref.id,
+      label: ref.label,
+      y,
+    };
+  })
+    .filter(Boolean)
+    .sort((a, b) => a.y - b.y);
+}
+
+function getSpineCrossStreetCatalogForRoute(allStops, route, points) {
+  if (!route?.length) return [];
+  const commercial = (allStops || []).filter(
+    (s) => (s.neighborhood || "commercial") === "commercial"
+  );
+  const furthestDist = Math.max(
+    ...route.map((s) => getStopWalkFromStation(s).km),
+    0.0001
+  );
+
+  return COMMERCIAL_SPINE_CROSS_STREETS.map((ref) => {
+    const onRoute = points.filter((p) => ref.matchCrossStreet(p.stop.crossStreet || ""));
+    if (onRoute.length) {
+      const ys = onRoute.map((p) => p.dotY).sort((a, b) => a - b);
+      return { id: ref.id, label: ref.label, y: ys[Math.floor(ys.length / 2)] };
+    }
+    const matches = commercial.filter((s) => ref.matchCrossStreet(s.crossStreet || ""));
+    if (!matches.length) return null;
+    const rep = matches.find((s) => !isStopOffSpine(s)) || matches[0];
+    return {
+      id: ref.id,
+      label: ref.label,
+      y: stopToRouteMapY(rep, furthestDist),
+    };
+  })
+    .filter(Boolean)
+    .sort((a, b) => a.y - b.y);
+}
+
+function getSpineCrossStreetDrawSpec(entry) {
+  if (!entry) return null;
+  const leftReach = (MAP.xCenter - (MAP.xClark - 4)) * 3;
+  const rightReach = (MAP.xEast + 4 - MAP.xCenter) * 3;
+  const drawToXLeft = MAP.xCenter - leftReach;
+  return {
+    key: entry.id,
+    crossY: entry.y,
+    centerX: MAP.xCenter,
+    drawToXLeft,
+    drawToXRight: MAP.xCenter + rightReach,
+    label: entry.label,
+    labelX: drawToXLeft,
+    labelY: entry.y,
+    labelAnchor: "start",
+  };
+}
+
+function getSpineCrossStreetDrawSpecAtPath(entry, pathEl, atLength) {
+  const spec = getSpineCrossStreetDrawSpec(entry);
+  if (!spec || !pathEl) return spec;
+  const len = pathEl.getTotalLength();
+  if (len < 1) return spec;
+  const y = pathEl.getPointAtLength(Math.max(0, Math.min(atLength, len))).y;
+  spec.crossY = y;
+  spec.labelY = y;
+  return spec;
+}
+
+function getLegLayoutEndpoints(leg, route, points) {
+  if (!leg || !route?.length) return null;
+  const stationY = MAP.yStation;
+  if (leg.legKind === "stationToStop") {
+    const p = getMapPointForRouteIndex(points, route, leg.toStopIndex);
+    if (!p) return null;
+    return { y1: stationY, y2: p.dotY, toStop: p.stop };
+  }
+  if (leg.legKind === "stopToStop") {
+    const a = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
+    const b = getMapPointForRouteIndex(points, route, leg.toStopIndex);
+    if (!a || !b) return null;
+    return {
+      y1: a.dotY,
+      y2: b.dotY,
+      fromStop: a.stop,
+      toStop: b.stop,
+    };
+  }
+  if (leg.legKind === "stopToStation") {
+    const p = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
+    if (!p) return null;
+    return { y1: p.dotY, y2: stationY, fromStop: p.stop };
+  }
+  return null;
+}
+
+function getLegCanonicalEndpoints(leg, route, points) {
+  if (!leg || !route?.length) return null;
+  const stationY = MAP.yStation;
+  if (leg.legKind === "stationToStop") {
+    const p = getMapPointForRouteIndex(points, route, leg.toStopIndex);
+    if (!p) return null;
+    return { y1: stationY, y2: stopToCanonicalMapY(p.stop), toStop: p.stop };
+  }
+  if (leg.legKind === "stopToStop") {
+    const a = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
+    const b = getMapPointForRouteIndex(points, route, leg.toStopIndex);
+    if (!a || !b) return null;
+    return {
+      y1: stopToCanonicalMapY(a.stop),
+      y2: stopToCanonicalMapY(b.stop),
+      fromStop: a.stop,
+      toStop: b.stop,
+    };
+  }
+  if (leg.legKind === "stopToStation") {
+    const p = getMapPointForRouteIndex(points, route, leg.fromStopIndex);
+    if (!p) return null;
+    return { y1: stopToCanonicalMapY(p.stop), y2: stationY, fromStop: p.stop };
+  }
+  return null;
+}
+
+const SPINE_CROSS_X_TOLERANCE = 8;
+
+function isLegVenablesEastWestHop(endpoints) {
+  if (!endpoints?.fromStop || !endpoints?.toStop) return false;
+  const z1 = getStopMapZone(endpoints.fromStop);
+  const z2 = getStopMapZone(endpoints.toStop);
+  return (
+    (z1 === "venablesWest" || z1 === "venablesEast") &&
+    (z2 === "venablesWest" || z2 === "venablesEast")
+  );
+}
+
+/** Where segment (x1,y1)→(x2,y2) meets spine column at crossY; returns t∈[0,1] or null. */
+function segmentCrossesSpineAtY(x1, y1, x2, y2, crossY, spineX = MAP.xCenter, tol = SPINE_CROSS_X_TOLERANCE) {
+  const dy = y2 - y1;
+  if (Math.abs(dy) < 0.01) {
+    if (Math.abs(y1 - crossY) > 0.5) return null;
+    const minX = Math.min(x1, x2);
+    const maxX = Math.max(x1, x2);
+    if (spineX < minX - tol || spineX > maxX + tol) return null;
+    return 0.5;
+  }
+  const t = (crossY - y1) / dy;
+  if (t < -0.01 || t > 1.01) return null;
+  const x = x1 + t * (x2 - x1);
+  if (Math.abs(x - spineX) > tol) return null;
+  return Math.max(0, Math.min(1, t));
+}
+
+function getLegSpineCrossStreetCrossings(leg, catalog, route, points) {
+  const endpoints = getLegLayoutEndpoints(leg, route, points);
+  if (!catalog?.length) return [];
+
+  if (isLegVenablesEastWestHop(endpoints)) return [];
+
+  const pathD = leg.pathD || "";
+  if (!pathD) return [];
+
+  const path = document.createElementNS(SVG_NS, "path");
+  path.setAttribute("d", pathD);
+  const total = path.getTotalLength();
+  if (total < 1) return [];
+
+  const samples = Math.max(24, Math.ceil(total / 2));
+  const sampled = [];
+  for (let i = 0; i <= samples; i++) {
+    const len = (i / samples) * total;
+    const pt = path.getPointAtLength(len);
+    sampled.push({ len, x: pt.x, y: pt.y });
+  }
+
+  const found = [];
+  for (const cs of catalog) {
+    let atLength = null;
+    for (let i = 1; i < sampled.length; i++) {
+      const a = sampled[i - 1];
+      const b = sampled[i];
+      const t = segmentCrossesSpineAtY(a.x, a.y, b.x, b.y, cs.y);
+      if (t == null) continue;
+      const hit = a.len + t * (b.len - a.len);
+      if (atLength == null || hit < atLength) atLength = hit;
+    }
+    if (atLength != null) {
+      found.push({ id: cs.id, entry: cs, atLength });
+    }
+  }
+
+  return found.sort((a, b) => a.atLength - b.atLength);
+}
+
 function getStopMapZone(stop) {
   if (!stop) return "spine";
   if (stop.mapVenables === "east") return "venablesEast";
   if (stop.mapVenables === "west") return "venablesWest";
+  if (stop.slug && COMMERCIAL_PARALLEL_BY_SLUG[stop.slug]) {
+    return COMMERCIAL_PARALLEL_BY_SLUG[stop.slug];
+  }
   if (isVictoriaCrossStreet(stop.crossStreet)) return "victoria";
+  if (isClarkCrossStreet(stop.crossStreet)) return "clark";
+  if (isMacleanCrossStreet(stop.crossStreet)) return "maclean";
   if (isFrancesCrossStreet(stop.crossStreet)) return "frances";
   return "spine";
 }
@@ -193,8 +506,8 @@ function getStopMapX(stop) {
   const zone = getStopMapZone(stop);
   if (zone === "venablesEast") return MAP.xVenablesEast;
   if (zone === "venablesWest") return MAP.xVenablesWest;
-  if (zone === "victoria") return MAP.xEast;
-  if (zone === "frances") return MAP.xWest;
+  const parallel = COMMERCIAL_PARALLEL_STREETS[zone];
+  if (parallel) return parallel.x;
   const explicit = stop.coords?.x;
   if (explicit != null && explicit !== MAP.xCenter) return explicit;
   return MAP.xCenter;
@@ -232,6 +545,23 @@ function alignVenablesMapPoints(points) {
   const rowY = Math.max(...west.map((p) => p.y));
   east.forEach((p) => {
     p.y = rowY;
+  });
+  return points;
+}
+
+/** Same map row for spine stops sharing a cross-street band (e.g. Commercial at Venables). */
+function alignCrossStreetBandPoints(points) {
+  COMMERCIAL_SPINE_CROSS_STREETS.forEach((ref) => {
+    const band = points.filter(
+      (p) =>
+        ref.matchCrossStreet(p.stop.crossStreet || "") && getStopMapZone(p.stop) === "spine"
+    );
+    if (band.length < 2) return;
+    const rowY = band.reduce((sum, p) => sum + p.y, 0) / band.length;
+    band.forEach((p) => {
+      p.y = rowY;
+      applyHybridGeometry(p);
+    });
   });
   return points;
 }
@@ -291,7 +621,7 @@ function buildRouteMapPoints(route) {
     routeIndices: groups[mapIdx].routeIndices,
     idx: groups[mapIdx].routeIndices[0],
   }));
-  return alignVenablesMapPoints(points);
+  return alignCrossStreetBandPoints(alignVenablesMapPoints(points));
 }
 
 function applyHybridGeometry(point) {
@@ -400,16 +730,14 @@ function getCurvedOffSpinePathD(x1, y1, x2, y2, fromStop, toStop, lineX1, lineX2
 
   if (fromOff && toOff) {
     if (z1 === z2) {
+      const parallel = COMMERCIAL_PARALLEL_STREETS[z1];
       const colX =
-        z1 === "victoria"
-          ? MAP.xEast
-          : z1 === "frances"
-            ? MAP.xWest
-            : z1 === "venablesWest"
-              ? MAP.xVenablesWest
-              : z1 === "venablesEast"
-                ? MAP.xVenablesEast
-                : x1;
+        parallel?.x ??
+        (z1 === "venablesWest"
+          ? MAP.xVenablesWest
+          : z1 === "venablesEast"
+            ? MAP.xVenablesEast
+            : x1);
       return `M ${colX} ${y1} L ${colX} ${y2}`;
     }
     parts.push(`M ${x1} ${y1}`);
@@ -461,7 +789,7 @@ function getMapLegPathD(x1, y1, x2, y2, fromStop, toStop) {
   }
 
   const offSpineZone = (z) =>
-    z === "venablesWest" || z === "venablesEast" || z === "victoria" || z === "frances";
+    z === "venablesWest" || z === "venablesEast" || isCommercialParallelZone(z);
   if (offSpineZone(z1) && offSpineZone(z2) && z1 !== z2) {
     return `M ${x1} ${y1} L ${spine} ${y1} L ${spine} ${y2} L ${x2} ${y2}`;
   }
@@ -711,16 +1039,25 @@ function computeMapViewBox(points, legs, showStation) {
   return `${minX} ${minY} ${w} ${h}`;
 }
 
-function renderCommercialSpineLabelSvg(spineY1, spineY2) {
+function getCommercialSpineLabelSpec(spineY1, spineY2) {
   const y1 = spineY1 ?? MAP.yNorth;
   const y2 = spineY2 ?? MAP.yStation;
+  // Left of the spine, clear of the south-return lane at xCenter − returnLaneOffset.
   const x = MAP.xCenter - MAP.returnLaneOffset - 9;
-  const y = (y1 + y2) / 2;
+  return {
+    x,
+    y: (y1 + y2) / 2,
+    text: "Commercial",
+  };
+}
+
+function renderCommercialSpineLabelSvg(spineY1, spineY2) {
+  const spec = getCommercialSpineLabelSpec(spineY1, spineY2);
   return `
     <text class="map-text map-spine-label map-spine-label--commercial"
-          x="${x}" y="${y}"
+          x="${spec.x}" y="${spec.y}"
           text-anchor="middle"
-          transform="rotate(-90 ${x} ${y})">Commercial</text>`;
+          transform="rotate(-90 ${spec.x} ${spec.y})">${spec.text}</text>`;
 }
 
 function renderMapStaticSvg(options = {}) {
@@ -753,14 +1090,11 @@ function renderMapStopSvg(point, hybrid) {
   const numLabel = formatMapStopNumberLabel(point);
   const x = hybrid ? point.dotX : point.x;
   const y = hybrid ? point.dotY : point.y;
-  const east = isMapStopEastOffset(x);
-  const west = isMapStopWestOffset(x);
-  const labelX = east || west ? x - 12 : x + 15;
-  const labelAnchor = east || west ? "end" : "start";
+  const { labelX, labelAnchor } = getMapStopLabelPlacement(x);
   return `
         <g class="map-stop-group map-stop-group--hidden" data-stop-index="${mapIdx}">
           <circle class="map-stop" cx="${x}" cy="${y}" r="5" />
-          <text class="map-text" x="${labelX}" y="${y + 4}" text-anchor="${labelAnchor}">${numLabel}. ${escapeHtml(s.crossStreet)}</text>
+          <text class="map-text" x="${labelX}" y="${y + 4}" text-anchor="${labelAnchor}">${numLabel}</text>
         </g>
       `;
 }
@@ -806,7 +1140,7 @@ function syncTraceArrow(pathEl, arrowEl, length) {
 }
 
 function animateMapPath(pathEl, options = {}) {
-  const { duration = 1500, onComplete = null, arrowEl = null } = options;
+  const { duration = 1500, onComplete = null, onProgress = null, arrowEl = null } = options;
   if (!pathEl) {
     onComplete?.();
     return;
@@ -823,11 +1157,14 @@ function animateMapPath(pathEl, options = {}) {
 
   let arrowFrame = 0;
   const trackArrow = () => {
+    const offset = parseFloat(getComputedStyle(pathEl).strokeDashoffset) || 0;
+    const drawn = Math.max(0, Math.min(length, length - offset));
+    onProgress?.(drawn, length);
     if (!arrowEl) return;
     syncTraceArrow(pathEl, arrowEl, length);
     arrowFrame = requestAnimationFrame(trackArrow);
   };
-  if (arrowEl) trackArrow();
+  if (arrowEl || onProgress) trackArrow();
 
   requestAnimationFrame(() => {
     pathEl.style.transition = `stroke-dashoffset ${duration}ms ease-in-out`;
@@ -851,140 +1188,46 @@ function animateMapPath(pathEl, options = {}) {
   }
 }
 
-function drawMap(svgEl, route, options = {}) {
-  const gen = ++mapAnimationGeneration.map;
-  const isStale = () => gen !== mapAnimationGeneration.map;
-
-  const showStation = true;
-  const layout = getRouteMapLayout(route, { hybrid: true });
-  const { points, legs } = layout;
-  const routeLegs = getRouteLegs(route);
-  const legDuration = options.legDuration ?? MAP.legDurationMs;
-  const spine = getMapSpineBounds(points, showStation, true);
-
-  let html = renderMapStaticSvg({
-    showStation,
-    spineY1: spine.y1,
-    spineY2: spine.y2,
-  });
-  html += `<g class="map-route-layer"></g><g class="map-overlay-layer"></g>`;
-  svgEl.innerHTML = html;
-
-  svgEl.setAttribute(
-    "viewBox",
-    route.length ? computeMapViewBox(points, legs, showStation) : MAP.defaultViewBox
-  );
-
-  const routeLayer = svgEl.querySelector(".map-route-layer");
-  const overlayLayer = svgEl.querySelector(".map-overlay-layer");
-  const traceArrow = createTraceArrow(routeLayer);
-
-  if (!route.length) {
-    options.onComplete?.();
-    return;
-  }
-
-  function revealStop(stopIndex) {
-    const existing = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
-    if (existing) {
-      requestAnimationFrame(() => existing.classList.remove("map-stop-group--hidden"));
-      return;
-    }
-    overlayLayer.insertAdjacentHTML("beforeend", renderMapStopSvg(points[stopIndex], true));
-    const g = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
-    requestAnimationFrame(() => g?.classList.remove("map-stop-group--hidden"));
-  }
-
-  if (!legs.length) {
-    points.forEach((_, idx) => revealStop(idx));
-    options.onComplete?.();
-    return;
-  }
-
-  function runLeg(legIndex) {
-    if (isStale()) return;
-    if (legIndex >= legs.length) {
-      options.onComplete?.();
-      return;
-    }
-
-    const leg = legs[legIndex];
-    const color = getMapLegColor(leg);
-    const pathClass = leg.isBackward ? "map-path map-path--backward" : "map-path";
-
-    const legComplete = () => {
-      if (isStale()) return;
-      const stopIdx = getMapStopIndexAfterLeg(legIndex, routeLegs, route);
-      if (stopIdx != null) revealStop(stopIdx);
-      runLeg(legIndex + 1);
-    };
-
-    const pathEl = document.createElementNS(SVG_NS, "path");
-    pathEl.setAttribute("class", pathClass);
-    pathEl.setAttribute("data-leg-index", String(legIndex));
-    pathEl.setAttribute("d", leg.pathD || `M ${leg.x1} ${leg.y1} L ${leg.x2} ${leg.y2}`);
-    pathEl.style.stroke = color;
-    routeLayer.appendChild(pathEl);
-
-    animateMapPath(pathEl, {
-      duration: legDuration,
-      arrowEl: traceArrow,
-      onComplete: legComplete,
-    });
-  }
-
-  runLeg(0);
-}
-
-function resolveRoute(presetKey) {
-  const preset = PRESETS[presetKey];
-  if (!preset) return [];
-  return preset.ids.map((id) => allStops.find((s) => s.id === id)).filter(Boolean);
-}
-
-function replayMap() {
-  drawMap(document.getElementById("route-map"), currentRoute);
-}
-
-async function init() {
-  const warnEl = document.getElementById("demo-warn");
-  const mapEl = document.getElementById("route-map");
-
-  if (window.location.protocol === "file:") {
-    if (warnEl) warnEl.hidden = false;
-    return;
-  }
-
-  try {
-    const res = await fetch("/data/stops.json");
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    STATION_LAT = data.station?.lat ?? STATION_LAT;
-    STATION_LNG = data.station?.lng ?? STATION_LNG;
-    allStops = (data.stops || []).filter((s) => (s.neighborhood || "commercial") === "commercial");
-  } catch (err) {
-    if (warnEl) warnEl.hidden = false;
-    document.querySelector(".demo-shell")?.insertAdjacentHTML(
-      "afterbegin",
-      `<p class="demo-banner" style="border-color:#c00">Could not load Commercial Drive stops (${escapeHtml(err.message)}). From the repo root run <code>npm run dev</code>, then open <code>http://localhost:3000/demo/commercial-hybrid-paths.html</code>.</p>`
-    );
-    if (mapEl) {
-      mapEl.innerHTML =
-        '<text class="map-text" x="20" y="40">Start the dev server to load stop data.</text>';
-    }
-    return;
-  }
-
-  const presetSelect = document.getElementById("preset-select");
-  const replay = () => {
-    currentRoute = resolveRoute(presetSelect.value);
-    replayMap();
-  };
-
-  presetSelect.addEventListener("change", replay);
-  document.getElementById("btn-replay").addEventListener("click", replay);
-  presetSelect.value = "backtrack";
-  replay();
-}
-
-init();
+globalThis.CommercialHybridMapCore = {
+  MAP,
+  SVG_NS,
+  STATION_WALK_LABEL,
+  setStation(lat, lng) {
+    STATION_LAT = lat;
+    STATION_LNG = lng;
+  },
+  escapeHtml,
+  isStopOffSpine,
+  getStopMapZone,
+  getStopParallelStreet,
+  getParallelStreetDrawSpec,
+  getVenablesCrossStreetY,
+  COMMERCIAL_PARALLEL_STREETS,
+  COMMERCIAL_SPINE_CROSS_STREETS,
+  initCommercialWalkExtents,
+  stopToCanonicalMapY,
+  getCommercialSpineCrossStreetCatalog,
+  getSpineCrossStreetCatalogForRoute,
+  getSpineCrossStreetDrawSpec,
+  getSpineCrossStreetDrawSpecAtPath,
+  getLegSpineCrossStreetCrossings,
+  getRouteLegs,
+  getRouteMapLayout,
+  getMapSpineBounds,
+  computeMapViewBox,
+  renderMapStaticSvg,
+  renderCommercialSpineLabelSvg,
+  getCommercialSpineLabelSpec,
+  renderMapStopSvg,
+  getMapLegColor,
+  getMapStopIndexAfterLeg,
+  createTraceArrow,
+  syncTraceArrow,
+  animateMapPath,
+  isMapStopEastOffset,
+  isMapStopWestOffset,
+  getMapStopLabelPlacement,
+  formatMapStopNumberLabel,
+  alignCrossStreetBandPoints,
+};
+})();

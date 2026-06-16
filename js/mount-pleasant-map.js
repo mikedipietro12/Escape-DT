@@ -24,6 +24,11 @@ const MAP = {
   xWestMid: 115,
   xWestFar: 108,
   xWestDeep: 100,
+  /** Named parallels west/east of Main (editorial columns). */
+  xJames: 138,
+  xQuebec: 125,
+  xOntario: 115,
+  xPrinceEdward: 175,
   mainSpineLng: -123.1004,
   /** Station anchors the top of the spine; route runs south (down) from here. */
   yStation: 72,
@@ -263,8 +268,46 @@ function inferWestMapXFromLng(lng) {
   return MAP.xWestDeep;
 }
 
+/** Editorial parallel columns west/east of Main. */
+const MP_PARALLEL_STREETS = {
+  ontario: { label: "Ontario", x: MAP.xOntario, side: "west" },
+  quebec: { label: "Quebec", x: MAP.xQuebec, side: "west" },
+  james: { label: "James", x: MAP.xJames, side: "west" },
+  princeEdward: { label: "Prince Edward", x: MAP.xPrinceEdward, side: "east" },
+};
+
+const MP_PARALLEL_BY_SLUG = {
+  "mount-pleasant-park": "ontario",
+  "mount-pleasant-vintage": "ontario",
+  "purebread-bakery-coffee": "ontario",
+  "33-acres-brewing-company": "ontario",
+  "earnest-ice-cream-quebec-st": "quebec",
+  "glory-juice-co": "quebec",
+  "prince-edward-park": "princeEdward",
+  "riley-park": "james",
+};
+
+function isMpParallelZone(zone) {
+  return zone in MP_PARALLEL_STREETS;
+}
+
+function getStopParallelStreet(stop) {
+  if (!stop) return null;
+  if (stop.slug && MP_PARALLEL_BY_SLUG[stop.slug]) {
+    return MP_PARALLEL_BY_SLUG[stop.slug];
+  }
+  const cs = String(stop.crossStreet || "");
+  if (/\bprince edward\b/i.test(cs)) return "princeEdward";
+  if (/\bontario\b/i.test(cs)) return "ontario";
+  if (/\bquebec\b/i.test(cs)) return "quebec";
+  if (/\bjames\b/i.test(cs)) return "james";
+  return null;
+}
+
 function getStopMapZone(stop) {
   if (!stop) return "spine";
+  const parallel = getStopParallelStreet(stop);
+  if (parallel) return parallel;
   const explicit = stop.coords?.x;
   if (explicit != null && explicit < MAP.xCenter - 5) return "westOffMain";
   if (explicit != null && explicit > MAP.xCenter + 5) return "eastOffMain";
@@ -283,16 +326,22 @@ function getStopMapZone(stop) {
 
 function isStopWestOffMain(stop) {
   if (!stop) return false;
-  return getStopMapZone(stop) === "westOffMain" || getStopMapX(stop) < MAP.xCenter - 5;
+  const zone = getStopMapZone(stop);
+  if (isMpParallelZone(zone) && MP_PARALLEL_STREETS[zone].side === "west") return true;
+  return zone === "westOffMain" || getStopMapX(stop) < MAP.xCenter - 5;
 }
 
 function isStopEastOffMain(stop) {
   if (!stop) return false;
-  return getStopMapZone(stop) === "eastOffMain" || getStopMapX(stop) > MAP.xCenter + 5;
+  const zone = getStopMapZone(stop);
+  if (isMpParallelZone(zone) && MP_PARALLEL_STREETS[zone].side === "east") return true;
+  return zone === "eastOffMain" || getStopMapX(stop) > MAP.xCenter + 5;
 }
 
 function getStopMapX(stop) {
   const zone = getStopMapZone(stop);
+  const parallel = MP_PARALLEL_STREETS[zone];
+  if (parallel) return parallel.x;
   const explicit = stop.coords?.x;
   if (explicit != null && explicit !== MAP.xCenter) return explicit;
   if (zone === "eastOffMain") return MAP.xEast;
@@ -1319,10 +1368,12 @@ function ensureAllStopsVisible(svgEl, points) {
 
   window.MountPleasantMap = {
     MAP,
+    MP_PARALLEL_STREETS,
     drawMap,
     getRouteMapLayout,
     getRouteWalkLegs,
     getWalkLeg,
+    getStopParallelStreet,
     haversineKm,
   };
 })();

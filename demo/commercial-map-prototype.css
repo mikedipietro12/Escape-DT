@@ -1,0 +1,301 @@
+/* Production-like Step E preview — map animation + route review */
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.step--active {
+  display: flex;
+  flex-direction: column;
+}
+
+.proto-preset-bar {
+  margin-bottom: 1.25rem;
+}
+
+.proto-preset-bar label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  font-weight: 500;
+  max-width: 28rem;
+}
+
+.proto-preset-bar select {
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--ink);
+  border-radius: var(--tile-radius);
+  background: rgba(255, 255, 255, 0.35);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* Step E layout — matches live app */
+@media (min-width: 768px) {
+  .route-review.route-phase-summary,
+  .route-review.route-phase-map:not(.route-review--stacked) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .route-review.route-phase-summary .map-container,
+  .route-review.route-phase-map:not(.route-review--stacked) .map-container {
+    width: 40%;
+    flex-shrink: 0;
+    max-width: none;
+  }
+
+  .route-review.route-phase-summary .route-summary,
+  .route-review.route-phase-map:not(.route-review--stacked) .route-summary {
+    width: 60%;
+    display: block;
+  }
+}
+
+.route-review.route-phase-map {
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 0.75rem 1.5rem 1.5rem;
+  }
+
+  .route-review.route-phase-map .map-container {
+    max-width: min(100%, 18rem);
+    width: 100%;
+  }
+
+  .route-review.route-phase-map .map-container svg {
+    max-height: min(48vh, 20rem);
+  }
+}
+
+.route-review.route-phase-map .route-summary {
+  display: none;
+}
+
+.route-review.route-phase-summary .route-summary {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .route-review.route-phase-summary .route-scroll-hint--visible {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: var(--type-label);
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--ink-muted);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .route-review.route-phase-summary .route-scroll-hint--visible:hover {
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .route-scroll-hint__arrow {
+    font-size: 1.25rem;
+    line-height: 1;
+    animation: route-scroll-bounce 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes route-scroll-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+.map-container svg {
+  max-height: min(70vh, 36rem);
+}
+
+.route-export-summary,
+.totals {
+  text-align: left;
+}
+
+.nav-buttons--finalize {
+  margin-top: auto;
+  padding-top: 2rem;
+}
+
+.nav-buttons--finalize button.primary:not(:disabled) {
+  cursor: pointer;
+}
+
+.nav-buttons--finalize button.primary:disabled {
+  opacity: 0.45;
+}
+
+/* Map layers (prototype animation) */
+.map-cross-street-layer,
+.map-spine-label--commercial {
+  pointer-events: none;
+}
+
+.map-side-street,
+.map-cross-street {
+  stroke: rgba(0, 0, 0, 0.14);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.map-side-street-label,
+.map-cross-street-label {
+  fill: rgba(0, 0, 0, 0.38);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0;
+}
+
+.map-side-street-label.is-visible,
+.map-cross-street-label.is-visible {
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+
+.map-side-street-label--vertical {
+  dominant-baseline: middle;
+}
+
+.map-cross-street-label {
+  dominant-baseline: alphabetic;
+}
+
+.map-trace-arrow {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.map-trace-arrow path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.map-overlay-layer .map-stop:not(.map-stop--hit) {
+  fill: #000;
+  stroke: none;
+  stroke-width: 0;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.map-stop-group--interactive {
+  cursor: pointer;
+  outline: none;
+}
+
+.map-stop-group--interactive .map-stop--hit {
+  pointer-events: all;
+  fill: transparent;
+  stroke: none;
+  stroke-width: 0;
+}
+
+.map-stop-group--interactive:hover .map-stop:not(.map-stop--hit),
+.map-stop-group--interactive:focus-visible .map-stop:not(.map-stop--hit),
+.map-stop-group--highlighted .map-stop:not(.map-stop--hit) {
+  fill: #000;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.map-stop-group--highlighted .map-text {
+  font-weight: 600;
+}
+
+/* Route cards — production base + prototype highlight */
+.route-card__placeholder {
+  width: 100px;
+  height: 100px;
+  min-width: 100px;
+  border-right: 1px solid var(--ink);
+  flex-shrink: 0;
+}
+
+.route-card {
+  transform: scale(1);
+  transform-origin: center center;
+  transition:
+    transform 0.18s ease,
+    border-width 0.18s ease;
+}
+
+.route-card .content h3 {
+  transition: font-weight 0.18s ease;
+}
+
+.route-card:not(.route-card--pending):hover,
+.route-card:not(.route-card--pending):focus-visible,
+.route-card.route-card--linked {
+  transform: scale(1.03);
+  border-width: 2.5px;
+}
+
+.route-card:not(.route-card--pending):hover .content h3,
+.route-card:not(.route-card--pending):focus-visible .content h3,
+.route-card.route-card--linked .content h3 {
+  font-weight: 700;
+}
+
+.route-card--pending {
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.route-card--pending:hover,
+.route-card--pending:focus-visible,
+.route-card--pending.route-card--linked {
+  transform: scale(1);
+  border-width: 1px;
+}
+
+.route-card--pending .content h3 {
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-card,
+  .map-side-street-label,
+  .map-cross-street-label,
+  .map-overlay-layer .map-stop {
+    transition: none;
+  }
+
+  .route-scroll-hint__arrow {
+    animation: none;
+  }
+}

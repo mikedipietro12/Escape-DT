@@ -1602,7 +1602,8 @@
             ],
             "name": "Earnest Ice Cream",
             "coords": {
-                "y": 178
+                "y": 178,
+                "x": 118
             },
             "description": "Top 3 Ice cream in the city hands down. I could go for a scoop of Cookies & Cream any day. A bit off the beaten path, but close to a big park with a playground and a large open field where locals tend to picnic.",
             "goto": "Sample everything but get a kids cone of cookies and cream.",
@@ -1637,7 +1638,7 @@
             "name": "Woodland Park",
             "coords": {
                 "y": 216,
-                "x": 125
+                "x": 143
             },
             "description": "A secret gem in the neighborhood. With a concrete wading pool that gets filled during the day it's a great place for parents and kids to cool off in the summer. The playground is \"oldschool\", but still provides lots of fun. You will often find locals picnicking in the large open fields, a great place to also watch all the bikes zip past the Adanac bike path. With three local breweries a stone's throw away, it's an easy choice for a chill afternoon/evening hang out.",
             "walkFromStation": 28,

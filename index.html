@@ -2221,8 +2221,69 @@
         animation: none;
         transform: translate(calc(var(--cx) * 1px), calc((var(--cy) + var(--off)) * 1px));
       }
+      .route-card,
+      .map-side-street-label,
+      .map-cross-street-label,
+      .map-overlay-layer .map-stop {
+        transition: none;
+      }
     }
     .map-spine-label { font-size: 9px; opacity: 0.75; }
+    .map-spine-label--commercial { pointer-events: none; }
+    .map-cross-street-layer { pointer-events: none; }
+    .map-side-street,
+    .map-cross-street {
+      stroke: rgba(0, 0, 0, 0.14);
+      stroke-width: 2.25;
+      stroke-linecap: round;
+      fill: none;
+    }
+    .map-side-street-label,
+    .map-cross-street-label {
+      fill: rgba(0, 0, 0, 0.38);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      opacity: 0;
+    }
+    .map-side-street-label.is-visible,
+    .map-cross-street-label.is-visible {
+      opacity: 1;
+      transition: opacity 0.45s ease;
+    }
+    .map-side-street-label--vertical {
+      dominant-baseline: middle;
+    }
+    .map-cross-street-label {
+      dominant-baseline: alphabetic;
+    }
+    .map-overlay-layer .map-stop:not(.map-stop--hit) {
+      fill: var(--ink);
+      stroke: none;
+      stroke-width: 0;
+      transition: stroke 0.2s ease, stroke-width 0.2s ease;
+    }
+    .map-stop-group--interactive {
+      cursor: pointer;
+      outline: none;
+    }
+    .map-stop-group--interactive .map-stop--hit {
+      pointer-events: all;
+      fill: transparent;
+      stroke: none;
+      stroke-width: 0;
+    }
+    .map-stop-group--interactive:hover .map-stop:not(.map-stop--hit),
+    .map-stop-group--interactive:focus-visible .map-stop:not(.map-stop--hit),
+    .map-stop-group--highlighted .map-stop:not(.map-stop--hit) {
+      fill: var(--ink);
+      stroke: #fff;
+      stroke-width: 2;
+    }
+    .map-stop-group--highlighted .map-text {
+      font-weight: 600;
+    }
     .map-stop-label { font-size: 11px; letter-spacing: 0.04em; }
 
     .route-area-subtitle {
@@ -2256,8 +2317,40 @@
       background: rgba(255,255,255,0.1);
       align-items: center;
       overflow: hidden;
+      transform: scale(1);
+      transform-origin: center center;
+      transition:
+        transform 0.18s ease,
+        border-width 0.18s ease;
     }
     .route-card[role="button"] { cursor: pointer; }
+    .route-card .content h3 {
+      transition: font-weight 0.18s ease;
+    }
+    .route-card:not(.route-card--pending):hover,
+    .route-card:not(.route-card--pending):focus-visible,
+    .route-card.route-card--linked {
+      transform: scale(1.03);
+      border-width: 2.5px;
+    }
+    .route-card:not(.route-card--pending):hover .content h3,
+    .route-card:not(.route-card--pending):focus-visible .content h3,
+    .route-card.route-card--linked .content h3 {
+      font-weight: 700;
+    }
+    .route-card--pending {
+      opacity: 0.42;
+      pointer-events: none;
+    }
+    .route-card--pending:hover,
+    .route-card--pending:focus-visible,
+    .route-card--pending.route-card--linked {
+      transform: scale(1);
+      border-width: 1px;
+    }
+    .route-card--pending .content h3 {
+      font-weight: 600;
+    }
     .route-card:focus-visible {
       outline: 3px solid var(--ink);
       outline-offset: 2px;
@@ -3496,6 +3589,7 @@
   <script src="js/east-village-map.js"></script>
   <script src="js/mount-pleasant-map.js"></script>
   <script src="js/chinatown-map.js"></script>
+  <script src="js/commercial-hybrid-map-core.js"></script>
   <!-- Animated hero: set data-hero-bubble="off" on <html> or ?hero=static to revert; remove link + js/landing-hero.js to remove entirely -->
   <link rel="stylesheet" href="css/landing-hero.css">
   <script>document.documentElement.classList.add("hero-anim-js");</script>
@@ -4561,6 +4655,11 @@
         if (stopsData.station) {
           STATION_LAT = stopsData.station.lat;
           STATION_LNG = stopsData.station.lng;
+        }
+        const mapCore = commercialMapCore();
+        if (mapCore) {
+          mapCore.setStation(STATION_LAT, STATION_LNG);
+          mapCore.initCommercialWalkExtents(STOPS);
         }
         PLANS = plansData.plans || {};
         PLAN_ORDER = Array.isArray(plansData.planOrder)
@@ -6364,13 +6463,15 @@
       xCenter: 150,
       xEast: 175,
       xWest: 125,
+      xMaclean: 138,
+      xClark: 115,
       xVenablesWest: 108,
       xVenablesEast: 114,
       yNorth: 50,
       yStation: 550,
       ySpan: 500,
       ySouthSpan: 90,
-      legDurationMs: 1400,
+      legDurationMs: 2800,
       defaultViewBox: "0 0 340 600",
       viewBoxPad: 24,
       cornerRadius: 18,
@@ -6386,6 +6487,41 @@
       "#9ad4a8",
     ];
     const MAP_BACKWARD_COLOR = "#c9a227";
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    const COMMERCIAL_PARALLEL_BY_SLUG = {
+      earnest: "frances",
+      "woodland-park": "maclean",
+    };
+    const COMMERCIAL_SIDE_STREET_DRAW_MS = 900;
+    const COMMERCIAL_SIDE_STREET_LABEL_DELAY_MS = 280;
+
+    function commercialMapCore() {
+      return window.CommercialHybridMapCore || null;
+    }
+
+    function isCommercialDriveMap(mapOptions = {}) {
+      return !mapOptions.horizontal && !mapOptions.grid && !mapOptions.mpVertical;
+    }
+
+    function getCommercialStops() {
+      return STOPS.filter((s) => (s.neighborhood || "commercial") === "commercial");
+    }
+
+    function renderCommercialSpineLabelSvg(spineY1, spineY2) {
+      const core = commercialMapCore();
+      if (core?.renderCommercialSpineLabelSvg) {
+        return core.renderCommercialSpineLabelSvg(spineY1, spineY2);
+      }
+      const y1 = spineY1 ?? MAP.yNorth;
+      const y2 = spineY2 ?? MAP.yStation;
+      const x = MAP.xCenter - MAP.returnLaneOffset - 9;
+      const y = (y1 + y2) / 2;
+      return `
+    <text class="map-text map-spine-label map-spine-label--commercial"
+          x="${x}" y="${y}"
+          text-anchor="middle"
+          transform="rotate(-90 ${x} ${y})">Commercial</text>`;
+    }
 
     function getSeasonFadeTop() {
       const v = getComputedStyle(document.documentElement).getPropertyValue("--fade-top").trim();
@@ -6422,11 +6558,24 @@
       return /\bfrances\b/i.test(String(crossStreet || ""));
     }
 
+    function isClarkCrossStreet(crossStreet) {
+      return /\bclark\b/i.test(String(crossStreet || ""));
+    }
+
+    function isMacleanCrossStreet(crossStreet) {
+      return /\bmaclean\b/i.test(String(crossStreet || ""));
+    }
+
     function getStopMapZone(stop) {
       if (!stop) return "spine";
       if (stop.mapVenables === "east") return "venablesEast";
       if (stop.mapVenables === "west") return "venablesWest";
+      if (stop.slug && COMMERCIAL_PARALLEL_BY_SLUG[stop.slug]) {
+        return COMMERCIAL_PARALLEL_BY_SLUG[stop.slug];
+      }
       if (isVictoriaCrossStreet(stop.crossStreet)) return "victoria";
+      if (isClarkCrossStreet(stop.crossStreet)) return "clark";
+      if (isMacleanCrossStreet(stop.crossStreet)) return "maclean";
       if (isFrancesCrossStreet(stop.crossStreet)) return "frances";
       return "spine";
     }
@@ -6435,11 +6584,13 @@
       const zone = getStopMapZone(stop);
       if (zone === "venablesEast") return MAP.xVenablesEast;
       if (zone === "venablesWest") return MAP.xVenablesWest;
+      if (zone === "victoria") return MAP.xEast;
+      if (zone === "maclean") return MAP.xMaclean;
+      if (zone === "clark") return MAP.xClark;
+      if (zone === "frances") return MAP.xWest;
       const explicit = stop.coords?.x;
       if (explicit != null && explicit !== MAP.xCenter) return explicit;
-      if (zone === "victoria") return MAP.xEast;
-      if (zone === "frances") return MAP.xWest;
-      return explicit ?? MAP.xCenter;
+      return MAP.xCenter;
     }
 
     function isStopOffSpine(stop) {
@@ -6590,6 +6741,23 @@
       }
 
       if (fromOff && toOff) {
+        if (z1 === z2) {
+          const colX =
+            z1 === "victoria"
+              ? MAP.xEast
+              : z1 === "maclean"
+                ? MAP.xMaclean
+                : z1 === "clark"
+                  ? MAP.xClark
+                  : z1 === "frances"
+                    ? MAP.xWest
+                    : z1 === "venablesWest"
+                      ? MAP.xVenablesWest
+                      : z1 === "venablesEast"
+                        ? MAP.xVenablesEast
+                        : x1;
+          return `M ${colX} ${y1} L ${colX} ${y2}`;
+        }
         parts.push(`M ${x1} ${y1}`);
         parts.push(roundedHorizVert(x1, y1, spine, y1, y2));
         if (Math.abs(y1 - y2) > 0.5) parts.push(`L ${spine} ${y2}`);
@@ -6738,12 +6906,11 @@
         z === "venablesWest" ||
         z === "venablesEast" ||
         z === "victoria" ||
-        z === "frances";
-      if (offSpineZone(z1) && offSpineZone(z2) && z1 !== z2) {
-        if (
-          (z1 === "victoria" && z2 === "victoria") ||
-          (z1 === "frances" && z2 === "frances")
-        ) {
+        z === "frances" ||
+        z === "clark" ||
+        z === "maclean";
+      if (offSpineZone(z1) && offSpineZone(z2)) {
+        if (z1 === z2) {
           return `M ${x1} ${y1} L ${x2} ${y2}`;
         }
         return `M ${x1} ${y1} L ${spine} ${y1} L ${spine} ${y2} L ${x2} ${y2}`;
@@ -6771,6 +6938,9 @@
     }
 
     let mapAnimationGeneration = 0;
+    let mapRouteStickyStopIds = [];
+    let mapRouteActiveCardsId = null;
+    let mapSpotCardLinker = null;
     let routeScrollHintObserver = null;
     let activeRouteScrollHint = null;
 
@@ -6862,7 +7032,10 @@
       if (exportSummaryEl && exportSummaryText) {
         exportSummaryEl.innerText = exportSummaryText;
       }
-      renderRouteCards(cardsId, route, routeCardOptions);
+      renderRouteCards(cardsId, route, {
+        ...(routeCardOptions || {}),
+        pending: !!config.cardsPending,
+      });
       renderRouteTotals(totalsId, route, {
         style: totalsStyle,
         mapOptions,
@@ -6916,7 +7089,10 @@
         reviewEl.classList.remove("route-phase-map");
         reviewEl.classList.add("route-phase-summary");
         summaryPanelEl.hidden = false;
-        primeRouteReviewSummary(config);
+        primeRouteReviewSummary({
+          ...config,
+          cardsPending: !skipAnimation && isCommercialDriveMap(config.mapOptions),
+        });
       } else {
         reviewEl.classList.remove("route-phase-summary");
         reviewEl.classList.add("route-phase-map");
@@ -6935,6 +7111,7 @@
       drawMap(mapSvgId, route, {
         mapOptions: config.mapOptions,
         legDuration: skipAnimation ? 0 : undefined,
+        cardsId: isCommercialDriveMap(config.mapOptions) ? config.cardsId : undefined,
         onComplete: onMapDone,
       });
     }
@@ -7009,7 +7186,12 @@
         routeIndices: groups[mapIdx].routeIndices,
         idx: groups[mapIdx].routeIndices[0],
       }));
-      return alignVenablesMapPoints(points);
+      const aligned = alignVenablesMapPoints(points);
+      const core = commercialMapCore();
+      if (core?.alignCrossStreetBandPoints) {
+        return core.alignCrossStreetBandPoints(aligned);
+      }
+      return aligned;
     }
 
     function getMapSpineBounds(points, showStation) {
@@ -7084,6 +7266,7 @@
       const spineY1 = options.spineY1 ?? MAP.yNorth;
       const spineY2 = options.spineY2 ?? MAP.yStation;
       let html = `<line class="map-line" x1="${MAP.xCenter}" y1="${spineY1}" x2="${MAP.xCenter}" y2="${spineY2}" />`;
+      html += renderCommercialSpineLabelSvg(spineY1, spineY2);
       if (showStation) {
         html += `
         <circle cx="${MAP.xCenter}" cy="${MAP.yStation}" r="5" fill="var(--ink)"/>
@@ -7110,8 +7293,8 @@
       const y = point.dotY ?? point.y;
       const east = isMapStopEastOffset(x);
       const west = isMapStopWestOffset(x);
-      const labelX = east || west ? x - 12 : x + 15;
-      const labelAnchor = east || west ? "end" : "start";
+      const labelX = east ? x + 12 : west ? x - 12 : x + 15;
+      const labelAnchor = east ? "start" : west ? "end" : "start";
       return `
         <g class="map-stop-group map-stop-group--hidden" data-stop-index="${mapIdx}">
           <circle class="map-stop" cx="${x}" cy="${y}" r="5" />
@@ -7177,7 +7360,13 @@
     }
 
     function animateMapPath(pathEl, options = {}) {
-      const { duration = 1500, direction = "draw", onComplete = null, arrowEl = null } = options;
+      const {
+        duration = 1500,
+        direction = "draw",
+        onComplete = null,
+        onProgress = null,
+        arrowEl = null,
+      } = options;
       if (!pathEl) {
         onComplete?.();
         return;
@@ -7196,11 +7385,14 @@
 
       let arrowFrame = 0;
       const trackArrow = () => {
+        const offset = parseFloat(getComputedStyle(pathEl).strokeDashoffset) || 0;
+        const drawn = Math.max(0, Math.min(length, length - offset));
+        onProgress?.(drawn, length);
         if (!arrowEl) return;
         syncTraceArrow(pathEl, arrowEl, length);
         arrowFrame = requestAnimationFrame(trackArrow);
       };
-      if (arrowEl) trackArrow();
+      if (arrowEl || onProgress) trackArrow();
 
       const runTransition = () => {
         pathEl.style.transition = `stroke-dashoffset ${duration}ms ease-in-out`;
@@ -7225,6 +7417,585 @@
       }
     }
 
+    function mapRouteCanFineHover() {
+      return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    }
+
+    function normalizeMapRouteStopIds(stopIdOrIds) {
+      if (!stopIdOrIds) return [];
+      return (Array.isArray(stopIdOrIds) ? stopIdOrIds : [stopIdOrIds]).filter(Boolean);
+    }
+
+    function sameMapRouteStopIdSet(a, b) {
+      const left = normalizeMapRouteStopIds(a).sort().join(",");
+      const right = normalizeMapRouteStopIds(b).sort().join(",");
+      return left.length > 0 && left === right;
+    }
+
+    function getMapRouteStopIdsForPoint(point, route) {
+      const indices = point?.routeIndices ?? (point?.idx != null ? [point.idx] : []);
+      return indices.map((routeIdx) => route[routeIdx]?.id).filter(Boolean);
+    }
+
+    function getMapGroupStopIds(groupEl) {
+      if (groupEl?.dataset.stopIds) {
+        return groupEl.dataset.stopIds.split(",").filter(Boolean);
+      }
+      return groupEl?.dataset.stopId ? [groupEl.dataset.stopId] : [];
+    }
+
+    function markMapRouteCardRevealed(stopId, cardsId) {
+      const root = cardsId ? document.getElementById(cardsId) : null;
+      const card = root
+        ? root.querySelector(`.route-card[data-stop-id="${stopId}"]`)
+        : document.querySelector(`.route-card[data-stop-id="${stopId}"]`);
+      card?.classList.remove("route-card--pending");
+    }
+
+    function markMapRouteCardsRevealedForPoint(point, route, cardsId) {
+      getMapRouteStopIdsForPoint(point, route).forEach((stopId) =>
+        markMapRouteCardRevealed(stopId, cardsId)
+      );
+    }
+
+    function setMapRouteHighlight(stopIdOrIds, cardsId, { scrollCard = false } = {}) {
+      const activeIds = new Set(normalizeMapRouteStopIds(stopIdOrIds));
+      const cardsRoot = cardsId ? document.getElementById(cardsId) : null;
+      const cardScope = cardsRoot || document;
+      cardScope.querySelectorAll(".route-card").forEach((card) => {
+        card.classList.toggle("route-card--linked", activeIds.has(card.dataset.stopId));
+      });
+      document.querySelectorAll(".map-stop-group--interactive").forEach((group) => {
+        const groupIds = getMapGroupStopIds(group);
+        const highlighted = groupIds.some((id) => activeIds.has(id));
+        group.classList.toggle("map-stop-group--highlighted", highlighted);
+      });
+      if (scrollCard && activeIds.size) {
+        cardScope
+          .querySelector(`.route-card[data-stop-id="${[...activeIds][0]}"]`)
+          ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+    }
+
+    function teardownMapSpotCardLinking() {
+      mapSpotCardLinker?.disconnect?.();
+      mapSpotCardLinker = null;
+      mapRouteActiveCardsId = null;
+    }
+
+    function wireMapSpotCardLinking(svgEl, cardsId) {
+      teardownMapSpotCardLinking();
+      const cardsRoot = cardsId ? document.getElementById(cardsId) : null;
+      if (!svgEl || !cardsRoot) return;
+
+      mapRouteActiveCardsId = cardsId;
+      const linker = { disconnect: null };
+
+      function activateFromPointer(stopIdOrIds, { scrollCard = false } = {}) {
+        if (!mapRouteCanFineHover()) return;
+        setMapRouteHighlight(stopIdOrIds, cardsId, { scrollCard });
+      }
+
+      function clearHoverHighlight() {
+        if (!mapRouteCanFineHover()) return;
+        setMapRouteHighlight(
+          mapRouteStickyStopIds.length ? mapRouteStickyStopIds : null,
+          cardsId
+        );
+      }
+
+      function toggleSticky(stopIdOrIds) {
+        const ids = normalizeMapRouteStopIds(stopIdOrIds);
+        if (sameMapRouteStopIdSet(ids, mapRouteStickyStopIds)) {
+          mapRouteStickyStopIds = [];
+          setMapRouteHighlight(null, cardsId, { scrollCard: true });
+          return;
+        }
+        mapRouteStickyStopIds = ids;
+        setMapRouteHighlight(mapRouteStickyStopIds, cardsId, { scrollCard: true });
+      }
+
+      const onCardsOver = (e) => {
+        const card = e.target.closest(".route-card");
+        if (card?.classList.contains("route-card--pending")) return;
+        if (card) activateFromPointer(card.dataset.stopId);
+      };
+      const onCardsOut = (e) => {
+        if (!cardsRoot.contains(e.relatedTarget)) clearHoverHighlight();
+      };
+
+      cardsRoot.addEventListener("pointerover", onCardsOver);
+      cardsRoot.addEventListener("pointerout", onCardsOut);
+
+      const onMapOver = (e) => {
+        const group = e.target.closest(".map-stop-group--interactive");
+        if (!group || group.classList.contains("map-stop-group--hidden")) return;
+        activateFromPointer(getMapGroupStopIds(group), { scrollCard: true });
+      };
+      const onMapOut = (e) => {
+        const group = e.target.closest(".map-stop-group--interactive");
+        if (!group) return;
+        if (!svgEl.contains(e.relatedTarget)) clearHoverHighlight();
+      };
+      const onMapClick = (e) => {
+        const group = e.target.closest(".map-stop-group--interactive");
+        if (!group || group.classList.contains("map-stop-group--hidden")) return;
+        toggleSticky(getMapGroupStopIds(group));
+      };
+      const onMapKey = (e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        const group = e.target.closest(".map-stop-group--interactive");
+        if (!group || group.classList.contains("map-stop-group--hidden")) return;
+        e.preventDefault();
+        toggleSticky(getMapGroupStopIds(group));
+      };
+
+      svgEl.addEventListener("pointerover", onMapOver);
+      svgEl.addEventListener("pointerout", onMapOut);
+      svgEl.addEventListener("click", onMapClick);
+      svgEl.addEventListener("keydown", onMapKey);
+
+      linker.disconnect = () => {
+        cardsRoot.removeEventListener("pointerover", onCardsOver);
+        cardsRoot.removeEventListener("pointerout", onCardsOut);
+        svgEl.removeEventListener("pointerover", onMapOver);
+        svgEl.removeEventListener("pointerout", onMapOut);
+        svgEl.removeEventListener("click", onMapClick);
+        svgEl.removeEventListener("keydown", onMapKey);
+      };
+
+      mapSpotCardLinker = linker;
+    }
+
+    function commercialSideStreetSpec(point, spine, venablesY, route) {
+      const core = commercialMapCore();
+      if (!core || !isStopOffSpine(point.stop)) return null;
+
+      const zone = getStopMapZone(point.stop);
+      if (zone === "venablesEast" || zone === "venablesWest") return null;
+
+      const streetId = core.getStopParallelStreet(point.stop);
+      if (!streetId) return null;
+
+      return core.getParallelStreetDrawSpec(streetId, spine, {
+        venablesY,
+        allStops: getCommercialStops(),
+        route,
+      });
+    }
+
+    function renderInteractiveMapStopSvg(point, route) {
+      const s = point.stop;
+      const mapIdx = point.mapIdx ?? point.idx;
+      const numLabel = formatMapStopNumberLabel(point);
+      const x = point.dotX ?? point.x;
+      const y = point.dotY ?? point.y;
+      const east = isMapStopEastOffset(x);
+      const west = isMapStopWestOffset(x);
+      const labelX = east ? x + 12 : west ? x - 12 : x + 15;
+      const labelAnchor = east ? "start" : west ? "end" : "start";
+      const stopIds = getMapRouteStopIdsForPoint(point, route);
+      const indices = point.routeIndices || [point.idx];
+      const names = indices
+        .map((routeIdx) => route[routeIdx]?.name)
+        .filter(Boolean)
+        .map((name) => escapeHtml(name));
+      const ariaNames = names.length > 1 ? names.join(" & ") : names[0] || escapeHtml(s.name);
+      return `
+      <g class="map-stop-group map-stop-group--hidden map-stop-group--interactive"
+         data-stop-index="${mapIdx}"
+         data-stop-id="${s.id}"
+         data-stop-ids="${stopIds.join(",")}"
+         role="button"
+         tabindex="0"
+         aria-label="${numLabel}. ${ariaNames}">
+        <circle class="map-stop--hit" cx="${x}" cy="${y}" r="14" fill="transparent" pointer-events="all" />
+        <circle class="map-stop" cx="${x}" cy="${y}" r="5" pointer-events="none" />
+        <text class="map-text" x="${labelX}" y="${y + 4}" text-anchor="${labelAnchor}" pointer-events="none">${numLabel}</text>
+      </g>`;
+    }
+
+    function animateCommercialCrossStreetBar(crossStreetLayer, spec) {
+      if (!spec || !crossStreetLayer) return;
+      if (crossStreetLayer.querySelector(`[data-cross-street="${spec.key}"]`)) return;
+
+      const y = spec.crossY;
+      const cx = spec.centerX;
+
+      const lineLeft = document.createElementNS(SVG_NS, "line");
+      lineLeft.setAttribute("class", "map-cross-street");
+      lineLeft.setAttribute("data-cross-street", spec.key);
+      lineLeft.setAttribute("x1", String(cx));
+      lineLeft.setAttribute("y1", String(y));
+      lineLeft.setAttribute("x2", String(cx));
+      lineLeft.setAttribute("y2", String(y));
+
+      const lineRight = document.createElementNS(SVG_NS, "line");
+      lineRight.setAttribute("class", "map-cross-street");
+      lineRight.setAttribute("data-cross-street", spec.key);
+      lineRight.setAttribute("x1", String(cx));
+      lineRight.setAttribute("y1", String(y));
+      lineRight.setAttribute("x2", String(cx));
+      lineRight.setAttribute("y2", String(y));
+
+      crossStreetLayer.append(lineLeft, lineRight);
+
+      const label = document.createElementNS(SVG_NS, "text");
+      label.setAttribute("class", "map-cross-street-label");
+      label.setAttribute("x", String(spec.labelX));
+      label.setAttribute("y", String(spec.labelY));
+      label.setAttribute("text-anchor", spec.labelAnchor);
+      label.setAttribute("dominant-baseline", "alphabetic");
+      label.textContent = spec.label;
+      crossStreetLayer.appendChild(label);
+
+      const finish = () => label.classList.add("is-visible");
+
+      if (window.gsap) {
+        gsap.to(lineLeft, {
+          attr: { x2: spec.drawToXLeft },
+          duration: COMMERCIAL_SIDE_STREET_DRAW_MS / 1000,
+          ease: "power2.out",
+        });
+        gsap.to(lineRight, {
+          attr: { x2: spec.drawToXRight },
+          duration: COMMERCIAL_SIDE_STREET_DRAW_MS / 1000,
+          ease: "power2.out",
+          onComplete: () =>
+            window.setTimeout(finish, COMMERCIAL_SIDE_STREET_LABEL_DELAY_MS),
+        });
+        return;
+      }
+
+      const leftLength = Math.abs(cx - spec.drawToXLeft);
+      const rightLength = Math.abs(spec.drawToXRight - cx);
+      lineLeft.setAttribute("x2", String(spec.drawToXLeft));
+      lineRight.setAttribute("x2", String(spec.drawToXRight));
+      lineLeft.style.strokeDasharray = `${leftLength}`;
+      lineLeft.style.strokeDashoffset = `${leftLength}`;
+      lineRight.style.strokeDasharray = `${rightLength}`;
+      lineRight.style.strokeDashoffset = `${rightLength}`;
+
+      let ended = 0;
+      const onSegmentEnd = () => {
+        ended += 1;
+        if (ended === 2) window.setTimeout(finish, COMMERCIAL_SIDE_STREET_LABEL_DELAY_MS);
+      };
+
+      requestAnimationFrame(() => {
+        const transition = `stroke-dashoffset ${COMMERCIAL_SIDE_STREET_DRAW_MS}ms ease-out`;
+        lineLeft.style.transition = transition;
+        lineRight.style.transition = transition;
+        lineLeft.style.strokeDashoffset = "0";
+        lineRight.style.strokeDashoffset = "0";
+        lineLeft.addEventListener("transitionend", onSegmentEnd, { once: true });
+        lineRight.addEventListener("transitionend", onSegmentEnd, { once: true });
+      });
+    }
+
+    function animateCommercialSideStreetBar(crossStreetLayer, spec, anchorY, onComplete) {
+      if (!spec || !crossStreetLayer) {
+        onComplete?.();
+        return;
+      }
+
+      const yTop = spec.drawFromY;
+      const yBottom = spec.drawToY;
+      const anchor = Number.isFinite(anchorY) ? anchorY : (yTop + yBottom) / 2;
+
+      const lineUp = document.createElementNS(SVG_NS, "line");
+      lineUp.setAttribute("class", "map-side-street");
+      lineUp.setAttribute("data-side-street", spec.key);
+      lineUp.setAttribute("x1", String(spec.streetX));
+      lineUp.setAttribute("y1", String(anchor));
+      lineUp.setAttribute("x2", String(spec.streetX));
+      lineUp.setAttribute("y2", String(anchor));
+
+      const lineDown = document.createElementNS(SVG_NS, "line");
+      lineDown.setAttribute("class", "map-side-street");
+      lineDown.setAttribute("data-side-street", spec.key);
+      lineDown.setAttribute("x1", String(spec.streetX));
+      lineDown.setAttribute("y1", String(anchor));
+      lineDown.setAttribute("x2", String(spec.streetX));
+      lineDown.setAttribute("y2", String(anchor));
+
+      crossStreetLayer.append(lineUp, lineDown);
+
+      const label = document.createElementNS(SVG_NS, "text");
+      label.setAttribute("class", "map-side-street-label");
+      label.setAttribute("x", String(spec.labelX));
+      label.setAttribute("y", String(spec.labelY));
+      label.setAttribute("text-anchor", spec.labelAnchor);
+      if (spec.labelVertical) {
+        label.setAttribute("class", "map-side-street-label map-side-street-label--vertical");
+        label.setAttribute("transform", `rotate(-90 ${spec.labelX} ${spec.labelY})`);
+      }
+      label.textContent = spec.label;
+      crossStreetLayer.appendChild(label);
+
+      const finish = () => {
+        label.classList.add("is-visible");
+        onComplete?.();
+      };
+
+      if (window.gsap) {
+        gsap.to(lineUp, {
+          attr: { y2: yTop },
+          duration: COMMERCIAL_SIDE_STREET_DRAW_MS / 1000,
+          ease: "power2.out",
+        });
+        gsap.to(lineDown, {
+          attr: { y2: yBottom },
+          duration: COMMERCIAL_SIDE_STREET_DRAW_MS / 1000,
+          ease: "power2.out",
+          onComplete: () => {
+            window.setTimeout(finish, COMMERCIAL_SIDE_STREET_LABEL_DELAY_MS);
+          },
+        });
+        return;
+      }
+
+      const upLength = Math.abs(anchor - yTop);
+      const downLength = Math.abs(yBottom - anchor);
+      lineUp.setAttribute("y2", String(yTop));
+      lineDown.setAttribute("y2", String(yBottom));
+      lineUp.style.strokeDasharray = `${upLength}`;
+      lineUp.style.strokeDashoffset = `${upLength}`;
+      lineDown.style.strokeDasharray = `${downLength}`;
+      lineDown.style.strokeDashoffset = `${downLength}`;
+
+      let ended = 0;
+      const onSegmentEnd = () => {
+        ended += 1;
+        if (ended === 2) window.setTimeout(finish, COMMERCIAL_SIDE_STREET_LABEL_DELAY_MS);
+      };
+
+      requestAnimationFrame(() => {
+        const transition = `stroke-dashoffset ${COMMERCIAL_SIDE_STREET_DRAW_MS}ms ease-out`;
+        lineUp.style.transition = transition;
+        lineDown.style.transition = transition;
+        lineUp.style.strokeDashoffset = "0";
+        lineDown.style.strokeDashoffset = "0";
+        lineUp.addEventListener("transitionend", onSegmentEnd, { once: true });
+        lineDown.addEventListener("transitionend", onSegmentEnd, { once: true });
+      });
+    }
+
+    function popCommercialStopDot(groupEl, onComplete) {
+      const dot = groupEl?.querySelector(".map-stop:not(.map-stop--hit)");
+      if (!dot) {
+        onComplete?.();
+        return;
+      }
+      if (!window.gsap) {
+        window.setTimeout(() => onComplete?.(), 350);
+        return;
+      }
+      gsap.fromTo(
+        dot,
+        { attr: { r: 2.5 }, opacity: 0.4 },
+        {
+          attr: { r: 5 },
+          opacity: 1,
+          duration: 0.35,
+          ease: "back.out(2)",
+          onComplete,
+        }
+      );
+    }
+
+    function drawCommercialDriveMap(svg, route, options = {}) {
+      const mapOptions = options.mapOptions || {};
+      const core = commercialMapCore();
+      const gen = ++mapAnimationGeneration;
+      const isStale = () => gen !== mapAnimationGeneration;
+
+      mapRouteStickyStopIds = [];
+      setMapRouteHighlight(null, options.cardsId);
+      teardownMapSpotCardLinking();
+
+      const showStation = shouldShowStationOnMap(mapOptions);
+      const layout = getRouteMapLayout(route, mapOptions);
+      const { points, legs } = layout;
+      const routeLegs = getRouteLegs(route, mapOptions);
+      const legDuration = options.legDuration ?? MAP.legDurationMs;
+      const spine = getMapSpineBounds(points, showStation);
+      const drawnSideStreets = new Set();
+      const drawnCrossStreets = new Set();
+      const spineCrossCatalog = core
+        ? core.getSpineCrossStreetCatalogForRoute(getCommercialStops(), route, points)
+        : [];
+      const venablesCrossY = spineCrossCatalog.find((c) => c.id === "venables")?.y ?? null;
+
+      let html = renderMapStaticSvg({
+        showStation,
+        spineY1: spine.y1,
+        spineY2: spine.y2,
+      });
+      html += `<g class="map-cross-street-layer"></g>`;
+      html += `<g class="map-route-layer"></g>`;
+      html += `<g class="map-overlay-layer"></g>`;
+      svg.innerHTML = html;
+      svg.setAttribute(
+        "viewBox",
+        route.length ? computeMapViewBox(points, legs, showStation) : MAP.defaultViewBox
+      );
+
+      const crossStreetLayer = svg.querySelector(".map-cross-street-layer");
+      const routeLayer = svg.querySelector(".map-route-layer");
+      const overlayLayer = svg.querySelector(".map-overlay-layer");
+      const traceArrow = legDuration > 0 ? createTraceArrow(routeLayer) : null;
+
+      if (options.cardsId) {
+        wireMapSpotCardLinking(svg, options.cardsId);
+      }
+
+      if (!route.length) {
+        options.onComplete?.();
+        return;
+      }
+
+      function revealStopGroup(stopIndex, onReady) {
+        let group = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
+        if (!group) {
+          overlayLayer.insertAdjacentHTML(
+            "beforeend",
+            renderInteractiveMapStopSvg(points[stopIndex], route)
+          );
+          group = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
+        }
+        requestAnimationFrame(() => {
+          group?.classList.remove("map-stop-group--hidden");
+          markMapRouteCardsRevealedForPoint(points[stopIndex], route, options.cardsId);
+          popCommercialStopDot(group, onReady);
+        });
+        return group;
+      }
+
+      function afterStopReveal(stopIndex, done) {
+        const point = points[stopIndex];
+        const spec = commercialSideStreetSpec(point, spine, venablesCrossY, route);
+        if (!spec || drawnSideStreets.has(spec.key)) {
+          done();
+          return;
+        }
+        drawnSideStreets.add(spec.key);
+        animateCommercialSideStreetBar(crossStreetLayer, spec, point.dotY ?? point.y, done);
+      }
+
+      function revealStop(stopIndex, onDone) {
+        revealStopGroup(stopIndex, () => {
+          afterStopReveal(stopIndex, onDone || (() => {}));
+        });
+      }
+
+      if (!legs.length) {
+        points.forEach((_, idx) => revealStop(idx));
+        options.onComplete?.();
+        return;
+      }
+
+      function runLeg(legIndex) {
+        if (isStale()) return;
+        if (legIndex >= legs.length) {
+          options.onComplete?.();
+          return;
+        }
+
+        const leg = legs[legIndex];
+        const color = getMapLegColor(leg);
+        const pathClass = leg.isBackward ? "map-path map-path--backward" : "map-path";
+
+        const legComplete = () => {
+          if (isStale()) return;
+          try {
+            const stopIdx = getMapStopIndexAfterLeg(
+              legIndex,
+              mapOptions,
+              points.length,
+              routeLegs,
+              route
+            );
+            if (stopIdx != null) {
+              revealStop(stopIdx, () => runLeg(legIndex + 1));
+            } else {
+              runLeg(legIndex + 1);
+            }
+          } catch (err) {
+            console.error("Map leg reveal failed", err);
+            runLeg(legIndex + 1);
+          }
+        };
+
+        const pathEl = document.createElementNS(SVG_NS, "path");
+        pathEl.setAttribute("class", pathClass);
+        pathEl.setAttribute("data-leg-index", String(legIndex));
+        pathEl.setAttribute("d", leg.pathD || `M ${leg.x1} ${leg.y1} L ${leg.x2} ${leg.y2}`);
+        pathEl.style.stroke = color;
+        routeLayer.appendChild(pathEl);
+
+        const legCrossings = core
+          ? core.getLegSpineCrossStreetCrossings(leg, spineCrossCatalog, route, points)
+          : [];
+        const triggeredCrossings = new Set();
+
+        if (legDuration === 0) {
+          pathEl.style.strokeDasharray = "none";
+          pathEl.style.strokeDashoffset = "0";
+          legCrossings.forEach((crossing) => {
+            if (drawnCrossStreets.has(crossing.id)) return;
+            drawnCrossStreets.add(crossing.id);
+            animateCommercialCrossStreetBar(
+              crossStreetLayer,
+              core.getSpineCrossStreetDrawSpecAtPath(
+                crossing.entry,
+                pathEl,
+                crossing.atLength
+              )
+            );
+          });
+          legComplete();
+          return;
+        }
+
+        animateMapPath(pathEl, {
+          duration: legDuration,
+          direction: "draw",
+          arrowEl: traceArrow,
+          onProgress: (drawn) => {
+            if (!core) return;
+            for (const crossing of legCrossings) {
+              if (triggeredCrossings.has(crossing.id)) continue;
+              if (drawn < crossing.atLength - 1) continue;
+              triggeredCrossings.add(crossing.id);
+              if (drawnCrossStreets.has(crossing.id)) continue;
+              drawnCrossStreets.add(crossing.id);
+              animateCommercialCrossStreetBar(
+                crossStreetLayer,
+                core.getSpineCrossStreetDrawSpecAtPath(
+                  crossing.entry,
+                  pathEl,
+                  crossing.atLength
+                )
+              );
+            }
+          },
+          onComplete: legComplete,
+        });
+      }
+
+      const mapOptsNorm = isRouteFinalizeV2Enabled()
+        ? normalizeMapOptions(mapOptions)
+        : null;
+      const revealFirstStopUpfront = isRouteFinalizeV2Enabled()
+        ? mapOptsNorm && !mapOptsNorm.startAtStation
+        : mapOptions.startAtFirstStop;
+      if (revealFirstStopUpfront && points.length) {
+        revealStop(0);
+      }
+      runLeg(0);
+    }
+
     function drawMap(svgId, route, options = {}) {
       const svg = document.getElementById(svgId);
       if (!svg) return;
@@ -7243,104 +8014,7 @@
         return;
       }
 
-      const gen = ++mapAnimationGeneration;
-      const isStale = () => gen !== mapAnimationGeneration;
-
-      const showStation = shouldShowStationOnMap(mapOptions);
-      const layout = getRouteMapLayout(route, mapOptions);
-      const { points, legs } = layout;
-      const routeLegs = getRouteLegs(route, mapOptions);
-      const legDuration = options.legDuration ?? MAP.legDurationMs;
-      const spine = getMapSpineBounds(points, showStation);
-
-      let html = renderMapStaticSvg({
-        showStation,
-        spineY1: spine.y1,
-        spineY2: spine.y2,
-      });
-      html += `<g class="map-route-layer"></g>`;
-      svg.innerHTML = html;
-      svg.setAttribute(
-        "viewBox",
-        route.length
-          ? computeMapViewBox(points, legs, showStation)
-          : MAP.defaultViewBox
-      );
-
-      const routeLayer = svg.querySelector(".map-route-layer");
-      const traceArrow = legDuration > 0 ? createTraceArrow(routeLayer) : null;
-
-      if (!route.length) {
-        options.onComplete?.();
-        return;
-      }
-
-      function revealStop(stopIndex) {
-        const existing = routeLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
-        if (existing) {
-          requestAnimationFrame(() => existing.classList.remove("map-stop-group--hidden"));
-          return;
-        }
-        routeLayer.insertAdjacentHTML("beforeend", renderMapStopSvg(points[stopIndex]));
-        const g = routeLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
-        requestAnimationFrame(() => g?.classList.remove("map-stop-group--hidden"));
-      }
-
-      if (!legs.length) {
-        points.forEach((_, idx) => revealStop(idx));
-        options.onComplete?.();
-        return;
-      }
-
-      function runLeg(legIndex) {
-        if (isStale()) return;
-        if (legIndex >= legs.length) {
-          options.onComplete?.();
-          return;
-        }
-
-        const leg = legs[legIndex];
-        const color = getMapLegColor(leg);
-        const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        pathEl.setAttribute("class", leg.isBackward ? "map-path map-path--backward" : "map-path");
-        pathEl.setAttribute("data-leg-index", String(legIndex));
-        pathEl.setAttribute("d", leg.pathD || `M ${leg.x1} ${leg.y1} L ${leg.x2} ${leg.y2}`);
-        pathEl.style.stroke = color;
-        routeLayer.appendChild(pathEl);
-
-        animateMapPath(pathEl, {
-          duration: legDuration,
-          direction: "draw",
-          arrowEl: traceArrow,
-          onComplete: () => {
-            if (isStale()) return;
-            try {
-              const stopIdx = getMapStopIndexAfterLeg(
-                legIndex,
-                mapOptions,
-                points.length,
-                routeLegs,
-                route
-              );
-              if (stopIdx != null) revealStop(stopIdx);
-            } catch (err) {
-              console.error("Map leg reveal failed", err);
-            }
-            runLeg(legIndex + 1);
-          },
-        });
-      }
-
-      const mapOptsNorm = isRouteFinalizeV2Enabled()
-        ? normalizeMapOptions(mapOptions)
-        : null;
-      const revealFirstStopUpfront = isRouteFinalizeV2Enabled()
-        ? mapOptsNorm && !mapOptsNorm.startAtStation
-        : mapOptions.startAtFirstStop;
-      if (revealFirstStopUpfront && points.length) {
-        revealStop(0);
-      }
-      runLeg(0);
+      drawCommercialDriveMap(svg, route, options);
     }
 
     function renderRouteCardHtml(s, idx, options = {}) {
@@ -7349,7 +8023,12 @@
       const removeBtn = removable
         ? `<button type="button" class="route-card-remove" aria-label="Remove ${escapeHtml(s.name)} from route" ${canRemove ? `onclick="${options.removeHandler}('${s.id}')"` : "disabled"} title="${canRemove ? "Remove from route" : "Keep at least one stop"}">×</button>`
         : "";
-      const cardClass = removable ? "route-card route-card--removable" : "route-card";
+      const cardClass = [
+        removable ? "route-card route-card--removable" : "route-card",
+        options.pending ? "route-card--pending" : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
       const tags = (s.tags || []).slice(0, 3);
       const tagsHtml = tags.length
         ? `<div class="tags">${tags
@@ -7379,6 +8058,8 @@
 
     function routeCardKeydown(e) {
       if (e.key === "Enter" || e.key === " ") {
+        const card = e.target.closest(".route-card");
+        if (card?.classList.contains("route-card--pending")) return;
         e.preventDefault();
         toggleRouteCardExpanded(e);
       }
@@ -7388,7 +8069,7 @@
       const target = e && e.target ? e.target : null;
       if (target && target.closest && target.closest(".route-card-remove")) return;
       const card = e && e.currentTarget ? e.currentTarget : null;
-      if (!card) return;
+      if (!card || card.classList.contains("route-card--pending")) return;
 
       const isExpanded = card.classList.toggle("route-card--expanded");
       card.setAttribute("aria-expanded", isExpanded ? "true" : "false");
@@ -7457,6 +8138,8 @@
     function updateRouteReviewSummary(config) {
       syncRouteReviewStackedLayout(config.reviewEl, config.mapOptions);
       const route = config.getRoute ? config.getRoute() : config.route;
+      const commercial = isCommercialDriveMap(config.mapOptions);
+      const sideBySide = usesRouteReviewSideBySide(config.reviewEl);
       if (config.exportSummaryEl) {
         const text =
           typeof config.buildExportSummaryText === "function"
@@ -7464,12 +8147,18 @@
             : config.exportSummaryText;
         if (text) config.exportSummaryEl.innerText = text;
       }
-      renderRouteCards(config.cardsId, route, config.routeCardOptions);
+      renderRouteCards(config.cardsId, route, {
+        ...(config.routeCardOptions || {}),
+        pending: commercial && sideBySide,
+      });
       renderRouteTotals(config.totalsId, route, {
         style: config.totalsStyle || "furthest-roundtrip",
         mapOptions: config.mapOptions,
       });
-      drawMap(config.mapSvgId, route, { mapOptions: config.mapOptions });
+      drawMap(config.mapSvgId, route, {
+        mapOptions: config.mapOptions,
+        cardsId: commercial ? config.cardsId : undefined,
+      });
       if (config.onRouteChange) config.onRouteChange(route);
     }
 

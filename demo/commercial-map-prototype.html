@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Route — Commercial Drive</title>
+  <script src="/js/season-theme.js"></script>
+  <link rel="stylesheet" href="/demo/east-village-route-map.css">
+  <link rel="stylesheet" href="/demo/commercial-map-prototype.css">
+</head>
+<body>
+  <p id="demo-warn" class="demo-warn" hidden>
+    Open this page through the dev server, not as a file.
+    From the repo root run <code>npm run dev</code>, then visit
+    <code>/demo/commercial-map-prototype.html</code>.
+  </p>
+
+  <div class="container">
+    <section id="step-E" class="step step--active" aria-label="Your route">
+      <h1>Your Route</h1>
+      <p class="route-area-subtitle">Commercial Drive</p>
+
+      <div class="proto-preset-bar">
+        <label for="preset-select">
+          Sample route
+          <select id="preset-select">
+            <option value="mintage-corso-park">Mintage → Bar Corso → Victoria Park</option>
+            <option value="victoria">Victoria walk (JJ → Mah → Park → pizza)</option>
+            <option value="venables">Venables hop (Slice → Alterior → Fun Haus)</option>
+            <option value="clark-crawl">Clark crawl (Superflux → Truck Stop → Kasko → Strange Fellows)</option>
+            <option value="station-slice">Station → Slice (1st + Venables)</option>
+            <option value="prado-loop">Prado → Audiopile (no 1st)</option>
+            <option value="frances-maclean">Frances &amp; Maclean (Earnest → Woodland Park → Bomber)</option>
+            <option value="spine-only">Spine only (Mintage → Bar Corso → Loula's)</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="route-review" class="route-review route-phase-map">
+        <div class="map-container">
+          <svg id="route-map" viewBox="0 0 340 600" aria-label="Commercial Drive route map"></svg>
+          <button type="button" id="route-scroll-hint" class="route-scroll-hint" hidden aria-label="Scroll down to see your stops and finalize your route">
+            <span class="route-scroll-hint__text">Scroll for your stops &amp; to finalize</span>
+            <span class="route-scroll-hint__arrow" aria-hidden="true">↓</span>
+          </button>
+        </div>
+        <div id="route-summary-panel" class="route-summary" hidden>
+          <p id="route-export-summary" class="label route-export-summary"></p>
+          <div id="route-cards"></div>
+          <div class="totals" id="route-totals"></div>
+        </div>
+      </div>
+
+      <div class="nav-buttons nav-buttons--finalize">
+        <button type="button" id="btn-route-finalize" class="primary" hidden disabled>Finalize</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="/js/vendor/gsap.min.js"></script>
+  <script src="/js/commercial-hybrid-map-core.js"></script>
+  <script src="/demo/commercial-map-prototype.js"></script>
+</body>
+</html>
