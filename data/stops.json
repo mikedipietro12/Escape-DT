@@ -3195,7 +3195,14 @@
                 "establishment"
             ],
             "walkFromStation": 8,
-            "goto": "COOKIES & CREAM on a waffle cone."
+            "goto": "COOKIES & CREAM on a waffle cone.",
+            "images": [
+                "assets/stops/earnest-ice-cream-quebec-st.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 0
+            }
         },
         {
             "id": "s74",
@@ -3330,7 +3337,16 @@
                 "establishment"
             ],
             "walkFromStation": 15,
-            "goto": "Duck A L'Orange and some tater tots for the table."
+            "goto": "Duck A L'Orange and some tater tots for the table.",
+            "images": [
+                "assets/stops/mount-pleasant-vintage-2.jpg",
+                "assets/stops/mount-pleasant-vintage.jpg",
+                "assets/stops/mount-pleasant-vintage-3.jpg"
+            ],
+            "heroFocus": {
+                "x": 49,
+                "y": 76
+            }
         },
         {
             "id": "s78",
@@ -3367,7 +3383,11 @@
                 "establishment"
             ],
             "walkFromStation": 19,
-            "goto": "Set up a blanket, grab a six pack from 33a, play some bocce, and people watch."
+            "goto": "Set up a blanket, grab a six pack from 33a, play some bocce, and people watch.",
+            "images": [
+                "assets/stops/jonathan-rogers-park.jpg",
+                "assets/stops/jonathan-rogers-park-2.jpg"
+            ]
         },
         {
             "id": "s79",
@@ -3408,7 +3428,15 @@
                 "establishment"
             ],
             "walkFromStation": 18,
-            "goto": "Sunshine or darkness."
+            "goto": "Sunshine or darkness.",
+            "images": [
+                "assets/stops/33-acres-brewing-company.jpg",
+                "assets/stops/33-acres-brewing-company-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 45,
+                "y": 74
+            }
         },
         {
             "id": "s80",
@@ -3487,7 +3515,14 @@
                 "establishment"
             ],
             "walkFromStation": 18,
-            "goto": "Falafel plate."
+            "goto": "Falafel plate.",
+            "images": [
+                "assets/stops/superbaba-vancouver.jpg"
+            ],
+            "heroFocus": {
+                "x": 51,
+                "y": 58
+            }
         },
         {
             "id": "s82",
@@ -3570,7 +3605,14 @@
                 "establishment"
             ],
             "walkFromStation": 13,
-            "goto": "Magicians Assistant or the Passive Aggressive."
+            "goto": "Magicians Assistant or the Passive Aggressive.",
+            "images": [
+                "assets/stops/brassneck-brewery.jpg"
+            ],
+            "heroFocus": {
+                "x": 46,
+                "y": 100
+            }
         },
         {
             "id": "s84",
@@ -3710,7 +3752,14 @@
                 "establishment"
             ],
             "walkFromStation": 18,
-            "goto": "The Johnny O"
+            "goto": "The Johnny O",
+            "images": [
+                "assets/stops/budgies-burritos.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 36
+            }
         },
         {
             "id": "s87",
@@ -3745,7 +3794,15 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 18
+            "walkFromStation": 18,
+            "images": [
+                "assets/stops/f-as-in-frank-vintage-clothing.jpg",
+                "assets/stops/f-as-in-frank-vintage-clothing-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 30
+            }
         },
         {
             "id": "s88",
@@ -4046,7 +4103,14 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 25
+            "walkFromStation": 25,
+            "images": [
+                "assets/stops/49th-parallel-cafe-and-lucky-s-doughnuts-main-street.jpg"
+            ],
+            "heroFocus": {
+                "x": 51,
+                "y": 12
+            }
         },
         {
             "id": "s96",
@@ -4214,7 +4278,10 @@
                 "establishment"
             ],
             "walkFromStation": 30,
-            "goto": "Grab some goodies from main and come chill in the park. Occasionally shoot a basketball or skate."
+            "goto": "Grab some goodies from main and come chill in the park. Occasionally shoot a basketball or skate.",
+            "images": [
+                "assets/stops/mount-pleasant-park.jpg"
+            ]
         },
         {
             "id": "s100",
@@ -4342,7 +4409,14 @@
                 "establishment"
             ],
             "walkFromStation": 33,
-            "goto": "Wok fried noodles or rice."
+            "goto": "Wok fried noodles or rice.",
+            "images": [
+                "assets/stops/anh-and-chi.jpg"
+            ],
+            "heroFocus": {
+                "x": 49,
+                "y": 78
+            }
         },
         {
             "id": "s103",
@@ -4702,7 +4776,15 @@
                 "establishment"
             ],
             "walkFromStation": 39,
-            "goto": "I love grabbing a new book for my daughter any time I am around."
+            "goto": "I love grabbing a new book for my daughter any time I am around.",
+            "images": [
+                "assets/stops/collage-collage-3.jpg",
+                "assets/stops/collage-collage-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 39,
+                "y": 41
+            }
         },
         {
             "id": "s121",
@@ -5037,7 +5119,14 @@
                 "establishment"
             ],
             "walkFromStation": 45,
-            "goto": "A shot of espresso and a cookie."
+            "goto": "A shot of espresso and a cookie.",
+            "images": [
+                "assets/stops/trafiq-cafe-and-bakery.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 0
+            }
         },
         {
             "id": "s128",
@@ -5055,7 +5144,7 @@
             "timeOfDay": [
                 "allday"
             ],
-            "description": "",
+            "description": "Authentic Mexican tortas and tacos.",
             "crossStreet": "Main St & 27th Ave",
             "coords": {
                 "y": 483
@@ -5071,12 +5160,14 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "_review": [
-                "description",
-                "categories?",
-                "timeOfDay?"
+            "walkFromStation": 46,
+            "images": [
+                "assets/stops/las-tortas-mexican-gourmet-sandwiches.jpg"
             ],
-            "walkFromStation": 46
+            "heroFocus": {
+                "x": 50,
+                "y": 54
+            }
         },
         {
             "id": "s129",
@@ -5147,7 +5238,14 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 48
+            "walkFromStation": 48,
+            "images": [
+                "assets/stops/red-cat-records.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 0
+            }
         },
         {
             "id": "s131",
@@ -5182,7 +5280,14 @@
                 "establishment"
             ],
             "walkFromStation": 48,
-            "goto": "I always check the back for kids clothes!"
+            "goto": "I always check the back for kids clothes!",
+            "images": [
+                "assets/stops/hunter-and-hare-main-st.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 10
+            }
         },
         {
             "id": "s132",
@@ -5219,7 +5324,14 @@
                 "establishment"
             ],
             "walkFromStation": 48,
-            "goto": "Silk Route tasting menu"
+            "goto": "Silk Route tasting menu",
+            "images": [
+                "assets/stops/east-is-east.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 33
+            }
         },
         {
             "id": "s133",
@@ -5259,7 +5371,17 @@
                 "establishment"
             ],
             "walkFromStation": 50,
-            "goto": "Flip through the clothes and look through the antiques."
+            "goto": "Flip through the clothes and look through the antiques.",
+            "images": [
+                "assets/stops/bunker-apparel-goods-4.jpg",
+                "assets/stops/bunker-apparel-goods.jpg",
+                "assets/stops/bunker-apparel-goods-2.jpg",
+                "assets/stops/bunker-apparel-goods-3.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 47
+            }
         },
         {
             "id": "s134",
@@ -5303,7 +5425,8 @@
             "images": [
                 "assets/stops/coco-et-olive.jpg",
                 "assets/stops/coco-et-olive-2.jpg",
-                "assets/stops/coco-et-olive-3.jpg"
+                "assets/stops/coco-et-olive-3.jpg",
+                "assets/stops/coco-et-olive-5.jpg"
             ],
             "heroFocus": {
                 "x": 50,
@@ -5645,7 +5768,14 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 39
+            "walkFromStation": 39,
+            "images": [
+                "assets/stops/prince-edward-park.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 69
+            }
         },
         {
             "id": "s190",
@@ -5712,7 +5842,480 @@
                 "point_of_interest",
                 "establishment"
             ],
-            "walkFromStation": 56
+            "walkFromStation": 56,
+            "description": "",
+            "images": [
+                "assets/stops/riley-park.jpg",
+                "assets/stops/riley-park-2.jpg"
+            ]
+        },
+        {
+            "id": "s192",
+            "slug": "alternative-creations-studio",
+            "name": "Alternative Creations Studio",
+            "categories": [
+                "hangout"
+            ],
+            "tags": [
+                "art gallery"
+            ],
+            "neighborhood": "commercial",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "Alternative Creations Studio, located in East Vancouver, is a collective that supports artists with developmental disabilities.",
+            "crossStreet": "Venables St",
+            "coords": {
+                "y": 282
+            },
+            "lat": 49.2768283,
+            "lng": -123.0714667,
+            "googlePlaceId": "ChIJn-D9QWJxhlQRIxnN5g9xLTs",
+            "placeholderColor": "f445e3",
+            "_googleTypes": [
+                "art_gallery",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 25,
+            "goto": "Head into the gallery and view the artwork.",
+            "images": [
+                "assets/stops/alternative-creations-studio.jpg"
+            ],
+            "heroFocus": {
+                "x": 49,
+                "y": 38
+            }
+        },
+        {
+            "id": "s194",
+            "slug": "bohemia-gallery-inc",
+            "name": "Bohemia Gallery Inc.",
+            "categories": [
+                "shopping"
+            ],
+            "tags": [
+                "vintage"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "Three vintage shops in a row with more of the eclectic, \"hippie\" aesthetic. Colorful, wild, and unique.",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 419
+            },
+            "lat": 49.2561805,
+            "lng": -123.1015049,
+            "googlePlaceId": "ChIJh1yFpeRzhlQRdXPKWELUK7M",
+            "placeholderColor": "10aca1",
+            "_googleTypes": [
+                "clothing_store",
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 30,
+            "images": [
+                "assets/stops/bohemia-gallery-inc.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 75
+            }
+        },
+        {
+            "id": "s195",
+            "slug": "vancouver-special",
+            "name": "Vancouver Special",
+            "categories": [
+                "shopping",
+                "hangout"
+            ],
+            "tags": [
+                "housewares",
+                "furniture"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "A high-end contemporary furniture and home goods store.",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 442
+            },
+            "lat": 49.2526718,
+            "lng": -123.1006428,
+            "googlePlaceId": "ChIJzQCyAftzhlQRqOuAn-IwaEk",
+            "placeholderColor": "ee3f9c",
+            "_googleTypes": [
+                "furniture_store",
+                "art_gallery",
+                "book_store",
+                "home_improvement_store",
+                "home_goods_store",
+                "gift_shop",
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 36,
+            "images": [
+                "assets/stops/vancouver-special.jpg"
+            ],
+            "heroFocus": {
+                "x": 46,
+                "y": 17
+            }
+        },
+        {
+            "id": "s198",
+            "slug": "lykopis-archery",
+            "name": "Lykopis Archery",
+            "categories": [
+                "hangout"
+            ],
+            "tags": [
+                "activity",
+                "archery"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "morning",
+                "afternoon"
+            ],
+            "description": "An indoor archery range specializing in introductory classes for every level.",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 357
+            },
+            "lat": 49.2656955,
+            "lng": -123.1006266,
+            "googlePlaceId": "ChIJPympn0hxhlQR6Yd4O0CzVek",
+            "placeholderColor": "0cc9cc",
+            "_googleTypes": [
+                "sporting_goods_store",
+                "sports_activity_location",
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 14,
+            "images": [
+                "assets/stops/lykopis-archery.jpg",
+                "assets/stops/lykopis-archery-2.jpg"
+            ]
+        },
+        {
+            "id": "s199",
+            "slug": "lucky-s-books-and-comics",
+            "name": "Lucky's Books & Comics",
+            "categories": [
+                "shopping"
+            ],
+            "tags": [
+                "books",
+                "comics"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "morning",
+                "afternoon"
+            ],
+            "description": "A fun local bookstore with lots of books for kids and adults. Comics in the back!",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 414
+            },
+            "lat": 49.2569459,
+            "lng": -123.1009958,
+            "googlePlaceId": "ChIJjxAf-PlzhlQRhL7vUJhKGmA",
+            "placeholderColor": "147731",
+            "_googleTypes": [
+                "book_store",
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 29,
+            "images": [
+                "assets/stops/lucky-s-books-and-comics.jpg",
+                "assets/stops/lucky-s-books-and-comics-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 39
+            }
+        },
+        {
+            "id": "s200",
+            "slug": "body-energy-club-main-street",
+            "name": "Body Energy Club @ Main Street",
+            "categories": [
+                "food",
+                "shopping"
+            ],
+            "tags": [
+                "protein smoothies",
+                "natural foods",
+                "grab and go",
+                "supplements"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "morning",
+                "afternoon"
+            ],
+            "description": "Sometimes when I've had a long day cruising the neighborhood, I really crave a well-made protein shake. Body energy club is my go to spot!",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 477
+            },
+            "lat": 49.2472052,
+            "lng": -123.1009518,
+            "googlePlaceId": "ChIJ6xDsorhzhlQRtXB51SyPZJE",
+            "placeholderColor": "53a016",
+            "_googleTypes": [
+                "juice_shop",
+                "health",
+                "food",
+                "point_of_interest",
+                "store",
+                "establishment"
+            ],
+            "walkFromStation": 45,
+            "goto": "PB&J Smoothie",
+            "images": [
+                "assets/stops/body-energy-club-main-street.jpg",
+                "assets/stops/body-energy-club-main-street-2.jpg",
+                "assets/stops/body-energy-club-main-street-3.jpg"
+            ]
+        },
+        {
+            "id": "s201",
+            "slug": "elysian-coffee-7th-and-ontario",
+            "name": "Elysian Coffee 7th & Ontario",
+            "categories": [
+                "coffee",
+                "food"
+            ],
+            "tags": [
+                "sit down",
+                "grab and go",
+                "baked goods",
+                "lunch"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "morning",
+                "afternoon"
+            ],
+            "description": "Elysian is my go to spot if I need a quick coffee or espresso on the North side of Main St. Lots of baked goods and lunch foods as well.",
+            "crossStreet": "Ontario St",
+            "coords": {
+                "y": 364
+            },
+            "lat": 49.2645303,
+            "lng": -123.1050928,
+            "googlePlaceId": "ChIJNcSuaOBzhlQRUMZua9hHWE0",
+            "placeholderColor": "bc4afd",
+            "_googleTypes": [
+                "coffee_shop",
+                "cafe",
+                "food_store",
+                "store",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "walkFromStation": 19,
+            "images": [
+                "assets/stops/elysian-coffee-7th-and-ontario.jpg",
+                "assets/stops/elysian-coffee-7th-and-ontario-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 46
+            }
+        },
+        {
+            "id": "s202",
+            "slug": "helen-s-grill",
+            "name": "Helen's Grill",
+            "categories": [
+                "food",
+                "drinks"
+            ],
+            "tags": [],
+            "neighborhood": "mount-pleasant",
+            "cost": "$",
+            "timeOfDay": [
+                "evening"
+            ],
+            "description": "Helen's is a classic in the neighborhood, a great spot for breakfast, lunch, and early dinners. Serving all the standard breakfast and grill foods. Cash only!",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 468
+            },
+            "lat": 49.2486833,
+            "lng": -123.1008611,
+            "googlePlaceId": "ChIJpxrTXvdzhlQR4YTSrrtIMCM",
+            "placeholderColor": "560a73",
+            "_googleTypes": [
+                "diner",
+                "hamburger_restaurant",
+                "sandwich_shop",
+                "bar_and_grill",
+                "breakfast_restaurant",
+                "bar",
+                "american_restaurant",
+                "restaurant",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
+            "_review": [
+                "tags"
+            ],
+            "walkFromStation": 43,
+            "images": [
+                "assets/stops/helen-s-grill.jpg"
+            ],
+            "goto": "Pancakes or steak & eggs."
+        },
+        {
+            "id": "s203",
+            "slug": "ayoub-s-dried-fruits-and-nuts",
+            "name": "Ayoub's Dried Fruits and Nuts",
+            "categories": [
+                "food",
+                "groceries"
+            ],
+            "tags": [
+                "grab and go",
+                "snacks",
+                "fruit",
+                "nuts"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "With many locations in the lower mainland, Ayoub's has a great selection of bulk foods and treats with middle-eastern and Mediterranean flavors.",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 467
+            },
+            "lat": 49.248739,
+            "lng": -123.1420605,
+            "googlePlaceId": "ChIJ6xUJm_5zhlQRpod2MCewmus",
+            "placeholderColor": "637f8e",
+            "_googleTypes": [
+                "food_store",
+                "store",
+                "food",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 78,
+            "goto": "Dried figs and the Mediterranean spiced cashews.",
+            "images": [
+                "assets/stops/ayoub-s-dried-fruits-and-nuts.jpg",
+                "assets/stops/ayoub-s-dried-fruits-and-nuts-2.jpg"
+            ]
+        },
+        {
+            "id": "s204",
+            "slug": "city-centre-artist-lodge",
+            "name": "City Centre Artist Lodge",
+            "categories": [
+                "shopping",
+                "hangout"
+            ],
+            "tags": [
+                "activities. art gallery",
+                "artist studio"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "A motel turned \"artist lodge\" City Centre motel now houses many different artist studios. Check out their website for events and open studio days.",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 356
+            },
+            "lat": 49.2658732,
+            "lng": -123.1014212,
+            "googlePlaceId": "ChIJnfc5zGRxhlQRhhlB0QPsqfg",
+            "placeholderColor": "621d3c",
+            "_googleTypes": [
+                "art_studio",
+                "point_of_interest",
+                "establishment"
+            ],
+            "walkFromStation": 15,
+            "images": [
+                "assets/stops/city-centre-artist-lodge.jpg",
+                "assets/stops/city-centre-artist-lodge-2.jpg"
+            ],
+            "heroFocus": {
+                "x": 46,
+                "y": 85
+            }
+        },
+        {
+            "id": "s205",
+            "slug": "uncommon",
+            "name": "UNCOMMON",
+            "categories": [
+                "shopping"
+            ],
+            "tags": [
+                "vintage"
+            ],
+            "neighborhood": "mount-pleasant",
+            "cost": "$$",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "Curated vintage shop in the heart of Main street.",
+            "crossStreet": "Main St",
+            "coords": {
+                "y": 371
+            },
+            "lat": 49.2635825,
+            "lng": -123.1006499,
+            "googlePlaceId": "ChIJS5e7vwXZhVQRXCy-UTBCY2k",
+            "placeholderColor": "8818be",
+            "_googleTypes": [
+                "thrift_store",
+                "discount_store",
+                "clothing_store",
+                "store",
+                "point_of_interest",
+                "service",
+                "establishment"
+            ],
+            "walkFromStation": 18,
+            "images": [
+                "assets/stops/uncommon.jpg"
+            ],
+            "heroFocus": {
+                "x": 51,
+                "y": 84
+            }
         }
     ]
 }

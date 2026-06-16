@@ -1450,6 +1450,168 @@
       ],
       "walkFromStation": 11,
       "goto": "In the description!"
+    },
+    {
+      "id": "s193",
+      "slug": "touski",
+      "name": "Touski",
+      "categories": [
+        "coffee",
+        "food"
+      ],
+      "tags": [
+        "sit down",
+        "grab and go",
+        "cookies",
+        "sandwiches"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "A new, cute, little coffee shop sister to Say Hey Cafe. Great quiet spot during the week to have a coffee and do some light work. Treats are all amazing too.",
+      "crossStreet": "E Pender St",
+      "coords": {
+        "y": 381
+      },
+      "lat": 49.2803091,
+      "lng": -123.1010371,
+      "googlePlaceId": "ChIJH-6uJlVxhlQRXToG5Rg77-Y",
+      "placeholderColor": "2a099d",
+      "_googleTypes": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "walkFromStation": 13,
+      "goto": "The cranberry cookie is very unique!",
+      "images": [
+        "assets/stops/touski.jpg",
+        "assets/stops/touski-2.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 20
+      }
+    },
+    {
+      "id": "s196",
+      "slug": "livestock",
+      "name": "Livestock",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [
+        "shoes",
+        "mensware",
+        "womensware"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "Livestocks Chinatown location has an amazing wall of shoes with a rotating selection of the newest from brands like Adidas, Arc'teryx, Asics, Converse, Jordan, Norda, Puma, Salomon, Timberland and many more.",
+      "crossStreet": "E Pender St",
+      "coords": {
+        "y": 388
+      },
+      "lat": 49.2805171,
+      "lng": -123.1008593,
+      "googlePlaceId": "ChIJydxeZXBxhlQR5SGJvVpKa1U",
+      "placeholderColor": "805faa",
+      "_googleTypes": [
+        "shoe_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "walkFromStation": 13,
+      "images": [
+        "assets/stops/livestock.jpg"
+      ]
+    },
+    {
+      "id": "s197",
+      "slug": "massy-books",
+      "name": "Massy Books",
+      "categories": [
+        "shopping"
+      ],
+      "tags": [
+        "books"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "This indigenous owned bookstore has a great selection of books and donates to many local charities and organizations with funds generated from sales.",
+      "crossStreet": "E Georgia St",
+      "coords": {
+        "y": 335
+      },
+      "lat": 49.2787472,
+      "lng": -123.0984913,
+      "googlePlaceId": "ChIJvZuRk19xhlQRddKuB8ZZZrA",
+      "placeholderColor": "f5e9f0",
+      "_googleTypes": [
+        "book_store",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "walkFromStation": 10,
+      "images": [
+        "assets/stops/massy-books-2.jpg",
+        "assets/stops/massy-books.jpg"
+      ],
+      "heroFocus": {
+        "x": 50,
+        "y": 49
+      }
+    },
+    {
+      "id": "s206",
+      "slug": "de-xing-long-trading-co-ltd",
+      "name": "De Xing Long Trading Co. LTD",
+      "categories": [
+        "shopping",
+        "groceries"
+      ],
+      "tags": [
+        "Chinese grocery",
+        "bulk foods",
+        "specialty foods"
+      ],
+      "neighborhood": "chinatown",
+      "cost": "$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "Among many of these types of shops, this one in particular has friendly service and fair prices. If it's your first time in Chinatown, it's worth a walk through!",
+      "crossStreet": "Keefer St",
+      "coords": {
+        "y": 359
+      },
+      "lat": 49.2795666,
+      "lng": -123.0991285,
+      "googlePlaceId": "ChIJT_GoGXBxhlQRcXzrOiwb0NM",
+      "placeholderColor": "fb3c8f",
+      "_googleTypes": [
+        "store",
+        "health",
+        "point_of_interest",
+        "establishment"
+      ],
+      "walkFromStation": 11,
+      "images": [
+        "assets/stops/de-xing-long-trading-co-ltd.jpg",
+        "assets/stops/de-xing-long-trading-co-ltd-2.jpg",
+        "assets/stops/de-xing-long-trading-co-ltd-3.jpg"
+      ]
     }
   ]
 }
