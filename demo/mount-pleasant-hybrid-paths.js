@@ -347,9 +347,9 @@ function parallelStreetIdFromMapX(x) {
 
 function parallelStreetIdForStop(stop) {
   const fromMeta = getStopParallelStreet(stop);
-  if (fromMeta && MP_PARALLEL_STREETS[fromMeta]?.side === "west") return fromMeta;
-  if (!isStopWestOffMain(stop)) return null;
-  return parallelStreetIdFromMapX(getStopMapX(stop));
+  if (fromMeta) return fromMeta;
+  if (isStopWestOffMain(stop)) return parallelStreetIdFromMapX(getStopMapX(stop));
+  return null;
 }
 
 function getParallelStreetDrawSpec(streetId, spineBounds) {
@@ -380,9 +380,9 @@ function mpSideStreetSpec(point, spine) {
   if (isMpParallelZone(zone)) {
     return getParallelStreetDrawSpec(zone, spine);
   }
-  if (isStopWestOffMain(point.stop)) {
-    const id = parallelStreetIdForStop(point.stop);
-    return id ? getParallelStreetDrawSpec(id, spine) : null;
+  const parallelId = parallelStreetIdForStop(point.stop);
+  if (parallelId) {
+    return getParallelStreetDrawSpec(parallelId, spine);
   }
   return null;
 }
@@ -455,13 +455,24 @@ function mapLabelCrossStreet(crossStreet, stop) {
 const MP_CROSS_STREET_DRAW_MS = 900;
 const MP_CROSS_STREET_LABEL_DELAY_MS = 280;
 
-/** East–west cross streets on Main (north → south). */
+/**
+ * Curated east–west cross streets on Main (north → south).
+ * Route-scoped catalogue only — a bar is eligible when the route includes a
+ * matching stop. It still renders only when a walk leg crosses Main at that Y
+ * (see fireCrossStreet in drawMap). Parallel streets render on stop reveal only.
+ */
 const MP_SPINE_CROSS_STREETS = [
   {
     id: "e2nd",
     label: "E 2nd",
     canonicalLat: 49.269,
     matchCrossStreet: (cs) => /\b(?:e\s*)?2nd\b/i.test(cs),
+  },
+  {
+    id: "e6th",
+    label: "E 6th",
+    canonicalLat: 49.2645,
+    matchCrossStreet: (cs) => /\b(?:e\s*)?6th\b/i.test(cs),
   },
   {
     id: "broadway",

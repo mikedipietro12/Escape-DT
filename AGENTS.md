@@ -20,21 +20,18 @@
 >
 > **Local test before deploy:** temporarily set `comingSoon: false` on the area card, then `npm run dev` → Explore Mount Pleasant.
 
-> **Roadmap / not yet built — route-map cross streets (Commercial + Main).** Faded intersection markers on the **vertical** hybrid maps only ([`index.html`](index.html) Commercial logic; [`js/mount-pleasant-map.js`](js/mount-pleasant-map.js) + demo [`demo/mount-pleasant-hybrid-paths.html`](demo/mount-pleasant-hybrid-paths.html)). **Not** Hastings (horizontal map).
+> **Route-map cross streets + parallel streets (Commercial + Main).** Live on the **vertical** hybrid maps ([`index.html`](index.html) Commercial; [`js/mount-pleasant-map.js`](js/mount-pleasant-map.js) Mount Pleasant). **Not** Hastings (horizontal map).
 >
-> **Visual:** At each relevant intersection, a **light grey horizontal bar** (cross street running east–west across the map). **Light, muted label text** on one side of the spine (same side convention as stop labels — east/west off-spine stops anchor end; spine stops anchor start). Bars sit **behind** the route legs and stop dots (new SVG layer, e.g. `map-cross-street-layer`, inserted before `map-route-layer`).
+> **Visual:** At each relevant intersection, a **light grey horizontal bar** (cross street running east–west across the map). **Light, muted label text** on one side of the spine (same side convention as stop labels — east/west off-spine stops anchor end; spine stops anchor start). Bars sit **behind** the route legs and stop dots (`map-cross-street-layer`, before `map-route-layer`). Off-spine stops also draw **vertical parallel street** bars (Quebec, Ontario, …) when the stop dot appears.
 >
-> **Animation:** Each bar **draws slowly left → right** (reuse `stroke-dasharray` / `stroke-dashoffset` pattern from route leg animation; slower than legs — tune in demo first). Text fades in after (or with) its bar.
+> **Animation:** Each bar **draws slowly** (cross streets: left → right from Main; parallel streets: up/down from the stop). Text fades in after the bar. Tune in [`demo/mount-pleasant-hybrid-paths.html`](demo/mount-pleasant-hybrid-paths.html) / [`demo/commercial-hybrid-paths.html`](demo/commercial-hybrid-paths.html).
 >
-> **Route-scoped only:** Show cross streets **in the context of the active route** — not the full spine catalogue. Derive from stops on the current route:
-> - Collect unique cross-street labels (Commercial: raw `crossStreet` or spine-side extract; Main: existing `mapLabelCrossStreet()` in [`js/mount-pleasant-map.js`](js/mount-pleasant-map.js)).
-> - Position **Y** from the stop’s map point (`walkFromStation` → layout Y); dedupe stops sharing the same label at the same band.
-> - **Bar X span:** wide enough to read as an intersection (e.g. viewBox min → max, or spine ± off-spine tier width) — confirm in demo.
-> - Do **not** render bars for off-route intersections or empty routes.
+> **Route-scoped only** — not every avenue on Main. Use the **curated catalog** in each map module; a bar appears only when (1) the active route includes a matching stop and (2) a walk leg crosses Main at that latitude:
+> - **Commercial:** `COMMERCIAL_SPINE_CROSS_STREETS` in [`js/commercial-hybrid-map-core.js`](js/commercial-hybrid-map-core.js) — Venables, 1st, 12th.
+> - **Mount Pleasant:** `MP_SPINE_CROSS_STREETS` in [`js/mount-pleasant-map.js`](js/mount-pleasant-map.js) — E 2nd, E 6th, Broadway, E 16th, E King Edward, E 33rd. Y comes from the on-route stop’s map point (`dotY`). Bars draw only when the leg crosses Main at that Y; parallel bars only when an off-Main dot appears.
+> - **Parallel streets (MP only):** `MP_PARALLEL_STREETS` + `MP_PARALLEL_BY_SLUG` — Columbia, Manitoba, Ontario, Quebec, Prince Edward, St. George.
 >
-> **Prototype first:** [`demo/commercial-hybrid-paths.js`](demo/commercial-hybrid-paths.js) and [`demo/mount-pleasant-hybrid-paths.js`](demo/mount-pleasant-hybrid-paths.js), then port to live app. Print/PDF static map (`renderMapStaticSvg` / finalize view) should show bars without animation.
->
-> **CSS:** New classes e.g. `.map-cross-street`, `.map-cross-street-label` — light grey stroke (`#ccc` or `rgba(0,0,0,0.12)`), smaller/lighter than `.map-text` on stops.
+> **Demo:** [`demo/mount-pleasant-hybrid-paths.html`](demo/mount-pleasant-hybrid-paths.html) (Off-Main animation notes). Print/PDF uses `legDuration: 0` (bars appear without animation).
 
 **Source of truth:** `data/stops.json` (not inline data in `index.html`).
 
@@ -282,9 +279,9 @@ Spots on **Victoria Street** (east of Commercial Drive) still use `neighborhood:
 | South return to first stop or SkyTrain | Tiny curve onto a parallel line just left of the spine, then curve back at destination |
 | Off-spine (Victoria, Venables, Frances) | Rounded quadratic corners at spine junctions — **both** onto and back from Commercial |
 | Animated route draw | Trace arrowhead at the drawing tip |
-| Cross streets (planned) | Route-scoped faded horizontal bars + side labels; L→R draw — see roadmap callout at top |
+| Cross streets | Route-scoped curated bars (Venables, 1st, 12th) — L→R draw when leg crosses spine |
 
-Mount Pleasant uses the same hybrid model in `js/mount-pleasant-map.js` (station at **top**, route runs **south**, west off-spine tiers).
+Mount Pleasant uses the same hybrid model in `js/mount-pleasant-map.js` (station at **top**, route runs **south**, west off-spine tiers). Cross streets: curated `MP_SPINE_CROSS_STREETS` (E 2nd, E 6th, Broadway, E 16th, E King Edward, E 33rd). Cross bars animate when a leg crosses Main; parallel streets when an off-Main stop is revealed.
 
 ### Main Street (off-spine) — Mount Pleasant
 
