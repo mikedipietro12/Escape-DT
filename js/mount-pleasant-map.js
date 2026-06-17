@@ -485,6 +485,62 @@ const MP_SPINE_CROSS_STREETS = [
   },
 ];
 
+function cleanSpineCrossStreetLabel(label) {
+  return String(label || "")
+    .trim()
+    .replace(/\b(?:ave(?:nue)?|st(?:reet)?)\.?$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function getCanonicalSpineCrossStreet(crossStreet) {
+  return MP_SPINE_CROSS_STREETS.find((ref) => ref.matchCrossStreet(crossStreet || "")) || null;
+}
+
+function isLikelyMpSpineCrossStreetLabel(label) {
+  const value = String(label || "");
+  return (
+    /\b(?:e\s*)?\d+(?:st|nd|rd|th)\b/i.test(value) ||
+    /\bbroadway\b/i.test(value) ||
+    /\bking\s*edward\b/i.test(value)
+  );
+}
+
+function isLikelyMpParallelStreetLabel(label) {
+  return /\b(?:main|quebec|ontario|manitoba|columbia|prince\s*edward|st\.?\s*george)\b/i.test(
+    String(label || "")
+  );
+}
+
+function getSpineCrossStreetLabelForStop(stop) {
+  const cs = String(stop?.crossStreet || "").trim();
+  if (!cs) return "";
+
+  const canonical = getCanonicalSpineCrossStreet(cs);
+  if (canonical) return canonical.label;
+
+  const parts = cs.split("&").map((part) => cleanSpineCrossStreetLabel(part));
+  const partCanonical = parts
+    .map((part) => getCanonicalSpineCrossStreet(part))
+    .find(Boolean);
+  if (partCanonical) return partCanonical.label;
+
+  const avenuePart = parts.find(isLikelyMpSpineCrossStreetLabel);
+  if (avenuePart) return avenuePart;
+
+  const nonParallelPart = parts.find((part) => part && !isLikelyMpParallelStreetLabel(part));
+  return cleanSpineCrossStreetLabel(nonParallelPart || mapLabelCrossStreet(cs, stop));
+}
+
+function crossStreetKeyFragment(label) {
+  return (
+    String(label || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "street"
+  );
+}
+
 function getSpineCrossStreetCatalogForRoute(route, points, mapOptions = {}) {
   if (!route?.length) return [];
   return MP_SPINE_CROSS_STREETS.map((ref) => {
@@ -495,6 +551,47 @@ function getSpineCrossStreetCatalogForRoute(route, points, mapOptions = {}) {
   })
     .filter(Boolean)
     .sort((a, b) => a.y - b.y);
+}
+
+function getEndpointSpineCrossStreetsForRoute(points) {
+  if (!points?.length) return [];
+
+  const entries = points
+    .map((point, stopIndex) => {
+      const label = getSpineCrossStreetLabelForStop(point.stop);
+      const y = point.dotY ?? point.y;
+      if (!label || !Number.isFinite(y)) return null;
+
+      const canonical = getCanonicalSpineCrossStreet(point.stop?.crossStreet || label);
+      return {
+        id:
+          canonical?.id ||
+          `endpoint-${point.stop?.id || point.stop?.slug || stopIndex}-${crossStreetKeyFragment(label)}`,
+        label: canonical?.label || label,
+        y,
+        stopIndex,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.y - b.y);
+
+  if (!entries.length) return [];
+
+  const endpoints = [entries[0]];
+  const bottom = entries[entries.length - 1];
+  if (bottom.id !== endpoints[0].id || Math.abs(bottom.y - endpoints[0].y) > 1) {
+    endpoints.push(bottom);
+  }
+  return endpoints;
+}
+
+function mergeSpineCrossStreetCatalog(...catalogs) {
+  const byId = new Map();
+  catalogs.flat().forEach((entry) => {
+    if (!entry || byId.has(entry.id)) return;
+    byId.set(entry.id, entry);
+  });
+  return Array.from(byId.values()).sort((a, b) => a.y - b.y);
 }
 
 function getSpineCrossStreetDrawSpec(entry) {
@@ -1678,7 +1775,14 @@ function drawMap(svgEl, route, options = {}) {
   const spineExtent = getSpineLineExtent(points, showStation);
   const spineForSideStreets = spineExtent ?? spine;
   const drawSpine = !!spineExtent;
-  const spineCrossCatalog = getSpineCrossStreetCatalogForRoute(route, points, mapOptions);
+  const endpointCrossStreets = getEndpointSpineCrossStreetsForRoute(points);
+  const endpointCrossStreetByStopIndex = new Map(
+    endpointCrossStreets.map((entry) => [entry.stopIndex, entry])
+  );
+  const spineCrossCatalog = mergeSpineCrossStreetCatalog(
+    getSpineCrossStreetCatalogForRoute(route, points, mapOptions),
+    endpointCrossStreets
+  );
   const drawnCrossStreets = new Set();
   const drawnSideStreets = new Set();
 
@@ -1761,8 +1865,18 @@ function drawMap(svgEl, route, options = {}) {
   function afterStopReveal(stopIndex, done) {
     const point = points[stopIndex];
     const spec = mpSideStreetSpec(point, spineForSideStreets);
-    if (!spec || drawnSideStreets.has(spec.key)) {
+    const revealEndpointCrossStreet = () => {
+      const entry = endpointCrossStreetByStopIndex.get(stopIndex);
+      if (entry && !drawnCrossStreets.has(entry.id)) {
+        drawnCrossStreets.add(entry.id);
+        animateCrossStreetBar(crossStreetLayer, getSpineCrossStreetDrawSpec(entry));
+      }
       done();
+      return;
+    };
+
+    if (!spec || drawnSideStreets.has(spec.key)) {
+      revealEndpointCrossStreet();
       return;
     }
     drawnSideStreets.add(spec.key);
@@ -1770,7 +1884,7 @@ function drawMap(svgEl, route, options = {}) {
       crossStreetLayer,
       spec,
       point.dotY ?? point.y,
-      done,
+      revealEndpointCrossStreet,
       legDuration === 0
     );
   }
