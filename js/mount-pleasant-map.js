@@ -1496,6 +1496,11 @@ function formatMapStopNumberLabel(point) {
   return first === last ? `${first}` : `${first}–${last}`;
 }
 
+function getMapRouteStopIdsForPoint(point, route) {
+  const indices = point?.routeIndices ?? (point?.idx != null ? [point.idx] : []);
+  return indices.map((routeIdx) => route[routeIdx]?.id).filter(Boolean);
+}
+
 /** Vertical offsets (px) when several route stops share one intersection dot. */
 function getClusterDotOffsets(count) {
   if (count <= 1) return [0];
@@ -1507,22 +1512,24 @@ function getClusterDotOffsets(count) {
   );
 }
 
-function renderMapStopDots(x, y, clusterCount, animateCluster) {
+function renderMapStopDots(x, y, clusterCount, animateCluster, interactive = false) {
+  const pointerEvents = interactive ? ' pointer-events="none"' : "";
   if (clusterCount <= 1) {
-    return `<circle class="map-stop" cx="${x}" cy="${y}" r="4" />`;
+    return `<circle class="map-stop" cx="${x}" cy="${y}" r="4"${pointerEvents} />`;
   }
   const staticClass = animateCluster ? "" : " map-stop-cluster-dot--static";
   return getClusterDotOffsets(clusterCount)
     .map(
       (off) => `
-          <g class="map-stop-cluster-dot${staticClass}" style="--cx:${x};--cy:${y};--off:${off}">
-            <circle class="map-stop" cx="0" cy="0" r="4" />
+          <g class="map-stop-cluster-dot${staticClass}" style="--cx:${x};--cy:${y};--off:${off}"${pointerEvents}>
+            <circle class="map-stop" cx="0" cy="0" r="4"${pointerEvents} />
           </g>`
     )
     .join("");
 }
 
-function renderMapStopSvg(point, hybrid, { animateCluster = true } = {}) {
+function renderMapStopSvg(point, hybrid, options = {}) {
+  const { animateCluster = true, interactive = false, route = [] } = options;
   const mapIdx = point.mapIdx ?? point.idx;
   const numLabel = formatMapStopNumberLabel(point);
   const routeIndices = point.routeIndices || [point.idx];
@@ -1533,10 +1540,30 @@ function renderMapStopSvg(point, hybrid, { animateCluster = true } = {}) {
   const { labelX, labelAnchor } = getMapStopLabelPlacement(x);
   const labelY = y + 4 + labelOffsetY;
   const clusterClass = clusterCount > 1 ? " map-stop-group--cluster" : "";
+  const interactiveClass = interactive ? " map-stop-group--interactive" : "";
+  const s = point.stop;
+  const stopIds = interactive ? getMapRouteStopIdsForPoint(point, route) : [];
+  const names = interactive
+    ? routeIndices
+        .map((routeIdx) => route[routeIdx]?.name)
+        .filter(Boolean)
+        .map((name) => escapeHtml(name))
+    : [];
+  const ariaNames =
+    interactive && names.length > 1
+      ? names.join(" & ")
+      : names[0] || (s?.name ? escapeHtml(s.name) : "");
+  const interactiveAttrs = interactive
+    ? ` data-stop-id="${s.id}" data-stop-ids="${stopIds.join(",")}" role="button" tabindex="0" aria-label="${numLabel}. ${ariaNames}"`
+    : "";
+  const hitTarget = interactive
+    ? `<circle class="map-stop--hit" cx="${x}" cy="${y}" r="14" fill="transparent" pointer-events="all" />`
+    : "";
   return `
-        <g class="map-stop-group map-stop-group--hidden${clusterClass}" data-stop-index="${mapIdx}" data-cluster-count="${clusterCount}">
-          ${renderMapStopDots(x, y, clusterCount, animateCluster)}
-          <text class="map-text" x="${labelX}" y="${labelY}" text-anchor="${labelAnchor}">${numLabel}</text>
+        <g class="map-stop-group map-stop-group--hidden${clusterClass}${interactiveClass}" data-stop-index="${mapIdx}" data-cluster-count="${clusterCount}"${interactiveAttrs}>
+          ${hitTarget}
+          ${renderMapStopDots(x, y, clusterCount, animateCluster, interactive)}
+          <text class="map-text" x="${labelX}" y="${labelY}" text-anchor="${labelAnchor}" pointer-events="none">${numLabel}</text>
         </g>
       `;
 }
@@ -1633,6 +1660,12 @@ function animateMapPath(pathEl, options = {}) {
 function drawMap(svgEl, route, options = {}) {
   const gen = ++mapAnimationGeneration.map;
   const isStale = () => gen !== mapAnimationGeneration.map;
+  const interactive = !!options.interactive;
+  const stopRenderOptions = {
+    animateCluster: (options.legDuration ?? MAP.legDurationMs) > 0,
+    interactive,
+    route,
+  };
 
   const mapOptions = normalizeMapOptions(options.mapOptions);
   const showStation = shouldShowStation(mapOptions);
@@ -1683,7 +1716,7 @@ function drawMap(svgEl, route, options = {}) {
   const routeLayer = svgEl.querySelector(".map-route-layer");
   const overlayLayer = svgEl.querySelector(".map-overlay-layer");
   const traceArrow = legDuration > 0 ? createTraceArrow(routeLayer) : null;
-  const animateCluster = legDuration > 0;
+  stopRenderOptions.animateCluster = legDuration > 0;
 
   if (!route.length) {
     options.onComplete?.();
@@ -1693,6 +1726,7 @@ function drawMap(svgEl, route, options = {}) {
   function revealStop(stopIndex, onDone) {
     const existing = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
     const show = () => {
+      options.onStopReveal?.(points[stopIndex]);
       afterStopReveal(stopIndex, onDone || (() => {}));
     };
     if (existing) {
@@ -1704,7 +1738,7 @@ function drawMap(svgEl, route, options = {}) {
     }
     overlayLayer.insertAdjacentHTML(
       "beforeend",
-      renderMapStopSvg(points[stopIndex], true, { animateCluster })
+      renderMapStopSvg(points[stopIndex], true, stopRenderOptions)
     );
     const g = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
     requestAnimationFrame(() => {

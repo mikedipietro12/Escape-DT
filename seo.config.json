@@ -93,8 +93,8 @@
             "spotSlugs": [
               "33-acres-brewing-company",
               "brassneck-brewery",
-              "mount-pleasant-vintage",
               "good-thief",
+              "mount-pleasant-vintage",
               "the-shameful-tiki-room"
             ]
           },
@@ -106,28 +106,29 @@
               "como-taperia",
               "sushi-hil",
               "superbaba-vancouver",
-              "parallel-49-brewing-company"
+              "carp-sushi-and-bowl"
+            ]
+          },
+          {
+            "heading": "Shopping",
+            "ariaLabel": "Shopping on Main Street",
+            "spotSlugs": [
+              "mintage-mall",
+              "antisocial-skateboard-shop",
+              "fish-market-studio-2",
+              "rath-art-supplies",
+              "lucky-s-books-and-comics"
             ]
           },
           {
             "heading": "Coffee",
             "ariaLabel": "Coffee on Main Street",
             "spotSlugs": [
-              "cultivate-tea",
-              "elysian-coffee-7th-and-ontario",
+              "liberty-bakery-cafe",
+              "coco-et-olive",
               "gene-coffee-bar",
-              "liberty-bakery-cafe"
-            ]
-          },
-          {
-            "heading": "Places",
-            "ariaLabel": "Places on Main Street",
-            "spotSlugs": [
-              "mount-pleasant-park",
-              "f-as-in-frank-vintage-clothing",
-              "hunter-and-hare-main-st",
-              "fox-cabaret",
-              "lykopis-archery"
+              "elysian-coffee-7th-and-ontario",
+              "cultivate-tea"
             ]
           }
         ]
