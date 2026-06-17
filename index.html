@@ -967,6 +967,7 @@
 
 
 
+
   <style>
     :root {
       --fade-top: #b2fdb5;
@@ -1836,21 +1837,25 @@
       #step-E .route-review.route-phase-map:not(.route-review--stacked),
       #step-P2-PLAN .route-review.route-phase-summary,
       #step-P2-PLAN .route-review.route-phase-map:not(.route-review--stacked) {
-        gap: 3.5rem;
+        gap: clamp(1.25rem, 3vw, 2.25rem);
+        justify-content: center;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
       }
       #step-E .route-review.route-phase-summary .map-container,
       #step-E .route-review.route-phase-map:not(.route-review--stacked) .map-container,
       #step-P2-PLAN .route-review.route-phase-summary .map-container,
       #step-P2-PLAN .route-review.route-phase-map:not(.route-review--stacked) .map-container {
-        width: 48%;
+        width: min(42%, 23rem);
       }
       #step-E .route-review.route-phase-summary .route-summary,
       #step-E .route-review.route-phase-map:not(.route-review--stacked) .route-summary,
       #step-P2-PLAN .route-review.route-phase-summary .route-summary,
       #step-P2-PLAN .route-review.route-phase-map:not(.route-review--stacked) .route-summary {
-        width: 52%;
-        max-width: none;
-        padding-left: 0.5rem;
+        width: min(50%, 26rem);
+        max-width: 26rem;
+        padding-left: 0;
       }
       #step-P2-PLAN .plan-narrative {
         margin-bottom: 3rem;
@@ -2642,6 +2647,47 @@
       opacity: 0.7;
       margin-top: 0.5rem;
       line-height: 1.4;
+    }
+    .route-summary-footer {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1rem;
+      border-top: 2px solid var(--ink);
+      padding-top: 1rem;
+    }
+    .route-summary-footer .totals {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+    .route-replay-btn {
+      flex: 0 0 auto;
+      margin-top: 0;
+      padding: 0.65rem 0.9rem;
+      border: 2px solid var(--ink);
+      background: transparent;
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .route-replay-btn:hover,
+    .route-replay-btn:focus-visible {
+      background: var(--ink);
+      color: #fff;
+    }
+    @media (max-width: 520px) {
+      .route-summary-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .route-replay-btn {
+        width: 100%;
+      }
     }
 
     /* --- NEW CSS FOR RESTRUCTURE --- */
@@ -4064,7 +4110,10 @@
         <div id="route-summary-panel" class="route-summary" hidden>
           <p id="route-export-summary" class="label route-export-summary">YOUR COMMERCIAL DRIVE ROUTE — N STOPS</p>
           <div id="route-cards"></div>
-          <div class="totals" id="route-totals"></div>
+          <div class="route-summary-footer">
+            <div class="totals" id="route-totals"></div>
+            <button type="button" id="route-replay-btn" class="route-replay-btn" onclick="replayRouteMap('E')" hidden>Replay route</button>
+          </div>
           <p class="route-print-footer">Escape the Downtown · explore.seasonsofeastvan.com</p>
         </div>
       </div>
@@ -4127,7 +4176,10 @@
         <div id="p2-route-summary-panel" class="route-summary" hidden>
           <p id="p2-route-export-summary" class="label route-export-summary">YOUR PLAN — N STOPS</p>
           <div id="route-cards-p2"></div>
-          <div class="totals" id="route-totals-p2"></div>
+          <div class="route-summary-footer">
+            <div class="totals" id="route-totals-p2"></div>
+            <button type="button" id="p2-route-replay-btn" class="route-replay-btn" onclick="replayRouteMap('P2-PLAN')" hidden>Replay route</button>
+          </div>
           <p class="route-print-footer">Escape the Downtown · explore.seasonsofeastvan.com</p>
         </div>
       </div>
@@ -4186,7 +4238,10 @@
         </div>
         <div class="route-list">
           <div id="route-cards-p3"></div>
-          <div class="totals" id="route-totals-p3"></div>
+          <div class="route-summary-footer">
+            <div class="totals" id="route-totals-p3"></div>
+            <button type="button" id="p3-route-replay-btn" class="route-replay-btn" onclick="replayRouteMap('P3-ROUTE')" hidden>Replay route</button>
+          </div>
         </div>
       </div>
 
@@ -8508,9 +8563,17 @@
       if (config.onRouteChange) config.onRouteChange(route);
     }
 
+    function setRouteReplayButtonVisible(totalsId, visible) {
+      const totalsEl = document.getElementById(totalsId);
+      const footer = totalsEl?.closest(".route-summary-footer");
+      const btn = footer?.querySelector(".route-replay-btn");
+      if (btn) btn.hidden = !visible;
+    }
+
     function renderRouteTotals(containerId, route, options = {}) {
       const el = document.getElementById(containerId);
       if (!el) return;
+      setRouteReplayButtonVisible(containerId, route.length > 0);
       if (!route.length) {
         el.innerHTML = "";
         return;
@@ -8543,6 +8606,48 @@
         <div>Total walking (your route order): ~${formatKm(totalKm)} km · ~${totalMin} min</div>
         <p class="walk-disclaimer">${disclaimer}</p>
       `;
+    }
+
+    function getRouteReplayContext(scope) {
+      if (scope === "P2-PLAN") {
+        const plan = PLANS[state.planTime] || {};
+        return {
+          mapSvgId: "route-map-p2",
+          cardsId: "route-cards-p2",
+          route: getPlanRoute(),
+          mapOptions: getEffectiveMapOptions(plan),
+        };
+      }
+      if (scope === "P3-ROUTE") {
+        return {
+          mapSvgId: "route-map-p3",
+          cardsId: "route-cards-p3",
+          route: sortStopsGeographic(getP3BuiltRoute()),
+          mapOptions: getUserRouteMapOptions(),
+        };
+      }
+      return {
+        mapSvgId: "route-map",
+        cardsId: "route-cards",
+        route: getFinalRoute(),
+        mapOptions: getUserRouteMapOptions(),
+      };
+    }
+
+    function replayRouteMap(scope) {
+      const { mapSvgId, cardsId, route, mapOptions } = getRouteReplayContext(scope);
+      if (!route.length) return;
+
+      const svg = document.getElementById(mapSvgId);
+      const mapContainer = svg?.closest(".map-container");
+      if (mapContainer && window.matchMedia("(max-width: 767px)").matches) {
+        mapContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      drawMap(mapSvgId, route, {
+        mapOptions,
+        cardsId: supportsMapSpotCardLinking(mapOptions) ? cardsId : undefined,
+      });
     }
 
     function getStepERouteCardOptions() {
@@ -10530,6 +10635,7 @@
     <p class="site-seo-footer__credit">Part of <a href="https://www.seasonsofeastvan.com" rel="noopener noreferrer">Seasons of East Van</a> · <a href="/sitemap.xml">Sitemap</a></p>
   </footer>
 <!-- /build:seo-footer -->
+
 
 
 
