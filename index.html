@@ -7256,7 +7256,25 @@
       };
     }
 
-    function computeMapViewBox(points, legs, showStation) {
+    function applyContainerAspect(rect, containerAspect) {
+      if (!containerAspect || containerAspect <= 0) return rect;
+      let { minX, minY, w, h } = rect;
+      const targetH = w / containerAspect;
+      if (targetH > h) {
+        return { minX, minY, w, h: targetH };
+      }
+      const targetW = h * containerAspect;
+      if (targetW > w) {
+        return { minX: minX - (targetW - w), minY, w: targetW, h };
+      }
+      return rect;
+    }
+
+    function formatMapViewBox(rect) {
+      return `${rect.minX} ${rect.minY} ${rect.w} ${rect.h}`;
+    }
+
+    function computeMapViewBox(points, legs, showStation, containerAspect) {
       const xs = [];
       const ys = [];
 
@@ -7290,21 +7308,35 @@
       const minY = Math.min(...ys) - pad;
       const maxX = Math.max(...xs) + pad;
       const maxY = Math.max(...ys) + pad;
-      const w = Math.max(maxX - minX, 120);
-      const h = Math.max(maxY - minY, 120);
-      return `${minX} ${minY} ${w} ${h}`;
-    }
-
-    function isRouteMapMobileView() {
-      return window.matchMedia("(max-width: 767px)").matches;
+      let rect = {
+        minX,
+        minY,
+        w: Math.max(maxX - minX, 120),
+        h: Math.max(maxY - minY, 120),
+      };
+      if (containerAspect) {
+        rect = applyContainerAspect(rect, containerAspect);
+      }
+      return formatMapViewBox(rect);
     }
 
     function applyRouteMapViewportMode(svgEl) {
       if (!svgEl) return;
+      svgEl.setAttribute("preserveAspectRatio", "xMidYMid meet");
+    }
+
+    function refitMapToColumn(svgEl, points, legs, showStation) {
+      const container = svgEl?.parentElement;
+      if (!container || !svgEl) return;
+      const cw = container.clientWidth;
+      let ch = container.clientHeight;
+      if (!ch) ch = svgEl.getBoundingClientRect().height;
+      if (!cw || !ch) return;
       svgEl.setAttribute(
-        "preserveAspectRatio",
-        isRouteMapMobileView() ? "xMidYMid slice" : "xMidYMid meet"
+        "viewBox",
+        computeMapViewBox(points, legs, showStation, cw / ch)
       );
+      applyRouteMapViewportMode(svgEl);
     }
 
     function getRouteMapLayout(route, mapOptions = {}) {
@@ -7902,6 +7934,15 @@
         route.length ? computeMapViewBox(points, legs, showStation) : MAP.defaultViewBox
       );
       applyRouteMapViewportMode(svg);
+      requestAnimationFrame(() => {
+        if (!isStale() && route.length) refitMapToColumn(svg, points, legs, showStation);
+      });
+
+      const finishMapDraw = () => {
+        if (isStale()) return;
+        if (route.length) refitMapToColumn(svg, points, legs, showStation);
+        options.onComplete?.();
+      };
 
       const crossStreetLayer = svg.querySelector(".map-cross-street-layer");
       const routeLayer = svg.querySelector(".map-route-layer");
@@ -7913,7 +7954,7 @@
       }
 
       if (!route.length) {
-        options.onComplete?.();
+        finishMapDraw();
         return;
       }
 
@@ -7953,14 +7994,14 @@
 
       if (!legs.length) {
         points.forEach((_, idx) => revealStop(idx));
-        options.onComplete?.();
+        finishMapDraw();
         return;
       }
 
       function runLeg(legIndex) {
         if (isStale()) return;
         if (legIndex >= legs.length) {
-          options.onComplete?.();
+          finishMapDraw();
           return;
         }
 

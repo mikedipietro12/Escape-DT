@@ -1026,19 +1026,12 @@ function isRouteMapMobileView() {
 
 function applyRouteMapViewportMode(svgEl) {
   if (!svgEl) return;
-  svgEl.setAttribute(
-    "preserveAspectRatio",
-    isRouteMapMobileView() ? "xMidYMid slice" : "xMidYMid meet"
-  );
+  svgEl.setAttribute("preserveAspectRatio", "xMidYMid meet");
 }
 
 function refitMapToColumn(svgEl, points, legs, showStation) {
   const container = svgEl?.parentElement;
   if (!container || !svgEl) return;
-  if (isRouteMapMobileView()) {
-    applyRouteMapViewportMode(svgEl);
-    return;
-  }
   const cw = container.clientWidth;
   let ch = container.clientHeight;
   if (!ch) ch = svgEl.getBoundingClientRect().height;
