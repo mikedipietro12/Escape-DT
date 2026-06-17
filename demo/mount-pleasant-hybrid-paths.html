@@ -29,21 +29,20 @@
     @media (min-width: 768px) {
       .route-review.route-phase-summary {
         flex-direction: row;
-        align-items: stretch;
+        align-items: flex-start;
       }
 
       .route-review.route-phase-summary .map-container {
         width: 40%;
         flex-shrink: 0;
         max-width: none;
-        display: flex;
+        display: block;
         overflow: hidden;
       }
 
       .route-review.route-phase-summary .map-container svg {
         width: 100%;
-        height: 100% !important;
-        max-height: none;
+        max-height: 70vh;
         overflow: hidden;
       }
 
@@ -102,6 +101,48 @@
 
     #route-map .map-stop-label {
       font-size: 8.5px;
+    }
+
+    .map-cross-street-layer { pointer-events: none; }
+    .map-cross-street {
+      stroke: rgba(0, 0, 0, 0.14);
+      stroke-width: 2.25;
+      stroke-linecap: round;
+      fill: none;
+    }
+    .map-cross-street-label {
+      fill: rgba(0, 0, 0, 0.38);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      opacity: 0;
+    }
+    .map-cross-street-label.is-visible {
+      opacity: 1;
+      transition: opacity 0.45s ease;
+    }
+
+    .map-side-street {
+      stroke: rgba(0, 0, 0, 0.14);
+      stroke-width: 2.25;
+      stroke-linecap: round;
+      fill: none;
+    }
+    .map-side-street-label {
+      fill: rgba(0, 0, 0, 0.38);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      opacity: 0;
+    }
+    .map-side-street-label.is-visible {
+      opacity: 1;
+      transition: opacity 0.45s ease;
+    }
+    .map-side-street-label--vertical {
+      dominant-baseline: middle;
     }
 
     #route-map .map-spine-label {
@@ -202,10 +243,10 @@
       <h2>Off-Main animation (locked)</h2>
       <ul>
         <li><strong>Spine Y</strong> — with station bookends, the station anchors the top and stops spread south by latitude. <strong>No-station</strong> routes frame only the stops on the route (north at top). The Main spine line hides when every stop is off-Main.</li>
-        <li><strong>West tiers</strong> — <code>125</code> Quebec/Kingsway · <code>115</code> W 7th / Quebec 10th · <code>108</code> Ontario / W 8th · <code>100</code> Columbia.</li>
+        <li><strong>West tiers</strong> — <code>120</code> Quebec/Kingsway · <code>108</code> mid · <code>96</code> Ontario / W 8th · <code>80</code> Manitoba · <code>64</code> Columbia.</li>
         <li><strong>West ↔ west</strong> — grid legs: down/up the side column, then across (not diagonals). Try <em>West crawl</em>.</li>
         <li><strong>Main ↔ off-Main</strong> — rounded L via the Main spine.</li>
-        <li><strong>Labels</strong> — off-Main names sit to the left of the pin; tight clusters stagger vertically. ViewBox refits from measured text so labels are not clipped.</li>
+        <li><strong>Labels</strong> — stop numbers only (same as Commercial); tight clusters stagger vertically. ViewBox refits from measured text so labels are not clipped.</li>
         <li><strong>Endpoints</strong> — try the <em>No station</em> and <em>Mixed endpoints</em> presets (same as live app <code>rs=first</code> / <code>re=last</code>).</li>
       </ul>
     </aside>

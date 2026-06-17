@@ -3324,7 +3324,7 @@
             "crossStreet": "6th Ave & Manitoba St",
             "coords": {
                 "y": 357,
-                "x": 125
+                "x": 80
             },
             "lat": 49.2657766,
             "lng": -123.1060929,
@@ -4203,7 +4203,8 @@
             "slug": "toshi-sushi",
             "name": "Toshi Sushi",
             "categories": [
-                "food"
+                "food",
+                "drinks"
             ],
             "tags": [
                 "sit down",
@@ -4213,7 +4214,8 @@
             "neighborhood": "mount-pleasant",
             "cost": "$$",
             "timeOfDay": [
-                "allday"
+                "afternoon",
+                "evening"
             ],
             "description": "",
             "crossStreet": "Main St & 16th Ave",
@@ -4235,10 +4237,7 @@
                 "establishment"
             ],
             "_review": [
-                "description",
-                "categories?",
-                "crossStreet",
-                "timeOfDay?"
+                "description"
             ],
             "walkFromStation": 30
         },
@@ -4364,7 +4363,8 @@
                 "assets/stops/the-granville-island-toy-company.jpg",
                 "assets/stops/the-granville-island-toy-company-2.jpg",
                 "assets/stops/the-granville-island-toy-company-3.jpg"
-            ]
+            ],
+            "goto": ""
         },
         {
             "id": "s102",
@@ -4932,7 +4932,8 @@
             "heroFocus": {
                 "x": 50,
                 "y": 43
-            }
+            },
+            "goto": "Reusable everything!"
         },
         {
             "id": "s124",
@@ -5025,7 +5026,8 @@
             "heroFocus": {
                 "x": 50,
                 "y": 72
-            }
+            },
+            "goto": "Peanuts and hello kitty stickers for my kiddo."
         },
         {
             "id": "s126",
@@ -5167,7 +5169,8 @@
             "heroFocus": {
                 "x": 50,
                 "y": 54
-            }
+            },
+            "goto": "Cochinita tortas."
         },
         {
             "id": "s129",
@@ -5431,7 +5434,8 @@
             "heroFocus": {
                 "x": 50,
                 "y": 15
-            }
+            },
+            "goto": "Latte and a baked good, browse the goods while waiting for my coffee."
         },
         {
             "id": "s135",
@@ -5615,7 +5619,8 @@
             "heroFocus": {
                 "x": 50,
                 "y": 54
-            }
+            },
+            "goto": "Do a full lab of the entire place."
         },
         {
             "id": "s185",
@@ -6155,7 +6160,13 @@
                 "food",
                 "drinks"
             ],
-            "tags": [],
+            "tags": [
+                "sit down",
+                "breakfast",
+                "brunch",
+                "lunch",
+                "diner"
+            ],
             "neighborhood": "mount-pleasant",
             "cost": "$",
             "timeOfDay": [
@@ -6182,9 +6193,6 @@
                 "food",
                 "point_of_interest",
                 "establishment"
-            ],
-            "_review": [
-                "tags"
             ],
             "walkFromStation": 43,
             "images": [

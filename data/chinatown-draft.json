@@ -8,15 +8,19 @@
       "categories": [
         "coffee"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "grab and go",
+        "sandwiches"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "If you're into sandwiches, this is your place. With so many amazing staples and an ever rotating seasonal menu, Say Hey always has the goods to stay or to go.",
+      "crossStreet": "E Pender & Main St.",
       "coords": {
         "y": 382
       },
@@ -24,10 +28,6 @@
       "lng": -123.1010711,
       "googlePlaceId": null,
       "placeholderColor": "981185",
-      "_review": [
-        "crossStreet",
-        "tags"
-      ],
       "walkFromStation": 10,
       "images": [
         "assets/stops/say-hey-cafe.jpg",
@@ -36,7 +36,8 @@
       "heroFocus": {
         "x": 50,
         "y": 13
-      }
+      },
+      "goto": "Doofer or the crunchy."
     },
     {
       "id": "s137",
@@ -54,8 +55,8 @@
         "afternoon",
         "evening"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "One of my favorite cocktail bars in the entire city. Inside is dark and moody, great music, and a fun patio if the weather is right. With Mortadella next door, it's a great spot to start or end a night out.",
+      "crossStreet": "Main St. & Prior",
       "coords": {
         "y": 269
       },
@@ -63,11 +64,8 @@
       "lng": -123.100149,
       "googlePlaceId": null,
       "placeholderColor": "ad8e00",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 5
+      "walkFromStation": 5,
+      "goto": "A good company and company or espresso martini."
     },
     {
       "id": "s138",
@@ -76,14 +74,18 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "grab and go",
+        "pizza"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Roman style slices and pies with fantastic toppings. A newer pizza joint in the city but one you should not sleep on.",
+      "crossStreet": "Main St. & Prior",
       "coords": {
         "y": 272
       },
@@ -91,12 +93,8 @@
       "lng": -123.1000924,
       "googlePlaceId": null,
       "placeholderColor": "f7be04",
-      "_review": [
-        "crossStreet",
-        "cost",
-        "tags"
-      ],
-      "walkFromStation": 5
+      "walkFromStation": 5,
+      "goto": "Go with the name sake to start. Potato slice is good too!"
     },
     {
       "id": "s139",
@@ -105,14 +103,19 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "bar",
+        "beer",
+        "games",
+        "pool"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "This lively bar can be visited at nearly any time of day if you are looking for some games and beers. They often host fun events so make sure you check the calendar if you're looking for a party. The burgers also make a great side to a fun night out.",
+      "crossStreet": "Main St. & Prior",
       "coords": {
         "y": 262
       },
@@ -120,12 +123,8 @@
       "lng": -123.0996041,
       "googlePlaceId": null,
       "placeholderColor": "483c19",
-      "_review": [
-        "crossStreet",
-        "cost",
-        "tags"
-      ],
-      "walkFromStation": 4
+      "walkFromStation": 4,
+      "goto": "Beer, burgers, and pool."
     },
     {
       "id": "s140",
@@ -134,14 +133,18 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "asian",
+        "cocktails"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "This modern Asian restaurant always has a diverse menu offering many different, delicious items to choose from. Their cocktails pair very well with all their dishes and if I could come here once a season, I would!",
+      "crossStreet": "Main St. & Prior",
       "coords": {
         "y": 251
       },
@@ -149,12 +152,8 @@
       "lng": -123.0996085,
       "googlePlaceId": null,
       "placeholderColor": "690337",
-      "_review": [
-        "crossStreet",
-        "cost",
-        "tags"
-      ],
-      "walkFromStation": 4
+      "walkFromStation": 4,
+      "goto": "Menu changes seasonally, but I've never left disappointed!"
     },
     {
       "id": "s141",
@@ -192,15 +191,22 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "grab and go",
+        "brunch",
+        "pancakes",
+        "coffee",
+        "baked goods"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "One of the most popular brunch spots in the city for a reason. Always great food and coffee with a wrap around patio for watching the bikes zip by on their way to the seawall. ",
+      "crossStreet": "Gore & Union",
       "coords": {
         "y": 305
       },
@@ -208,10 +214,6 @@
       "lng": -123.097148,
       "googlePlaceId": null,
       "placeholderColor": "a093cd",
-      "_review": [
-        "crossStreet",
-        "tags"
-      ],
       "walkFromStation": 7,
       "images": [
         "assets/stops/hunnybee-bruncheonette.jpg"
@@ -219,7 +221,8 @@
       "heroFocus": {
         "x": 51,
         "y": 82
-      }
+      },
+      "goto": "Pancakes and a coffee."
     },
     {
       "id": "s143",
@@ -236,8 +239,8 @@
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "The Program offers fitness classes as well as personal training with a focus on an entry to fitness for any level.",
+      "crossStreet": "Gore & Union",
       "coords": {
         "y": 310
       },
@@ -245,11 +248,8 @@
       "lng": -123.0971855,
       "googlePlaceId": null,
       "placeholderColor": "aee177",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 7
+      "walkFromStation": 7,
+      "goto": "Suffer through an intense 45 minutes!"
     },
     {
       "id": "s144",
@@ -266,8 +266,8 @@
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "GSV is one of the OG vintage shops in Chinatown, with a crazy selection of graphic tee's, work wear, and vintage designer, there is something for everyone.",
+      "crossStreet": "Gore & Keefer",
       "coords": {
         "y": 326
       },
@@ -275,14 +275,12 @@
       "lng": -123.0972542,
       "googlePlaceId": null,
       "placeholderColor": "f7bcd0",
-      "_review": [
-        "crossStreet"
-      ],
       "walkFromStation": 8,
       "images": [
         "assets/stops/gore-street-vintage-2.jpg",
         "assets/stops/gore-street-vintage.jpg"
-      ]
+      ],
+      "goto": ""
     },
     {
       "id": "s145",
@@ -291,14 +289,19 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "grab and go",
+        "vietnamese",
+        "wings"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Easily one of the most famous spots in Chinatown for their signature dishes, a long standing tradition and loved by all.",
+      "crossStreet": "E Georgia & Gore",
       "coords": {
         "y": 327
       },
@@ -306,14 +309,11 @@
       "lng": -123.0982266,
       "googlePlaceId": null,
       "placeholderColor": "13ad5a",
-      "_review": [
-        "crossStreet",
-        "tags"
-      ],
       "walkFromStation": 7,
       "images": [
         "assets/stops/phnom-penh-restaurant.jpg"
-      ]
+      ],
+      "goto": "Chicken wings, butter beef, meatball noodle soup."
     },
     {
       "id": "s146",
@@ -351,14 +351,17 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "grab and go",
+        "pizza"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Great spot to grab a fresh slice before heading downtown for a game or concert.",
+      "crossStreet": "Main St. & E Georgia",
       "coords": {
         "y": 334
       },
@@ -366,12 +369,8 @@
       "lng": -123.0995335,
       "googlePlaceId": null,
       "placeholderColor": "6b1666",
-      "_review": [
-        "crossStreet",
-        "cost",
-        "tags"
-      ],
-      "walkFromStation": 8
+      "walkFromStation": 8,
+      "goto": "Pesto or Cup N Char"
     },
     {
       "id": "s148",
@@ -389,8 +388,8 @@
         "afternoon",
         "evening"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "If you are looking for a rowdy crowd to watch a game with, slam a pint of Guiness, and throw some darts, this is your spot. You never know where your night might take you if you end up at the London Pub.",
+      "crossStreet": "Main St. & E Georgia",
       "coords": {
         "y": 327
       },
@@ -398,11 +397,8 @@
       "lng": -123.0995789,
       "googlePlaceId": null,
       "placeholderColor": "166647",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 7
+      "walkFromStation": 7,
+      "goto": ""
     },
     {
       "id": "s149",
@@ -411,14 +407,19 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "grab and go",
+        "mexican",
+        "tacos"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Authentic Mexican street Taco's in Chinatown.",
+      "crossStreet": "Keefer & Main St.",
       "coords": {
         "y": 353
       },
@@ -426,12 +427,8 @@
       "lng": -123.0991317,
       "googlePlaceId": null,
       "placeholderColor": "51beda",
-      "_review": [
-        "crossStreet",
-        "cost",
-        "tags"
-      ],
-      "walkFromStation": 8
+      "walkFromStation": 8,
+      "goto": "One of each taco."
     },
     {
       "id": "s150",
@@ -448,8 +445,8 @@
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Artist studio housing some of the most unique creatives in the city.",
+      "crossStreet": "Keefer & Gore",
       "coords": {
         "y": 353
       },
@@ -457,9 +454,6 @@
       "lng": -123.0975183,
       "googlePlaceId": null,
       "placeholderColor": "78ab16",
-      "_review": [
-        "crossStreet"
-      ],
       "walkFromStation": 9,
       "images": [
         "assets/stops/friend-of-a-friend.jpg"
@@ -467,7 +461,8 @@
       "heroFocus": {
         "x": 50,
         "y": 0
-      }
+      },
+      "goto": ""
     },
     {
       "id": "s151",
@@ -485,8 +480,8 @@
         "afternoon",
         "evening"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Cocktail bar serving some of the best martinis in the city.",
+      "crossStreet": "Keefer St. & Columbia st",
       "coords": {
         "y": 361
       },
@@ -494,11 +489,8 @@
       "lng": -123.1013292,
       "googlePlaceId": null,
       "placeholderColor": "49e57a",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 9
+      "walkFromStation": 9,
+      "goto": "Gin martini with a side of olives."
     },
     {
       "id": "s152",
@@ -516,8 +508,8 @@
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Cute little cafe facing the park on the corner. Amazing and unique pastries, gelato, and delicious coffee.",
+      "crossStreet": "Keefer St. & Columbia st",
       "coords": {
         "y": 345
       },
@@ -525,9 +517,6 @@
       "lng": -123.1018716,
       "googlePlaceId": null,
       "placeholderColor": "b77352",
-      "_review": [
-        "crossStreet"
-      ],
       "walkFromStation": 8,
       "images": [
         "assets/stops/annabelle-s.jpg",
@@ -536,7 +525,8 @@
       "heroFocus": {
         "x": 50,
         "y": 16
-      }
+      },
+      "goto": "Coffee and a pastry. "
     },
     {
       "id": "s153",
@@ -583,8 +573,8 @@
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "The iconic Plaza Skatepark is always worth a stop if you are in the area. See some of the best skaters in the city in one of the most legendary skate parks in Canada.",
+      "crossStreet": "Expo & Quebec",
       "coords": {
         "y": 292
       },
@@ -592,11 +582,8 @@
       "lng": -123.1024551,
       "googlePlaceId": null,
       "placeholderColor": "4f859d",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 6
+      "walkFromStation": 6,
+      "goto": "Grab a coffee and watch."
     },
     {
       "id": "s155",
@@ -605,14 +592,19 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "grab and go",
+        "burgers",
+        "smash burger"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "My favorite smash burger spot in the city, hands down.",
+      "crossStreet": "Columbia St. & E Pender St.",
       "coords": {
         "y": 389
       },
@@ -620,14 +612,11 @@
       "lng": -123.101967,
       "googlePlaceId": null,
       "placeholderColor": "493026",
-      "_review": [
-        "crossStreet",
-        "tags"
-      ],
       "walkFromStation": 10,
       "images": [
         "assets/stops/between-2-buns.jpg"
-      ]
+      ],
+      "goto": "Single with cheese, no substitutions. "
     },
     {
       "id": "s156",
@@ -636,14 +625,18 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "Vietnamese",
+        "cocktails"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "DD Mau has modern takes on classic Viet dishes. I enjoy going there late night for a cocktail and sharing a few of their signature plates.",
+      "crossStreet": "Main St. & Pender",
       "coords": {
         "y": 387
       },
@@ -651,10 +644,6 @@
       "lng": -123.1007844,
       "googlePlaceId": null,
       "placeholderColor": "463358",
-      "_review": [
-        "crossStreet",
-        "tags"
-      ],
       "walkFromStation": 10,
       "images": [
         "assets/stops/dd-mau.jpg"
@@ -662,7 +651,8 @@
       "heroFocus": {
         "x": 50,
         "y": 0
-      }
+      },
+      "goto": "Bar Snax, Wings, Fried Sticky Rice, Sate beef sandwich."
     },
     {
       "id": "s157",
@@ -671,14 +661,19 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "cocktails",
+        "bar",
+        "japanese"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "A modern Japanese snack bar with a constantly rotating menu, very cool interior, and great atmosphere.",
+      "crossStreet": "Main St. & Pender",
       "coords": {
         "y": 387
       },
@@ -686,12 +681,8 @@
       "lng": -123.1001523,
       "googlePlaceId": null,
       "placeholderColor": "7123fa",
-      "_review": [
-        "crossStreet",
-        "cost",
-        "tags"
-      ],
-      "walkFromStation": 10
+      "walkFromStation": 10,
+      "goto": "Pina Coming Soon and a mix of whatever is new from the food menu!"
     },
     {
       "id": "s158",
@@ -700,14 +691,19 @@
       "categories": [
         "shopping"
       ],
-      "tags": [],
+      "tags": [
+        "clothing",
+        "biking",
+        "cycling",
+        "gear"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "HMPL is a bike bag and accessory manufacturer, but also has a storefront with a curated selection of new and used gear. ",
+      "crossStreet": "Columbia St. & E Pender St.",
       "coords": {
         "y": 395
       },
@@ -715,15 +711,13 @@
       "lng": -123.1021552,
       "googlePlaceId": null,
       "placeholderColor": "e1a09e",
-      "_review": [
-        "crossStreet"
-      ],
       "walkFromStation": 10,
       "images": [
         "assets/stops/hmpl.jpg",
         "assets/stops/hmpl-2.jpg",
         "assets/stops/hmpl-3.jpg"
-      ]
+      ],
+      "goto": "Browse all of the vintage bike jerseys and mountain bike shorts."
     },
     {
       "id": "s159",
@@ -732,14 +726,19 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "grab and go",
+        "donuts",
+        "cookies",
+        "coffee"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "If you're looking for a brioche bun with some really wild and fun toppings, Mello is your jam (no pun intended).",
+      "crossStreet": "Main St. & Pender",
       "coords": {
         "y": 395
       },
@@ -747,10 +746,6 @@
       "lng": -123.1021552,
       "googlePlaceId": null,
       "placeholderColor": "7b9591",
-      "_review": [
-        "crossStreet",
-        "tags"
-      ],
       "walkFromStation": 10,
       "images": [
         "assets/stops/mello.jpg"
@@ -758,7 +753,8 @@
       "heroFocus": {
         "x": 50,
         "y": 30
-      }
+      },
+      "goto": "Cereal milk donut."
     },
     {
       "id": "s160",
@@ -1050,8 +1046,8 @@
         "afternoon",
         "evening"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Italian-Japanese food with an incredible ambiance and menu. One of my most suggested restaurants when people are visiting the city as it's something you truly can't find anywhere else.",
+      "crossStreet": "Main St. & Pender",
       "coords": {
         "y": 386
       },
@@ -1059,9 +1055,6 @@
       "lng": -123.0981257,
       "googlePlaceId": null,
       "placeholderColor": "b30a7c",
-      "_review": [
-        "crossStreet"
-      ],
       "walkFromStation": 10,
       "images": [
         "assets/stops/kissa-tanto.jpg"
@@ -1069,7 +1062,8 @@
       "heroFocus": {
         "x": 50,
         "y": 17
-      }
+      },
+      "goto": ""
     },
     {
       "id": "s170",
@@ -1078,14 +1072,18 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "chinese",
+        "cocktails"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Modern Chinese with some unique cocktails and dishes. Great for dining with a small group of close friends.",
+      "crossStreet": "Main St. & Keefer",
       "coords": {
         "y": 365
       },
@@ -1093,12 +1091,8 @@
       "lng": -123.1005921,
       "googlePlaceId": null,
       "placeholderColor": "5370e3",
-      "_review": [
-        "crossStreet",
-        "cost",
-        "tags"
-      ],
-      "walkFromStation": 9
+      "walkFromStation": 9,
+      "goto": ""
     },
     {
       "id": "s171",
@@ -1116,8 +1110,8 @@
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Family owned Hong Kong style bakery/cafe serving some of the best buns and traditional grab and go items in the city.",
+      "crossStreet": "Main St. & Pender",
       "coords": {
         "y": 381
       },
@@ -1125,14 +1119,12 @@
       "lng": -123.1011414,
       "googlePlaceId": null,
       "placeholderColor": "38be09",
-      "_review": [
-        "crossStreet"
-      ],
       "walkFromStation": 10,
       "images": [
         "assets/stops/new-town-bakery.jpg",
         "assets/stops/new-town-bakery-2.jpg"
-      ]
+      ],
+      "goto": "Coconut bun and a pork bun."
     },
     {
       "id": "s172",
@@ -1151,8 +1143,8 @@
         "afternoon",
         "evening"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "A \"speak-easy\" with a fun way to enter (I won't ruin it for you), and a really good selection of fancy cocktails.",
+      "crossStreet": "Main St. & Pender",
       "coords": {
         "y": 373
       },
@@ -1160,11 +1152,8 @@
       "lng": -123.0993665,
       "googlePlaceId": null,
       "placeholderColor": "6ff7fd",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 9
+      "walkFromStation": 9,
+      "goto": ""
     },
     {
       "id": "s173",
@@ -1173,15 +1162,18 @@
       "categories": [
         "coffee"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "grab and go"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "A quiet and unassuming coffee shop in the heart of Chinatown with amazing roasts and quick service.",
+      "crossStreet": "Main St. & Pender",
       "coords": {
         "y": 387
       },
@@ -1189,14 +1181,11 @@
       "lng": -123.0990112,
       "googlePlaceId": null,
       "placeholderColor": "1800a4",
-      "_review": [
-        "crossStreet",
-        "tags"
-      ],
       "walkFromStation": 10,
       "images": [
         "assets/stops/propaganda.jpg"
-      ]
+      ],
+      "goto": "A cappuccino or shot of espresso."
     },
     {
       "id": "s174",
@@ -1215,8 +1204,8 @@
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Cute little neighbourhood grocer and cafe on the bike path.",
+      "crossStreet": "Hawks & Union St.",
       "coords": {
         "y": 290
       },
@@ -1224,11 +1213,8 @@
       "lng": -123.086955,
       "googlePlaceId": null,
       "placeholderColor": "6b5a35",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 13
+      "walkFromStation": 13,
+      "goto": "Stop for a muffin and a hydration break."
     },
     {
       "id": "s175",
@@ -1245,8 +1231,8 @@
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Large park with huge grassy areas, big trees, a concrete skate park, and a basketball court.",
+      "crossStreet": "Prior & Campbell",
       "coords": {
         "y": 231
       },
@@ -1254,11 +1240,8 @@
       "lng": -123.0855911,
       "googlePlaceId": null,
       "placeholderColor": "74b9c5",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 13
+      "walkFromStation": 13,
+      "goto": ""
     },
     {
       "id": "s176",
@@ -1267,14 +1250,17 @@
       "categories": [
         "food"
       ],
-      "tags": [],
+      "tags": [
+        "grab and go",
+        "gelato"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Home of hundreds of flavors, La Casa Gelato is a spectacle on a hot summer evening. With so many flavors to try, it's a wonder anyone makes it out of there with a cone!",
+      "crossStreet": "Glen & Venables",
       "coords": {
         "y": 285
       },
@@ -1282,12 +1268,8 @@
       "lng": -123.0816196,
       "googlePlaceId": null,
       "placeholderColor": "fd47ca",
-      "_review": [
-        "crossStreet",
-        "cost",
-        "tags"
-      ],
-      "walkFromStation": 17
+      "walkFromStation": 17,
+      "goto": "Nutella scoop."
     },
     {
       "id": "s177",
@@ -1297,14 +1279,17 @@
         "food",
         "groceries"
       ],
-      "tags": [],
+      "tags": [
+        "grab and go",
+        "Jamaican"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "allday"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "A fun little Jamaican grocer and lunch spot in a heritage building with great vibes and even better food.",
+      "crossStreet": "Vernon Dr & E Georgia",
       "coords": {
         "y": 324
       },
@@ -1312,11 +1297,8 @@
       "lng": -123.0790454,
       "googlePlaceId": null,
       "placeholderColor": "6febab",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 20
+      "walkFromStation": 20,
+      "goto": "A patty to go. Veggie or meat, both are great."
     },
     {
       "id": "s178",
@@ -1356,15 +1338,19 @@
       "categories": [
         "coffee"
       ],
-      "tags": [],
+      "tags": [
+        "sit down",
+        "grab and go",
+        "roaster"
+      ],
       "neighborhood": "chinatown",
       "cost": "$$",
       "timeOfDay": [
         "morning",
         "afternoon"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Some of the most unique micro-roasts you'll ever find in any city. With in house roasting that can be smelt from a block away. Experts at any style of coffee you like.",
+      "crossStreet": "E Hastings & Campbell",
       "coords": {
         "y": 410
       },
@@ -1372,12 +1358,8 @@
       "lng": -123.0852931,
       "googlePlaceId": null,
       "placeholderColor": "8f65fa",
-      "_review": [
-        "crossStreet",
-        "cost",
-        "tags"
-      ],
-      "walkFromStation": 17
+      "walkFromStation": 17,
+      "goto": "A pour-over with whatever beans the barista is excited about."
     },
     {
       "id": "s180",
@@ -1395,8 +1377,8 @@
         "afternoon",
         "evening"
       ],
-      "description": "",
-      "crossStreet": "",
+      "description": "Great local beer and pizza in a really cool atmosphere. ",
+      "crossStreet": "E Hastings & Campbell",
       "coords": {
         "y": 409
       },
@@ -1404,11 +1386,8 @@
       "lng": -123.0850594,
       "googlePlaceId": null,
       "placeholderColor": "9da124",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 17
+      "walkFromStation": 17,
+      "goto": "Hawaiian pizza with a seasonal brew."
     },
     {
       "id": "s188",
@@ -1531,7 +1510,8 @@
       "walkFromStation": 13,
       "images": [
         "assets/stops/livestock.jpg"
-      ]
+      ],
+      "goto": ""
     },
     {
       "id": "s197",
@@ -1571,7 +1551,8 @@
       "heroFocus": {
         "x": 50,
         "y": 49
-      }
+      },
+      "goto": ""
     },
     {
       "id": "s206",
@@ -1611,7 +1592,8 @@
         "assets/stops/de-xing-long-trading-co-ltd.jpg",
         "assets/stops/de-xing-long-trading-co-ltd-2.jpg",
         "assets/stops/de-xing-long-trading-co-ltd-3.jpg"
-      ]
+      ],
+      "goto": ""
     }
   ]
 }

@@ -872,11 +872,78 @@
         "position": 138,
         "name": "Riley Park",
         "item": "https://explore.seasonsofeastvan.com/spots/riley-park/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 139,
+        "name": "Alternative Creations Studio",
+        "item": "https://explore.seasonsofeastvan.com/spots/alternative-creations-studio/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 140,
+        "name": "Bohemia Gallery Inc.",
+        "item": "https://explore.seasonsofeastvan.com/spots/bohemia-gallery-inc/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 141,
+        "name": "Vancouver Special",
+        "item": "https://explore.seasonsofeastvan.com/spots/vancouver-special/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 142,
+        "name": "Lykopis Archery",
+        "item": "https://explore.seasonsofeastvan.com/spots/lykopis-archery/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 143,
+        "name": "Lucky's Books & Comics",
+        "item": "https://explore.seasonsofeastvan.com/spots/lucky-s-books-and-comics/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 144,
+        "name": "Body Energy Club @ Main Street",
+        "item": "https://explore.seasonsofeastvan.com/spots/body-energy-club-main-street/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 145,
+        "name": "Elysian Coffee 7th & Ontario",
+        "item": "https://explore.seasonsofeastvan.com/spots/elysian-coffee-7th-and-ontario/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 146,
+        "name": "Helen's Grill",
+        "item": "https://explore.seasonsofeastvan.com/spots/helen-s-grill/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 147,
+        "name": "Ayoub's Dried Fruits and Nuts",
+        "item": "https://explore.seasonsofeastvan.com/spots/ayoub-s-dried-fruits-and-nuts/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 148,
+        "name": "City Centre Artist Lodge",
+        "item": "https://explore.seasonsofeastvan.com/spots/city-centre-artist-lodge/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 149,
+        "name": "UNCOMMON",
+        "item": "https://explore.seasonsofeastvan.com/spots/uncommon/"
       }
     ]
   }
 ]</script>
   <!-- /build:seo-head -->
+
 
 
 
@@ -2058,6 +2125,32 @@
     .route-export-actions__secondary .route-export-tour {
       flex: 1;
       min-width: 0;
+    }
+    @media (max-width: 767px) {
+      .route-export-actions__secondary button,
+      .route-export-actions__secondary .route-export-tour {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      #btn-route-share,
+      #btn-p2-share {
+        order: 1;
+      }
+      #btn-route-pdf,
+      #btn-p2-pdf {
+        order: 2;
+      }
+      .route-export-actions__secondary .route-export-tour {
+        order: 3;
+      }
+      #btn-route-feedback,
+      #btn-p2-feedback {
+        order: 4;
+        flex: 1 1 100%;
+        width: 100%;
+      }
     }
     #step-E .nav-buttons:has(#route-export-actions:not([hidden])) .route-export-hint,
     #step-P2-PLAN .nav-buttons:has(#p2-export-actions:not([hidden])) .route-export-hint {
@@ -5625,17 +5718,31 @@
     }
 
     // --- STEP D ---
+    function getStepDSelectionHint() {
+      if (state.timeFilter === "fullday") {
+        return "Select as many stops as you like for this category";
+      }
+      return "Select one or two stops for this category";
+    }
+
     function getStepDDesc() {
+      const hint = getStepDSelectionHint();
       if (isHorizontalMapArea()) {
-        return "Select one or two stops for this category — sorted west to east along Hastings, closest to your first pick";
+        const sortNote = state.timeFilter === "fullday"
+          ? "sorted west to east along Hastings"
+          : "sorted west to east along Hastings, closest to your first pick";
+        return `${hint} — ${sortNote}`;
       }
       if (isChinatownArea()) {
-        return "Select one or two stops for this category — sorted west to east on the grid, closest to your first pick";
+        const sortNote = state.timeFilter === "fullday"
+          ? "sorted west to east on the grid"
+          : "sorted west to east on the grid, closest to your first pick";
+        return `${hint} — ${sortNote}`;
       }
       if (isMountPleasantArea()) {
-        return "Select one or two stops for this category — sorted by walk from Main Street–Science World station";
+        return `${hint} — sorted by walk from Main Street–Science World station`;
       }
-      return "Select one or two stops for this category, locations appear in geographic distance from Commercial-Broadway Skytrain station";
+      return `${hint}, locations appear in geographic distance from Commercial-Broadway Skytrain station`;
     }
 
     function countCategoryStopsWithTag(catId, tag) {
@@ -5935,7 +6042,7 @@
       if (selected.includes(spotId)) {
         selected = selected.filter(id => id !== spotId);
       } else {
-        if (selected.length >= 2) selected.shift(); // Max 2 per category
+        if (state.timeFilter !== "fullday" && selected.length >= 2) selected.shift();
         selected.push(spotId);
       }
       state.selectedStops[catId] = selected;
@@ -6172,11 +6279,20 @@
     }
 
     function getPlanMapOptions(plan) {
-      if (plan?.routeMap === "start-north") return { startAtFirstStop: true };
-      if (plan?.routeMap === "first-to-last") {
-        return { startAtFirstStop: true, endAtStation: false };
+      let endpointOpts = {};
+      if (plan?.routeMap === "start-north") {
+        endpointOpts = { startAtFirstStop: true };
+      } else if (plan?.routeMap === "first-to-last") {
+        endpointOpts = { startAtFirstStop: true, endAtStation: false };
       }
-      return {};
+      const nbh = plan?.neighborhood || activeAreaNeighborhood();
+      if (nbh === "mount-pleasant") {
+        return { ...getMountPleasantMapOptions(), ...endpointOpts };
+      }
+      if (nbh === "chinatown") {
+        return { ...getChinatownMapOptions(), ...endpointOpts };
+      }
+      return endpointOpts;
     }
 
     function normalizeMapOptions(mapOptions = {}) {
@@ -7261,13 +7377,18 @@
       let { minX, minY, w, h } = rect;
       const targetH = w / containerAspect;
       if (targetH > h) {
-        return { minX, minY, w, h: targetH };
+        return { minX, minY: minY - (targetH - h) / 2, w, h: targetH };
       }
       const targetW = h * containerAspect;
       if (targetW > w) {
-        return { minX: minX - (targetW - w), minY, w: targetW, h };
+        return { minX: minX - (targetW - w) / 2, minY, w: targetW, h };
       }
       return rect;
+    }
+
+    function centerViewBoxOnSpine(rect, spineX = MAP.xCenter) {
+      const delta = spineX - (rect.minX + rect.w / 2);
+      return { ...rect, minX: rect.minX + delta };
     }
 
     function formatMapViewBox(rect) {
@@ -7316,6 +7437,7 @@
       };
       if (containerAspect) {
         rect = applyContainerAspect(rect, containerAspect);
+        rect = centerViewBoxOnSpine(rect);
       }
       return formatMapViewBox(rect);
     }
@@ -8116,6 +8238,7 @@
       }
       if (mapOptions.mpVertical && window.MountPleasantMap) {
         MountPleasantMap.drawMap(svg, route, options);
+        applyRouteMapViewportMode(svg);
         return;
       }
 
@@ -8263,6 +8386,7 @@
       drawMap(config.mapSvgId, route, {
         mapOptions: config.mapOptions,
         cardsId: commercial ? config.cardsId : undefined,
+        legDuration: commercial ? undefined : 0,
       });
       if (config.onRouteChange) config.onRouteChange(route);
     }
@@ -10288,6 +10412,7 @@
     <p class="site-seo-footer__credit">Part of <a href="https://www.seasonsofeastvan.com" rel="noopener noreferrer">Seasons of East Van</a> · <a href="/sitemap.xml">Sitemap</a></p>
   </footer>
 <!-- /build:seo-footer -->
+
 
 
 

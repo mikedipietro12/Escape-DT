@@ -20,15 +20,17 @@ const WALK_SPEED_KMH = 5;
 const MAP = {
   xCenter: 150,
   xEast: 175,
-  xWest: 125,
-  xWestMid: 115,
-  xWestFar: 108,
-  xWestDeep: 100,
-  /** Named parallels west/east of Main (editorial columns). */
-  xJames: 138,
-  xQuebec: 125,
-  xOntario: 115,
+  xWest: 120,
+  xWestMid: 108,
+  xWestFar: 96,
+  xWestDeep: 64,
+  /** Named parallels west/east of Main (editorial columns, west → east). */
+  xColumbia: 64,
+  xManitoba: 80,
+  xOntario: 96,
+  xQuebec: 120,
   xPrinceEdward: 175,
+  xStGeorge: 188,
   mainSpineLng: -123.1004,
   /** Station anchors the top of the spine; route runs south (down) from here. */
   yStation: 72,
@@ -196,7 +198,7 @@ function getHybridReturnToStationPathD(x1, y1, x2, y2, fromStop, toStop) {
 
   if (fromOff && !toOff) {
     const parts = [`M ${x1} ${y1}`];
-    parts.push(roundedHorizVert(x1, y1, spine, y1, y2));
+    parts.push(roundedHorizVert(x1, y1, spine, y1, y1));
     appendReturnToStationLane(parts, y1, y2);
     return parts.join(" ");
   }
@@ -248,7 +250,7 @@ function getMapLegColor(leg) {
 }
 
 function isWestOffMainCrossStreet(crossStreet) {
-  return /\b(quebec|ontario|columbia|kingsway)\b/i.test(String(crossStreet || ""));
+  return /\b(quebec|ontario|manitoba|columbia|kingsway)\b/i.test(String(crossStreet || ""));
 }
 
 function isEastOffMainCrossStreet(_crossStreet) {
@@ -268,23 +270,29 @@ function inferWestMapXFromLng(lng) {
   return MAP.xWestDeep;
 }
 
-/** Editorial parallel columns west/east of Main. */
+/** West parallel columns in map-x order (west → east). */
+const WEST_PARALLEL_ORDER = ["columbia", "manitoba", "ontario", "quebec"];
+
+/** Editorial parallel columns west/east of Main (route-map vertical bars). */
 const MP_PARALLEL_STREETS = {
+  columbia: { label: "Columbia", x: MAP.xColumbia, side: "west" },
+  manitoba: { label: "Manitoba", x: MAP.xManitoba, side: "west" },
   ontario: { label: "Ontario", x: MAP.xOntario, side: "west" },
   quebec: { label: "Quebec", x: MAP.xQuebec, side: "west" },
-  james: { label: "James", x: MAP.xJames, side: "west" },
   princeEdward: { label: "Prince Edward", x: MAP.xPrinceEdward, side: "east" },
+  stGeorge: { label: "St. George", x: MAP.xStGeorge, side: "east" },
 };
 
 const MP_PARALLEL_BY_SLUG = {
+  "jonathan-rogers-park": "columbia",
   "mount-pleasant-park": "ontario",
-  "mount-pleasant-vintage": "ontario",
+  "mount-pleasant-vintage": "manitoba",
   "purebread-bakery-coffee": "ontario",
   "33-acres-brewing-company": "ontario",
   "earnest-ice-cream-quebec-st": "quebec",
   "glory-juice-co": "quebec",
   "prince-edward-park": "princeEdward",
-  "riley-park": "james",
+  "riley-park": "ontario",
 };
 
 function isMpParallelZone(zone) {
@@ -297,10 +305,68 @@ function getStopParallelStreet(stop) {
     return MP_PARALLEL_BY_SLUG[stop.slug];
   }
   const cs = String(stop.crossStreet || "");
+  if (/\bst\.?\s*george\b/i.test(cs)) return "stGeorge";
   if (/\bprince edward\b/i.test(cs)) return "princeEdward";
-  if (/\bontario\b/i.test(cs)) return "ontario";
   if (/\bquebec\b/i.test(cs)) return "quebec";
-  if (/\bjames\b/i.test(cs)) return "james";
+  if (/\bontario\b/i.test(cs)) return "ontario";
+  if (/\bmanitoba\b/i.test(cs)) return "manitoba";
+  if (/\bcolumbia\b/i.test(cs)) return "columbia";
+  return null;
+}
+
+function parallelStreetIdFromMapX(x) {
+  let best = null;
+  let bestDist = Infinity;
+  for (const id of WEST_PARALLEL_ORDER) {
+    const street = MP_PARALLEL_STREETS[id];
+    const d = Math.abs(x - street.x);
+    if (d < bestDist) {
+      bestDist = d;
+      best = id;
+    }
+  }
+  return bestDist <= 14 ? best : null;
+}
+
+function parallelStreetIdForStop(stop) {
+  const fromMeta = getStopParallelStreet(stop);
+  if (fromMeta && MP_PARALLEL_STREETS[fromMeta]?.side === "west") return fromMeta;
+  if (!isStopWestOffMain(stop)) return null;
+  return parallelStreetIdFromMapX(getStopMapX(stop));
+}
+
+function getParallelStreetDrawSpec(streetId, spineBounds) {
+  const street = MP_PARALLEL_STREETS[streetId];
+  if (!street) return null;
+  const drawFromY = spineBounds?.y1 ?? MAP.yStation;
+  const drawToY = spineBounds?.y2 ?? MAP.yStation + MAP.yRouteSpan;
+  const y1 = Math.min(drawFromY, drawToY);
+  const y2 = Math.max(drawFromY, drawToY);
+  const labelX = street.side === "east" ? street.x + 9 : street.x - 9;
+  const span = y2 - y1;
+  return {
+    key: streetId,
+    streetX: street.x,
+    drawFromY: y1,
+    drawToY: y2,
+    label: street.label,
+    labelVertical: true,
+    labelX,
+    labelY: y1 + span * 0.5,
+    labelAnchor: "middle",
+  };
+}
+
+function mpSideStreetSpec(point, spine) {
+  if (!point?.stop || !isStopOffSpine(point.stop)) return null;
+  const zone = getStopMapZone(point.stop);
+  if (isMpParallelZone(zone)) {
+    return getParallelStreetDrawSpec(zone, spine);
+  }
+  if (isStopWestOffMain(point.stop)) {
+    const id = parallelStreetIdForStop(point.stop);
+    return id ? getParallelStreetDrawSpec(id, spine) : null;
+  }
   return null;
 }
 
@@ -360,6 +426,7 @@ function mapLabelCrossStreet(crossStreet, stop) {
   }
   if (/\bquebec\b/i.test(cs)) return cs.split("&")[0].replace(/\.$/, "").trim();
   if (/\bontario\b/i.test(cs)) return "Ontario St";
+  if (/\bmanitoba\b/i.test(cs)) return "Manitoba St";
   if (/\bcolumbia\b/i.test(cs)) return "Columbia St";
   if (/\bkingsway\b/i.test(cs)) return "Kingsway";
   if (/\bmain\b/i.test(cs)) {
@@ -368,6 +435,279 @@ function mapLabelCrossStreet(crossStreet, stop) {
   }
   const parts = cs.split("&").map((p) => p.trim());
   return parts[parts.length - 1] || parts[0];
+}
+
+const MP_CROSS_STREET_DRAW_MS = 900;
+const MP_CROSS_STREET_LABEL_DELAY_MS = 280;
+
+/** East–west cross streets on Main (north → south). */
+const MP_SPINE_CROSS_STREETS = [
+  {
+    id: "e2nd",
+    label: "E 2nd",
+    canonicalLat: 49.269,
+    matchCrossStreet: (cs) => /\b(?:e\s*)?2nd\b/i.test(cs),
+  },
+  {
+    id: "broadway",
+    label: "Broadway",
+    canonicalLat: 49.2622,
+    matchCrossStreet: (cs) => /\bbroadway\b/i.test(cs),
+  },
+  {
+    id: "e16th",
+    label: "E 16th",
+    canonicalLat: 49.2567,
+    matchCrossStreet: (cs) => /\b(?:e\s*)?16th\b/i.test(cs),
+  },
+  {
+    id: "kingEdward",
+    label: "E King Edward",
+    canonicalLat: 49.2493,
+    matchCrossStreet: (cs) => /\bking\s*edward\b/i.test(cs),
+  },
+  {
+    id: "e33rd",
+    label: "E 33rd",
+    canonicalLat: 49.2389,
+    matchCrossStreet: (cs) => /\b(?:e\s*)?33rd\b/i.test(cs),
+  },
+];
+
+function getSpineCrossStreetCatalogForRoute(route, points, mapOptions = {}) {
+  if (!route?.length) return [];
+  return MP_SPINE_CROSS_STREETS.map((ref) => {
+    const onRoute = points.filter((p) => ref.matchCrossStreet(p.stop.crossStreet || ""));
+    if (!onRoute.length) return null;
+    const ys = onRoute.map((p) => p.dotY ?? p.y).sort((a, b) => a - b);
+    return { id: ref.id, label: ref.label, y: ys[Math.floor(ys.length / 2)] };
+  })
+    .filter(Boolean)
+    .sort((a, b) => a.y - b.y);
+}
+
+function getSpineCrossStreetDrawSpec(entry) {
+  if (!entry) return null;
+  const leftReach = (MAP.xCenter - (MAP.xOntario - 4)) * 3;
+  const rightReach = (MAP.xStGeorge + 4 - MAP.xCenter) * 3;
+  const drawToXLeft = MAP.xCenter - leftReach;
+  return {
+    key: entry.id,
+    crossY: entry.y,
+    centerX: MAP.xCenter,
+    drawToXLeft,
+    drawToXRight: MAP.xCenter + rightReach,
+    label: entry.label,
+    labelX: drawToXLeft,
+    labelY: entry.y,
+    labelAnchor: "start",
+  };
+}
+
+function getSpineCrossStreetDrawSpecAtPath(entry, pathEl, atLength) {
+  const spec = getSpineCrossStreetDrawSpec(entry);
+  if (!spec || !pathEl) return spec;
+  const len = pathEl.getTotalLength();
+  if (len < 1) return spec;
+  const y = pathEl.getPointAtLength(Math.max(0, Math.min(atLength, len))).y;
+  spec.crossY = y;
+  spec.labelY = y;
+  return spec;
+}
+
+const SPINE_CROSS_X_TOLERANCE = 8;
+
+function segmentCrossesSpineAtY(x1, y1, x2, y2, crossY, spineX = MAP.xCenter, tol = SPINE_CROSS_X_TOLERANCE) {
+  const dy = y2 - y1;
+  if (Math.abs(dy) < 0.01) {
+    if (Math.abs(y1 - crossY) > 0.5) return null;
+    const minX = Math.min(x1, x2);
+    const maxX = Math.max(x1, x2);
+    if (spineX < minX - tol || spineX > maxX + tol) return null;
+    return 0.5;
+  }
+  const t = (crossY - y1) / dy;
+  if (t < -0.01 || t > 1.01) return null;
+  const x = x1 + t * (x2 - x1);
+  if (Math.abs(x - spineX) > tol) return null;
+  return Math.max(0, Math.min(1, t));
+}
+
+function getLegSpineCrossStreetCrossings(leg, catalog, route, points, mapOptions = {}) {
+  if (!catalog?.length) return [];
+  const pathD = leg.pathD || "";
+  if (!pathD) return [];
+
+  const path = document.createElementNS(SVG_NS, "path");
+  path.setAttribute("d", pathD);
+  const total = path.getTotalLength();
+  if (total < 1) return [];
+
+  const samples = Math.max(24, Math.ceil(total / 2));
+  const sampled = [];
+  for (let i = 0; i <= samples; i++) {
+    const len = (i / samples) * total;
+    const pt = path.getPointAtLength(len);
+    sampled.push({ len, x: pt.x, y: pt.y });
+  }
+
+  const found = [];
+  for (const cs of catalog) {
+    let atLength = null;
+    for (let i = 1; i < sampled.length; i++) {
+      const a = sampled[i - 1];
+      const b = sampled[i];
+      const t = segmentCrossesSpineAtY(a.x, a.y, b.x, b.y, cs.y);
+      if (t == null) continue;
+      const hit = a.len + t * (b.len - a.len);
+      if (atLength == null || hit < atLength) atLength = hit;
+    }
+    if (atLength != null) {
+      found.push({ id: cs.id, entry: cs, atLength });
+    }
+  }
+
+  return found.sort((a, b) => a.atLength - b.atLength);
+}
+
+function animateCrossStreetBar(crossStreetLayer, spec) {
+  if (!spec || !crossStreetLayer) return;
+  if (crossStreetLayer.querySelector(`[data-cross-street="${spec.key}"]`)) return;
+
+  const y = spec.crossY;
+  const cx = spec.centerX;
+
+  const lineLeft = document.createElementNS(SVG_NS, "line");
+  lineLeft.setAttribute("class", "map-cross-street");
+  lineLeft.setAttribute("data-cross-street", spec.key);
+  lineLeft.setAttribute("x1", String(cx));
+  lineLeft.setAttribute("y1", String(y));
+  lineLeft.setAttribute("x2", String(cx));
+  lineLeft.setAttribute("y2", String(y));
+
+  const lineRight = document.createElementNS(SVG_NS, "line");
+  lineRight.setAttribute("class", "map-cross-street");
+  lineRight.setAttribute("data-cross-street", spec.key);
+  lineRight.setAttribute("x1", String(cx));
+  lineRight.setAttribute("y1", String(y));
+  lineRight.setAttribute("x2", String(cx));
+  lineRight.setAttribute("y2", String(y));
+
+  crossStreetLayer.append(lineLeft, lineRight);
+
+  const label = document.createElementNS(SVG_NS, "text");
+  label.setAttribute("class", "map-cross-street-label");
+  label.setAttribute("x", String(spec.labelX));
+  label.setAttribute("y", String(spec.labelY));
+  label.setAttribute("text-anchor", spec.labelAnchor);
+  label.setAttribute("dominant-baseline", "alphabetic");
+  label.textContent = spec.label;
+  crossStreetLayer.appendChild(label);
+
+  const finish = () => label.classList.add("is-visible");
+
+  const leftLength = Math.abs(cx - spec.drawToXLeft);
+  const rightLength = Math.abs(spec.drawToXRight - cx);
+  lineLeft.setAttribute("x2", String(spec.drawToXLeft));
+  lineRight.setAttribute("x2", String(spec.drawToXRight));
+  lineLeft.style.strokeDasharray = `${leftLength}`;
+  lineLeft.style.strokeDashoffset = `${leftLength}`;
+  lineRight.style.strokeDasharray = `${rightLength}`;
+  lineRight.style.strokeDashoffset = `${rightLength}`;
+
+  let ended = 0;
+  const onSegmentEnd = () => {
+    ended += 1;
+    if (ended === 2) window.setTimeout(finish, MP_CROSS_STREET_LABEL_DELAY_MS);
+  };
+
+  requestAnimationFrame(() => {
+    const transition = `stroke-dashoffset ${MP_CROSS_STREET_DRAW_MS}ms ease-out`;
+    lineLeft.style.transition = transition;
+    lineRight.style.transition = transition;
+    lineLeft.style.strokeDashoffset = "0";
+    lineRight.style.strokeDashoffset = "0";
+    lineLeft.addEventListener("transitionend", onSegmentEnd, { once: true });
+    lineRight.addEventListener("transitionend", onSegmentEnd, { once: true });
+  });
+}
+
+function animateSideStreetBar(crossStreetLayer, spec, anchorY, onComplete, instant = false) {
+  if (!spec || !crossStreetLayer) {
+    onComplete?.();
+    return;
+  }
+
+  const yTop = spec.drawFromY;
+  const yBottom = spec.drawToY;
+  const anchor = Number.isFinite(anchorY) ? anchorY : (yTop + yBottom) / 2;
+
+  const lineUp = document.createElementNS(SVG_NS, "line");
+  lineUp.setAttribute("class", "map-side-street");
+  lineUp.setAttribute("data-side-street", spec.key);
+  lineUp.setAttribute("x1", String(spec.streetX));
+  lineUp.setAttribute("y1", String(anchor));
+  lineUp.setAttribute("x2", String(spec.streetX));
+  lineUp.setAttribute("y2", String(anchor));
+
+  const lineDown = document.createElementNS(SVG_NS, "line");
+  lineDown.setAttribute("class", "map-side-street");
+  lineDown.setAttribute("data-side-street", spec.key);
+  lineDown.setAttribute("x1", String(spec.streetX));
+  lineDown.setAttribute("y1", String(anchor));
+  lineDown.setAttribute("x2", String(spec.streetX));
+  lineDown.setAttribute("y2", String(anchor));
+
+  crossStreetLayer.append(lineUp, lineDown);
+
+  const label = document.createElementNS(SVG_NS, "text");
+  label.setAttribute("class", "map-side-street-label");
+  label.setAttribute("x", String(spec.labelX));
+  label.setAttribute("y", String(spec.labelY));
+  label.setAttribute("text-anchor", spec.labelAnchor);
+  if (spec.labelVertical) {
+    label.setAttribute("class", "map-side-street-label map-side-street-label--vertical");
+    label.setAttribute("transform", `rotate(-90 ${spec.labelX} ${spec.labelY})`);
+  }
+  label.textContent = spec.label;
+  crossStreetLayer.appendChild(label);
+
+  const finish = () => {
+    label.classList.add("is-visible");
+    onComplete?.();
+  };
+
+  if (instant) {
+    lineUp.setAttribute("y2", String(yTop));
+    lineDown.setAttribute("y2", String(yBottom));
+    finish();
+    return;
+  }
+
+  const upLength = Math.abs(anchor - yTop);
+  const downLength = Math.abs(yBottom - anchor);
+  lineUp.setAttribute("y2", String(yTop));
+  lineDown.setAttribute("y2", String(yBottom));
+  lineUp.style.strokeDasharray = `${upLength}`;
+  lineUp.style.strokeDashoffset = `${upLength}`;
+  lineDown.style.strokeDasharray = `${downLength}`;
+  lineDown.style.strokeDashoffset = `${downLength}`;
+
+  let ended = 0;
+  const onSegmentEnd = () => {
+    ended += 1;
+    if (ended === 2) window.setTimeout(finish, MP_CROSS_STREET_LABEL_DELAY_MS);
+  };
+
+  requestAnimationFrame(() => {
+    const transition = `stroke-dashoffset ${MP_CROSS_STREET_DRAW_MS}ms ease-out`;
+    lineUp.style.transition = transition;
+    lineDown.style.transition = transition;
+    lineUp.style.strokeDashoffset = "0";
+    lineDown.style.strokeDashoffset = "0";
+    lineUp.addEventListener("transitionend", onSegmentEnd, { once: true });
+    lineDown.addEventListener("transitionend", onSegmentEnd, { once: true });
+  });
 }
 
 function isStopOffSpine(stop) {
@@ -426,6 +766,11 @@ function alignOffMainMapPoints(points) {
   return points;
 }
 
+function resolveRouteMapY(stop, computedY) {
+  const nudge = stop?.routeMapY ?? stop?.coords?.routeMapY;
+  return nudge != null ? computedY + nudge : computedY;
+}
+
 function layoutRouteMapPointsFromStation(route, mapOptions = {}) {
   const station = getStation(mapOptions);
   const routeLats = route.map((s) => s.lat);
@@ -435,7 +780,7 @@ function layoutRouteMapPointsFromStation(route, mapOptions = {}) {
 
   return route.map((stop, idx) => {
     const t = Math.max(0, Math.min(1, (station.lat - stop.lat) / safeSpan));
-    const y = MAP.yStation + t * MAP.yRouteSpan;
+    const y = resolveRouteMapY(stop, MAP.yStation + t * MAP.yRouteSpan);
     const x = getStopMapX(stop);
     return { stop, x, y, idx };
   });
@@ -452,7 +797,7 @@ function layoutRouteMapPointsLocal(route) {
 
   return route.map((stop, idx) => {
     const t = latSpan > 1e-6 ? (maxLat - stop.lat) / safeSpan : 0.5;
-    const y = MAP.yStation + t * spanY;
+    const y = resolveRouteMapY(stop, MAP.yStation + t * spanY);
     const x = getStopMapX(stop);
     return { stop, x, y, idx };
   });
@@ -928,12 +1273,7 @@ function estimateLabelWidth(text) {
 }
 
 function getStopLabelText(point) {
-  const indices = point.routeIndices || [point.idx];
-  const first = indices[0] + 1;
-  const last = indices[indices.length - 1] + 1;
-  const numLabel = first === last ? `${first}` : `${first}–${last}`;
-  const label = mapLabelCrossStreet(point.stop.crossStreet, point.stop);
-  return `${numLabel}. ${label}`.toUpperCase();
+  return formatMapStopNumberLabel(point);
 }
 
 function measureRenderedTextBounds(svgEl) {
@@ -979,13 +1319,18 @@ function applyContainerAspect(rect, containerAspect) {
   let { minX, minY, w, h } = rect;
   const targetH = w / containerAspect;
   if (targetH > h) {
-    return { minX, minY, w, h: targetH };
+    return { minX, minY: minY - (targetH - h) / 2, w, h: targetH };
   }
   const targetW = h * containerAspect;
   if (targetW > w) {
-    return { minX: minX - (targetW - w), minY, w: targetW, h };
+    return { minX: minX - (targetW - w) / 2, minY, w: targetW, h };
   }
   return rect;
+}
+
+function centerViewBoxOnSpine(rect, spineX = MAP.xCenter) {
+  const delta = spineX - (rect.minX + rect.w / 2);
+  return { ...rect, minX: rect.minX + delta };
 }
 
 function formatViewBox(rect) {
@@ -1045,6 +1390,16 @@ function computeMapViewBox(points, legs, showStation, containerAspect, measured 
     pad
   );
   rect = applyContainerAspect(rect, containerAspect);
+  if (containerAspect) {
+    rect = centerViewBoxOnSpine(rect);
+    // Re-expand after centering so west-side labels and cross-street bars are not clipped.
+    rect = expandViewBoxRect(
+      rect,
+      [...xs, ...(measured?.xs || [])],
+      [...ys, ...(measured?.ys || [])],
+      pad
+    );
+  }
   return formatViewBox(rect);
 }
 
@@ -1137,7 +1492,6 @@ function renderMapStopDots(x, y, clusterCount, animateCluster) {
 }
 
 function renderMapStopSvg(point, hybrid, { animateCluster = true } = {}) {
-  const s = point.stop;
   const mapIdx = point.mapIdx ?? point.idx;
   const numLabel = formatMapStopNumberLabel(point);
   const routeIndices = point.routeIndices || [point.idx];
@@ -1146,13 +1500,12 @@ function renderMapStopSvg(point, hybrid, { animateCluster = true } = {}) {
   const y = hybrid ? point.dotY : point.y;
   const labelOffsetY = point.labelOffsetY || 0;
   const { labelX, labelAnchor } = getMapStopLabelPlacement(x);
-  const labelY = y + 3 + labelOffsetY;
-  const label = mapLabelCrossStreet(s.crossStreet, s);
+  const labelY = y + 4 + labelOffsetY;
   const clusterClass = clusterCount > 1 ? " map-stop-group--cluster" : "";
   return `
         <g class="map-stop-group map-stop-group--hidden${clusterClass}" data-stop-index="${mapIdx}" data-cluster-count="${clusterCount}">
           ${renderMapStopDots(x, y, clusterCount, animateCluster)}
-          <text class="map-text map-stop-label" x="${labelX}" y="${labelY}" text-anchor="${labelAnchor}">${numLabel}. ${escapeHtml(label)}</text>
+          <text class="map-text" x="${labelX}" y="${labelY}" text-anchor="${labelAnchor}">${numLabel}</text>
         </g>
       `;
 }
@@ -1198,7 +1551,7 @@ function syncTraceArrow(pathEl, arrowEl, length) {
 }
 
 function animateMapPath(pathEl, options = {}) {
-  const { duration = 1500, onComplete = null, arrowEl = null } = options;
+  const { duration = 1500, onComplete = null, onProgress = null, arrowEl = null } = options;
   if (!pathEl) {
     onComplete?.();
     return;
@@ -1215,11 +1568,14 @@ function animateMapPath(pathEl, options = {}) {
 
   let arrowFrame = 0;
   const trackArrow = () => {
+    const offset = parseFloat(getComputedStyle(pathEl).strokeDashoffset) || 0;
+    const drawn = Math.max(0, Math.min(length, length - offset));
+    onProgress?.(drawn, length);
     if (!arrowEl) return;
     syncTraceArrow(pathEl, arrowEl, length);
     arrowFrame = requestAnimationFrame(trackArrow);
   };
-  if (arrowEl) trackArrow();
+  if (arrowEl || onProgress) trackArrow();
 
   requestAnimationFrame(() => {
     pathEl.style.transition = `stroke-dashoffset ${duration}ms ease-in-out`;
@@ -1256,7 +1612,11 @@ function drawMap(svgEl, route, options = {}) {
   const legDuration = options.legDuration ?? MAP.legDurationMs;
   const spine = getMapSpineBounds(points, showStation, true);
   const spineExtent = getSpineLineExtent(points, showStation);
+  const spineForSideStreets = spineExtent ?? spine;
   const drawSpine = !!spineExtent;
+  const spineCrossCatalog = getSpineCrossStreetCatalogForRoute(route, points, mapOptions);
+  const drawnCrossStreets = new Set();
+  const drawnSideStreets = new Set();
 
   let html = renderMapStaticSvg({
     showStation,
@@ -1264,6 +1624,7 @@ function drawMap(svgEl, route, options = {}) {
     spineY1: spineExtent?.y1 ?? spine.y1,
     spineY2: spineExtent?.y2 ?? spine.y2,
   });
+  html += `<g class="map-cross-street-layer"></g>`;
   html += `<g class="map-route-layer"></g><g class="map-overlay-layer"></g>`;
   svgEl.innerHTML = html;
 
@@ -1283,20 +1644,27 @@ function drawMap(svgEl, route, options = {}) {
     }
   };
 
+  const crossStreetLayer = svgEl.querySelector(".map-cross-street-layer");
   const routeLayer = svgEl.querySelector(".map-route-layer");
   const overlayLayer = svgEl.querySelector(".map-overlay-layer");
-  const traceArrow = createTraceArrow(routeLayer);
-  const animateCluster = (options.legDuration ?? MAP.legDurationMs) > 0;
+  const traceArrow = legDuration > 0 ? createTraceArrow(routeLayer) : null;
+  const animateCluster = legDuration > 0;
 
   if (!route.length) {
     options.onComplete?.();
     return;
   }
 
-  function revealStop(stopIndex) {
+  function revealStop(stopIndex, onDone) {
     const existing = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
+    const show = () => {
+      afterStopReveal(stopIndex, onDone || (() => {}));
+    };
     if (existing) {
-      requestAnimationFrame(() => existing.classList.remove("map-stop-group--hidden"));
+      requestAnimationFrame(() => {
+        existing.classList.remove("map-stop-group--hidden");
+        show();
+      });
       return;
     }
     overlayLayer.insertAdjacentHTML(
@@ -1304,18 +1672,46 @@ function drawMap(svgEl, route, options = {}) {
       renderMapStopSvg(points[stopIndex], true, { animateCluster })
     );
     const g = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
-    requestAnimationFrame(() => g?.classList.remove("map-stop-group--hidden"));
+    requestAnimationFrame(() => {
+      g?.classList.remove("map-stop-group--hidden");
+      show();
+    });
+  }
+
+  function afterStopReveal(stopIndex, done) {
+    const point = points[stopIndex];
+    const spec = mpSideStreetSpec(point, spineForSideStreets);
+    if (!spec || drawnSideStreets.has(spec.key)) {
+      done();
+      return;
+    }
+    drawnSideStreets.add(spec.key);
+    animateSideStreetBar(
+      crossStreetLayer,
+      spec,
+      point.dotY ?? point.y,
+      done,
+      legDuration === 0
+    );
   }
 
   if (!legs.length) {
-    points.forEach((_, idx) => revealStop(idx));
-    options.onComplete?.();
+    let pending = points.length;
+    if (!pending) {
+      options.onComplete?.();
+      return;
+    }
+    const onAllRevealed = () => {
+      pending -= 1;
+      if (pending <= 0) options.onComplete?.();
+    };
+    points.forEach((_, idx) => revealStop(idx, onAllRevealed));
     return;
   }
 
   // Route starts at the first stop — show it (and any cluster dots) before the arrow draws.
   if (!mapOptions.startAtStation && points.length) {
-    revealStop(0);
+    revealStop(0, () => {});
   }
 
   function runLeg(legIndex) {
@@ -1333,8 +1729,11 @@ function drawMap(svgEl, route, options = {}) {
     const legComplete = () => {
       if (isStale()) return;
       const stopIdx = getMapStopIndexAfterLeg(legIndex, routeLegs, route, mapOptions);
-      if (stopIdx != null) revealStop(stopIdx);
-      runLeg(legIndex + 1);
+      if (stopIdx != null) {
+        revealStop(stopIdx, () => runLeg(legIndex + 1));
+      } else {
+        runLeg(legIndex + 1);
+      }
     };
 
     const pathEl = document.createElementNS(SVG_NS, "path");
@@ -1344,9 +1743,43 @@ function drawMap(svgEl, route, options = {}) {
     pathEl.style.stroke = color;
     routeLayer.appendChild(pathEl);
 
+    const legCrossings = getLegSpineCrossStreetCrossings(
+      leg,
+      spineCrossCatalog,
+      route,
+      points,
+      mapOptions
+    );
+    const triggeredCrossings = new Set();
+
+    const fireCrossStreet = (crossing) => {
+      if (drawnCrossStreets.has(crossing.id)) return;
+      drawnCrossStreets.add(crossing.id);
+      animateCrossStreetBar(
+        crossStreetLayer,
+        getSpineCrossStreetDrawSpecAtPath(crossing.entry, pathEl, crossing.atLength)
+      );
+    };
+
+    if (legDuration === 0) {
+      pathEl.style.strokeDasharray = "none";
+      pathEl.style.strokeDashoffset = "0";
+      legCrossings.forEach(fireCrossStreet);
+      legComplete();
+      return;
+    }
+
     animateMapPath(pathEl, {
       duration: legDuration,
       arrowEl: traceArrow,
+      onProgress: (drawn) => {
+        for (const crossing of legCrossings) {
+          if (triggeredCrossings.has(crossing.id)) continue;
+          if (drawn < crossing.atLength - 1) continue;
+          triggeredCrossings.add(crossing.id);
+          fireCrossStreet(crossing);
+        }
+      },
       onComplete: legComplete,
     });
   }
@@ -1379,6 +1812,7 @@ function ensureAllStopsVisible(svgEl, points) {
   window.MountPleasantMap = {
     MAP,
     MP_PARALLEL_STREETS,
+    MP_SPINE_CROSS_STREETS,
     drawMap,
     getRouteMapLayout,
     getRouteWalkLegs,
