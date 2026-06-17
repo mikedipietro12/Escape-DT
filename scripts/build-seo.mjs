@@ -21,6 +21,8 @@ const PLAN_FOOTER_LABELS = {
   "world-cup-day": "World Cup day on the Drive",
   "mp-full-day-main": "Full day on Main Street",
   "mp-kids-afternoon-main": "Kids afternoon on Main",
+  "mp-afternoon-main": "Quick afternoon on Main",
+  "mp-evening-main": "Evening on Main Street",
   "chinatown-pre-post-match": "Chinatown pre &amp; post-match",
 };
 
@@ -291,8 +293,38 @@ function stopBySlug(stops, slug) {
   return stops.find((s) => s.slug === slug);
 }
 
-function buildFooterGridHtml(config, stops, hrefForPlan, hrefForSpot) {
-  const footer = config.seoFooter || {};
+function resolveSeoFooter(config, neighborhoodId) {
+  const base = config.seoFooter || {};
+  const nbh = (neighborhoodId || "commercial").toLowerCase();
+  const override = base.neighborhoods?.[nbh];
+  const merged = override
+    ? {
+        toggleLabel: override.toggleLabel ?? base.toggleLabel,
+        ariaLabel: override.ariaLabel ?? base.ariaLabel,
+        lead: override.lead ?? base.lead,
+        routeSlugs: override.routeSlugs ?? base.routeSlugs,
+        columns: override.columns ?? base.columns,
+      }
+    : { ...base };
+  if (!merged.ariaLabel) {
+    merged.ariaLabel = `${AREA_SHORT_LABELS[nbh] || "Commercial Drive"} guide`;
+  }
+  if (!merged.toggleLabel) merged.toggleLabel = "More info";
+  if (!merged.lead) {
+    merged.lead =
+      "East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer";
+  }
+  if (!merged.routeSlugs?.length) merged.routeSlugs = config.seoPlanSlugs || [];
+  return merged;
+}
+
+function footerNeighborhoodIds(config) {
+  const ids = new Set(["commercial"]);
+  Object.keys(config.seoFooter?.neighborhoods || {}).forEach((id) => ids.add(id));
+  return [...ids];
+}
+
+function buildFooterGridHtml(footer, config, stops, hrefForPlan, hrefForSpot) {
   const routeSlugs = footer.routeSlugs || config.seoPlanSlugs || [];
   const planItems = routeSlugs
     .map((key) => {
@@ -301,7 +333,7 @@ function buildFooterGridHtml(config, stops, hrefForPlan, hrefForSpot) {
     })
     .join("\n");
 
-  const columns = (footer.columns || [])
+  const columns = (footer?.columns || [])
     .map((col) => {
       const items = (col.spotSlugs || [])
         .map((slug) => {
@@ -332,26 +364,48 @@ ${planItems}
 ${columns}`;
 }
 
+function buildFooterNeighborhoodPayload(config, stops, neighborhoodId, hrefForPlan, hrefForSpot) {
+  const footer = resolveSeoFooter(config, neighborhoodId);
+  const gridHtml = buildFooterGridHtml(footer, config, stops, hrefForPlan, hrefForSpot);
+  return {
+    ariaLabel: footer.ariaLabel,
+    toggleLabel: footer.toggleLabel,
+    lead: footer.lead,
+    gridHtml,
+  };
+}
+
 function buildHomeSeoFooter(config, stops) {
-  const footer = config.seoFooter || {};
-  const toggleLabel = footer.toggleLabel || "Browse spots & routes on the Drive";
-  const lead =
-    footer.lead ||
-    "East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer";
+  const footer = resolveSeoFooter(config, "commercial");
   const publisherUrl = config.publisherUrl || "https://www.seasonsofeastvan.com";
   const grid = buildFooterGridHtml(
+    footer,
     config,
     stops,
     (key) => `/plans/${key}/`,
     (slug) => `/spots/${slug}/`
   );
+  const footerByNeighborhood = Object.fromEntries(
+    footerNeighborhoodIds(config).map((id) => [
+      id,
+      buildFooterNeighborhoodPayload(
+        config,
+        stops,
+        id,
+        (key) => `/plans/${key}/`,
+        (slug) => `/spots/${slug}/`
+      ),
+    ])
+  );
+  const footerDataJson = JSON.stringify(footerByNeighborhood).replace(/</g, "\\u003c");
 
   return `${FOOTER_MARKER_START}
-  <footer id="site-seo-footer" class="site-seo-footer" aria-label="Commercial Drive guide">
+  <script type="application/json" id="seo-footer-by-neighborhood">${footerDataJson}</script>
+  <footer id="site-seo-footer" class="site-seo-footer" aria-label="${escapeHtml(footer.ariaLabel)}">
     <details class="site-seo-footer__details">
-      <summary class="site-seo-footer__toggle">${escapeHtml(toggleLabel)}</summary>
+      <summary class="site-seo-footer__toggle">${escapeHtml(footer.toggleLabel)}</summary>
       <div class="site-seo-footer__panel">
-        <p class="site-seo-footer__lead">${escapeHtml(lead)}</p>
+        <p class="site-seo-footer__lead">${escapeHtml(footer.lead)}</p>
         <div class="site-seo-footer__grid">
 ${grid}
         </div>
@@ -362,25 +416,22 @@ ${grid}
 ${FOOTER_MARKER_END}`;
 }
 
-function buildStaticFooter(config, guideUrl, publisherUrl, stops) {
-  const footer = config.seoFooter || {};
-  const toggleLabel = footer.toggleLabel || "Browse spots & routes on the Drive";
-  const lead =
-    footer.lead ||
-    "East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer";
+function buildStaticFooter(config, guideUrl, publisherUrl, stops, neighborhoodId = "commercial") {
+  const footer = resolveSeoFooter(config, neighborhoodId);
   const grid = buildFooterGridHtml(
+    footer,
     config,
     stops,
     (key) => absoluteUrl(config.siteUrl, `/plans/${key}/`),
     (slug) => absoluteUrl(config.siteUrl, `/spots/${slug}/`)
   );
 
-  return `  <footer class="static-footer" aria-label="Commercial Drive guide">
+  return `  <footer class="static-footer" aria-label="${escapeHtml(footer.ariaLabel)}">
     <div class="static-footer__inner">
       <details class="static-footer__details">
-        <summary class="static-footer__toggle">${escapeHtml(toggleLabel)}</summary>
+        <summary class="static-footer__toggle">${escapeHtml(footer.toggleLabel)}</summary>
         <div class="static-footer__panel">
-          <p class="static-footer__lead">${escapeHtml(lead)}</p>
+          <p class="static-footer__lead">${escapeHtml(footer.lead)}</p>
           <div class="static-footer__grid">
 ${grid}
           </div>
@@ -403,6 +454,7 @@ function buildStaticPageShell({
   guideUrl,
   publisherUrl,
   stops,
+  neighborhoodId = "commercial",
 }) {
   const analytics = buildGoogleAnalyticsTag(config.gaMeasurementId);
   const ld = JSON.stringify(jsonLd, null, 2).replace(/</g, "\\u003c");
@@ -440,7 +492,7 @@ ${analytics}
   <main class="static-main">
 ${body}
   </main>
-${buildStaticFooter(config, guideUrl, publisherUrl, stops)}
+${buildStaticFooter(config, guideUrl, publisherUrl, stops, neighborhoodId)}
   <script>(function(){var img=document.getElementById("static-hero-logo");var logo=document.documentElement.dataset.heroLogo;if(logo&&img)img.src="../../"+logo.replace(/^\\//,"");})();</script>
   <script src="../../js/static-gallery.js"></script>
 </body>
@@ -617,6 +669,7 @@ ${narrativeHtml}
     guideUrl,
     publisherUrl,
     stops,
+    neighborhoodId: planNeighborhoodId(plan, routeStops, neighborhoodsData),
   });
 }
 
@@ -752,6 +805,7 @@ ${gotoBlock}${crossMeta}${walkLine}
     guideUrl,
     publisherUrl,
     stops: allStops,
+    neighborhoodId: stopNeighborhoodId(stop),
   });
 }
 

@@ -965,6 +965,7 @@
 
 
 
+
   <style>
     :root {
       --fade-top: #b2fdb5;
@@ -1799,13 +1800,28 @@
       .route-review.route-phase-map:not(.route-review--stacked) { flex-direction: row; align-items: flex-start; }
       .map-split .map-container,
       .route-review.route-phase-summary .map-container,
-      .route-review.route-phase-map:not(.route-review--stacked) .map-container { width: 40%; flex-shrink: 0; max-width: none; }
+      .route-review.route-phase-map:not(.route-review--stacked) .map-container {
+        width: 40%;
+        flex-shrink: 0;
+        max-width: none;
+        position: sticky;
+        top: 1.25rem;
+        align-self: flex-start;
+        height: min(85vh, calc(100dvh - 2.5rem));
+        min-height: 22rem;
+        display: flex;
+        flex-direction: column;
+      }
       .map-split .route-list,
       .route-review.route-phase-summary .route-summary,
       .route-review.route-phase-map:not(.route-review--stacked) .route-summary { width: 60%; display: block; }
+      .map-split .map-container svg,
       .route-review.route-phase-summary .map-container svg,
       .route-review.route-phase-map:not(.route-review--stacked) .map-container svg {
-        max-height: 70vh;
+        flex: 1 1 auto;
+        width: 100%;
+        height: 100%;
+        max-height: none;
       }
       /* Route final + plan pages: wider canvas, roomier gutters on desktop */
       .container:has(#step-P2-PLAN.active),
@@ -4725,12 +4741,14 @@
       state.landingView = "areas";
       state.landingAreaId = null;
       applyLandingView();
+      updateSeoFooterContent();
     }
 
     function showLandingForArea(areaId) {
       state.landingView = "paths";
       state.landingAreaId = areaId;
       applyLandingView();
+      updateSeoFooterContent();
     }
 
     function openLandingArea(areaId) {
@@ -5213,11 +5231,49 @@
     }
 
     const SEO_FOOTER_STEPS = new Set(["LANDING", "E", "P2-PLAN"]);
+    let seoFooterByNeighborhood = null;
+
+    function loadSeoFooterByNeighborhood() {
+      if (seoFooterByNeighborhood) return seoFooterByNeighborhood;
+      const el = document.getElementById("seo-footer-by-neighborhood");
+      if (!el) return null;
+      try {
+        seoFooterByNeighborhood = JSON.parse(el.textContent);
+      } catch (err) {
+        console.warn("Could not parse seo-footer-by-neighborhood", err);
+        seoFooterByNeighborhood = null;
+      }
+      return seoFooterByNeighborhood;
+    }
+
+    function getSeoFooterNeighborhood() {
+      if (state.currentStep === "P2-PLAN" && state.planTime) {
+        const plan = PLANS[state.planTime];
+        if (plan?.neighborhood) return plan.neighborhood;
+      }
+      return activeAreaNeighborhood();
+    }
+
+    function updateSeoFooterContent() {
+      const footer = document.getElementById("site-seo-footer");
+      const data = loadSeoFooterByNeighborhood();
+      if (!footer || !data) return;
+      const slice = data[getSeoFooterNeighborhood()] || data.commercial;
+      if (!slice) return;
+      if (slice.ariaLabel) footer.setAttribute("aria-label", slice.ariaLabel);
+      const lead = footer.querySelector(".site-seo-footer__lead");
+      const grid = footer.querySelector(".site-seo-footer__grid");
+      const toggle = footer.querySelector(".site-seo-footer__toggle");
+      if (lead && slice.lead != null) lead.textContent = slice.lead;
+      if (grid && slice.gridHtml) grid.innerHTML = slice.gridHtml;
+      if (toggle && slice.toggleLabel) toggle.textContent = slice.toggleLabel;
+    }
 
     function updateSeoFooterVisibility(step) {
       const footer = document.getElementById("site-seo-footer");
       if (!footer) return;
       footer.hidden = !SEO_FOOTER_STEPS.has(step);
+      if (!footer.hidden) updateSeoFooterContent();
     }
 
     function showStep(step) {
@@ -7448,18 +7504,38 @@
       svgEl.setAttribute("preserveAspectRatio", "xMidYMid meet");
     }
 
+    let routeMapColumnObserver = null;
+
+    function getMapColumnHeight(container, svgEl) {
+      const measured = container.clientHeight || container.offsetHeight;
+      if (measured >= 80) return measured;
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        return Math.max(window.innerHeight * 0.85, 352);
+      }
+      return svgEl.getBoundingClientRect().height;
+    }
+
     function refitMapToColumn(svgEl, points, legs, showStation) {
       const container = svgEl?.parentElement;
       if (!container || !svgEl) return;
       const cw = container.clientWidth;
-      let ch = container.clientHeight;
-      if (!ch) ch = svgEl.getBoundingClientRect().height;
+      const ch = getMapColumnHeight(container, svgEl);
       if (!cw || !ch) return;
       svgEl.setAttribute(
         "viewBox",
         computeMapViewBox(points, legs, showStation, cw / ch)
       );
       applyRouteMapViewportMode(svgEl);
+    }
+
+    function bindRouteMapColumnResize(svgEl, points, legs, showStation) {
+      const container = svgEl?.parentElement;
+      if (!container || typeof ResizeObserver === "undefined") return;
+      routeMapColumnObserver?.disconnect();
+      routeMapColumnObserver = new ResizeObserver(() => {
+        refitMapToColumn(svgEl, points, legs, showStation);
+      });
+      routeMapColumnObserver.observe(container);
     }
 
     function getRouteMapLayout(route, mapOptions = {}) {
@@ -8058,12 +8134,18 @@
       );
       applyRouteMapViewportMode(svg);
       requestAnimationFrame(() => {
-        if (!isStale() && route.length) refitMapToColumn(svg, points, legs, showStation);
+        if (!isStale() && route.length) {
+          refitMapToColumn(svg, points, legs, showStation);
+          bindRouteMapColumnResize(svg, points, legs, showStation);
+        }
       });
 
       const finishMapDraw = () => {
         if (isStale()) return;
-        if (route.length) refitMapToColumn(svg, points, legs, showStation);
+        if (route.length) {
+          refitMapToColumn(svg, points, legs, showStation);
+          bindRouteMapColumnResize(svg, points, legs, showStation);
+        }
         options.onComplete?.();
       };
 
@@ -9098,6 +9180,7 @@
       } else {
         showStep("P2-PLAN");
       }
+      updateSeoFooterContent();
     }
 
     function getP2PlanStopIds() {
@@ -10351,6 +10434,7 @@
   <script src="js/vendor/gsap.min.js"></script>
   <script src="js/landing-hero-jello.js"></script>
 <!-- build:seo-footer -->
+  <script type="application/json" id="seo-footer-by-neighborhood">{"commercial":{"ariaLabel":"Commercial Drive guide","toggleLabel":"More info","lead":"East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer","gridHtml":"      \u003cnav aria-label=\"Curated walking routes\">\n        \u003ch2>Curated routes\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/plans/quick-sip-shop/\">Quick Sip &amp; Shop (near SkyTrain)\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/quick-sip-shop-2/\">Quick Sip &amp; Shop 2 (north end)\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/half-a-day-mid-morning/\">Half a day on the Drive — morning\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/half-a-day-evening/\">Half a day on the Drive — evening\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/world-cup-day/\">World Cup day on the Drive\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Bars and drinks on Commercial Drive\">\n        \u003ch2>Bars &amp; drinks\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/superflux/\">Superflux\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/livia-forno-e-vino/\">LIVIA Forno e Vino\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/the-charlatan/\">The Charlatan\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/havana/\">Havana\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/nomo-nomo/\">Nomo Nomo\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Restaurants on Commercial Drive\">\n        \u003ch2>Restaurants\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/magari-by-oca/\">Magari by Oca\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/belli-pizza/\">Belli Pizza\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/dont-argue-pizza/\">Don't Argue Pizza\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/sula-indian-restaurant/\">Sula Indian Restaurant\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/mogu-fried-chicken/\">Mogu Fried Chicken\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Coffee on Commercial Drive\">\n        \u003ch2>Coffee\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/prado-cafe/\">Prado Cafe\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/jj-bean/\">JJ Bean\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/caffe-la-tana/\">Caffè La Tana\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/bump-n-grind/\">Bump N Grind Cafe\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Places on Commercial Drive\">\n        \u003ch2>Places\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/alterior/\">Alterior\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/vintage-sponsor/\">Vintage Sponsor\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/slice-of-life-art-gallery/\">Slice of Life Art Gallery\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/grandview-park/\">Grandview Park\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/equinox-gallery/\">Equinox Gallery\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>"},"mount-pleasant":{"ariaLabel":"Mount Pleasant guide","toggleLabel":"More info","lead":"Mount Pleasant restaurants, bars & coffee on Main Street — curated by a local photographer","gridHtml":"      \u003cnav aria-label=\"Curated walking routes\">\n        \u003ch2>Curated routes\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/plans/mp-full-day-main/\">Full day on Main Street\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/mp-kids-afternoon-main/\">Kids afternoon on Main\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/mp-afternoon-main/\">Quick afternoon on Main\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/mp-evening-main/\">Evening on Main Street\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Bars and drinks on Main Street\">\n        \u003ch2>Bars &amp; drinks\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/33-acres-brewing-company/\">33 Acres Brewing Company\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/brassneck-brewery/\">Brassneck Brewery\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/mount-pleasant-vintage/\">Mount Pleasant Vintage\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/good-thief/\">Good Thief\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/the-shameful-tiki-room/\">The Shameful Tiki Room\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Restaurants on Main Street\">\n        \u003ch2>Restaurants\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/aj-s-brooklyn-pizza-joint/\">AJ's Brooklyn Pizza Joint\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/como-taperia/\">Como Taperia\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/sushi-hil/\">Sushi Hil\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/superbaba-vancouver/\">Superbaba (Vancouver)\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/parallel-49-brewing-company/\">Parallel 49 Brewing Company\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Coffee on Main Street\">\n        \u003ch2>Coffee\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/cultivate-tea/\">Cultivate Tea\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/elysian-coffee-7th-and-ontario/\">Elysian Coffee 7th &amp; Ontario\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/gene-coffee-bar/\">Gene Coffee Bar\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/liberty-bakery-cafe/\">Liberty Bakery + Café\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Places on Main Street\">\n        \u003ch2>Places\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/mount-pleasant-park/\">Mount Pleasant Park\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/f-as-in-frank-vintage-clothing/\">F as in Frank Vintage Clothing\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/hunter-and-hare-main-st/\">Hunter &amp; Hare - Main St\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/fox-cabaret/\">Fox Cabaret\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/lykopis-archery/\">Lykopis Archery\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>"}}</script>
   <footer id="site-seo-footer" class="site-seo-footer" aria-label="Commercial Drive guide">
     <details class="site-seo-footer__details">
       <summary class="site-seo-footer__toggle">More info</summary>
@@ -10412,6 +10496,7 @@
     <p class="site-seo-footer__credit">Part of <a href="https://www.seasonsofeastvan.com" rel="noopener noreferrer">Seasons of East Van</a> · <a href="/sitemap.xml">Sitemap</a></p>
   </footer>
 <!-- /build:seo-footer -->
+
 
 
 

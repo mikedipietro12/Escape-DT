@@ -33,6 +33,11 @@ function assertIncludes(haystack, needle, label) {
   else fail(`${label} — missing: ${needle}`);
 }
 
+function assertExcludes(haystack, needle, label) {
+  if (!haystack.includes(needle)) ok(label);
+  else fail(`${label} — should not include: ${needle}`);
+}
+
 function parseJsonLd(html) {
   const m = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
   if (!m) throw new Error("no ld+json script");
@@ -78,6 +83,7 @@ for (const planKey of planKeys) {
   const html = read(planPath);
   assertIncludes(html, `<h1>${escapeHtml(plan.title)}</h1>`, `${planKey} h1`);
   assertIncludes(html, "Build this route in the guide", `${planKey} CTA`);
+  assertExcludes(html, "Web experience brought to you by", `${planKey} footer has no web experience credit`);
   try {
     parseJsonLd(html);
     ok(`${planKey} JSON-LD parses`);
@@ -90,6 +96,8 @@ const index = read("index.html");
 assertIncludes(index, 'name="description"', "index meta description");
 assertIncludes(index, 'rel="canonical"', "index canonical");
 assertIncludes(index, 'property="og:image"', "index og:image");
+assertIncludes(index, 'id="seo-footer-by-neighborhood"', "index footer neighborhood data");
+assertExcludes(index, "Web experience brought to you by", "index footer has no web experience credit");
 if (config.gaMeasurementId) {
   assertIncludes(index, config.gaMeasurementId, "index Google Analytics");
 }
@@ -114,6 +122,7 @@ for (const slug of spotSlugs) {
   const spot = read(spotPath);
   assertIncludes(spot, `<h1 class="choice-title">${escapeHtml(stop.name)}</h1>`, `${slug} h1`);
   assertIncludes(spot, "Add to route in guide", `${slug} CTA`);
+  assertExcludes(spot, "Web experience brought to you by", `${slug} footer has no web experience credit`);
   if (config.gaMeasurementId) {
     assertIncludes(spot, config.gaMeasurementId, `${slug} Google Analytics`);
   }

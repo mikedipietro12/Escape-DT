@@ -22,6 +22,7 @@
   ],
   "seoFooter": {
     "toggleLabel": "More info",
+    "ariaLabel": "Commercial Drive guide",
     "lead": "East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer",
     "routeSlugs": [
       "quick-sip-shop",
@@ -74,7 +75,64 @@
           "equinox-gallery"
         ]
       }
-    ]
+    ],
+    "neighborhoods": {
+      "mount-pleasant": {
+        "ariaLabel": "Mount Pleasant guide",
+        "lead": "Mount Pleasant restaurants, bars & coffee on Main Street — curated by a local photographer",
+        "routeSlugs": [
+          "mp-full-day-main",
+          "mp-kids-afternoon-main",
+          "mp-afternoon-main",
+          "mp-evening-main"
+        ],
+        "columns": [
+          {
+            "heading": "Bars & drinks",
+            "ariaLabel": "Bars and drinks on Main Street",
+            "spotSlugs": [
+              "33-acres-brewing-company",
+              "brassneck-brewery",
+              "mount-pleasant-vintage",
+              "good-thief",
+              "the-shameful-tiki-room"
+            ]
+          },
+          {
+            "heading": "Restaurants",
+            "ariaLabel": "Restaurants on Main Street",
+            "spotSlugs": [
+              "aj-s-brooklyn-pizza-joint",
+              "como-taperia",
+              "sushi-hil",
+              "superbaba-vancouver",
+              "parallel-49-brewing-company"
+            ]
+          },
+          {
+            "heading": "Coffee",
+            "ariaLabel": "Coffee on Main Street",
+            "spotSlugs": [
+              "cultivate-tea",
+              "elysian-coffee-7th-and-ontario",
+              "gene-coffee-bar",
+              "liberty-bakery-cafe"
+            ]
+          },
+          {
+            "heading": "Places",
+            "ariaLabel": "Places on Main Street",
+            "spotSlugs": [
+              "mount-pleasant-park",
+              "f-as-in-frank-vintage-clothing",
+              "hunter-and-hare-main-st",
+              "fox-cabaret",
+              "lykopis-archery"
+            ]
+          }
+        ]
+      }
+    }
   },
   "pilotSpotSlugs": [
     "alterior",

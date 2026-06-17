@@ -1439,14 +1439,34 @@ function applyRouteMapViewportMode(svgEl) {
   svgEl.setAttribute("preserveAspectRatio", "xMidYMid meet");
 }
 
+let mapColumnResizeObserver = null;
+
+function getMapColumnHeight(container, svgEl) {
+  const measured = container.clientHeight || container.offsetHeight;
+  if (measured >= 80) return measured;
+  if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
+    return Math.max(window.innerHeight * 0.85, 352);
+  }
+  return svgEl.getBoundingClientRect().height;
+}
+
 function refitMapToColumn(svgEl, points, legs, showStation) {
   const container = svgEl?.parentElement;
   if (!container || !svgEl) return;
   const cw = container.clientWidth;
-  let ch = container.clientHeight;
-  if (!ch) ch = svgEl.getBoundingClientRect().height;
+  const ch = getMapColumnHeight(container, svgEl);
   if (!cw || !ch) return;
   applyMapViewBox(svgEl, points, legs, showStation, cw / ch);
+}
+
+function bindMapColumnResize(svgEl, points, legs, showStation) {
+  const container = svgEl?.parentElement;
+  if (!container || typeof ResizeObserver === "undefined") return;
+  mapColumnResizeObserver?.disconnect();
+  mapColumnResizeObserver = new ResizeObserver(() => {
+    refitMapToColumn(svgEl, points, legs, showStation);
+  });
+  mapColumnResizeObserver.observe(container);
 }
 
 function renderMapStaticSvg(options = {}) {
@@ -1645,13 +1665,17 @@ function drawMap(svgEl, route, options = {}) {
   );
   applyRouteMapViewportMode(svgEl);
   requestAnimationFrame(() => {
-    if (!isStale() && route.length) refitMapToColumn(svgEl, points, legs, showStation);
+    if (!isStale() && route.length) {
+      refitMapToColumn(svgEl, points, legs, showStation);
+      bindMapColumnResize(svgEl, points, legs, showStation);
+    }
   });
 
   const onLayoutDone = () => {
     if (!isStale() && route.length) {
       ensureAllStopsVisible(svgEl, points);
       refitMapToColumn(svgEl, points, legs, showStation);
+      bindMapColumnResize(svgEl, points, legs, showStation);
     }
   };
 
