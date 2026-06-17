@@ -7755,6 +7755,15 @@
       );
     }
 
+    function revealAllPendingMapRouteCards(cardsId) {
+      if (!cardsId) return;
+      const root = document.getElementById(cardsId);
+      if (!root) return;
+      root.querySelectorAll(".route-card--pending").forEach((card) => {
+        card.classList.remove("route-card--pending");
+      });
+    }
+
     function setMapRouteHighlight(stopIdOrIds, cardsId, { scrollCard = false } = {}) {
       const activeIds = new Set(normalizeMapRouteStopIds(stopIdOrIds));
       const cardsRoot = cardsId ? document.getElementById(cardsId) : null;
@@ -8333,12 +8342,18 @@
         if (options.cardsId) {
           wireMapSpotCardLinking(svg, options.cardsId);
         }
+        const userOnComplete = options.onComplete;
         MountPleasantMap.drawMap(svg, route, {
           ...options,
           interactive: !!options.cardsId,
           onStopReveal: options.cardsId
             ? (point) => markMapRouteCardsRevealedForPoint(point, route, options.cardsId)
             : undefined,
+          popStopDot: popCommercialStopDot,
+          onComplete: () => {
+            revealAllPendingMapRouteCards(options.cardsId);
+            userOnComplete?.();
+          },
         });
         applyRouteMapViewportMode(svg);
         return;

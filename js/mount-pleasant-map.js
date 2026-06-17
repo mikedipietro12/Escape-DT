@@ -1521,7 +1521,7 @@ function renderMapStopDots(x, y, clusterCount, animateCluster, interactive = fal
   return getClusterDotOffsets(clusterCount)
     .map(
       (off) => `
-          <g class="map-stop-cluster-dot${staticClass}" style="--cx:${x};--cy:${y};--off:${off}"${pointerEvents}>
+          <g class="map-stop-cluster-dot${staticClass}" style="--cx:${x};--cy:${y};--off:${off}">
             <circle class="map-stop" cx="0" cy="0" r="4"${pointerEvents} />
           </g>`
     )
@@ -1561,8 +1561,8 @@ function renderMapStopSvg(point, hybrid, options = {}) {
     : "";
   return `
         <g class="map-stop-group map-stop-group--hidden${clusterClass}${interactiveClass}" data-stop-index="${mapIdx}" data-cluster-count="${clusterCount}"${interactiveAttrs}>
-          ${hitTarget}
           ${renderMapStopDots(x, y, clusterCount, animateCluster, interactive)}
+          ${hitTarget}
           <text class="map-text" x="${labelX}" y="${labelY}" text-anchor="${labelAnchor}" pointer-events="none">${numLabel}</text>
         </g>
       `;
@@ -1706,7 +1706,7 @@ function drawMap(svgEl, route, options = {}) {
 
   const onLayoutDone = () => {
     if (!isStale() && route.length) {
-      ensureAllStopsVisible(svgEl, points);
+      ensureAllStopsVisible(svgEl, points, stopRenderOptions, options);
       refitMapToColumn(svgEl, points, legs, showStation);
       bindMapColumnResize(svgEl, points, legs, showStation);
     }
@@ -1724,27 +1724,38 @@ function drawMap(svgEl, route, options = {}) {
   }
 
   function revealStop(stopIndex, onDone) {
-    const existing = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
-    const show = () => {
-      options.onStopReveal?.(points[stopIndex]);
-      afterStopReveal(stopIndex, onDone || (() => {}));
-    };
-    if (existing) {
+    const finish = onDone || (() => {});
+
+    function unveilGroup(group) {
+      if (!group) {
+        finish();
+        return;
+      }
       requestAnimationFrame(() => {
-        existing.classList.remove("map-stop-group--hidden");
-        show();
+        group.classList.remove("map-stop-group--hidden");
+        const point = points[stopIndex];
+        options.onStopReveal?.(point, group);
+        const clusterCount = Number(group.dataset.clusterCount || 1);
+        const afterDot = () => afterStopReveal(stopIndex, finish);
+        if (typeof options.popStopDot === "function" && clusterCount <= 1) {
+          options.popStopDot(group, afterDot);
+        } else {
+          afterDot();
+        }
       });
+    }
+
+    let group = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
+    if (group) {
+      unveilGroup(group);
       return;
     }
     overlayLayer.insertAdjacentHTML(
       "beforeend",
       renderMapStopSvg(points[stopIndex], true, stopRenderOptions)
     );
-    const g = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
-    requestAnimationFrame(() => {
-      g?.classList.remove("map-stop-group--hidden");
-      show();
-    });
+    group = overlayLayer.querySelector(`[data-stop-index="${stopIndex}"]`);
+    unveilGroup(group);
   }
 
   function afterStopReveal(stopIndex, done) {
@@ -1856,7 +1867,7 @@ function drawMap(svgEl, route, options = {}) {
   runLeg(0);
 }
 
-function ensureAllStopsVisible(svgEl, points) {
+function ensureAllStopsVisible(svgEl, points, stopRenderOptions = {}, drawOptions = {}) {
   const overlayLayer = svgEl?.querySelector(".map-overlay-layer");
   if (!overlayLayer) return;
   points.forEach((point, idx) => {
@@ -1865,9 +1876,10 @@ function ensureAllStopsVisible(svgEl, points) {
     if (!g) {
       overlayLayer.insertAdjacentHTML(
         "beforeend",
-        renderMapStopSvg(point, true, { animateCluster: false })
+        renderMapStopSvg(point, true, { ...stopRenderOptions, animateCluster: false })
       );
       g = overlayLayer.querySelector(`[data-stop-index="${mapIdx}"]`);
+      drawOptions.onStopReveal?.(point, g);
     }
     g?.classList.remove("map-stop-group--hidden");
   });
