@@ -7457,6 +7457,33 @@
                 "assets/stops/de-xing-long-trading-co-ltd-2.jpg",
                 "assets/stops/de-xing-long-trading-co-ltd-3.jpg"
             ]
+        },
+        {
+            "id": "s166",
+            "slug": "maclean-park",
+            "name": "MacLean Park",
+            "categories": [
+                "hangout"
+            ],
+            "tags": [
+                "park",
+                "spray pad"
+            ],
+            "neighborhood": "chinatown",
+            "cost": "Free",
+            "timeOfDay": [
+                "allday"
+            ],
+            "description": "Just between Chinatown and Strathcona, this park has one of the best spray pads in the city. Big open area for picnics and large trees for lots of shade. A good stop if you're touring Chinatown or Strathcona with kids.",
+            "crossStreet": "Heatley & E Georgia",
+            "coords": {
+                "y": 337
+            },
+            "lat": 49.2788157,
+            "lng": -123.0884454,
+            "googlePlaceId": null,
+            "placeholderColor": "6447fe",
+            "walkFromStation": 13
         }
     ]
 }

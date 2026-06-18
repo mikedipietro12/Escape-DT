@@ -4860,15 +4860,6 @@
           NEIGHBORHOODS = {};
         }
         STOPS = hydrateStops(stopsData.stops || []);
-        try {
-          const chinatownRes = await fetch("data/chinatown-draft.json", { cache: "no-store" });
-          if (chinatownRes.ok) {
-            const chinatownData = await chinatownRes.json();
-            STOPS = STOPS.concat(hydrateStops(chinatownData.stops || []));
-          }
-        } catch (_) {
-          /* draft optional */
-        }
         if (window.ChinatownMap?.loadGridConfig) {
           await window.ChinatownMap.loadGridConfig("data/chinatown-grid.json");
         }

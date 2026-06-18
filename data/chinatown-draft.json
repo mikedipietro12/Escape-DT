@@ -270,36 +270,6 @@
       "walkFromStation": 14
     },
     {
-      "id": "s166",
-      "slug": "maclean-park",
-      "name": "MacLean Park",
-      "categories": [
-        "hangout"
-      ],
-      "tags": [
-        "park"
-      ],
-      "neighborhood": "chinatown",
-      "cost": "$$",
-      "timeOfDay": [
-        "allday"
-      ],
-      "description": "",
-      "crossStreet": "",
-      "coords": {
-        "y": 337
-      },
-      "lat": 49.2788157,
-      "lng": -123.0884454,
-      "googlePlaceId": null,
-      "placeholderColor": "6447fe",
-      "_review": [
-        "crossStreet",
-        "cost"
-      ],
-      "walkFromStation": 13
-    },
-    {
       "id": "s167",
       "slug": "finch-s-market",
       "name": "Finch's Market",
