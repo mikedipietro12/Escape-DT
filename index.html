@@ -2904,12 +2904,36 @@
       background: var(--ink);
       color: #fff;
     }
+    .route-replay-mobile-slot {
+      display: none;
+    }
+    .route-replay-btn--mobile {
+      opacity: 0;
+      transition: opacity 1.4s ease;
+    }
+    .route-replay-btn--mobile.route-replay-btn--visible {
+      opacity: 1;
+    }
+    @media (max-width: 767px) {
+      .route-replay-mobile-slot {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin: -1.2rem auto 0;
+      }
+      .route-replay-btn--desktop {
+        display: none !important;
+      }
+      .route-replay-btn--mobile {
+        width: min(100%, 20rem);
+      }
+    }
     @media (max-width: 520px) {
       .route-summary-footer {
         flex-direction: column;
         align-items: stretch;
       }
-      .route-replay-btn {
+      .route-replay-btn--desktop {
         width: 100%;
       }
     }
@@ -4331,12 +4355,15 @@
             <span class="route-scroll-hint__arrow" aria-hidden="true">↓</span>
           </button>
         </div>
+        <div class="route-replay-mobile-slot">
+          <button type="button" id="route-replay-btn-mobile" class="route-replay-btn route-replay-btn--mobile" data-route-replay-for="route-totals" onclick="replayRouteMap('E')" hidden>Replay route</button>
+        </div>
         <div id="route-summary-panel" class="route-summary" hidden>
           <p id="route-export-summary" class="label route-export-summary">YOUR COMMERCIAL DRIVE ROUTE — N STOPS</p>
           <div id="route-cards"></div>
           <div class="route-summary-footer">
             <div class="totals" id="route-totals"></div>
-            <button type="button" id="route-replay-btn" class="route-replay-btn" onclick="replayRouteMap('E')" hidden>Replay route</button>
+            <button type="button" id="route-replay-btn" class="route-replay-btn route-replay-btn--desktop" data-route-replay-for="route-totals" onclick="replayRouteMap('E')" hidden>Replay route</button>
           </div>
           <p class="route-print-footer">Escape the Downtown · explore.seasonsofeastvan.com</p>
         </div>
@@ -4397,12 +4424,15 @@
             <span class="route-scroll-hint__arrow" aria-hidden="true">↓</span>
           </button>
         </div>
+        <div class="route-replay-mobile-slot">
+          <button type="button" id="p2-route-replay-btn-mobile" class="route-replay-btn route-replay-btn--mobile" data-route-replay-for="route-totals-p2" onclick="replayRouteMap('P2-PLAN')" hidden>Replay route</button>
+        </div>
         <div id="p2-route-summary-panel" class="route-summary" hidden>
           <p id="p2-route-export-summary" class="label route-export-summary">YOUR PLAN — N STOPS</p>
           <div id="route-cards-p2"></div>
           <div class="route-summary-footer">
             <div class="totals" id="route-totals-p2"></div>
-            <button type="button" id="p2-route-replay-btn" class="route-replay-btn" onclick="replayRouteMap('P2-PLAN')" hidden>Replay route</button>
+            <button type="button" id="p2-route-replay-btn" class="route-replay-btn route-replay-btn--desktop" data-route-replay-for="route-totals-p2" onclick="replayRouteMap('P2-PLAN')" hidden>Replay route</button>
           </div>
           <p class="route-print-footer">Escape the Downtown · explore.seasonsofeastvan.com</p>
         </div>
@@ -4460,11 +4490,14 @@
         <div class="map-container">
           <svg id="route-map-p3" viewBox="0 0 340 600"></svg>
         </div>
+        <div class="route-replay-mobile-slot">
+          <button type="button" id="p3-route-replay-btn-mobile" class="route-replay-btn route-replay-btn--mobile" data-route-replay-for="route-totals-p3" onclick="replayRouteMap('P3-ROUTE')" hidden>Replay route</button>
+        </div>
         <div class="route-list">
           <div id="route-cards-p3"></div>
           <div class="route-summary-footer">
             <div class="totals" id="route-totals-p3"></div>
-            <button type="button" id="p3-route-replay-btn" class="route-replay-btn" onclick="replayRouteMap('P3-ROUTE')" hidden>Replay route</button>
+            <button type="button" id="p3-route-replay-btn" class="route-replay-btn route-replay-btn--desktop" data-route-replay-for="route-totals-p3" onclick="replayRouteMap('P3-ROUTE')" hidden>Replay route</button>
           </div>
         </div>
       </div>
@@ -8847,8 +8880,39 @@
       if (config.onRouteChange) config.onRouteChange(route);
     }
 
+    function setMobileRouteReplayButtonVisible(totalsId, visible) {
+      const buttons = document.querySelectorAll(
+        `.route-replay-btn--mobile[data-route-replay-for="${totalsId}"]`
+      );
+      buttons.forEach((btn) => {
+        const token = (btn._routeReplayVisibilityToken || 0) + 1;
+        btn._routeReplayVisibilityToken = token;
+        if (visible) {
+          btn.hidden = false;
+          requestAnimationFrame(() => {
+            if (btn._routeReplayVisibilityToken === token) {
+              btn.classList.add("route-replay-btn--visible");
+            }
+          });
+        } else {
+          btn.classList.remove("route-replay-btn--visible");
+          btn.hidden = true;
+        }
+      });
+    }
+
     function setRouteReplayButtonVisible(totalsId, visible) {
       const totalsEl = document.getElementById(totalsId);
+      const buttons = document.querySelectorAll(
+        `.route-replay-btn[data-route-replay-for="${totalsId}"]`
+      );
+      if (buttons.length) {
+        setMobileRouteReplayButtonVisible(totalsId, visible);
+        buttons.forEach((btn) => {
+          if (!btn.classList.contains("route-replay-btn--mobile")) btn.hidden = !visible;
+        });
+        return;
+      }
       const footer = totalsEl?.closest(".route-summary-footer");
       const btn = footer?.querySelector(".route-replay-btn");
       if (btn) btn.hidden = !visible;
@@ -8898,6 +8962,7 @@
         return {
           mapSvgId: "route-map-p2",
           cardsId: "route-cards-p2",
+          totalsId: "route-totals-p2",
           route: getPlanRoute(),
           mapOptions: getEffectiveMapOptions(plan),
         };
@@ -8906,6 +8971,7 @@
         return {
           mapSvgId: "route-map-p3",
           cardsId: "route-cards-p3",
+          totalsId: "route-totals-p3",
           route: sortStopsGeographic(getP3BuiltRoute()),
           mapOptions: getUserRouteMapOptions(),
         };
@@ -8913,13 +8979,14 @@
       return {
         mapSvgId: "route-map",
         cardsId: "route-cards",
+        totalsId: "route-totals",
         route: getFinalRoute(),
         mapOptions: getUserRouteMapOptions(),
       };
     }
 
     function replayRouteMap(scope) {
-      const { mapSvgId, cardsId, route, mapOptions } = getRouteReplayContext(scope);
+      const { mapSvgId, cardsId, totalsId, route, mapOptions } = getRouteReplayContext(scope);
       if (!route.length) return;
 
       const svg = document.getElementById(mapSvgId);
@@ -8927,10 +8994,12 @@
       if (mapContainer && window.matchMedia("(max-width: 767px)").matches) {
         mapContainer.scrollIntoView({ behavior: "smooth", block: "start" });
       }
+      setMobileRouteReplayButtonVisible(totalsId, false);
 
       drawMap(mapSvgId, route, {
         mapOptions,
         cardsId: supportsMapSpotCardLinking(mapOptions) ? cardsId : undefined,
+        onComplete: () => setMobileRouteReplayButtonVisible(totalsId, true),
       });
     }
 
@@ -10666,14 +10735,19 @@
           desc.textContent = `${route.length} stop${route.length === 1 ? "" : "s"} sorted north to south along the Drive for walking. Tap × on a stop to remove it.`;
         }
       }
-      drawMap("route-map-p3", route, { mapOptions: getUserRouteMapOptions() });
+      const mapOptions = getUserRouteMapOptions();
       renderRouteCards("route-cards-p3", route, {
         removable: true,
         removeHandler: "removeP3RouteStop",
       });
       renderRouteTotals("route-totals-p3", route, {
-        style: getTotalsStyleForMapOptions(getUserRouteMapOptions()),
-        mapOptions: getUserRouteMapOptions(),
+        style: getTotalsStyleForMapOptions(mapOptions),
+        mapOptions,
+      });
+      setMobileRouteReplayButtonVisible("route-totals-p3", false);
+      drawMap("route-map-p3", route, {
+        mapOptions,
+        onComplete: () => setMobileRouteReplayButtonVisible("route-totals-p3", route.length > 0),
       });
     }
 
