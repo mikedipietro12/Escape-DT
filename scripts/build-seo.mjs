@@ -297,7 +297,7 @@ function stopBySlug(stops, slug) {
 function resolveSeoFooter(config, neighborhoodId) {
   const base = config.seoFooter || {};
   const nbh = (neighborhoodId || "commercial").toLowerCase();
-  const override = base.neighborhoods?.[nbh];
+  const override = nbh === "landing" ? base.landing : base.neighborhoods?.[nbh];
   const merged = override
     ? {
         toggleLabel: override.toggleLabel ?? base.toggleLabel,
@@ -315,28 +315,32 @@ function resolveSeoFooter(config, neighborhoodId) {
     merged.lead =
       "East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer";
   }
-  if (!merged.routeSlugs?.length) merged.routeSlugs = config.seoPlanSlugs || [];
+  if (!Array.isArray(merged.routeSlugs)) merged.routeSlugs = config.seoPlanSlugs || [];
   return merged;
 }
 
 function footerNeighborhoodIds(config) {
-  const ids = new Set(["commercial"]);
+  const ids = new Set(["landing", "commercial"]);
   Object.keys(config.seoFooter?.neighborhoods || {}).forEach((id) => ids.add(id));
   return [...ids];
 }
 
-function buildFooterGridHtml(footer, config, stops, hrefForPlan, hrefForSpot) {
-  const routeSlugs = footer.routeSlugs || config.seoPlanSlugs || [];
-  const planItems = routeSlugs
+function buildPlanListItems(routeSlugs, hrefForPlan) {
+  return (routeSlugs || [])
     .map((key) => {
       const label = PLAN_FOOTER_LABELS[key] || escapeHtml(key);
       return `          <li><a href="${escapeHtml(hrefForPlan(key))}">${label}</a></li>`;
     })
     .join("\n");
+}
+
+function buildFooterGridHtml(footer, config, stops, hrefForPlan, hrefForSpot) {
+  const routeSlugs = footer.routeSlugs || config.seoPlanSlugs || [];
+  const planItems = buildPlanListItems(routeSlugs, hrefForPlan);
 
   const columns = (footer?.columns || [])
     .map((col) => {
-      const items = (col.spotSlugs || [])
+      const spotItems = (col.spotSlugs || [])
         .map((slug) => {
           const stop = stopBySlug(stops, slug);
           if (!stop) {
@@ -347,6 +351,16 @@ function buildFooterGridHtml(footer, config, stops, hrefForPlan, hrefForSpot) {
         })
         .filter(Boolean)
         .join("\n");
+      const routeItems = buildPlanListItems(col.routeSlugs || [], hrefForPlan);
+      const linkItems = (col.links || [])
+        .map((link) => {
+          if (!link?.href || !link?.label) return "";
+          return `          <li><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a></li>`;
+        })
+        .filter(Boolean)
+        .join("\n");
+      const items = [routeItems, spotItems, linkItems].filter(Boolean).join("\n");
+      if (!items) return "";
       return `      <nav aria-label="${escapeHtml(col.ariaLabel || col.heading)}">
         <h2>${escapeHtml(col.heading)}</h2>
         <ul>
@@ -354,15 +368,19 @@ ${items}
         </ul>
       </nav>`;
     })
+    .filter(Boolean)
     .join("\n");
 
-  return `      <nav aria-label="Curated walking routes">
+  const routes = planItems
+    ? `      <nav aria-label="Curated walking routes">
         <h2>Curated routes</h2>
         <ul>
 ${planItems}
         </ul>
-      </nav>
-${columns}`;
+      </nav>`
+    : "";
+
+  return [routes, columns].filter(Boolean).join("\n");
 }
 
 function buildFooterNeighborhoodPayload(config, stops, neighborhoodId, hrefForPlan, hrefForSpot) {
@@ -377,7 +395,7 @@ function buildFooterNeighborhoodPayload(config, stops, neighborhoodId, hrefForPl
 }
 
 function buildHomeSeoFooter(config, stops) {
-  const footer = resolveSeoFooter(config, "commercial");
+  const footer = resolveSeoFooter(config, "landing");
   const publisherUrl = config.publisherUrl || "https://www.seasonsofeastvan.com";
   const grid = buildFooterGridHtml(
     footer,

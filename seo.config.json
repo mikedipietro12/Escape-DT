@@ -22,6 +22,42 @@
   ],
   "seoFooter": {
     "toggleLabel": "More info",
+    "landing": {
+      "ariaLabel": "Neighborhood pre-built routes",
+      "lead": "East Vancouver pre-built walks by neighborhood — curated by a local photographer",
+      "routeSlugs": [],
+      "columns": [
+        {
+          "heading": "Mount Pleasant Pre-builts",
+          "ariaLabel": "Mount Pleasant pre-built routes",
+          "routeSlugs": [
+            "mp-full-day-main",
+            "mp-kids-afternoon-main",
+            "mp-afternoon-main",
+            "mp-evening-main"
+          ]
+        },
+        {
+          "heading": "Commercial Drive Pre-builts",
+          "ariaLabel": "Commercial Drive pre-built routes",
+          "routeSlugs": [
+            "quick-sip-shop",
+            "quick-sip-shop-2",
+            "half-a-day-mid-morning",
+            "half-a-day-evening",
+            "world-cup-day"
+          ]
+        },
+        {
+          "heading": "Chinatown Pre-builts",
+          "ariaLabel": "Chinatown pre-built routes",
+          "routeSlugs": [
+            "chinatown-pre-post-match",
+            "early-start-in-chinatown"
+          ]
+        }
+      ]
+    },
     "ariaLabel": "Commercial Drive guide",
     "lead": "East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer",
     "routeSlugs": [
@@ -140,7 +176,52 @@
           "chinatown-pre-post-match",
           "early-start-in-chinatown"
         ],
-        "columns": []
+        "columns": [
+          {
+            "heading": "Bars & drinks",
+            "ariaLabel": "Bars and drinks in Chinatown",
+            "spotSlugs": [
+              "the-boxcar",
+              "the-american",
+              "london-pub",
+              "keefer-bar",
+              "kissa-tanto"
+            ]
+          },
+          {
+            "heading": "Restaurants",
+            "ariaLabel": "Restaurants in Chinatown",
+            "spotSlugs": [
+              "mortadella",
+              "torafuku",
+              "hunnybee-bruncheonette",
+              "phnom-penh-restaurant",
+              "straight-brooklyn-pizza"
+            ]
+          },
+          {
+            "heading": "Coffee & treats",
+            "ariaLabel": "Coffee and treats in Chinatown",
+            "spotSlugs": [
+              "say-hey-cafe",
+              "annabelle-s",
+              "mello",
+              "propaganda",
+              "la-casa-gelato"
+            ]
+          },
+          {
+            "heading": "Shops & places",
+            "ariaLabel": "Shops and places in Chinatown",
+            "spotSlugs": [
+              "the-program-fitness",
+              "gore-street-vintage",
+              "friend-of-a-friend",
+              "the-plaza-skatepark",
+              "hmpl"
+            ]
+          }
+        ]
       }
     }
   },
