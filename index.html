@@ -4732,7 +4732,6 @@
     }
 
     function googleMapsPointQuery(point) {
-      if (point?.mapsQuery) return point.mapsQuery;
       return point?.googlePlaceId && point?.name ? point.name : googleMapsLatLng(point);
     }
 
@@ -9596,16 +9595,8 @@
       let waypointStops = [];
 
       if (opts.startAtStation && opts.endAtStation) {
-        // Avoid identical origin/destination query strings so Google can still
-        // receive place IDs for every route waypoint on station round trips.
-        if (station.name) {
-          return buildGoogleMapsDirectionsUrl(
-            { ...station, mapsQuery: station.name },
-            station,
-            resolved
-          );
-        }
-        // Fallback for unnamed anchors where origin === destination would fail.
+        // Google Maps cannot resolve api=1 directions when origin === destination
+        // (common SkyTrain round trip). Use a multi-segment /dir/ walking URL instead.
         const pathPoints = [
           buildGoogleMapsPathSegment(station),
           ...resolved.map(buildGoogleMapsPathSegment),
