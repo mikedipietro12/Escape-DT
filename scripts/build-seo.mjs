@@ -87,6 +87,24 @@ function escapeHtml(s) {
     .replace(/"/g, "&quot;");
 }
 
+function googleMapsLatLng(stop) {
+  return `${stop.lat},${stop.lng}`;
+}
+
+function googleMapsPointQuery(stop) {
+  return stop?.googlePlaceId && stop?.name ? stop.name : googleMapsLatLng(stop);
+}
+
+function buildGoogleMapsSearchUrl(stop) {
+  const params = new URLSearchParams();
+  params.set("api", "1");
+  params.set("query", googleMapsPointQuery(stop));
+  if (stop?.googlePlaceId) {
+    params.set("query_place_id", stop.googlePlaceId);
+  }
+  return `https://www.google.com/maps/search/?${params.toString()}`;
+}
+
 function truncateMeta(text, max = 155) {
   const t = String(text).replace(/\s+/g, " ").trim();
   if (t.length <= max) return t;
@@ -783,7 +801,7 @@ function buildSpotPage(stop, config, allStops, neighborhoodsData, stopsData) {
     ? `        <p class="goto"><strong>My go-to:</strong> ${escapeHtml(gotoText)}</p>\n`
     : "";
   const ctaUrl = spotDeepLink(siteUrl, stop);
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${stop.lat},${stop.lng}`;
+  const mapsUrl = buildGoogleMapsSearchUrl(stop);
   const galleryHtml = buildStaticPhotoGalleryHtml(stop, `static-${stop.slug}`);
   const tagsHtml = buildStaticSpotTagsHtml(stop, neighborhoodsData, stopsData);
   const walkLine = buildStaticSpotWalkLine(stop, neighborhoodsData, stopsData);
