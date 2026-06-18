@@ -968,6 +968,8 @@
 
 
 
+
+
   <style>
     :root {
       --fade-top: #b2fdb5;
@@ -2423,6 +2425,7 @@
     .map-cross-street-label {
       dominant-baseline: alphabetic;
     }
+    .map-stop-group--interactive .map-stop:not(.map-stop--hit),
     .map-overlay-layer .map-stop:not(.map-stop--hit) {
       fill: var(--ink);
       stroke: none;
@@ -6782,7 +6785,7 @@
     }
 
     function supportsMapSpotCardLinking(mapOptions = {}) {
-      return isCommercialDriveMap(mapOptions) || !!mapOptions.mpVertical;
+      return isCommercialDriveMap(mapOptions) || !!mapOptions.mpVertical || !!mapOptions.grid;
     }
 
     function getCommercialStops() {
@@ -7530,8 +7533,8 @@
       });
 
       if (showStation) {
-        xs.push(MAP.xCenter - 10, MAP.xCenter + 72);
-        ys.push(MAP.yStation - 10, MAP.yStation + 14);
+        xs.push(MAP.xCenter - 10, MAP.xCenter + 150);
+        ys.push(MAP.yStation - 10, MAP.yStation + 24);
       }
 
       legs.forEach((leg) => {
@@ -7622,9 +7625,9 @@
       if (showStation) {
         html += `
         <circle cx="${MAP.xCenter}" cy="${MAP.yStation}" r="5" fill="var(--ink)"/>
-        <text class="map-text" x="${MAP.xCenter + 10}" y="${MAP.yStation + 1}">
-          <tspan x="${MAP.xCenter + 10}" dy="0">Commercial-Broadway</tspan>
-          <tspan x="${MAP.xCenter + 10}" dy="11">Skytrain station</tspan>
+        <text class="map-text map-station-label" x="${MAP.xCenter + 10}" y="${MAP.yStation + 1}" style="white-space: pre;">
+          <tspan x="${MAP.xCenter + 10}" dy="0">Commercial&#8209;Broadway</tspan>
+          <tspan x="${MAP.xCenter + 10}" dy="11">SkyTrain&#160;station</tspan>
         </text>`;
       }
       return html;
@@ -8384,7 +8387,27 @@
         return;
       }
       if (mapOptions.grid && window.ChinatownMap) {
-        ChinatownMap.drawMap(svg, route, options);
+        if (supportsMapSpotCardLinking(mapOptions)) {
+          mapRouteStickyStopIds = [];
+          setMapRouteHighlight(null, options.cardsId);
+          teardownMapSpotCardLinking();
+        }
+        if (options.cardsId) {
+          wireMapSpotCardLinking(svg, options.cardsId);
+        }
+        const userOnComplete = options.onComplete;
+        ChinatownMap.drawMap(svg, route, {
+          ...options,
+          interactive: !!options.cardsId,
+          onStopReveal: options.cardsId
+            ? (point) => markMapRouteCardsRevealedForPoint(point, route, options.cardsId)
+            : undefined,
+          popStopDot: popCommercialStopDot,
+          onComplete: () => {
+            revealAllPendingMapRouteCards(options.cardsId);
+            userOnComplete?.();
+          },
+        });
         applyRouteMapViewportMode(svg);
         return;
       }
@@ -10573,7 +10596,7 @@
   <script src="js/vendor/gsap.min.js"></script>
   <script src="js/landing-hero-jello.js"></script>
 <!-- build:seo-footer -->
-  <script type="application/json" id="seo-footer-by-neighborhood">{"commercial":{"ariaLabel":"Commercial Drive guide","toggleLabel":"More info","lead":"East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer","gridHtml":"      \u003cnav aria-label=\"Curated walking routes\">\n        \u003ch2>Curated routes\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/plans/quick-sip-shop/\">Quick Sip &amp; Shop (near SkyTrain)\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/quick-sip-shop-2/\">Quick Sip &amp; Shop 2 (north end)\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/half-a-day-mid-morning/\">Half a day on the Drive — morning\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/half-a-day-evening/\">Half a day on the Drive — evening\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/world-cup-day/\">World Cup day on the Drive\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Bars and drinks on Commercial Drive\">\n        \u003ch2>Bars &amp; drinks\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/superflux/\">Superflux\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/livia-forno-e-vino/\">LIVIA Forno e Vino\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/the-charlatan/\">The Charlatan\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/havana/\">Havana\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/nomo-nomo/\">Nomo Nomo\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Restaurants on Commercial Drive\">\n        \u003ch2>Restaurants\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/magari-by-oca/\">Magari by Oca\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/belli-pizza/\">Belli Pizza\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/dont-argue-pizza/\">Don't Argue Pizza\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/sula-indian-restaurant/\">Sula Indian Restaurant\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/mogu-fried-chicken/\">Mogu Fried Chicken\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Coffee on Commercial Drive\">\n        \u003ch2>Coffee\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/prado-cafe/\">Prado Cafe\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/jj-bean/\">JJ Bean\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/caffe-la-tana/\">Caffè La Tana\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/bump-n-grind/\">Bump N Grind Cafe\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Places on Commercial Drive\">\n        \u003ch2>Places\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/alterior/\">Alterior\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/vintage-sponsor/\">Vintage Sponsor\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/slice-of-life-art-gallery/\">Slice of Life Art Gallery\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/grandview-park/\">Grandview Park\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/equinox-gallery/\">Equinox Gallery\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>"},"mount-pleasant":{"ariaLabel":"Mount Pleasant guide","toggleLabel":"More info","lead":"Mount Pleasant restaurants, bars & coffee on Main Street — curated by a local photographer","gridHtml":"      \u003cnav aria-label=\"Curated walking routes\">\n        \u003ch2>Curated routes\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/plans/mp-full-day-main/\">Full day on Main Street\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/mp-kids-afternoon-main/\">Kids afternoon on Main\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/mp-afternoon-main/\">Quick afternoon on Main\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/mp-evening-main/\">Evening on Main Street\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Bars and drinks on Main Street\">\n        \u003ch2>Bars &amp; drinks\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/33-acres-brewing-company/\">33 Acres Brewing Company\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/brassneck-brewery/\">Brassneck Brewery\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/good-thief/\">Good Thief\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/mount-pleasant-vintage/\">Mount Pleasant Vintage\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/the-shameful-tiki-room/\">The Shameful Tiki Room\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Restaurants on Main Street\">\n        \u003ch2>Restaurants\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/aj-s-brooklyn-pizza-joint/\">AJ's Brooklyn Pizza Joint\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/como-taperia/\">Como Taperia\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/sushi-hil/\">Sushi Hil\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/superbaba-vancouver/\">Superbaba (Vancouver)\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/carp-sushi-and-bowl/\">Carp Sushi&amp;Bowl\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Shopping on Main Street\">\n        \u003ch2>Shopping\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/mintage-mall/\">Mintage Mall\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/antisocial-skateboard-shop/\">Antisocial Skateboard Shop\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/fish-market-studio-2/\">Fish Market Studio\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/rath-art-supplies/\">Rath Art Supplies\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/lucky-s-books-and-comics/\">Lucky's Books &amp; Comics\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Coffee on Main Street\">\n        \u003ch2>Coffee\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/liberty-bakery-cafe/\">Liberty Bakery + Café\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/coco-et-olive/\">Coco et Olive\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/gene-coffee-bar/\">Gene Coffee Bar\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/elysian-coffee-7th-and-ontario/\">Elysian Coffee 7th &amp; Ontario\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/cultivate-tea/\">Cultivate Tea\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>"}}</script>
+  <script type="application/json" id="seo-footer-by-neighborhood">{"commercial":{"ariaLabel":"Commercial Drive guide","toggleLabel":"More info","lead":"East Vancouver restaurants, bars & coffee on Commercial Drive — curated by a local photographer","gridHtml":"      \u003cnav aria-label=\"Curated walking routes\">\n        \u003ch2>Curated routes\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/plans/quick-sip-shop/\">Quick Sip &amp; Shop (near SkyTrain)\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/quick-sip-shop-2/\">Quick Sip &amp; Shop 2 (north end)\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/half-a-day-mid-morning/\">Half a day on the Drive — morning\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/half-a-day-evening/\">Half a day on the Drive — evening\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/world-cup-day/\">World Cup day on the Drive\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Bars and drinks on Commercial Drive\">\n        \u003ch2>Bars &amp; drinks\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/superflux/\">Superflux\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/livia-forno-e-vino/\">LIVIA Forno e Vino\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/the-charlatan/\">The Charlatan\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/havana/\">Havana\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/nomo-nomo/\">Nomo Nomo\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Restaurants on Commercial Drive\">\n        \u003ch2>Restaurants\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/magari-by-oca/\">Magari by Oca\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/belli-pizza/\">Belli Pizza\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/dont-argue-pizza/\">Don't Argue Pizza\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/sula-indian-restaurant/\">Sula Indian Restaurant\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/mogu-fried-chicken/\">Mogu Fried Chicken\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Coffee on Commercial Drive\">\n        \u003ch2>Coffee\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/prado-cafe/\">Prado Cafe\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/jj-bean/\">JJ Bean\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/caffe-la-tana/\">Caffè La Tana\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/bump-n-grind/\">Bump N Grind Cafe\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Places on Commercial Drive\">\n        \u003ch2>Places\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/alterior/\">Alterior\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/vintage-sponsor/\">Vintage Sponsor\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/slice-of-life-art-gallery/\">Slice of Life Art Gallery\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/grandview-park/\">Grandview Park\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/equinox-gallery/\">Equinox Gallery\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>"},"mount-pleasant":{"ariaLabel":"Mount Pleasant guide","toggleLabel":"More info","lead":"Mount Pleasant restaurants, bars & coffee on Main Street — curated by a local photographer","gridHtml":"      \u003cnav aria-label=\"Curated walking routes\">\n        \u003ch2>Curated routes\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/plans/mp-full-day-main/\">Full day on Main Street\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/mp-kids-afternoon-main/\">Kids afternoon on Main\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/mp-afternoon-main/\">Quick afternoon on Main\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/mp-evening-main/\">Evening on Main Street\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Bars and drinks on Main Street\">\n        \u003ch2>Bars &amp; drinks\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/33-acres-brewing-company/\">33 Acres Brewing Company\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/brassneck-brewery/\">Brassneck Brewery\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/good-thief/\">Good Thief\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/mount-pleasant-vintage/\">Mount Pleasant Vintage\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/the-shameful-tiki-room/\">The Shameful Tiki Room\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Restaurants on Main Street\">\n        \u003ch2>Restaurants\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/aj-s-brooklyn-pizza-joint/\">AJ's Brooklyn Pizza Joint\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/como-taperia/\">Como Taperia\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/sushi-hil/\">Sushi Hil\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/superbaba-vancouver/\">Superbaba (Vancouver)\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/carp-sushi-and-bowl/\">Carp Sushi&amp;Bowl\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Shopping on Main Street\">\n        \u003ch2>Shopping\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/mintage-mall/\">Mintage Mall\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/antisocial-skateboard-shop/\">Antisocial Skateboard Shop\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/fish-market-studio-2/\">Fish Market Studio\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/rath-art-supplies/\">Rath Art Supplies\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/lucky-s-books-and-comics/\">Lucky's Books &amp; Comics\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n      \u003cnav aria-label=\"Coffee on Main Street\">\n        \u003ch2>Coffee\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/spots/liberty-bakery-cafe/\">Liberty Bakery + Café\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/coco-et-olive/\">Coco et Olive\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/gene-coffee-bar/\">Gene Coffee Bar\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/elysian-coffee-7th-and-ontario/\">Elysian Coffee 7th &amp; Ontario\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/spots/cultivate-tea/\">Cultivate Tea\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>"},"chinatown":{"ariaLabel":"Chinatown guide","toggleLabel":"More info","lead":"Chinatown restaurants, bars & coffee around Main, Pender, Keefer, and the grid — curated by a local photographer","gridHtml":"      \u003cnav aria-label=\"Curated walking routes\">\n        \u003ch2>Curated routes\u003c/h2>\n        \u003cul>\n          \u003cli>\u003ca href=\"/plans/chinatown-pre-post-match/\">Chinatown pre &amp; post-match\u003c/a>\u003c/li>\n          \u003cli>\u003ca href=\"/plans/early-start-in-chinatown/\">Early start in Chinatown\u003c/a>\u003c/li>\n        \u003c/ul>\n      \u003c/nav>\n"}}</script>
   <footer id="site-seo-footer" class="site-seo-footer" aria-label="Commercial Drive guide">
     <details class="site-seo-footer__details">
       <summary class="site-seo-footer__toggle">More info</summary>
@@ -10635,6 +10658,8 @@
     <p class="site-seo-footer__credit">Part of <a href="https://www.seasonsofeastvan.com" rel="noopener noreferrer">Seasons of East Van</a> · <a href="/sitemap.xml">Sitemap</a></p>
   </footer>
 <!-- /build:seo-footer -->
+
+
 
 
 

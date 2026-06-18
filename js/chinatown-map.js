@@ -1,5 +1,5 @@
 /**
- * Chinatown grid route map — Manhattan routing on arterial intersections.
+ * Chinatown grid route map — Manhattan routing with stops placed by real coordinates.
  * Loaded by index.html; exposes window.ChinatownMap.
  */
 (function () {
@@ -19,7 +19,7 @@
     legDurationMs: 2200,
     legDurationMinMs: 1100,
     viewBoxPad: 28,
-    stationSouthPad: 36,
+    stationSouthPad: 18,
     cornerRadius: 14,
     stopNumOffset: 10,
     vLabelLeftOffset: 7,
@@ -33,6 +33,8 @@
     /** Parallel lane west of Main for return-to-station legs (avoids retracing the route). */
     returnLaneOffset: 8,
     returnLaneCurve: 10,
+    clusterDistance: 16,
+    clusterDistanceKm: 0.05,
   };
 
   const MAP_LEG_COLORS = ["#3d8f4a", "#52a362", "#6ab87a", "#84cc94", "#9ad4a8", "#ffeea1"];
@@ -46,6 +48,7 @@
    */
   const EAST_BOOKEND_ID = "glen";
   const EAST_CORRIDOR_VERTICAL_IDS = new Set([EAST_BOOKEND_ID]);
+  const ALWAYS_RENDER_HORIZONTAL_IDS = new Set(["union"]);
 
   const H_STREET_SHAPE = {
     powell: [
@@ -246,6 +249,10 @@
       .replace(/>/g, "&gt;");
   }
 
+  function escapeSvgAttr(str) {
+    return escapeSvgText(str).replace(/"/g, "&quot;");
+  }
+
   function mapPositionKey(stop) {
     return `${Number(stop.lat).toFixed(6)},${Number(stop.lng).toFixed(6)}`;
   }
@@ -267,6 +274,9 @@
       const node = resolveMapNode(stop, grid);
       lats.push(node.h.lat);
       lngs.push(node.v.lng);
+    });
+    grid.horizontalStreets.forEach((h) => {
+      if (ALWAYS_RENDER_HORIZONTAL_IDS.has(h.id)) lats.push(h.lat);
     });
     const latMin = Math.min(...lats);
     const latMax = Math.max(...lats);
@@ -301,9 +311,53 @@
   }
 
   function nodeToPoint(node, bounds) {
+    const x = getVerticalStreetX(node.v, bounds);
     return {
-      x: getVerticalStreetX(node.v, bounds),
-      y: latToY(node.h.lat, bounds),
+      x,
+      y: getShapedHorizontalStreetY(node.h, x, bounds),
+    };
+  }
+
+  function approxMetersBetweenLng(lngA, lngB, lat) {
+    return Math.abs(lngA - lngB) * 111000 * Math.cos((lat * Math.PI) / 180);
+  }
+
+  function approxMetersBetweenLat(latA, latB) {
+    return Math.abs(latA - latB) * 111000;
+  }
+
+  function stopGeoPoint(stop, node, bounds) {
+    const lat = Number(stop.mapPoint?.lat ?? stop.lat);
+    const lng = Number(stop.mapPoint?.lng ?? stop.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+    if (stop.mapPoint) {
+      return {
+        x: lngToX(lng, bounds),
+        y: latToY(lat, bounds),
+        source: "mapPoint",
+      };
+    }
+
+    const horizontalDistanceM = approxMetersBetweenLat(lat, node.h.lat);
+    const verticalDistanceM = approxMetersBetweenLng(lng, node.v.lng, lat);
+    if (horizontalDistanceM <= 70) {
+      return {
+        x: lngToX(lng, bounds),
+        y: getShapedHorizontalStreetY(node.h, lngToX(lng, bounds), bounds),
+        source: "streetRow",
+      };
+    }
+    if (verticalDistanceM <= 55) {
+      return {
+        x: getVerticalStreetX(node.v, bounds),
+        y: latToY(lat, bounds),
+        source: "streetColumn",
+      };
+    }
+    return {
+      x: lngToX(lng, bounds),
+      y: latToY(lat, bounds),
+      source: "latLng",
     };
   }
 
@@ -329,15 +383,49 @@
   }
 
   function attachMapLabelGroups(points) {
-    const groups = new Map();
-    points.forEach((p) => {
-      const key = `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
-      if (!groups.has(key)) {
-        groups.set(key, { key, indices: [], anchor: p });
+    const groups = [];
+    const isNearGroup = (p, group) => {
+      const anchorStop = group.anchor?.stop;
+      if (
+        Number.isFinite(Number(p.stop?.lat)) &&
+        Number.isFinite(Number(p.stop?.lng)) &&
+        Number.isFinite(Number(anchorStop?.lat)) &&
+        Number.isFinite(Number(anchorStop?.lng))
+      ) {
+        return (
+          haversineKm(
+            Number(p.stop.lat),
+            Number(p.stop.lng),
+            Number(anchorStop.lat),
+            Number(anchorStop.lng)
+          ) <= GMAP.clusterDistanceKm
+        );
       }
-      const group = groups.get(key);
+      return Math.hypot(p.x - group.anchor.x, p.y - group.anchor.y) <= GMAP.clusterDistance;
+    };
+    points.forEach((p) => {
+      let group = groups.find((g) => isNearGroup(p, g));
+      if (!group) {
+        group = { key: `cluster-${groups.length}`, indices: [], anchor: p };
+        groups.push(group);
+      }
       group.indices.push(p.idx);
       p.labelGroup = group;
+    });
+    groups.forEach((group) => {
+      if (group.indices.length < 2) return;
+      const members = group.indices.map((idx) => points[idx]);
+      const anchorX = members.reduce((sum, p) => sum + p.x, 0) / members.length;
+      const anchorY = members.reduce((sum, p) => sum + p.y, 0) / members.length;
+      group.anchor = members[0];
+      group.anchor.x = anchorX;
+      group.anchor.y = anchorY;
+      group.anchor.clustered = true;
+      members.slice(1).forEach((p) => {
+        p.x = anchorX;
+        p.y = anchorY;
+        p.clustered = true;
+      });
     });
     points.forEach((p) => {
       p.isLabelAnchor = p.labelGroup.anchor === p;
@@ -374,8 +462,10 @@
     const bounds = computeGeoBounds(route, mapOptions, grid);
     const points = route.map((stop, idx) => {
       const node = resolveMapNode(stop, grid);
-      const { x, y } = nodeToPoint(node, bounds);
-      return { stop, idx, node, x, y, bounds };
+      const geoPoint = stopGeoPoint(stop, node, bounds);
+      const nodePoint = nodeToPoint(node, bounds);
+      const point = geoPoint || { ...nodePoint, source: "node" };
+      return { stop, idx, node, x: point.x, y: point.y, pointSource: point.source, nodePoint, bounds };
     });
     attachMapLabelGroups(points);
     layoutStopNumbers(points);
@@ -396,20 +486,15 @@
     if (dx > 0.5 && dy > 0.5) cap = Math.min(cap, dx * 0.9, dy * 0.9);
     else if (dx > 0.5) cap = Math.min(cap, dx * 0.9);
     else if (dy > 0.5) cap = Math.min(cap, dy * 0.9);
-    return Math.max(cap, 6);
+    return cap;
   }
 
-  /** Manhattan L-path: horizontal to corner X, rounded turn, then vertical to destination. */
+  /** Manhattan L-path: horizontal to corner X, then vertical to destination. */
   function getGridLegPathD(x1, y1, x2, y2) {
     if (Math.abs(x1 - x2) < 0.5 || Math.abs(y1 - y2) < 0.5) {
       return `M ${x1} ${y1} L ${x2} ${y2}`;
     }
-    const r = getCornerRadius(x1, y1, x2, y2);
-    const east = x2 > x1;
-    const down = y2 > y1;
-    const xPre = east ? x2 - r : x2 + r;
-    const yPost = down ? y1 + r : y1 - r;
-    return `M ${x1} ${y1} L ${xPre} ${y1} Q ${x2} ${y1} ${x2} ${yPost} L ${x2} ${y2}`;
+    return `M ${x1} ${y1} L ${x2} ${y1} L ${x2} ${y2}`;
   }
 
   /** Return to station: jog onto a parallel lane west of Main, then south, then curve back in. */
@@ -418,12 +503,11 @@
     const r = Math.min(GMAP.returnLaneCurve, getCornerRadius(x1, y1, x2, y2));
 
     if (Math.abs(x1 - x2) < 0.5 && y2 > y1) {
-      if (y2 - y1 < r * 2) return `M ${x1} ${y1} L ${x2} ${y2}`;
       return [
         `M ${x1} ${y1}`,
-        `Q ${xLane} ${y1} ${xLane} ${y1 + r}`,
-        `L ${xLane} ${y2 - r}`,
-        `Q ${xLane} ${y2} ${x2} ${y2}`,
+        `L ${xLane} ${y1}`,
+        `L ${xLane} ${y2}`,
+        `L ${x2} ${y2}`,
       ].join(" ");
     }
 
@@ -431,17 +515,33 @@
       return getGridLegPathD(x1, y1, x2, y2);
     }
 
-    const horizR = getCornerRadius(x1, y1, xLane, y1);
-    const east = xLane > x1;
-    const xPre = east ? xLane - horizR : xLane + horizR;
-    const yPost = y1 + horizR;
     return [
       `M ${x1} ${y1}`,
-      `L ${xPre} ${y1}`,
-      `Q ${xLane} ${y1} ${xLane} ${yPost}`,
-      `L ${xLane} ${y2 - r}`,
-      `Q ${xLane} ${y2} ${x2} ${y2}`,
+      `L ${xLane} ${y1}`,
+      `L ${xLane} ${y2}`,
+      `L ${x2} ${y2}`,
     ].join(" ");
+  }
+
+  function stripMoveCommand(pathD) {
+    return String(pathD || "").replace(
+      /^M\s+[-+.\d]+(?:e[-+]?\d+)?\s+[-+.\d]+(?:e[-+]?\d+)?\s*/i,
+      ""
+    );
+  }
+
+  function getGridLegPathThroughSegments(segments) {
+    const parts = [];
+    segments.forEach((segment) => {
+      const { from, to, legKind } = segment;
+      if (!from || !to || sameMapPoint(from, to)) return;
+      const pathD =
+        legKind === "stopToStation"
+          ? getReturnToStationGridPathD(from.x, from.y, to.x, to.y)
+          : getGridLegPathD(from.x, from.y, to.x, to.y);
+      parts.push(parts.length ? stripMoveCommand(pathD) : pathD);
+    });
+    return parts.join(" ");
   }
 
   function collectActiveGridLines(points, grid, stationPt) {
@@ -450,6 +550,9 @@
     points.forEach((p) => {
       vIds.add(p.node.v.id);
       hIds.add(p.node.h.id);
+    });
+    grid.horizontalStreets.forEach((h) => {
+      if (ALWAYS_RENDER_HORIZONTAL_IDS.has(h.id)) hIds.add(h.id);
     });
     if (stationPt) vIds.add(stationPt.v.id);
     const verticals = grid.verticalStreets.filter((v) => vIds.has(v.id));
@@ -468,42 +571,65 @@
     const legs = [];
     let legIndex = 0;
 
-    const pushLeg = (from, to, meta = {}) => {
-      if (sameMapPoint(from, to)) return;
-      const pathD =
-        meta.legKind === "stopToStation"
-          ? getReturnToStationGridPathD(from.x, from.y, to.x, to.y)
-          : getGridLegPathD(from.x, from.y, to.x, to.y);
+    const pushLeg = (segments, meta = {}) => {
+      const visibleSegments = segments.filter((segment) => !sameMapPoint(segment.from, segment.to));
+      if (!visibleSegments.length) return;
+      const first = visibleSegments[0].from;
+      const last = visibleSegments[visibleSegments.length - 1].to;
+      const pathD = getGridLegPathThroughSegments(visibleSegments);
       if (measurePathLength(pathD) < 0.5) return;
       legs.push({
         ...meta,
-        x1: from.x,
-        y1: from.y,
-        x2: to.x,
-        y2: to.y,
+        x1: first.x,
+        y1: first.y,
+        x2: last.x,
+        y2: last.y,
         pathD,
         legIndex: legIndex++,
-        isBackward: isMapLegBackward(from.x, from.y, to.x, to.y),
+        isBackward: isMapLegBackward(first.x, first.y, last.x, last.y),
       });
     };
 
     if (route.length && opts.startAtStation && stationPt) {
-      pushLeg(stationPt, points[0], { legKind: "stationToStop", toStopIndex: 0 });
+      const to = points[0];
+      pushLeg(
+        [
+          { from: stationPt, to: to.nodePoint },
+          { from: to.nodePoint, to },
+        ],
+        { legKind: "stationToStop", toStopIndex: 0 }
+      );
     }
 
     for (let i = 0; i < route.length - 1; i++) {
-      pushLeg(points[i], points[i + 1], {
-        legKind: "stopToStop",
-        fromStopIndex: i,
-        toStopIndex: i + 1,
-      });
+      const from = points[i];
+      const to = points[i + 1];
+      pushLeg(
+        [
+          { from, to: from.nodePoint },
+          { from: from.nodePoint, to: to.nodePoint },
+          { from: to.nodePoint, to },
+        ],
+        {
+          legKind: "stopToStop",
+          fromStopIndex: i,
+          toStopIndex: i + 1,
+        }
+      );
     }
 
     if (route.length && opts.endAtStation && stationPt) {
-      pushLeg(points[route.length - 1], stationPt, {
-        legKind: "stopToStation",
-        fromStopIndex: route.length - 1,
-      });
+      const from = points[route.length - 1];
+      pushLeg(
+        [
+          { from, to: from.nodePoint },
+          { from: from.nodePoint, to: stationPt, legKind: "stopToStation" },
+        ],
+        {
+          legKind: "stopToStation",
+          fromStopIndex: route.length - 1,
+        }
+      );
     }
 
     const gridLines = collectActiveGridLines(points, grid, stationPt);
@@ -673,12 +799,43 @@
     return parts.join(" ");
   }
 
+  function getShapedHorizontalStreetY(h, x, bounds) {
+    const y = latToY(h.lat, bounds);
+    const shape = H_STREET_SHAPE[h.id];
+    if (!shape?.length || GMAP.xMax - GMAP.xMin < 80) return y;
+    const x1 = GMAP.xMin;
+    const x2 = GMAP.xMax;
+    const span = x2 - x1;
+    let cx = x1;
+    let cy = y;
+    for (const seg of shape) {
+      let nx;
+      let ny;
+      if (seg.to != null) {
+        nx = x1 + span * seg.to;
+        ny = seg.yOff != null ? y + seg.yOff : cy;
+      } else {
+        nx = cx + span * (seg.dx ?? 0);
+        ny = cy + (seg.dy ?? 0);
+      }
+      const minX = Math.min(cx, nx);
+      const maxX = Math.max(cx, nx);
+      if (x >= minX && x <= maxX) {
+        const t = nx === cx ? 0 : (x - cx) / (nx - cx);
+        return cy + (ny - cy) * t;
+      }
+      cx = nx;
+      cy = ny;
+    }
+    return cy;
+  }
+
   /** Center horizontal street names in the map (Main–Glen corridor, or full map width). */
   function getHorizontalStreetLabelPlacement(y, bounds, gridLines, stationPt) {
     const mapMidX = (GMAP.xMin + GMAP.xMax) / 2;
 
     if (!stationPt) {
-      return { x: mapMidX, y: y - 5, anchor: "middle", gap: true };
+      return { x: mapMidX, y: y - 18, anchor: "middle", gap: true };
     }
 
     const main = gridLines.verticals.find((v) => v.id === "main");
@@ -689,14 +846,14 @@
       if (xGlen - xMain > 36) {
         return {
           x: (xMain + xGlen) / 2,
-          y: y + 9,
+          y: y - 18,
           anchor: "middle",
           gap: true,
         };
       }
     }
 
-    return { x: mapMidX, y: y + 9, anchor: "middle", gap: true };
+    return { x: mapMidX, y: y - 18, anchor: "middle", gap: true };
   }
 
   function getGeorgiaLineY(bounds, gridLines, grid) {
@@ -773,16 +930,30 @@
       </text>`;
   }
 
-  function renderMapStopSvg(group) {
+  function renderMapStopSvg(group, route, options = {}) {
     const anchor = group.anchor;
+    const interactive = !!options.interactive;
+    const routeStops = group.indices.map((routeIdx) => route[routeIdx]).filter(Boolean);
+    const stopIds = routeStops.map((s) => s.id).filter(Boolean);
+    const names = routeStops.map((s) => escapeSvgText(s.name)).filter(Boolean);
+    const ariaNames = names.length > 1 ? names.join(" & ") : names[0] || escapeSvgText(anchor.stop?.name);
+    const interactiveClass = interactive ? " map-stop-group--interactive" : "";
+    const interactiveAttrs = interactive
+      ? ` data-stop-id="${escapeSvgAttr(stopIds[0] || anchor.stop?.id || "")}" data-stop-ids="${escapeSvgAttr(stopIds.join(","))}" role="button" tabindex="0" aria-label="${escapeSvgAttr(formatStopNumbers(group.indices))}. ${escapeSvgAttr(ariaNames)}"`
+      : "";
+    const hitTarget = interactive
+      ? `<circle class="map-stop--hit" cx="${anchor.x}" cy="${anchor.y}" r="14" fill="transparent" pointer-events="all" />`
+      : "";
     return `
-      <g class="map-stop-group map-stop-group--hidden" data-label-key="${group.key}">
-        <circle class="map-stop" cx="${anchor.x}" cy="${anchor.y}" r="5" />
+      <g class="map-stop-group map-stop-group--hidden${interactiveClass}" data-label-key="${group.key}"${interactiveAttrs}>
+        ${hitTarget}
+        <circle class="map-stop" cx="${anchor.x}" cy="${anchor.y}" r="5"${interactive ? ' pointer-events="none"' : ""} />
         <text
           class="map-text map-stop-num"
           x="${anchor.numX}"
           y="${anchor.numY}"
           text-anchor="${anchor.numAnchor}"
+          pointer-events="none"
         ></text>
       </g>
     `;
@@ -795,7 +966,7 @@
   }
 
   function animateMapPath(pathEl, options = {}) {
-    const { duration = GMAP.legDurationMs, onComplete = null } = options;
+    const { duration = GMAP.legDurationMs, onComplete = null, onProgress = null, arrowEl = null } = options;
     if (!pathEl) {
       onComplete?.();
       return;
@@ -808,6 +979,17 @@
         onComplete?.();
         return;
       }
+      let rafId = null;
+      const syncArrow = () => {
+        if (arrowEl || onProgress) {
+          const offset = parseFloat(getComputedStyle(pathEl).strokeDashoffset) || 0;
+          const drawn = Math.max(0, Math.min(length, length - offset));
+          onProgress?.(drawn);
+          if (arrowEl) syncTraceArrow(pathEl, arrowEl, length, drawn);
+        }
+        rafId = requestAnimationFrame(syncArrow);
+      };
+      if (arrowEl || onProgress) rafId = requestAnimationFrame(syncArrow);
       pathEl.style.transition = "none";
       pathEl.style.strokeDasharray = `${length}`;
       pathEl.style.strokeDashoffset = `${length}`;
@@ -822,6 +1004,9 @@
         const finish = () => {
           if (done) return;
           done = true;
+          if (rafId) cancelAnimationFrame(rafId);
+          if (arrowEl) arrowEl.style.opacity = "0";
+          onProgress?.(length);
           onComplete();
         };
         pathEl.addEventListener("transitionend", function handler(e) {
@@ -833,7 +1018,49 @@
       }
     };
 
-    requestAnimationFrame(() => requestAnimationFrame(begin));
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      begin();
+    };
+    requestAnimationFrame(() => requestAnimationFrame(start));
+    setTimeout(start, 80);
+  }
+
+  function createTraceArrow(routeLayer) {
+    const g = document.createElementNS(SVG_NS, "g");
+    g.setAttribute("class", "map-trace-arrow");
+    const head = document.createElementNS(SVG_NS, "path");
+    head.setAttribute("d", "M -7,-4.5 L 0,0 L -7,4.5");
+    head.setAttribute("fill", "none");
+    g.appendChild(head);
+    routeLayer.appendChild(g);
+    return g;
+  }
+
+  function syncTraceArrow(pathEl, arrowEl, length, drawnOverride = null) {
+    if (!arrowEl || !length) return;
+    const drawn =
+      drawnOverride == null
+        ? Math.max(
+            0,
+            Math.min(
+              length,
+              length - (parseFloat(getComputedStyle(pathEl).strokeDashoffset) || 0)
+            )
+          )
+        : drawnOverride;
+    if (drawn < 1) {
+      arrowEl.style.opacity = "0";
+      return;
+    }
+    const pt = pathEl.getPointAtLength(drawn);
+    const ahead = pathEl.getPointAtLength(Math.min(length, drawn + 4));
+    const angle = (Math.atan2(ahead.y - pt.y, ahead.x - pt.x) * 180) / Math.PI;
+    arrowEl.setAttribute("transform", `translate(${pt.x},${pt.y}) rotate(${angle})`);
+    arrowEl.style.opacity = "1";
+    arrowEl.style.color = pathEl.style.stroke || "var(--ink)";
   }
 
   function drawMap(svgEl, route, options = {}) {
@@ -848,7 +1075,7 @@
     const station = getStation(mapOptions);
     const { points, legs, bounds, stationPt, gridLines } = getRouteMapLayout(route, mapOptions, grid);
 
-    svgEl.innerHTML = `${renderGridLinesSvg(gridLines, bounds, showStation ? stationPt : null, grid)}<g class="map-route-layer"></g>`;
+    svgEl.innerHTML = `${renderGridLinesSvg(gridLines, bounds, showStation ? stationPt : null, grid)}<g class="map-route-layer"></g><g class="map-overlay-layer"></g>`;
     if (showStation && stationPt) {
       svgEl.insertAdjacentHTML("afterbegin", renderStationSvg(stationPt, station.label));
     }
@@ -860,6 +1087,8 @@
     );
 
     const routeLayer = svgEl.querySelector(".map-route-layer");
+    const overlayLayer = svgEl.querySelector(".map-overlay-layer");
+    const traceArrow = legDuration > 0 ? createTraceArrow(routeLayer) : null;
     if (!route.length) {
       options.onComplete?.();
       return;
@@ -869,7 +1098,7 @@
     points.forEach((p) => {
       if (!p.isLabelAnchor || labelGroupsSeen.has(p.labelGroup.key)) return;
       labelGroupsSeen.add(p.labelGroup.key);
-      svgEl.insertAdjacentHTML("beforeend", renderMapStopSvg(p.labelGroup));
+      overlayLayer.insertAdjacentHTML("beforeend", renderMapStopSvg(p.labelGroup, route, options));
     });
 
     const revealedStopIndices = new Set();
@@ -886,6 +1115,10 @@
       const textEl = stopGroup.querySelector(".map-stop-num");
       if (textEl) textEl.textContent = formatStopNumbers(revealedInGroup);
       stopGroup.classList.remove("map-stop-group--hidden");
+      options.onStopReveal?.({ ...point, routeIndices: revealedInGroup }, stopGroup);
+      if (typeof options.popStopDot === "function") {
+        options.popStopDot(stopGroup);
+      }
     };
 
     const revealStopsThroughColocated = (startIdx) => {
@@ -939,6 +1172,7 @@
 
       animateMapPath(path, {
         duration,
+        arrowEl: traceArrow,
         onComplete: () => {
           if (isStale()) return;
           if (leg.toStopIndex != null) revealStopsThroughColocated(leg.toStopIndex);

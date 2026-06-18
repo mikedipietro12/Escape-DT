@@ -132,6 +132,15 @@
             ]
           }
         ]
+      },
+      "chinatown": {
+        "ariaLabel": "Chinatown guide",
+        "lead": "Chinatown restaurants, bars & coffee around Main, Pender, Keefer, and the grid — curated by a local photographer",
+        "routeSlugs": [
+          "chinatown-pre-post-match",
+          "early-start-in-chinatown"
+        ],
+        "columns": []
       }
     }
   },

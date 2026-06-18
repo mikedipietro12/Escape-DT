@@ -33,6 +33,18 @@
       font-weight: 500;
       letter-spacing: 0.02em;
     }
+    .map-trace-arrow {
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .map-trace-arrow path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
     .debug-panel {
       margin-top: 1rem;
       padding: 0.75rem 1rem;
@@ -57,7 +69,7 @@
   <div class="demo-shell">
     <div class="demo-banner">
       <strong>Chinatown grid map</strong>
-      — Manhattan legs on arterial intersections. Loads
+      — Manhattan legs with stop dots placed by real coordinates. Loads
       <code>data/chinatown-draft.json</code> + <code>data/chinatown-grid.json</code>.
     </div>
 

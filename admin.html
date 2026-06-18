@@ -65,6 +65,9 @@
     button.primary:hover { background: #1d4fd0; }
     button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
     button.ghost { background: transparent; }
+    button.warn { color: var(--warn); border-color: #f1d9ad; background: var(--warn-soft); }
+    button.warn:hover { border-color: #e1bd79; background: #ffedd0; }
+    button.warn:disabled { opacity: 0.5; cursor: not-allowed; }
     button.danger { color: var(--danger); border-color: #f3c0c0; background: #fff5f5; }
     button.danger:hover { background: #fdecec; border-color: #e8a0a0; }
     button.danger:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -194,6 +197,20 @@
     .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; }
     .checks { display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; }
     .checks label { display: flex; align-items: center; gap: 0.3rem; font-weight: 400; }
+    .draft-toggle {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      padding: 0.55rem 0.65rem;
+      border: 1px solid #f1d9ad;
+      border-radius: 8px;
+      background: var(--warn-soft);
+      color: #7c4a03;
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+    .draft-toggle input { margin-top: 0.15rem; }
+    .draft-toggle strong { color: var(--warn); }
     .cost-mode { display: flex; gap: 0.8rem; margin-bottom: 0.4rem; font-size: 0.8rem; }
     .color-row { display: flex; align-items: center; gap: 0.5rem; }
     .color-swatch { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--line); }
@@ -359,6 +376,7 @@
         </details>
         <label class="needs-toggle"><input type="checkbox" id="filter-needs"> Needs info only</label>
         <label class="needs-toggle"><input type="checkbox" id="filter-needs-photos"> Needs photos only</label>
+        <label class="needs-toggle"><input type="checkbox" id="filter-drafts"> Drafts only</label>
       </div>
       <div class="list-count" id="list-count"></div>
       <div class="list-scroll" id="list"></div>
@@ -382,6 +400,7 @@
             <span class="pill" id="form-source"></span>
             <span class="pill" id="form-id"></span>
             <span class="form-head-spacer"></span>
+            <button type="button" class="warn" id="draft-action-btn" title="Move this stop between live and draft storage">Move to draft</button>
             <button type="button" class="danger ghost" id="delete-btn" title="Remove this stop from the data file">Delete…</button>
           </div>
 
@@ -408,6 +427,11 @@
               <select name="neighborhood" id="neighborhood"></select>
             </div>
           </div>
+
+          <label class="draft-toggle">
+            <input type="checkbox" name="draft" id="draft-toggle">
+            <span><strong>Keep as draft</strong> — hidden from the live site and removed from any pre-built plans until you publish it back to live.</span>
+          </label>
 
           <div class="field">
             <label>Categories <span class="hint">(1–3 browse filters)</span></label>
@@ -772,16 +796,28 @@
 
     // Any non-"stops" source is a draft file (hastings-draft, mount-pleasant-draft, …).
     function isDraftSource(src) { return !!src && src !== "stops"; }
-    // Which file a stop should save to, by neighborhood. The server sends the
-    // draft routing map in refs.drafts so new draft neighborhoods just work.
+    // Which draft file a stop should save to, by neighborhood. The server sends
+    // neighborhood-specific drafts plus a generic draft source for live areas.
     function sourceForNeighborhood(nbh) {
       const drafts = (state.refs && state.refs.drafts) || {};
-      return drafts[nbh] || "stops";
+      return drafts[nbh] || state.refs.draftSource || "draft-stops";
     }
     function sourceLabel(stop, src) {
       return isDraftSource(src)
         ? `${neighborhoodTitle(stop.neighborhood || "commercial")} draft`
         : "live (stops.json)";
+    }
+
+    function syncDraftActionButton(source) {
+      const btn = $("#draft-action-btn");
+      if (!btn) return;
+      const isDraft = isDraftSource(source);
+      btn.textContent = isDraft ? "Publish live" : "Move to draft";
+      btn.classList.toggle("warn", !isDraft);
+      btn.classList.toggle("primary", isDraft);
+      btn.title = isDraft
+        ? "Publish this stop back to data/stops.json"
+        : "Move this stop to draft storage and remove it from plans";
     }
 
     function isNeedsInfo(stop) {
@@ -930,12 +966,14 @@
       const nbh = $("#filter-neighborhood").value;
       const needsOnly = $("#filter-needs").checked;
       const needsPhotosOnly = $("#filter-needs-photos").checked;
+      const draftsOnly = $("#filter-drafts").checked;
       const catFilter = getActiveFilterChips("#filter-categories");
       const tagFilter = getActiveFilterChips("#filter-tags");
       return state.stops.filter((s) => {
         if (nbh && (s.neighborhood || "commercial") !== nbh) return false;
         if (needsOnly && !isNeedsInfo(s)) return false;
         if (needsPhotosOnly && !needsPhotos(s)) return false;
+        if (draftsOnly && !isDraftSource(s._source)) return false;
         if (catFilter.length) {
           const cats = s.categories || [];
           if (!catFilter.some((c) => cats.includes(c))) return false;
@@ -1119,10 +1157,12 @@
       $("#form-id").textContent = stop.id;
       $("#form-source").textContent = sourceLabel(stop, stop._source);
       $("#form-source").className = "pill" + (isDraftSource(stop._source) ? " draft" : "");
+      syncDraftActionButton(stop._source);
 
       form.name.value = stop.name || "";
       form.slug.value = stop.slug || "";
       form.neighborhood.value = stop.neighborhood || "commercial";
+      form.draft.checked = isDraftSource(stop._source);
       syncWalkFieldVisibility(form.neighborhood.value);
       form.tags.value = (stop.tags || []).join(", ");
       form.description.value = stop.description || "";
@@ -1249,8 +1289,9 @@
       if (!isDefaultHeroFocus(heroFocus)) stop.heroFocus = heroFocus;
       else delete stop.heroFocus;
 
-      // Route file by neighborhood (draft neighborhoods stay in their draft file).
-      stop._source = sourceForNeighborhood(stop.neighborhood);
+      // Draft/live status is explicit: draft stops keep their neighborhood data
+      // but save outside data/stops.json so they stay off the live site.
+      stop._source = form.draft.checked ? sourceForNeighborhood(stop.neighborhood) : "stops";
       return stop;
     }
 
@@ -1382,6 +1423,7 @@
       else state.stops.push(saved);
       $("#form-source").textContent = sourceLabel(saved, data.source);
       $("#form-source").className = "pill" + (isDraftSource(data.source) ? " draft" : "");
+      syncDraftActionButton(data.source);
       $("#form-title").textContent = stop.name;
       renderReviewBox(saved);
       renderList();
@@ -1412,7 +1454,11 @@
           applySavedStop(stop, data);
           setDirty(false);
           flashSaved();
-          if (!quiet) toast("Saved " + stop.id);
+          if (data.plansRemoved?.length) {
+            toast(`Removed from plans: ${data.plansRemoved.join(", ")}`);
+          } else if (!quiet) {
+            toast("Saved " + stop.id);
+          }
           return true;
         } catch (err) {
           setDirty(true, "Save failed — try Save");
@@ -1780,6 +1826,47 @@
       if (ok) deleteStop();
     }
 
+    function draftConfirmMessage(name, movingToDraft) {
+      return movingToDraft
+        ? `Move "${name}" to draft?\n\nIt will be hidden from the live site and removed from any pre-built plans. The stop data will stay editable here.`
+        : `Publish "${name}" back to live?\n\nIt will be saved to data/stops.json and can appear on the site for its neighborhood.`;
+    }
+
+    function confirmDraftToggleChange() {
+      if (!state.selectedId) return;
+      const stop = state.stops.find((s) => s.id === state.selectedId);
+      const name = stop?.name || form.name.value || "this stop";
+      const movingToDraft = form.draft.checked;
+      if (movingToDraft) {
+        const ok = confirm(draftConfirmMessage(name, movingToDraft));
+        if (!ok) {
+          form.draft.checked = false;
+          return;
+        }
+      }
+      onInput();
+    }
+
+    async function toggleSelectedDraftStatus() {
+      if (!state.selectedId) return;
+      const stop = state.stops.find((s) => s.id === state.selectedId);
+      const currentIsDraft = isDraftSource(stop?._source);
+      const movingToDraft = !currentIsDraft;
+      const name = stop?.name || form.name.value || "this stop";
+      if (movingToDraft && !confirm(draftConfirmMessage(name, movingToDraft))) return;
+
+      form.draft.checked = movingToDraft;
+      const btn = $("#draft-action-btn");
+      btn.disabled = true;
+      try {
+        await runAutoSave({ quiet: false, syncTagsInput: true });
+      } catch {
+        form.draft.checked = currentIsDraft;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
     // ---------- guided fill wizard ----------
     const WIZARD_ORDER = ["tags", "cost", "timeOfDay", "categories", "crossStreet", "walkFromStation", "description", "goto", "images"];
     const FIELD_DEFS = {
@@ -2084,7 +2171,8 @@
       pruneWizardReview(stop);
       pruneReviewWhenFilled(stop);
       if ((stop.images || []).length) delete stop.image; else delete stop.images;
-      stop._source = sourceForNeighborhood(stop.neighborhood);
+      const original = state.stops.find((s) => s.id === stop.id);
+      stop._source = original?._source || sourceForNeighborhood(stop.neighborhood);
       try {
         const res = await fetch(`/api/stop/${encodeURIComponent(stop.id)}`, {
           method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(stop),
@@ -2158,7 +2246,6 @@
       if (await saveWizard()) toast("Saved " + wizard.stop.id);
     });
     $("#wiz-close").addEventListener("click", () => closeWizard(false));
-    $("#wizard-overlay").addEventListener("click", (e) => { if (e.target.id === "wizard-overlay") closeWizard(false); });
     document.addEventListener("keydown", (e) => {
       if ($("#wizard-overlay").hidden) return;
       if (e.key === "Escape") closeWizard(false);
@@ -2412,6 +2499,7 @@
     });
     $("#search").addEventListener("input", renderList);
     $("#filter-neighborhood").addEventListener("change", renderList);
+    $("#draft-toggle").addEventListener("change", confirmDraftToggleChange);
     $("#neighborhood").addEventListener("change", () => {
       syncWalkFieldVisibility(form.neighborhood.value);
       updatePreview();
@@ -2419,6 +2507,7 @@
     });
     $("#filter-needs").addEventListener("change", renderList);
     $("#filter-needs-photos").addEventListener("change", renderList);
+    $("#filter-drafts").addEventListener("change", renderList);
     $("#filter-categories-clear").addEventListener("click", () => {
       $("#filter-categories").querySelectorAll(".filter-chip.on").forEach((b) => b.classList.remove("on"));
       updateFilterClearButtons();
@@ -2434,7 +2523,6 @@
     $("#add-close").addEventListener("click", closeAddDialog);
     $("#add-cancel").addEventListener("click", closeAddDialog);
     $("#add-submit").addEventListener("click", submitAddStop);
-    $("#add-overlay").addEventListener("click", (e) => { if (e.target.id === "add-overlay") closeAddDialog(); });
     $("#add-maps").addEventListener("keydown", (e) => {
       if (e.key === "Enter") { e.preventDefault(); submitAddStop(); }
     });
@@ -2470,6 +2558,7 @@
       load();
     });
     $("#delete-btn").addEventListener("click", confirmDeleteStop);
+    $("#draft-action-btn").addEventListener("click", toggleSelectedDraftStatus);
     form.addEventListener("submit", saveStop);
     form.tags.addEventListener("blur", () => {
       buildStopFromForm({ syncTagsInput: true });

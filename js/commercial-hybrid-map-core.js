@@ -20,7 +20,7 @@ const MAP = {
   yStation: 550,
   ySpan: 500,
   ySouthSpan: 90,
-  legDurationMs: 2800,
+  legDurationMs: 1400,
   defaultViewBox: "0 0 340 600",
   viewBoxPad: 24,
   cornerRadius: 18,
@@ -1013,8 +1013,8 @@ function collectMapContentBounds(points, legs, showStation) {
   });
 
   if (showStation) {
-    xs.push(MAP.xCenter - 10, MAP.xCenter + 72);
-    ys.push(MAP.yStation - 10, MAP.yStation + 14);
+    xs.push(MAP.xCenter - 10, MAP.xCenter + 150);
+    ys.push(MAP.yStation - 10, MAP.yStation + 24);
   }
 
   legs.forEach((leg) => {
@@ -1069,9 +1069,9 @@ function renderMapStaticSvg(options = {}) {
   if (showStation) {
     html += `
         <circle cx="${MAP.xCenter}" cy="${MAP.yStation}" r="5" fill="var(--ink)"/>
-        <text class="map-text" x="${MAP.xCenter + 10}" y="${MAP.yStation + 1}">
-          <tspan x="${MAP.xCenter + 10}" dy="0">Commercial-Broadway</tspan>
-          <tspan x="${MAP.xCenter + 10}" dy="11">Skytrain station</tspan>
+        <text class="map-text map-station-label" x="${MAP.xCenter + 10}" y="${MAP.yStation + 1}" style="white-space: pre;">
+          <tspan x="${MAP.xCenter + 10}" dy="0">Commercial&#8209;Broadway</tspan>
+          <tspan x="${MAP.xCenter + 10}" dy="11">SkyTrain&#160;station</tspan>
         </text>`;
   }
   return html;

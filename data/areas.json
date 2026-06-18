@@ -81,7 +81,6 @@
       "neighborhood": "chinatown",
       "title": "Explore Chinatown",
       "label": "",
-      "comingSoon": true,
       "pathsIntro": "Choose one of the following options and end up with a personalized route to explore Chinatown, Japantown, and Strathcona on the grid.",
       "paths": [
         {

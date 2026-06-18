@@ -33,10 +33,16 @@ const PLANS = {
   rel: path.join("data", "plans.json"),
   indent: 4,
 };
-// Draft files keep not-yet-live neighborhoods out of data/stops.json (which the
-// app loads wholesale). Each one is keyed to a neighborhood id so saving a stop
-// routes it to the right file. Add a new entry here to stage another area.
+const DRAFT_STOPS = {
+  source: "draft-stops",
+  rel: path.join("data", "draft-stops.json"),
+  indent: 2,
+};
+// Draft files keep not-yet-live stops out of data/stops.json (which the app
+// loads wholesale). Neighborhood-specific drafts are preferred when they exist;
+// otherwise the editor uses data/draft-stops.json as the staging area.
 const DRAFTS = [
+  DRAFT_STOPS,
   {
     source: "chinatown-draft",
     rel: path.join("data", "chinatown-draft.json"),
@@ -169,7 +175,8 @@ function handleGetStops(res) {
       costs: COSTS,
       tags: collectTags(stops),
       nextId: nextStopId(stops),
-      drafts: Object.fromEntries(DRAFTS.map((d) => [d.neighborhood, d.source])),
+      draftSource: DRAFT_STOPS.source,
+      drafts: Object.fromEntries(DRAFTS.filter((d) => d.neighborhood).map((d) => [d.neighborhood, d.source])),
       tagRules: TAG_RULES_META,
     },
   });
@@ -241,14 +248,18 @@ async function handleSaveStop(req, res, id) {
   } else {
     targetObj.stops.push(stop);
   }
+  let plansRemoved = [];
   try {
     writeJson(target, targetObj);
+    if (target.source !== STOPS.source) {
+      plansRemoved = removeStopFromPlans(stop.id);
+    }
   } catch (err) {
     return sendJson(res, 500, { error: `Write failed: ${err.message}` });
   }
 
   console.log(`saved ${stop.id} "${stop.name}" -> ${target.rel}${source !== target.source ? " (moved)" : ""}`);
-  sendJson(res, 200, { ok: true, id: stop.id, source: target.source });
+  sendJson(res, 200, { ok: true, id: stop.id, source: target.source, plansRemoved });
 }
 
 function findPlanRefs(stopId) {
@@ -268,6 +279,42 @@ function findPlanRefs(stopId) {
   } catch {
     return [];
   }
+}
+
+function removeStopFromPlans(stopId) {
+  const data = loadPlansFile();
+  const touched = [];
+  for (const key of data.planOrder || Object.keys(data.plans || {})) {
+    const plan = data.plans?.[key];
+    if (!plan) continue;
+    let changed = false;
+
+    if (Array.isArray(plan.stops)) {
+      const nextStops = plan.stops.filter((id) => id !== stopId);
+      changed = changed || nextStops.length !== plan.stops.length;
+      plan.stops = nextStops;
+    }
+
+    if (Array.isArray(plan.narrative)) {
+      const nextNarrative = [];
+      for (const segment of plan.narrative) {
+        if (segment?.type !== "stops" || !Array.isArray(segment.ids)) {
+          nextNarrative.push(segment);
+          continue;
+        }
+        const nextIds = segment.ids.filter((id) => id !== stopId);
+        changed = changed || nextIds.length !== segment.ids.length;
+        if (nextIds.length) nextNarrative.push({ ...segment, ids: nextIds });
+      }
+      changed = changed || nextNarrative.length !== plan.narrative.length;
+      plan.narrative = nextNarrative;
+    }
+
+    if (changed) touched.push(key);
+  }
+
+  if (touched.length) writePlansFile(data);
+  return touched;
 }
 
 async function handleDeleteStop(req, res, id) {

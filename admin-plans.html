@@ -282,6 +282,16 @@
       line-height: 1;
     }
     .stop-chip button:hover { color: var(--danger); }
+    .stop-chip button.draft-btn {
+      border: 1px solid #f1d9ad;
+      background: var(--warn-soft);
+      color: var(--warn);
+      padding: 0.08rem 0.35rem;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      line-height: 1.2;
+    }
+    .stop-chip button.draft-btn:hover { border-color: #e1bd79; background: #ffedd0; color: var(--warn); }
     .seg-empty { color: var(--muted); font-size: 0.82rem; font-style: italic; }
 
     .stop-row {
@@ -411,7 +421,7 @@
             <label for="plan-introduction">Introduction (SEO / static fallback)</label>
             <textarea id="plan-introduction" class="tall" rows="4"></textarea>
             <div class="field-actions">
-              <button type="button" id="build-intro" class="sm">Build from narrative prose</button>
+              <button type="button" id="build-intro" class="sm">Copy narrative prose to intro</button>
             </div>
           </div>
 
@@ -498,6 +508,7 @@
       summary: [],
       stops: [],
       refs: { neighborhoods: { neighborhoodOrder: [], neighborhoods: {} }, categories: [] },
+      stopRefs: { draftSource: "draft-stops", drafts: {} },
       selectedKey: null,
       draft: null,
       dirty: false,
@@ -524,13 +535,17 @@
       return source && source !== "stops";
     }
 
+    function sourceForNeighborhood(nbh) {
+      const drafts = state.stopRefs?.drafts || {};
+      return drafts[nbh] || state.stopRefs?.draftSource || "draft-stops";
+    }
+
     function stopsForNeighborhood(hood) {
       const id = (hood || "commercial").toLowerCase();
       return state.stops.filter((s) => {
         const sn = (s.neighborhood || "commercial").toLowerCase();
         if (sn !== id) return false;
-        if (s._source === "stops") return true;
-        return isDraftSource(s._source);
+        return s._source === "stops";
       });
     }
 
@@ -916,6 +931,7 @@
               <span class="stop-chip" draggable="true" data-seg="${i}" data-chip="${ci}">
                 <span>${escapeHtml(name)}</span>
                 <span class="chip-id">${escapeHtml(id)}</span>
+                ${stop && !isDraftSource(stop._source) ? `<button type="button" class="draft-btn" data-draft-stop="${escapeHtml(id)}" title="Move this stop to draft and remove it from all plans">Draft</button>` : ""}
                 <button type="button" data-remove-seg="${i}" data-remove-chip="${ci}" title="Remove">&times;</button>
               </span>`;
           }).join("");
@@ -981,6 +997,13 @@
         });
       });
 
+      wrap.querySelectorAll("[data-draft-stop]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          moveStopToDraft(btn.dataset.draftStop);
+        });
+      });
+
       // Segment drag
       wrap.querySelectorAll(".seg-card").forEach((card) => {
         card.addEventListener("dragstart", (e) => {
@@ -1012,6 +1035,10 @@
       // Chip drag within segment
       wrap.querySelectorAll(".stop-chip").forEach((chip) => {
         chip.addEventListener("dragstart", (e) => {
+          if (e.target.closest("button")) {
+            e.preventDefault();
+            return;
+          }
           e.stopPropagation();
           state.drag = {
             type: "chip",
@@ -1039,6 +1066,54 @@
           }
         });
       });
+    }
+
+    async function moveStopToDraft(stopId) {
+      if (!stopId) return;
+      const stop = stopById(stopId);
+      if (!stop) {
+        toast(`Stop ${stopId} not found`, true);
+        return;
+      }
+      if (isDraftSource(stop._source)) {
+        toast(`${stop.name} is already draft`);
+        return;
+      }
+
+      const ok = confirm(
+        `Move "${stop.name}" (${stop.id}) to draft?\n\n` +
+        "It will be hidden from the live site and removed from every pre-built plan. The stop data will stay editable in the stop editor."
+      );
+      if (!ok) return;
+
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = null;
+      try {
+        if (autoSavePromise) await autoSavePromise;
+        if (state.dirty) {
+          if (!canAutoSave()) {
+            toast("Save or fix the current plan before moving a stop to draft", true);
+            return;
+          }
+          await runAutoSave({ quiet: true });
+        }
+
+        const payload = JSON.parse(JSON.stringify(stop));
+        payload._source = sourceForNeighborhood(payload.neighborhood || "commercial");
+        const res = await fetch(`/api/stop/${encodeURIComponent(stop.id)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Move to draft failed");
+
+        await load();
+        const removed = data.plansRemoved?.length ? ` Removed from plans: ${data.plansRemoved.join(", ")}.` : "";
+        toast(`Moved ${stop.name} to draft.${removed}`);
+      } catch (err) {
+        toast(err.message, true);
+      }
     }
 
     function syncFormFromDraft() {
@@ -1196,7 +1271,16 @@
       const prose = (state.draft.narrative || [])
         .filter((s) => s.type === "prose" && String(s.text || "").trim())
         .map((s) => String(s.text).trim());
-      $("#plan-introduction").value = prose.join("\n\n");
+      const builtIntro = prose.join("\n\n");
+      if (!builtIntro) {
+        toast("No narrative prose to copy — intro unchanged");
+        return;
+      }
+      const currentIntro = $("#plan-introduction").value.trim();
+      if (currentIntro && currentIntro !== builtIntro && !confirm("Replace the current intro with narrative prose?")) {
+        return;
+      }
+      $("#plan-introduction").value = builtIntro;
       scheduleAutoSave();
     });
 
@@ -1282,9 +1366,6 @@
     $("#new-plan").addEventListener("click", openNewModal);
     $("#new-cancel").addEventListener("click", closeNewModal);
     $("#new-submit").addEventListener("click", submitNewPlan);
-    $("#new-overlay").addEventListener("click", (e) => {
-      if (e.target === $("#new-overlay")) closeNewModal();
-    });
 
     $("#plan-form").addEventListener("submit", savePlan);
     $("#plan-search").addEventListener("input", renderPlanList);
@@ -1347,6 +1428,7 @@
       state.plans = plansData.plans || {};
       state.summary = plansData.summary || [];
       state.stops = stopsData.stops || [];
+      state.stopRefs = stopsData.refs || state.stopRefs;
       state.refs.neighborhoods = refsData.neighborhoods || state.refs.neighborhoods;
       state.refs.categories = refsData.categories || [];
 

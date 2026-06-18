@@ -43,11 +43,26 @@ function placeholderImg(color) {
   return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='100%25' height='100%25' fill='%23${color}'/%3E%3C/svg%3E`;
 }
 
+function demoAssetPath(src) {
+  const value = String(src || "");
+  if (!value || value.startsWith("/") || value.startsWith("data:") || /^https?:\/\//i.test(value)) {
+    return value;
+  }
+  return `/${value}`;
+}
+
 function hydrateStop(stop) {
   const color = stop.placeholderColor || "cccccc";
+  const rawImages = Array.isArray(stop.images) && stop.images.length
+    ? stop.images
+    : stop.image
+      ? [stop.image]
+      : [];
+  const images = rawImages.map(demoAssetPath);
   return {
     ...stop,
-    image: placeholderImg(color),
+    images,
+    image: images[0] || placeholderImg(color),
   };
 }
 
@@ -123,6 +138,7 @@ function drawRouteMap(route) {
   if (!svg || !window.ChinatownMap) return;
   window.ChinatownMap.drawMap(svg, route, {
     mapOptions: getMapOptions(),
+    interactive: true,
     onComplete: () => {
       document.getElementById("route-summary-panel")?.removeAttribute("hidden");
     },

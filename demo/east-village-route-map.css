@@ -234,6 +234,38 @@ h1 {
   stroke-width: 3;
 }
 
+.map-stop-group--interactive {
+  cursor: pointer;
+  outline: none;
+}
+
+.map-stop-group--interactive .map-stop:not(.map-stop--hit),
+.map-overlay-layer .map-stop:not(.map-stop--hit) {
+  fill: var(--ink);
+  stroke: none;
+  stroke-width: 0;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.map-stop-group--interactive .map-stop--hit {
+  pointer-events: all;
+  fill: transparent;
+  stroke: none;
+  stroke-width: 0;
+}
+
+.map-stop-group--interactive:hover .map-stop:not(.map-stop--hit),
+.map-stop-group--interactive:focus-visible .map-stop:not(.map-stop--hit),
+.map-stop-group--highlighted .map-stop:not(.map-stop--hit) {
+  fill: var(--ink);
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.map-stop-group--highlighted .map-text {
+  font-weight: 600;
+}
+
 .map-stop-group {
   opacity: 1;
   transition: opacity 0.35s ease;

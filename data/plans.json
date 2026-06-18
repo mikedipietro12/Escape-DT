@@ -10,7 +10,8 @@
         "mp-kids-afternoon-main",
         "mp-afternoon-main",
         "mp-evening-main",
-        "chinatown-pre-post-match"
+        "chinatown-pre-post-match",
+        "early-start-in-chinatown"
     ],
     "plans": {
         "world-cup-day": {
@@ -802,6 +803,101 @@
                 "s170",
                 "s148",
                 "s188"
+            ],
+            "neighborhood": "chinatown"
+        },
+        "early-start-in-chinatown": {
+            "title": "Early Start in Chinatown",
+            "duration": "Morning to early evening",
+            "description": "If you're the type who likes to get after it early, this plan could be for you.",
+            "introduction": "When I used to live closer to Chinatown, this would be a typical way I'd start my summer morning when I was off work. If you are visiting, and are looking to get a workout in, and explore Chinatown too, this could be a great option for you.\n\nFirst, head to The Program Fitness for an early morning class. They have many daily options, but for this plan, I'd suggest an 8-9ish one to get the day started.\n\nOnce you get your workout out of the way, you can cool off and step over to Hunnybee where you can get a coffee, treat, or a full breakfast. I always land on the pancakes. Enjoy watching the bikers fly by and Chinatown awaken.\n\nFrom there, head over to Touski or Propaganda for another coffee while you wait for the shops to open.\n\nIf a workout wasn't enough, I'd walk between Livestock, HMPL, Massy Books, and Gore Street Vintage to see all that Chinatown has to offer from vintage clothing, to new sneakers, and books. While you're exploring some of my favorite shops, you'll also stumble across locations like De Xing Long Traders to get the true Chinatown experience. Head into any of these spots to get an idea of what makes this neighborhood so unique.\n\nIf by this time you haven't stumbled into a spot to get lunch, I'd recommend Say Hey Cafe for a sandwich or Phnom Penh for some signature dishes.\n\nFinally, if you're totally over being healthy for this morning and have gotten enough steps in, and your early evening is started, you might as well head over to Boxcar for a cocktail on the back patio before finally heading home to hit the showers!",
+            "narrative": [
+                {
+                    "type": "prose",
+                    "text": "When I used to live closer to Chinatown, this would be a typical way I'd start my summer morning when I was off work. If you are visiting, and are looking to get a workout in, and explore Chinatown too, this could be a great option for you."
+                },
+                {
+                    "type": "prose",
+                    "text": "First, head to The Program Fitness for an early morning class. They have many daily options, but for this plan, I'd suggest an 8-9ish one to get the day started."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s143"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "Once you get your workout out of the way, you can cool off and step over to Hunnybee where you can get a coffee, treat, or a full breakfast. I always land on the pancakes. Enjoy watching the bikers fly by and Chinatown awaken."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s142"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "From there, head over to Touski or Propaganda for another coffee while you wait for the shops to open."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s193",
+                        "s173"
+                    ],
+                    "layout": "or"
+                },
+                {
+                    "type": "prose",
+                    "text": "If a workout wasn't enough, I'd walk between Livestock, HMPL, Massy Books, and Gore Street Vintage to see all that Chinatown has to offer from vintage clothing, to new sneakers, and books. While you're exploring some of my favorite shops, you'll also stumble across locations like De Xing Long Traders to get the true Chinatown experience. Head into any of these spots to get an idea of what makes this neighborhood so unique."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s196",
+                        "s158",
+                        "s197",
+                        "s144",
+                        "s206"
+                    ]
+                },
+                {
+                    "type": "prose",
+                    "text": "If by this time you haven't stumbled into a spot to get lunch, I'd recommend Say Hey Cafe for a sandwich or Phnom Penh for some signature dishes."
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s136",
+                        "s145"
+                    ],
+                    "layout": "or"
+                },
+                {
+                    "type": "prose",
+                    "text": "Finally, if you're totally over being healthy for this morning and have gotten enough steps in, and your early evening is started, you might as well head over to Boxcar for a cocktail on the back patio before finally heading home to hit the showers!"
+                },
+                {
+                    "type": "stops",
+                    "ids": [
+                        "s137"
+                    ]
+                }
+            ],
+            "stops": [
+                "s143",
+                "s142",
+                "s193",
+                "s173",
+                "s196",
+                "s158",
+                "s197",
+                "s144",
+                "s206",
+                "s136",
+                "s145",
+                "s137"
             ],
             "neighborhood": "chinatown"
         }

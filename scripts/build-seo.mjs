@@ -24,6 +24,7 @@ const PLAN_FOOTER_LABELS = {
   "mp-afternoon-main": "Quick afternoon on Main",
   "mp-evening-main": "Evening on Main Street",
   "chinatown-pre-post-match": "Chinatown pre &amp; post-match",
+  "early-start-in-chinatown": "Early start in Chinatown",
 };
 
 const AREA_SHORT_LABELS = {

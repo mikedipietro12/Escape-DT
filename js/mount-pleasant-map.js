@@ -1578,8 +1578,8 @@ function renderMapStaticSvg(options = {}) {
   if (showStation) {
     html += `
         <circle cx="${MAP.xCenter}" cy="${MAP.yStation}" r="4" fill="var(--ink)"/>
-        <text class="map-text map-spine-label" x="${MAP.xCenter - 6}" y="${MAP.yStation + 3}" text-anchor="end">
-          <tspan x="${MAP.xCenter - 6}" dy="0">Main St–Science World</tspan>
+        <text class="map-text map-spine-label map-station-label" x="${MAP.xCenter - 6}" y="${MAP.yStation + 3}" text-anchor="end" style="white-space: pre;">
+          <tspan x="${MAP.xCenter - 6}" dy="0">Main&#160;St&#8288;–&#8288;Science&#160;World</tspan>
           <tspan x="${MAP.xCenter - 6}" dy="8">Station</tspan>
         </text>`;
   }
