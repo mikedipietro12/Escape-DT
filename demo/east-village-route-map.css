@@ -134,6 +134,87 @@ h1 {
   color: #fff;
 }
 
+.map-colour-tuner {
+  margin: -0.5rem 0 1.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--ink);
+  border-radius: var(--tile-radius);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.map-colour-tuner__title {
+  margin-bottom: 0.35rem;
+  font-size: var(--type-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.map-colour-tuner__hint,
+.map-colour-tuner__value {
+  font-size: 0.82rem;
+}
+
+.map-colour-tuner__hint {
+  margin-bottom: 0.75rem;
+}
+
+.map-colour-tuner__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: end;
+  margin-bottom: 0.75rem;
+}
+
+.map-colour-tuner label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.map-colour-tuner input[type="color"] {
+  width: 4rem;
+  height: 2.2rem;
+  padding: 0.15rem;
+  border: 1px solid var(--ink);
+  border-radius: var(--tile-radius);
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+
+.map-colour-tuner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.map-colour-tuner button {
+  font-family: inherit;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--ink);
+  border-radius: var(--tile-radius);
+  background: rgba(255, 255, 255, 0.35);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.map-colour-tuner button:hover {
+  background: var(--ink);
+  color: #fff;
+}
+
+.map-colour-tuner__value {
+  display: block;
+  margin-top: 0.75rem;
+  word-break: break-word;
+}
+
 .route-review {
   display: flex;
   flex-direction: column;

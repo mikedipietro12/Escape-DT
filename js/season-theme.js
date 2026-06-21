@@ -29,7 +29,7 @@
     winter: ["#8edcee", "#b7c3c8"],
     thaw: [FADE.blue, FADE.green],
     spring: [FADE.green, FADE.yellow],
-    summer: [FADE.orange, FADE.yellow],
+    summer: ["#cc4f18", "#e66d1f", "#f28b2e", "#d49a00"],
     autumn: [FADE.red, FADE.orange],
     "late-fall": [FADE.red, FADE.orange],
   };

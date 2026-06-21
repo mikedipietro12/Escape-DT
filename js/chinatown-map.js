@@ -156,6 +156,11 @@
     return colors[colors.length - 1] || MAP_BACKWARD_COLOR;
   }
 
+  function getMapForwardColors() {
+    const colors = getSeasonRouteColors();
+    return colors.length > 1 ? colors.slice(0, -1) : colors;
+  }
+
   function normalizeToken(raw) {
     return String(raw || "")
       .replace(/\./g, "")
@@ -967,7 +972,7 @@
 
   function getMapLegColor(leg) {
     if (leg.isBackward) return getMapBackwardColor();
-    const colors = getSeasonRouteColors();
+    const colors = getMapForwardColors();
     return colors[leg.legIndex % colors.length];
   }
 

@@ -213,7 +213,8 @@ function getSeasonRouteColors() {
 }
 
 function getMapLegColors() {
-  return getSeasonRouteColors();
+  const colors = getSeasonRouteColors();
+  return colors.length > 1 ? colors.slice(0, -1) : colors;
 }
 
 function getMapBackwardColor() {

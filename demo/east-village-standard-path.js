@@ -108,6 +108,22 @@ function getSeasonFadeTop() {
   return v || "#b2fdb5";
 }
 
+function getSeasonRouteColors() {
+  const v = getComputedStyle(document.documentElement).getPropertyValue("--map-route-colors").trim();
+  const colors = v.split(",").map((color) => color.trim()).filter(Boolean);
+  return colors.length ? colors : [...MAP_LEG_COLORS, getSeasonFadeTop()];
+}
+
+function getMapBackwardColor() {
+  const colors = getSeasonRouteColors();
+  return colors[colors.length - 1] || MAP_BACKWARD_COLOR;
+}
+
+function getMapForwardColors() {
+  const colors = getSeasonRouteColors();
+  return colors.length > 1 ? colors.slice(0, -1) : colors;
+}
+
 function isOnHastingsSpine(stop) {
   const cs = String(stop.crossStreet || "").toLowerCase();
   if (/\b(hastings|e hastings)\b/.test(cs)) return true;
@@ -387,8 +403,8 @@ function renderMapLabelSvg(group) {
 }
 
 function getMapLegColor(leg) {
-  if (leg.isBackward) return MAP_BACKWARD_COLOR;
-  const colors = [...MAP_LEG_COLORS, getSeasonFadeTop()];
+  if (leg.isBackward) return getMapBackwardColor();
+  const colors = getMapForwardColors();
   return colors[leg.legIndex % colors.length];
 }
 

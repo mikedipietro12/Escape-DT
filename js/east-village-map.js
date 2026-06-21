@@ -66,6 +66,11 @@
     return colors[colors.length - 1] || MAP_BACKWARD_COLOR;
   }
 
+  function getMapForwardColors() {
+    const colors = getSeasonRouteColors();
+    return colors.length > 1 ? colors.slice(0, -1) : colors;
+  }
+
   function isOnHastingsSpine(stop) {
     const cs = String(stop.crossStreet || "").toLowerCase();
     if (/\b(hastings|e hastings)\b/.test(cs)) return true;
@@ -439,7 +444,7 @@
 
   function getMapLegColor(leg) {
     if (leg.isBackward) return getMapBackwardColor();
-    const colors = getSeasonRouteColors();
+    const colors = getMapForwardColors();
     return colors[leg.legIndex % colors.length];
   }
 
