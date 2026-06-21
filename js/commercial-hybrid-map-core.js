@@ -109,13 +109,19 @@ function getHybridReturnSouthPathD(x1, y1, x2, y2, fromStop, toStop) {
   return getReturnSouthLanePathD(y1, y2);
 }
 
-function getSeasonFadeTop() {
-  const v = getComputedStyle(document.documentElement).getPropertyValue("--fade-top").trim();
-  return v || "#b2fdb5";
+function getSeasonRouteColors() {
+  const v = getComputedStyle(document.documentElement).getPropertyValue("--map-route-colors").trim();
+  const colors = v.split(",").map((color) => color.trim()).filter(Boolean);
+  return colors.length ? colors : [...MAP_LEG_COLORS_BASE, "#ffeea1"];
 }
 
 function getMapLegColors() {
-  return [...MAP_LEG_COLORS_BASE, getSeasonFadeTop()];
+  return getSeasonRouteColors();
+}
+
+function getMapBackwardColor() {
+  const colors = getSeasonRouteColors();
+  return colors[colors.length - 1] || MAP_BACKWARD_COLOR;
 }
 
 function isMapLegBackward(y1, y2) {
@@ -142,7 +148,7 @@ function getMapStopLabelPlacement(x) {
 }
 
 function getMapLegColor(leg) {
-  if (leg.isBackward) return MAP_BACKWARD_COLOR;
+  if (leg.isBackward) return getMapBackwardColor();
   const colors = getMapLegColors();
   return colors[leg.legIndex % colors.length];
 }

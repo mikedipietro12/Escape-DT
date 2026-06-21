@@ -24,6 +24,16 @@
     "late-fall": { top: FADE.red, bottom: FADE.blue },
   };
 
+  /** Route-map walking lines follow the seasonal art direction. */
+  const MAP_ROUTE_COLORS = {
+    winter: ["#8edcee", "#b7c3c8"],
+    thaw: [FADE.blue, FADE.green],
+    spring: [FADE.green, FADE.yellow],
+    summer: [FADE.orange, FADE.yellow],
+    autumn: [FADE.red, FADE.orange],
+    "late-fall": [FADE.red, FADE.orange],
+  };
+
   /** Hero mascot PNGs (transparent); reuse closest art when no dedicated asset. */
   const HERO_LOGO = {
     winter: "assets/hero/shy-winter.png",
@@ -65,4 +75,5 @@
   root.dataset.heroLogo = HERO_LOGO[key];
   root.style.setProperty("--fade-top", theme.top);
   root.style.setProperty("--fade-bottom", theme.bottom);
+  root.style.setProperty("--map-route-colors", MAP_ROUTE_COLORS[key].join(", "));
 })();

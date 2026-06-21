@@ -145,9 +145,15 @@
     return { km, minutes: Math.max(1, Math.round((km / WALK_SPEED_KMH) * 60)) };
   }
 
-  function getSeasonFadeTop() {
-    const v = getComputedStyle(document.documentElement).getPropertyValue("--fade-top").trim();
-    return v || "#b2fdb5";
+  function getSeasonRouteColors() {
+    const v = getComputedStyle(document.documentElement).getPropertyValue("--map-route-colors").trim();
+    const colors = v.split(",").map((color) => color.trim()).filter(Boolean);
+    return colors.length ? colors : MAP_LEG_COLORS;
+  }
+
+  function getMapBackwardColor() {
+    const colors = getSeasonRouteColors();
+    return colors[colors.length - 1] || MAP_BACKWARD_COLOR;
   }
 
   function normalizeToken(raw) {
@@ -960,8 +966,8 @@
   }
 
   function getMapLegColor(leg) {
-    if (leg.isBackward) return MAP_BACKWARD_COLOR;
-    const colors = [...MAP_LEG_COLORS, getSeasonFadeTop()];
+    if (leg.isBackward) return getMapBackwardColor();
+    const colors = getSeasonRouteColors();
     return colors[leg.legIndex % colors.length];
   }
 
