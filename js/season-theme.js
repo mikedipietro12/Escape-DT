@@ -47,10 +47,10 @@
   function themeKeyFromDate(date) {
     const i = halfMonthIndex(date);
     if (i <= 2 || i === 23) return "winter";
-    if (i <= 7) return "thaw";
-    if (i <= 11) return "spring";
-    if (i <= 17) return "summer";
-    if (i <= 19) return "autumn";
+    if (i <= 6) return "thaw";
+    if (i <= 10) return "spring";
+    if (i <= 16) return "summer";
+    if (i <= 18) return "autumn";
     if (i <= 22) return "late-fall";
     return "winter";
   }
