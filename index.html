@@ -1840,6 +1840,12 @@
       #main-container:has(#step-P3.active) nav.progress {
         max-width: none;
       }
+      body:has(#step-D.active) #top-nav,
+      body:has(#step-P3.active) #top-nav {
+        max-width: none;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+      }
       #step-D > h1,
       #step-P3 > h1 {
         font-size: clamp(1.5rem, 2.2vw, 2.25rem);
@@ -1849,6 +1855,11 @@
     @media (min-width: 1100px) {
       .container:has(#step-D.active),
       .container:has(#step-P3.active) {
+        padding-left: 1.1rem;
+        padding-right: 1.1rem;
+      }
+      body:has(#step-D.active) #top-nav,
+      body:has(#step-P3.active) #top-nav {
         padding-left: 1.1rem;
         padding-right: 1.1rem;
       }
