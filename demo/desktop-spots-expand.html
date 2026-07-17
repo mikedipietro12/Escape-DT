@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en" data-season="summer">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desktop spots — expand mock</title>
+  <style>
+    :root {
+      --fade-top: #ffeea1;
+      --fade-bottom: #ffaf64;
+      --bg-top: #ffffff;
+      --bg-bottom: var(--fade-bottom);
+      --ink: #000000;
+      --ink-muted: #2a2a2a;
+      --tile-radius: 8px;
+      --type-display: 2.5rem;
+      --type-heading: 1.25rem;
+      --type-body: 0.95rem;
+      --type-label: 0.75rem;
+      --tracking-wide: 0.08em;
+      --cols: 5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Futura, "Futura PT", "Century Gothic", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
+      min-height: 100vh;
+      background-attachment: fixed;
+      line-height: 1.4;
+    }
+
+    .mock-bar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1.25rem;
+      padding: 0.85rem 1.25rem;
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid var(--ink);
+      backdrop-filter: blur(8px);
+    }
+    .mock-bar strong {
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      font-size: 0.8rem;
+    }
+    .mock-bar p {
+      flex: 1 1 14rem;
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      margin: 0;
+    }
+    .mock-toggle {
+      display: inline-flex;
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      overflow: hidden;
+    }
+    .mock-toggle button {
+      font-family: inherit;
+      font-size: 0.7rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      padding: 0.55rem 0.85rem;
+      border: none;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .mock-toggle button + button {
+      border-left: 1px solid var(--ink);
+    }
+    .mock-toggle button.is-active {
+      background: var(--ink);
+      color: #fff;
+    }
+    .mock-note {
+      width: 100%;
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    .page {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 1.5rem 1.1rem 4rem;
+    }
+    h1 {
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: clamp(1.5rem, 2.2vw, 2.25rem);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .label {
+      font-size: var(--type-label);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--ink-muted);
+      margin-bottom: 1rem;
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+      gap: 0.7rem;
+      align-items: start;
+    }
+
+    .p3-card {
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      overflow: hidden;
+      transition: background 0.35s ease, box-shadow 0.35s ease;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .p3-card:not(.is-expanded):hover {
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+    }
+    .p3-card.is-expanded {
+      background: #fff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
+      z-index: 2;
+      align-self: stretch;
+    }
+
+    /* —— Current: full row —— */
+    body.mode-full .p3-card.is-expanded {
+      grid-column: 1 / -1;
+    }
+
+    /* —— Proposed: 2×2 (four cells) —— */
+    body.mode-block .p3-card.is-expanded {
+      /* span set inline by JS */
+    }
+
+    /* —— Alt: 4 columns wide —— */
+    body.mode-wide4 .p3-card.is-expanded {
+      /* span set inline by JS */
+    }
+
+    .p3-card__summary {
+      display: flex;
+      flex-direction: column;
+    }
+    .p3-card.is-expanded .p3-card__summary {
+      flex-direction: row;
+      align-items: stretch;
+      border-bottom: 1px solid var(--ink);
+    }
+    .p3-card__thumb {
+      width: 100%;
+      aspect-ratio: 12 / 5;
+      object-fit: cover;
+      border-bottom: 1px solid var(--ink);
+      display: block;
+      background: #c9a66b;
+    }
+    .p3-card.is-expanded .p3-card__summary .p3-card__thumb {
+      display: none;
+    }
+    .p3-card__body {
+      position: relative;
+      padding: 0.7rem 1.75rem 0.85rem 0.8rem;
+      flex-grow: 1;
+      min-width: 0;
+    }
+    .p3-card__body h3 {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      font-size: 0.85rem;
+      margin-bottom: 0.15rem;
+      line-height: 1.2;
+    }
+    .p3-card.is-expanded .p3-card__body h3 {
+      font-size: 1.05rem;
+    }
+    .meta {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      opacity: 0.7;
+      margin-bottom: 0.25rem;
+    }
+    .p3-card__grid-desc {
+      font-size: 0.72rem;
+      line-height: 1.35;
+      margin: 0;
+      color: var(--ink-muted);
+    }
+    .p3-card.is-expanded .p3-card__grid-desc,
+    .p3-card.is-expanded .meta {
+      display: none;
+    }
+    .add-btn {
+      position: absolute;
+      top: 0.35rem;
+      right: 0.4rem;
+      border: none;
+      background: transparent;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .p3-card__expand-panel {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+    }
+    .p3-card.is-expanded .p3-card__expand-panel {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .p3-card__gallery {
+      width: 100%;
+      overflow: hidden;
+      border-bottom: 1px solid var(--ink);
+      background: #ddd;
+      flex-shrink: 0;
+    }
+    .p3-card__gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Default / landscape: photo above copy */
+    .p3-card.is-expanded .p3-card__expand-panel {
+      flex-direction: column;
+    }
+    .p3-card.is-expanded.is-photo-landscape .p3-card__gallery,
+    .p3-card.is-expanded:not(.is-photo-portrait) .p3-card__gallery {
+      aspect-ratio: 3 / 2;
+      max-height: min(38vh, 18rem);
+      min-height: 8rem;
+      width: 100%;
+    }
+
+    /* Portrait: photo on the left, copy beside it */
+    @media (min-width: 700px) {
+      .p3-card.is-expanded.is-photo-portrait .p3-card__expand-panel {
+        display: grid;
+        grid-template-columns: minmax(9rem, 0.85fr) 1.15fr;
+        grid-template-rows: 1fr auto;
+      }
+      .p3-card.is-expanded.is-photo-portrait .p3-card__gallery {
+        grid-row: 1 / 3;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        max-height: none;
+        aspect-ratio: 3 / 4;
+        margin: 0;
+        border-bottom: none;
+        border-right: 1px solid var(--ink);
+      }
+      .p3-card.is-expanded.is-photo-portrait .p3-card__expand-body {
+        border-bottom: none;
+      }
+    }
+
+    @media (max-width: 699px) {
+      .p3-card.is-expanded.is-photo-portrait .p3-card__gallery {
+        width: auto;
+        height: min(42vh, 20rem);
+        max-width: 100%;
+        aspect-ratio: 3 / 4;
+        margin-inline: 0 auto;
+      }
+    }
+
+    body.mode-block .p3-card.is-expanded.is-photo-landscape .p3-card__gallery {
+      max-height: min(32vh, 14rem);
+    }
+
+    .p3-card__expand-body {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--ink);
+      flex: 1;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 0.65rem;
+    }
+    .tag {
+      font-size: 0.58rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      padding: 0.2rem 0.4rem;
+      border: 1px solid var(--ink);
+    }
+    .description {
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: var(--ink-muted);
+      margin-bottom: 0.5rem;
+    }
+    .goto {
+      font-size: 0.75rem;
+      margin-bottom: 0.45rem;
+    }
+    .goto strong { font-weight: 700; }
+    .detail-meta {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      opacity: 0.75;
+    }
+    .p3-card__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+    }
+    .p3-card__actions button {
+      font-family: inherit;
+      font-size: 0.65rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--ink);
+      background: #fff;
+      cursor: pointer;
+      border-radius: var(--tile-radius);
+    }
+    .p3-card__actions button:hover {
+      background: var(--ink);
+      color: #fff;
+    }
+    .p3-card__actions button.primary {
+      background: var(--ink);
+      color: #fff;
+    }
+    .p3-card__actions button.primary:hover {
+      opacity: 0.85;
+    }
+
+    .hint-chip {
+      display: inline-block;
+      margin-left: 0.35rem;
+      padding: 0.1rem 0.35rem;
+      border: 1px dashed var(--ink-muted);
+      font-size: 0.55rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      vertical-align: middle;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 1099px) {
+      :root { --cols: 3; }
+    }
+    @media (max-width: 699px) {
+      :root { --cols: 2; }
+    }
+    @media (max-width: 519px) {
+      :root { --cols: 1; }
+    }
+  </style>
+</head>
+<body class="mode-block">
+  <div class="mock-bar">
+    <strong>Expand mock</strong>
+    <div class="mock-toggle" role="group" aria-label="Compare expand layouts">
+      <button type="button" data-mode="full">Current (full row)</button>
+      <button type="button" class="is-active" data-mode="block">Proposed (4 cells)</button>
+      <button type="button" data-mode="wide4">Alt (4 columns)</button>
+    </div>
+    <p>Click any spot. Esc collapses. Preview only — live Path 3 unchanged.</p>
+    <p class="mock-note" id="mode-note">
+      Proposed: expanded card spans <strong>2×2 grid cells</strong> (footprint of four spots) and
+      <strong>displaces</strong> neighbors. <strong>Landscape</strong> photo above the copy;
+      <strong>portrait</strong> photo on the left with copy beside it.
+    </p>
+  </div>
+
+  <div class="page">
+    <h1>See all spots</h1>
+    <p class="label">Commercial Drive — tap a spot for more info</p>
+    <div id="grid"></div>
+  </div>
+
+  <script>
+    const NOTES = {
+      full: `Current live Path 3: expanded card spans <strong>the full row</strong> (all 5 columns). Neighbors drop to the next row.`,
+      block: `Proposed: expanded card spans <strong>2×2 grid cells</strong> (footprint of four spots) and <strong>displaces</strong> neighbors. <strong>Landscape</strong> photo above the copy; <strong>portrait</strong> photo on the left with copy beside it.`,
+      wide4: `Alt: expanded card spans <strong>4 of 5 columns</strong> (one row tall for the chrome, panel below). Slightly narrower than today; one spot stays beside it when possible.`,
+    };
+
+    let stops = [];
+    let expandedId = null;
+    let orderBeforeExpand = null;
+    let mode = "block";
+
+    function formatCost(cost) {
+      if (typeof cost === "string") return cost;
+      if (cost && cost.min && cost.max) return `${cost.min}\u2013${cost.max}`;
+      if (Array.isArray(cost) && cost.length >= 2) return `${cost[0]}\u2013${cost[1]}`;
+      return "";
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function getCols() {
+      return Number.parseInt(
+        getComputedStyle(document.documentElement).getPropertyValue("--cols").trim(),
+        10
+      ) || 5;
+    }
+
+    function renderCollapsed(spot) {
+      const cost = formatCost(spot.cost);
+      const meta = [cost, spot.crossStreet].filter(Boolean).join(" · ");
+      const img = spot.img
+        ? `<img class="p3-card__thumb" src="${escapeHtml(spot.img)}" alt="" loading="lazy" onerror="this.remove()" />`
+        : `<div class="p3-card__thumb" style="background:#${escapeHtml(spot.placeholderColor || "c9a66b")}"></div>`;
+      return `
+        <div class="p3-card" data-id="${escapeHtml(spot.id)}" role="button" tabindex="0" aria-expanded="false">
+          <div class="p3-card__summary">
+            ${img}
+            <div class="p3-card__body">
+              <button type="button" class="add-btn" aria-label="Add to route" data-add>+</button>
+              <h3>${escapeHtml(spot.name)}</h3>
+              <p class="meta">${escapeHtml(meta)}</p>
+              <p class="p3-card__grid-desc">${escapeHtml(spot.description || "")}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderExpandPanel(spot) {
+      const cost = formatCost(spot.cost);
+      const tags = (spot.tags || []).slice(0, 4)
+        .map((t) => `<span class="tag">${escapeHtml(t)}</span>`)
+        .join("");
+      const costTag = cost ? `<span class="tag">${escapeHtml(cost)}</span>` : "";
+      const walkTag = spot.walkFromStation != null
+        ? `<span class="tag">${spot.walkFromStation} min from station</span>`
+        : "";
+      const img = spot.img
+        ? `<img src="${escapeHtml(spot.img)}" alt="" data-orient-src loading="eager" onerror="this.parentElement.style.background='#c9a66b'; this.remove()" />`
+        : "";
+      const goto = spot.goto
+        ? `<p class="goto"><strong>My go-to:</strong> ${escapeHtml(spot.goto)}</p>`
+        : "";
+      return `
+        <div class="p3-card__expand-panel">
+          <div class="p3-card__gallery" style="${spot.img ? "" : `background:#${escapeHtml(spot.placeholderColor || "c9a66b")}`}">${img}</div>
+          <div class="p3-card__expand-body">
+            <div class="tags">${tags}${costTag}${walkTag}</div>
+            <p class="description">${escapeHtml(spot.description || "")}</p>
+            ${goto}
+            <p class="detail-meta">${escapeHtml(spot.crossStreet || "")}</p>
+          </div>
+          <div class="p3-card__actions">
+            <button type="button" data-maps>See in Google Maps</button>
+            <button type="button" class="primary" data-add>Add to route</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function clearPlacement(el) {
+      el.style.gridColumn = "";
+      el.style.gridRow = "";
+    }
+
+    function blockFits(anchorCol, anchorRow, cols, total, colSpan, rowSpan) {
+      if (anchorCol < 0 || anchorCol + colSpan > cols) return false;
+      if (anchorRow < 0) return false;
+      for (let r = 0; r < rowSpan; r++) {
+        for (let c = 0; c < colSpan; c++) {
+          const i = (anchorRow + r) * cols + (anchorCol + c);
+          if (i >= total) return false;
+        }
+      }
+      return true;
+    }
+
+    function expandAnchor(clickIdx, cols, total, colSpan, rowSpan) {
+      let col = clickIdx % cols;
+      let row = Math.floor(clickIdx / cols);
+      col = Math.min(col, Math.max(0, cols - colSpan));
+      if (!blockFits(col, row, cols, total, colSpan, rowSpan) && row > 0) row -= 1;
+      if (!blockFits(col, row, cols, total, colSpan, rowSpan) && col > 0) {
+        col = Math.max(0, cols - colSpan);
+      }
+      return { anchorCol: col, anchorRow: row, anchorIdx: row * cols + col };
+    }
+
+    function modeSpans(cols) {
+      if (mode === "block") {
+        const colSpan = Math.min(2, cols);
+        const rowSpan = cols >= 2 ? 2 : 1;
+        return { colSpan, rowSpan, displace: true };
+      }
+      if (mode === "wide4") {
+        const colSpan = Math.min(4, cols);
+        return { colSpan, rowSpan: 1, displace: true };
+      }
+      return { colSpan: cols, rowSpan: 1, displace: false };
+    }
+
+    function collapse() {
+      if (!expandedId) return;
+      const grid = document.getElementById("grid");
+      const ids = orderBeforeExpand || stops.map((s) => s.id);
+      const byId = Object.fromEntries(stops.map((s) => [s.id, s]));
+      grid.innerHTML = ids.map((id) => renderCollapsed(byId[id])).filter(Boolean).join("");
+      expandedId = null;
+      orderBeforeExpand = null;
+    }
+
+    function expand(card) {
+      const id = card.dataset.id;
+      if (expandedId === id) {
+        collapse();
+        return;
+      }
+      if (expandedId) {
+        collapse();
+        card = document.querySelector(`.p3-card[data-id="${CSS.escape(id)}"]`);
+        if (!card) return;
+      }
+
+      const grid = document.getElementById("grid");
+      const cols = getCols();
+      const cards = [...grid.children];
+      const clickIdx = cards.indexOf(card);
+      const total = cards.length;
+      const { colSpan, rowSpan, displace } = modeSpans(cols);
+      const spot = stops.find((s) => s.id === id);
+      if (!spot) return;
+
+      orderBeforeExpand = cards.map((c) => c.dataset.id);
+
+      if (displace && (colSpan > 1 || rowSpan > 1)) {
+        const { anchorCol, anchorRow, anchorIdx } = expandAnchor(
+          clickIdx, cols, total, colSpan, rowSpan
+        );
+        if (!blockFits(anchorCol, anchorRow, cols, total, colSpan, rowSpan)) {
+          // Fallback: just expand in place without span if near end of grid
+          applyExpanded(card, spot, Math.min(colSpan, cols), 1);
+          expandedId = id;
+          card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          return;
+        }
+
+        const block = [];
+        for (let r = 0; r < rowSpan; r++) {
+          for (let c = 0; c < colSpan; c++) {
+            block.push((anchorRow + r) * cols + (anchorCol + c));
+          }
+        }
+        const blockSet = new Set(block);
+        const afterStart = Math.max(...block) + 1;
+        // Cards in the span range but not part of the 2×2/N-cell block keep
+        // their place after the expanded card; displaced block-mates follow.
+        const outsideInRange = cards.filter(
+          (_, i) => i >= anchorIdx && i < afterStart && !blockSet.has(i)
+        );
+        const displaced = block
+          .filter((i) => i !== clickIdx)
+          .map((i) => cards[i]);
+        const newOrder = [
+          ...cards.slice(0, anchorIdx),
+          card,
+          ...outsideInRange,
+          ...displaced,
+          ...cards.slice(afterStart),
+        ];
+
+        applyExpanded(card, spot, colSpan, rowSpan);
+        newOrder.forEach((c) => {
+          if (c !== card) clearPlacement(c);
+          grid.appendChild(c);
+        });
+      } else {
+        applyExpanded(card, spot, cols, 1);
+      }
+
+      expandedId = id;
+      requestAnimationFrame(() => {
+        card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    }
+
+    function applyPhotoOrientation(card) {
+      card.classList.remove("is-photo-landscape", "is-photo-portrait");
+      const img = card.querySelector(".p3-card__gallery img");
+      if (!img) {
+        card.classList.add("is-photo-landscape");
+        return;
+      }
+      const apply = () => {
+        const w = img.naturalWidth || 0;
+        const h = img.naturalHeight || 0;
+        if (!w || !h) {
+          card.classList.add("is-photo-landscape");
+          return;
+        }
+        card.classList.toggle("is-photo-landscape", w >= h);
+        card.classList.toggle("is-photo-portrait", w < h);
+      };
+      if (img.complete && img.naturalWidth) apply();
+      else img.addEventListener("load", apply, { once: true });
+    }
+
+    function applyExpanded(card, spot, colSpan, rowSpan) {
+      card.classList.add("is-expanded");
+      card.setAttribute("aria-expanded", "true");
+      if (!card.querySelector(".p3-card__expand-panel")) {
+        card.insertAdjacentHTML("beforeend", renderExpandPanel(spot));
+      }
+      applyPhotoOrientation(card);
+      if (mode === "full") {
+        clearPlacement(card);
+      } else {
+        card.style.gridColumn = `span ${colSpan}`;
+        card.style.gridRow = rowSpan > 1 ? `span ${rowSpan}` : "";
+      }
+    }
+
+    function renderAll() {
+      const grid = document.getElementById("grid");
+      expandedId = null;
+      orderBeforeExpand = null;
+      grid.innerHTML = stops.map(renderCollapsed).join("");
+    }
+
+    document.getElementById("grid").addEventListener("click", (e) => {
+      if (e.target.closest("[data-add], [data-maps]")) {
+        e.stopPropagation();
+        return;
+      }
+      const card = e.target.closest(".p3-card");
+      if (!card) return;
+      if (card.classList.contains("is-expanded") && !e.target.closest(".p3-card__summary")) {
+        // Clicking panel body collapses (same as live: whole card toggles)
+      }
+      expand(card);
+    });
+
+    document.getElementById("grid").addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const card = e.target.closest(".p3-card");
+      if (!card || e.target.closest("button")) return;
+      e.preventDefault();
+      expand(card);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && expandedId) collapse();
+    });
+
+    document.querySelectorAll(".mock-toggle button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".mock-toggle button").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        mode = btn.dataset.mode;
+        document.body.classList.remove("mode-full", "mode-block", "mode-wide4");
+        document.body.classList.add(`mode-${mode}`);
+        document.getElementById("mode-note").innerHTML = NOTES[mode];
+        renderAll();
+      });
+    });
+
+    async function load() {
+      const res = await fetch("../data/stops.json");
+      const data = await res.json();
+      stops = (data.stops || [])
+        .filter((s) => !s._test && (s.neighborhood || "commercial") === "commercial")
+        .filter((s) => (s.description || "").trim())
+        .slice(0, 20)
+        .map((s) => {
+          const img = (s.images && s.images[0]) || s.image || "";
+          return {
+            id: s.id,
+            name: s.name,
+            description: s.description,
+            goto: s.goto || "",
+            tags: s.tags || [],
+            cost: s.cost,
+            crossStreet: s.crossStreet || "",
+            walkFromStation: s.walkFromStation,
+            placeholderColor: s.placeholderColor || "c9a66b",
+            img: img ? `../${img}` : "",
+          };
+        });
+      renderAll();
+    }
+
+    load().catch((err) => {
+      document.getElementById("grid").innerHTML =
+        `<p class="label">Could not load stops.json — run via local server (<code>npm run dev</code>).</p>`;
+      console.error(err);
+    });
+  </script>
+</body>
+</html>
