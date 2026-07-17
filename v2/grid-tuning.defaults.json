@@ -1,0 +1,10 @@
+{
+  "gapX": 23,
+  "gapY": 11,
+  "cardWidth": 280,
+  "cardHeight": 158,
+  "gridColumns": 6,
+  "gridJustify": "start",
+  "gridStretch": true,
+  "pagePadX": 8
+}

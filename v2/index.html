@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore East Van — v2</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="/v2/css/editorial-grid.css">
+</head>
+<body class="v2-body">
+  <p id="v2-warn" class="v2-warn" hidden>
+    Open via the dev server (<code>npm run dev</code>), not as a file.
+  </p>
+
+  <div class="v2-page">
+    <header class="v2-chrome">
+      <div>
+        <p class="v2-chrome__kicker">Town guide · Commercial Drive</p>
+        <h1>East Van Standard Shops</h1>
+      </div>
+      <p class="v2-chrome__meta">
+        Tile grid preview<br>
+        <a href="/v2/demo/layout-mock.html">Layout mock</a> ·
+        <a href="/v2/?tune=1">Grid tuner</a> ·
+        <a href="/">Live app</a>
+      </p>
+    </header>
+
+    <div class="v2-app-header" hidden>
+      <label>
+        Sample route
+        <select id="preset-select">
+          <option value="commercial">Mintage → Bar Corso → Victoria Park</option>
+          <option value="victoria">Victoria walk</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="v2-grid" id="tile-grid" aria-label="Stops"></div>
+
+    <p class="v2-status" id="v2-status">Loading…</p>
+  </div>
+
+  <aside id="v2-grid-tuner" class="v2-grid-tuner" hidden aria-label="Grid spacing tuner">
+    <div class="v2-grid-tuner__head">
+      <div>
+        <h2>Grid tuner</h2>
+        <p>Drag sliders, then copy the readout into <code>editorial-grid.css</code>. Tiles keep fixed gaps and grow to fill the row.</p>
+      </div>
+      <button type="button" class="v2-grid-tuner__close" id="v2-tuner-close" aria-label="Close tuner">×</button>
+    </div>
+
+    <label>
+      Horizontal gap
+      <input type="range" id="tune-gap-x" min="0" max="40" value="23" step="1">
+      <output id="tune-gap-x-out">23px</output>
+    </label>
+    <label>
+      Vertical gap
+      <input type="range" id="tune-gap-y" min="0" max="32" value="11" step="1">
+      <output id="tune-gap-y-out">11px</output>
+    </label>
+    <label>
+      Tile width
+      <input type="range" id="tune-card-width" min="180" max="360" value="280" step="4">
+      <output id="tune-card-width-out">280px</output>
+    </label>
+    <label>
+      Tile height
+      <input type="range" id="tune-card-height" min="120" max="220" value="158" step="2">
+      <output id="tune-card-height-out">158px</output>
+    </label>
+    <label>
+      Columns
+      <input type="range" id="tune-grid-columns" min="2" max="8" value="6" step="1">
+      <output id="tune-grid-columns-out">6</output>
+    </label>
+    <label>
+      Row spread
+      <select id="tune-grid-spread">
+        <option value="start">Packed left</option>
+        <option value="center">Centered</option>
+        <option value="stretch-start" selected>Full width (stretch tiles)</option>
+        <option value="stretch-center">Centered + stretch</option>
+      </select>
+    </label>
+    <label>
+      Page side padding
+      <input type="range" id="tune-page-pad-x" min="0" max="48" value="8" step="2">
+      <output id="tune-page-pad-x-out">8px</output>
+    </label>
+
+    <div class="v2-grid-tuner__actions">
+      <button type="button" id="tune-reset-btn">Reset</button>
+      <button type="button" id="tune-copy-btn">Copy readout</button>
+    </div>
+    <p class="v2-tuning-readout" id="v2-tuning-readout" aria-live="polite"></p>
+  </aside>
+
+  <script src="/v2/js/grid-tuning.js"></script>
+  <script src="/v2/js/data.js"></script>
+  <script src="/v2/js/app.js"></script>
+</body>
+</html>

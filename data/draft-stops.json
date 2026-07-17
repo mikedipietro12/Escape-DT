@@ -1,4 +1,87 @@
 {
   "_note": "DRAFT, not loaded by the app. Use this file for stops that belong to a live neighborhood but should stay hidden until they are ready.",
-  "stops": []
+  "stops": [
+    {
+      "id": "s104",
+      "slug": "suyo-modern-peruvian",
+      "name": "SUYO Modern Peruvian",
+      "categories": [
+        "food"
+      ],
+      "tags": [
+        "sit down",
+        "peruvian"
+      ],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "allday"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 19th Ave",
+      "coords": {
+        "y": 430
+      },
+      "lat": 49.2540235,
+      "lng": -123.1010613,
+      "googlePlaceId": "ChIJ3efTtO5zhlQRQIv3wHdHaiY",
+      "placeholderColor": "5bf51b",
+      "_googleTypes": [
+        "peruvian_restaurant",
+        "fine_dining_restaurant",
+        "latin_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description"
+      ],
+      "walkFromStation": 34
+    },
+    {
+      "id": "s98",
+      "slug": "toshi-sushi",
+      "name": "Toshi Sushi",
+      "categories": [
+        "food",
+        "drinks"
+      ],
+      "tags": [
+        "sit down",
+        "japanese",
+        "sushi"
+      ],
+      "neighborhood": "mount-pleasant",
+      "cost": "$$",
+      "timeOfDay": [
+        "afternoon",
+        "evening"
+      ],
+      "description": "",
+      "crossStreet": "Main St & 16th Ave",
+      "coords": {
+        "y": 413,
+        "x": 125
+      },
+      "lat": 49.2566985,
+      "lng": -123.1018776,
+      "googlePlaceId": "ChIJffOLmORzhlQRaWgo3PaVM40",
+      "placeholderColor": "007be8",
+      "_googleTypes": [
+        "sushi_restaurant",
+        "meal_takeaway",
+        "japanese_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "_review": [
+        "description"
+      ],
+      "walkFromStation": 30
+    }
+  ]
 }

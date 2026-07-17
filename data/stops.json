@@ -1588,7 +1588,10 @@
             "categories": [
                 "hangout"
             ],
-            "goto": "Grab a coffee from Flourist and head over to walk through the gallery."
+            "goto": "Grab a coffee from Flourist and head over to walk through the gallery.",
+            "images": [
+                "assets/stops/equinox-gallery.jpg"
+            ]
         },
         {
             "crossStreet": "Frances & Woodland",
@@ -1687,7 +1690,10 @@
             "categories": [
                 "drinks"
             ],
-            "goto": "Pack of courts water and a six pack of lager and head to the park with a blanket."
+            "goto": "Pack of courts water and a six pack of lager and head to the park with a blanket.",
+            "images": [
+                "assets/stops/bomber-brewing.jpg"
+            ]
         },
         {
             "crossStreet": "Frances & Clark",
@@ -4199,49 +4205,6 @@
             ]
         },
         {
-            "id": "s98",
-            "slug": "toshi-sushi",
-            "name": "Toshi Sushi",
-            "categories": [
-                "food",
-                "drinks"
-            ],
-            "tags": [
-                "sit down",
-                "japanese",
-                "sushi"
-            ],
-            "neighborhood": "mount-pleasant",
-            "cost": "$$",
-            "timeOfDay": [
-                "afternoon",
-                "evening"
-            ],
-            "description": "",
-            "crossStreet": "Main St & 16th Ave",
-            "coords": {
-                "y": 413,
-                "x": 125
-            },
-            "lat": 49.2566985,
-            "lng": -123.1018776,
-            "googlePlaceId": "ChIJffOLmORzhlQRaWgo3PaVM40",
-            "placeholderColor": "007be8",
-            "_googleTypes": [
-                "sushi_restaurant",
-                "meal_takeaway",
-                "japanese_restaurant",
-                "restaurant",
-                "food",
-                "point_of_interest",
-                "establishment"
-            ],
-            "_review": [
-                "description"
-            ],
-            "walkFromStation": 30
-        },
-        {
             "id": "s99",
             "slug": "mount-pleasant-park",
             "name": "Mount Pleasant Park",
@@ -4454,45 +4417,6 @@
             "images": [
                 "assets/stops/good-thief.jpg"
             ]
-        },
-        {
-            "id": "s104",
-            "slug": "suyo-modern-peruvian",
-            "name": "SUYO Modern Peruvian",
-            "categories": [
-                "food"
-            ],
-            "tags": [
-                "sit down",
-                "peruvian"
-            ],
-            "neighborhood": "mount-pleasant",
-            "cost": "$$",
-            "timeOfDay": [
-                "allday"
-            ],
-            "description": "",
-            "crossStreet": "Main St & 19th Ave",
-            "coords": {
-                "y": 430
-            },
-            "lat": 49.2540235,
-            "lng": -123.1010613,
-            "googlePlaceId": "ChIJ3efTtO5zhlQRQIv3wHdHaiY",
-            "placeholderColor": "5bf51b",
-            "_googleTypes": [
-                "peruvian_restaurant",
-                "fine_dining_restaurant",
-                "latin_american_restaurant",
-                "restaurant",
-                "food",
-                "point_of_interest",
-                "establishment"
-            ],
-            "_review": [
-                "description"
-            ],
-            "walkFromStation": 34
         },
         {
             "id": "s105",
@@ -7223,7 +7147,14 @@
             "googlePlaceId": null,
             "placeholderColor": "6febab",
             "walkFromStation": 20,
-            "goto": "A patty to go. Veggie or meat, both are great."
+            "goto": "A patty to go. Veggie or meat, both are great.",
+            "images": [
+                "assets/stops/rise-up-marketplace.jpg"
+            ],
+            "heroFocus": {
+                "x": 50,
+                "y": 35
+            }
         },
         {
             "id": "s179",
@@ -7253,7 +7184,10 @@
             "googlePlaceId": null,
             "placeholderColor": "8f65fa",
             "walkFromStation": 17,
-            "goto": "A pour-over with whatever beans the barista is excited about."
+            "goto": "A pour-over with whatever beans the barista is excited about.",
+            "images": [
+                "assets/stops/prototype-coffee.jpg"
+            ]
         },
         {
             "id": "s188",

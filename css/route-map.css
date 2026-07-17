@@ -1,0 +1,179 @@
+/* Shared illustrated route map styles — used by v2 and promotable to index.html later */
+
+.map-container {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.map-container svg {
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  display: block;
+  overflow: visible;
+}
+
+.map-line { stroke: var(--ink); stroke-width: 2; }
+.map-grid-line { fill: none; stroke: rgba(0, 0, 0, 0.14); stroke-width: 1.5; }
+.map-grid-line--shaped { stroke-linecap: butt; stroke-linejoin: miter; }
+.map-street-label { font-size: 9px; fill: rgba(0, 0, 0, 0.38); letter-spacing: 0.03em; pointer-events: none; }
+.map-street-label--h-gap { dominant-baseline: hanging; }
+.map-street-label--v-gap { dominant-baseline: central; }
+.map-stop-num { font-size: 11px; font-weight: 500; letter-spacing: 0.02em; }
+.map-text { font-family: inherit; font-size: 10px; fill: var(--ink); text-transform: uppercase; letter-spacing: 0.08em; }
+.map-path {
+  stroke-width: 4;
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.map-path--backward {
+  stroke: #c9a227;
+}
+.map-trace-arrow {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.map-trace-arrow path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.map-stop {
+  fill: var(--ink);
+  stroke: var(--bg-top, #fff);
+  stroke-width: 3;
+  transition: r 0.2s;
+}
+.map-stop:hover { r: 8; cursor: pointer; }
+.map-stop-group {
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+.map-stop-group--hidden {
+  opacity: 0;
+}
+.map-stop-group--hidden .map-stop-cluster-dot {
+  animation: none;
+}
+.map-stop-cluster-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.map-stop-group--cluster:not(.map-stop-group--hidden) .map-stop-cluster-dot:not(.map-stop-cluster-dot--static) {
+  animation: map-cluster-dot-settle 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.map-stop-group--cluster:not(.map-stop-group--hidden) .map-stop-cluster-dot:nth-child(2) {
+  animation-delay: 0.07s;
+}
+.map-stop-group--cluster:not(.map-stop-group--hidden) .map-stop-cluster-dot:nth-child(3) {
+  animation-delay: 0.14s;
+}
+.map-stop-group--cluster:not(.map-stop-group--hidden) .map-stop-cluster-dot:nth-child(4) {
+  animation-delay: 0.21s;
+}
+.map-stop-cluster-dot--static {
+  transform: translate(calc(var(--cx) * 1px), calc((var(--cy) + var(--off)) * 1px));
+}
+@keyframes map-cluster-dot-settle {
+  0% {
+    transform: translate(calc(var(--cx) * 1px), calc(var(--cy) * 1px)) scale(1.65);
+    opacity: 0.82;
+  }
+  100% {
+    transform: translate(calc(var(--cx) * 1px), calc((var(--cy) + var(--off)) * 1px)) scale(1);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .map-stop-group--cluster .map-stop-cluster-dot {
+    animation: none;
+    transform: translate(calc(var(--cx) * 1px), calc((var(--cy) + var(--off)) * 1px));
+  }
+  .map-side-street-label,
+  .map-cross-street-label,
+  .map-overlay-layer .map-stop {
+    transition: none;
+  }
+}
+.map-spine-label { font-size: 9px; opacity: 0.75; }
+.map-spine-label--commercial { pointer-events: none; }
+.map-cross-street-layer { pointer-events: none; }
+.map-side-street,
+.map-cross-street {
+  stroke: rgba(0, 0, 0, 0.14);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  fill: none;
+}
+.map-side-street-label,
+.map-cross-street-label {
+  fill: rgba(0, 0, 0, 0.38);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0;
+}
+.map-side-street-label.is-visible,
+.map-cross-street-label.is-visible {
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+.map-side-street-label--vertical {
+  dominant-baseline: middle;
+}
+.map-cross-street-label {
+  dominant-baseline: alphabetic;
+}
+.map-stop-group--interactive .map-stop:not(.map-stop--hit),
+.map-overlay-layer .map-stop:not(.map-stop--hit) {
+  fill: var(--ink);
+  stroke: none;
+  stroke-width: 0;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+.map-stop-group--interactive {
+  cursor: pointer;
+  outline: none;
+}
+.map-stop-group--interactive .map-stop--hit {
+  pointer-events: all;
+  fill: transparent;
+  stroke: none;
+  stroke-width: 0;
+}
+.map-stop-group--interactive:hover .map-stop:not(.map-stop--hit),
+.map-stop-group--interactive:focus-visible .map-stop:not(.map-stop--hit),
+.map-stop-group--highlighted .map-stop:not(.map-stop--hit) {
+  fill: var(--ink);
+  stroke: #fff;
+  stroke-width: 2;
+}
+.map-stop-group--highlighted .map-text {
+  font-weight: 600;
+}
+.map-stop-label { font-size: 11px; letter-spacing: 0.04em; }
+
+.map-container--drop-target {
+  outline: 2px dashed var(--ink, #1a1a1a);
+  outline-offset: 4px;
+}
+
+.map-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.45);
+}

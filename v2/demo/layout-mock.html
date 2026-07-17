@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v2 layout mock — square tiles around map</title>
+  <link rel="stylesheet" href="/css/route-map.css">
+  <link rel="stylesheet" href="/v2/css/editorial-grid.css">
+</head>
+<body class="v2-body">
+  <div class="v2-page">
+    <header class="v2-chrome">
+      <div>
+        <p class="v2-chrome__kicker">Layout mock · Phase 0</p>
+        <h1>East Van Standard Shops</h1>
+      </div>
+      <p class="v2-chrome__meta">Town guide<br>Commercial Drive</p>
+    </header>
+
+    <p class="v2-section-label">FULL reference — small squares on white, map centered</p>
+
+    <div class="v2-canvas">
+      <div class="v2-tile-ring v2-tile-ring--nw" id="ring-nw"></div>
+      <div class="v2-tile-ring v2-tile-ring--n" id="ring-n"></div>
+      <div class="v2-tile-ring v2-tile-ring--ne" id="ring-ne"></div>
+      <div class="v2-tile-ring v2-tile-ring--w" id="ring-w"></div>
+
+      <div class="v2-canvas__map map-container">
+        <div class="map-placeholder">Route map</div>
+      </div>
+
+      <div class="v2-tile-ring v2-tile-ring--e" id="ring-e"></div>
+      <div class="v2-tile-ring v2-tile-ring--sw" id="ring-sw"></div>
+      <div class="v2-tile-ring v2-tile-ring--s" id="ring-s"></div>
+      <div class="v2-tile-ring v2-tile-ring--se" id="ring-se"></div>
+    </div>
+
+    <p class="v2-status">
+      Static mock ·
+      <a href="/v2/">Open v2 shell</a> ·
+      <a href="/">Live app</a>
+    </p>
+  </div>
+
+  <script>
+    const SAMPLES = [
+      { num: 1, name: "JJ Bean", meta: "E 6th · $", thumb: "/assets/stops/jj-bean.jpg", color: "6f4e37" },
+      { num: 2, name: "Rollzzy", meta: "E 6th · $", thumb: "/assets/stops/rollzzy.jpg", color: "e07a5f" },
+      { num: 3, name: "Prado Cafe", meta: "E 4th · $$", thumb: "/assets/stops/prado-cafe.jpg", color: "4a6741" },
+      { num: 4, name: "Mintage", meta: "E 5th · $", thumb: "/assets/stops/mintage.jpg", color: "8b7355" },
+      { num: 5, name: "Bar Corso", meta: "E 4th · $$", thumb: "/assets/stops/bar-corso.jpg", color: "c45c3e" },
+      { num: 6, name: "Loula's", meta: "E 4th · $$", thumb: "/assets/stops/loulas.jpg", color: "d4a574" },
+      { num: 7, name: "La Grotta", meta: "E 3rd · $", thumb: "/assets/stops/la-grotta.jpg", color: "a8c4a0" },
+      { num: 8, name: "Bella Gelateria", meta: "E 1st · $", thumb: "/assets/stops/bella-gelateria.jpg", color: "e8b4b8" },
+      { num: 9, name: "Slice of Life", meta: "Venables · $", thumb: "/assets/stops/slice-of-life.jpg", color: "e74c3c" },
+      { num: 10, name: "Audiopile", meta: "E 2nd · $$", thumb: "/assets/stops/audiopile.jpg", color: "5d6d7e" },
+      { num: 11, name: "Wildebeest", meta: "E 1st · $$$", thumb: "/assets/stops/wildebeest.jpg", color: "2c3e50" },
+      { num: 12, name: "Kensington", meta: "E 5th · $$", thumb: "/assets/stops/kensington.jpg", color: "7f8c8d" },
+      { num: 13, name: "Yama Cafe", meta: "E 5th · $", thumb: "/assets/stops/yama-cafe.jpg", color: "f39c12" },
+      { num: 14, name: "Cascade", meta: "E 2nd · $$", thumb: "/assets/stops/cascade.jpg", color: "3498db" },
+      { num: 15, name: "Burgoo", meta: "E 7th · $$", thumb: "/assets/stops/burgoo.jpg", color: "8e44ad" },
+      { num: 16, name: "Nuba", meta: "E 4th · $$", thumb: "/assets/stops/nuba.jpg", color: "27ae60" },
+      { num: 17, name: "Biercraft", meta: "E 12th · $$", thumb: "/assets/stops/biercraft.jpg", color: "c0392b" },
+      { num: 18, name: "Storm Crow", meta: "E 12th · $$", thumb: "/assets/stops/storm-crow.jpg", color: "1a1a2e" },
+      { num: 19, name: "Cascade Room", meta: "E 2nd · $$", thumb: "/assets/stops/cascade-room.jpg", color: "6c5ce7" },
+      { num: 20, name: "Cafe Deux", meta: "E 3rd · $", thumb: "/assets/stops/cafe-deux.jpg", color: "b8860b" },
+      { num: 21, name: "Burgers on Broadway", meta: "Broadway · $", thumb: "/assets/stops/burgers-on-broadway.jpg", color: "cd6133" },
+      { num: 22, name: "El Camino's", meta: "E 4th · $$", thumb: "/assets/stops/el-caminos.jpg", color: "e55039" },
+      { num: 23, name: "Foundation", meta: "E 7th · $$", thumb: "/assets/stops/foundation.jpg", color: "3d3d3d" },
+      { num: 24, name: "Gene", meta: "E 5th · $$", thumb: "/assets/stops/gene.jpg", color: "9b59b6" },
+    ];
+
+    const RINGS = ["nw", "n", "ne", "w", "e", "sw", "s", "se"];
+
+    function tileHtml(s) {
+      const thumb = s.thumb
+        ? `background-image:url('${s.thumb}')`
+        : `background-color:#${s.color}`;
+      return `<article class="v2-tile" draggable="true">
+        <span class="v2-tile__num">No. ${s.num}</span>
+        <div class="v2-tile__thumb" style="${thumb}"></div>
+        <p class="v2-tile__title">${s.name}</p>
+        <p class="v2-tile__meta">${s.meta}</p>
+      </article>`;
+    }
+
+    const perRing = Math.ceil(SAMPLES.length / RINGS.length);
+    RINGS.forEach((ringId, ri) => {
+      const el = document.getElementById(`ring-${ringId}`);
+      const chunk = SAMPLES.slice(ri * perRing, (ri + 1) * perRing);
+      if (el) el.innerHTML = chunk.map(tileHtml).join("");
+    });
+
+    if (window.location.protocol === "file:") {
+      document.body.insertAdjacentHTML("afterbegin",
+        '<p class="v2-warn">Open via <code>npm run dev</code> — not file://</p>');
+    }
+  </script>
+</body>
+</html>

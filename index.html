@@ -1702,6 +1702,18 @@
     @media (min-width: 600px) {
       .photo-grid { grid-template-columns: 1fr 1fr; }
     }
+    @media (min-width: 900px) {
+      .photo-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+    }
+    @media (min-width: 1100px) {
+      .photo-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.7rem;
+      }
+    }
     .spot-tile {
       border: 1px solid var(--ink);
       border-radius: var(--tile-radius);
@@ -1813,6 +1825,62 @@
       text-transform: uppercase;
       padding: 0.25rem 0.5rem;
       border: 1px solid var(--ink);
+    }
+    /* Desktop: full-width spots — shrink photo/chrome, keep descriptions */
+    @media (min-width: 900px) {
+      .container:has(#step-D.active),
+      .container:has(#step-P3.active) {
+        max-width: none;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+      }
+      #main-container:has(#step-D.active) .path-context,
+      #main-container:has(#step-P3.active) .path-context,
+      #main-container:has(#step-D.active) nav.progress,
+      #main-container:has(#step-P3.active) nav.progress {
+        max-width: none;
+      }
+      #step-D > h1,
+      #step-P3 > h1 {
+        font-size: clamp(1.5rem, 2.2vw, 2.25rem);
+        margin-bottom: 0.5rem;
+      }
+    }
+    @media (min-width: 1100px) {
+      .container:has(#step-D.active),
+      .container:has(#step-P3.active) {
+        padding-left: 1.1rem;
+        padding-right: 1.1rem;
+      }
+      .spot-tile .img-wrapper {
+        padding-top: 42%;
+      }
+      .spot-tile .content {
+        padding: 0.7rem 0.8rem 0.85rem;
+      }
+      .spot-tile .content h2.choice-title {
+        font-size: 0.85rem;
+        line-height: 1.2;
+        margin-bottom: 0.15rem;
+      }
+      .spot-tile .tags {
+        gap: 0.3rem;
+        margin: 0.35rem 0 0.4rem;
+      }
+      .spot-tile .tag,
+      .spot-tile .tags-more-btn {
+        font-size: 0.52rem;
+        padding: 0.12rem 0.35rem;
+      }
+      .spot-tile .content > p {
+        font-size: 0.72rem;
+        line-height: 1.35;
+        margin-bottom: 0.35rem;
+      }
+      .spot-tile .content .goto {
+        font-size: 0.68rem;
+        margin-bottom: 0;
+      }
     }
     .spot-tile .tags-more-btn {
       display: none;
@@ -3301,6 +3369,18 @@
         gap: 0.75rem;
       }
     }
+    @media (min-width: 900px) {
+      #p3-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+    }
+    @media (min-width: 1100px) {
+      #p3-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.7rem;
+      }
+    }
     @media (max-width: 599px) {
       #p3-grid {
         width: calc(100% + 3rem);
@@ -3447,6 +3527,45 @@
       -webkit-line-clamp: 5;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+    /* Desktop 5-across: vertical tiles, full descriptions, compact chrome */
+    @media (min-width: 1100px) {
+      .p3-card:not(.is-expanded) .p3-card__summary {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .p3-card:not(.is-expanded) .p3-card__thumb {
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        aspect-ratio: 12 / 5;
+        align-self: stretch;
+        border-right: none;
+        border-bottom: 1px solid var(--ink);
+      }
+      .p3-card:not(.is-expanded) .p3-card__body {
+        padding: 0.7rem 1.75rem 0.85rem 0.8rem;
+      }
+      .p3-card:not(.is-expanded) .p3-card__body h3.choice-title {
+        font-size: 0.85rem;
+        margin-bottom: 0.15rem;
+      }
+      .p3-card:not(.is-expanded) .meta.choice-desc {
+        font-size: 0.6rem;
+        margin-bottom: 0.25rem;
+      }
+      .p3-card:not(.is-expanded) .p3-card__grid-desc {
+        display: block;
+        -webkit-line-clamp: unset;
+        overflow: visible;
+        font-size: 0.72rem;
+        line-height: 1.35;
+      }
+      .p3-card:not(.is-expanded) .p3-add-btn {
+        top: 0.35rem;
+        right: 0.4rem;
+        font-size: 1rem;
+      }
     }
     .p3-card.is-expanded .p3-card__grid-desc,
     .p3-card.is-expanded .p3-card__summary .meta.choice-desc {

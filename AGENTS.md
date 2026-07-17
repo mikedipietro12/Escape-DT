@@ -1,5 +1,7 @@
 # Escape DT — adding a location
 
+> **v2 rebuild (parallel):** The live app is [`index.html`](index.html). Active rebuild lives in [`v2/`](v2/) — see [`v2/AGENTS.md`](v2/AGENTS.md) and [`v2/DESIGN.md`](v2/DESIGN.md). Do not edit `index.html` for v2 work. Preview: `npm run dev` → `/v2/`.
+
 > **Roadmap / not yet built — Hastings-Sunrise area.** When the user is ready to add Hastings-Sunrise locations, build the feature and add the locations *simultaneously*. Two parts:
 > 1. **Horizontal (east-west) route map + single-area scoping** — full plan at `.cursor/plans/horizontal_route_map_+_single-area_725c1795.plan.md`. Commercial Drive's map is vertical (N-S); Hastings runs left-to-right (W-E). Single area at a time (no multi-area filtering).
 > 2. **18 geocoded draft stops** already prepared in `data/hastings-sunrise-draft.json` (via `npm run enrich`). Pending: descriptions, photos, real cross streets, and a category/cost review (East End Billiards should be `hangout`; trim long Google names). These are NOT yet in `data/stops.json`.

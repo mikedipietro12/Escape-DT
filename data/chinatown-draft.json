@@ -386,10 +386,12 @@
       "googlePlaceId": null,
       "placeholderColor": "717e1b",
       "_review": [
-        "crossStreet",
-        "cost"
+        "crossStreet"
       ],
-      "walkFromStation": 17
+      "walkFromStation": 17,
+      "images": [
+        "assets/stops/the-garden-strathcona.jpg"
+      ]
     },
     {
       "id": "s180",
@@ -407,7 +409,7 @@
         "afternoon",
         "evening"
       ],
-      "description": "Great local beer and pizza in a really cool atmosphere. ",
+      "description": "Great local beer and pizza in a really cool atmosphere.",
       "crossStreet": "E Hastings & Campbell",
       "coords": {
         "y": 409
@@ -417,7 +419,10 @@
       "googlePlaceId": null,
       "placeholderColor": "9da124",
       "walkFromStation": 17,
-      "goto": "Hawaiian pizza with a seasonal brew."
+      "goto": "Hawaiian pizza with a seasonal brew.",
+      "images": [
+        "assets/stops/strathcona-beer-company.jpg"
+      ]
     }
   ]
 }

@@ -673,7 +673,10 @@
     const overlayLayer = svgEl.querySelector(".map-overlay-layer");
     const traceArrow = legDuration > 0 ? createTraceArrow(routeLayer) : null;
 
-    wireSpotCardLinking(svgEl, document.getElementById("route-cards"));
+    const cardsEl = options.cardsId
+      ? document.getElementById(options.cardsId)
+      : document.getElementById("route-cards");
+    if (cardsEl) wireSpotCardLinking(svgEl, cardsEl);
 
     if (!route.length) {
       options.onComplete?.();
@@ -857,5 +860,18 @@
     replay();
   }
 
-  init();
+  globalThis.CommercialMapDraw = {
+    setStops(stops) {
+      allStops = stops;
+      initCommercialWalkExtents(allStops);
+    },
+    setStationFromData(data) {
+      setStation(data?.station?.lat ?? 49.2634, data?.station?.lng ?? -123.0694);
+    },
+    drawMap: drawMapPrototype,
+  };
+
+  if (document.getElementById("preset-select")) {
+    init();
+  }
 })();
