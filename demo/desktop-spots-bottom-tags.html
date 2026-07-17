@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" data-season="summer">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desktop spots — bottom tags mock</title>
+  <style>
+    :root {
+      --fade-top: #ffeea1;
+      --fade-bottom: #ffaf64;
+      --bg-top: #ffffff;
+      --bg-bottom: var(--fade-bottom);
+      --ink: #000000;
+      --ink-muted: #2a2a2a;
+      --tile-radius: 8px;
+      --tracking-wide: 0.08em;
+      --cols: 5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Futura, "Futura PT", "Century Gothic", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
+      min-height: 100vh;
+      background-attachment: fixed;
+      line-height: 1.4;
+    }
+
+    .mock-bar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1.25rem;
+      padding: 0.85rem 1.25rem;
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid var(--ink);
+      backdrop-filter: blur(8px);
+    }
+    .mock-bar strong {
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      font-size: 0.8rem;
+    }
+    .mock-bar p {
+      flex: 1 1 14rem;
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      margin: 0;
+    }
+    .mock-toggle {
+      display: inline-flex;
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      overflow: hidden;
+    }
+    .mock-toggle button {
+      font-family: inherit;
+      font-size: 0.7rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      padding: 0.55rem 0.85rem;
+      border: none;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .mock-toggle button + button {
+      border-left: 1px solid var(--ink);
+    }
+    .mock-toggle button.is-active {
+      background: var(--ink);
+      color: #fff;
+    }
+    .mock-note {
+      width: 100%;
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    .page {
+      width: 100%;
+      padding: 1.5rem 1.1rem 4rem;
+    }
+    h1 {
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: clamp(1.5rem, 2.2vw, 2.25rem);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .label {
+      font-size: 0.75rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--ink-muted);
+      margin-bottom: 1rem;
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+      gap: 0.7rem;
+      align-items: start;
+    }
+
+    .p3-card {
+      border: 1px solid var(--ink);
+      border-radius: var(--tile-radius);
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      transition: background 0.35s ease;
+    }
+    .p3-card:hover {
+      background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
+    }
+
+    .p3-card__thumb {
+      width: 100%;
+      aspect-ratio: 12 / 5;
+      object-fit: cover;
+      display: block;
+      border-bottom: 1px solid var(--ink);
+      background: #c9a66b;
+    }
+
+    .p3-card__body {
+      position: relative;
+      padding: 0.7rem 1.75rem 0.85rem 0.8rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .p3-card__body h3 {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      font-size: 0.85rem;
+      margin-bottom: 0.15rem;
+      line-height: 1.2;
+      padding-right: 0.5rem;
+    }
+    .meta {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      opacity: 0.7;
+      margin-bottom: 0.25rem;
+    }
+    .p3-card__grid-desc {
+      font-size: 0.72rem;
+      line-height: 1.35;
+      margin: 0;
+      color: var(--ink-muted);
+      flex: 1;
+    }
+    .add-btn {
+      position: absolute;
+      top: 0.35rem;
+      right: 0.4rem;
+      border: none;
+      background: transparent;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* —— Proposed: tiny tags at bottom —— */
+    .p3-card__tags {
+      display: none;
+      flex-wrap: wrap;
+      gap: 0.22rem;
+      margin-top: 0.55rem;
+      padding-top: 0.45rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+    }
+    body.show-tags .p3-card__tags {
+      display: flex;
+    }
+    .p3-card__tags .tag {
+      font-size: 0.48rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.2;
+      padding: 0.12rem 0.28rem;
+      border: 1px solid var(--ink);
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 1099px) {
+      :root { --cols: 3; }
+    }
+    @media (max-width: 699px) {
+      :root { --cols: 2; }
+      .p3-card__body {
+        flex-direction: row;
+        padding: 0.6rem 1.85rem 0.75rem 0.65rem;
+      }
+      .p3-card__thumb {
+        width: 5.25rem;
+        min-width: 5.25rem;
+        aspect-ratio: auto;
+        min-height: 5.25rem;
+        align-self: stretch;
+        border-bottom: none;
+        border-right: 1px solid var(--ink);
+      }
+      .p3-card {
+        flex-direction: row;
+      }
+      .p3-card__summary {
+        display: contents;
+      }
+      /* Keep tags under text column on narrow */
+      .p3-card__body {
+        flex-direction: column;
+      }
+    }
+    @media (max-width: 519px) {
+      :root { --cols: 1; }
+    }
+  </style>
+</head>
+<body class="show-tags">
+  <div class="mock-bar">
+    <strong>Tags mock</strong>
+    <div class="mock-toggle" role="group" aria-label="Compare tag placement">
+      <button type="button" data-mode="off">Current (no tags)</button>
+      <button type="button" class="is-active" data-mode="on">Proposed (3 at bottom)</button>
+    </div>
+    <p>Collapsed Path 3 cards — now live in the app. This page remains a reference.</p>
+    <p class="mock-note">
+      First <strong>3 tags</strong> from each stop, pinned under the description.
+      Type at <strong>0.48rem</strong> with tight padding — smallest that stays readable on a 5-across desktop grid.
+    </p>
+  </div>
+
+  <div class="page">
+    <h1>See all spots</h1>
+    <p class="label">Commercial Drive — collapsed cards</p>
+    <div id="grid"></div>
+  </div>
+
+  <script>
+    function formatCost(cost) {
+      if (typeof cost === "string") return cost;
+      if (cost && cost.min && cost.max) return `${cost.min}\u2013${cost.max}`;
+      if (Array.isArray(cost) && cost.length >= 2) return `${cost[0]}\u2013${cost[1]}`;
+      return "";
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderCard(spot) {
+      const cost = formatCost(spot.cost);
+      const meta = [cost, spot.crossStreet].filter(Boolean).join(" · ");
+      const tags = (spot.tags || []).slice(0, 3);
+      const tagsHtml = tags.length
+        ? `<div class="p3-card__tags">${tags.map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>`
+        : `<div class="p3-card__tags" hidden></div>`;
+      const img = spot.img
+        ? `<img class="p3-card__thumb" src="${escapeHtml(spot.img)}" alt="" loading="lazy" onerror="this.remove()" />`
+        : `<div class="p3-card__thumb" style="background:#${escapeHtml(spot.placeholderColor || "c9a66b")}"></div>`;
+      return `
+        <article class="p3-card">
+          <div class="p3-card__summary">
+            ${img}
+            <div class="p3-card__body">
+              <button type="button" class="add-btn" aria-label="Add to route">+</button>
+              <h3>${escapeHtml(spot.name)}</h3>
+              <p class="meta">${escapeHtml(meta)}</p>
+              <p class="p3-card__grid-desc">${escapeHtml(spot.description || "")}</p>
+              ${tagsHtml}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    document.querySelectorAll(".mock-toggle button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".mock-toggle button").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        document.body.classList.toggle("show-tags", btn.dataset.mode === "on");
+      });
+    });
+
+    fetch("../data/stops.json")
+      .then((r) => r.json())
+      .then((data) => {
+        const stops = (data.stops || [])
+          .filter((s) => !s._test && (s.neighborhood || "commercial") === "commercial")
+          .filter((s) => (s.description || "").trim())
+          .slice(0, 15)
+          .map((s) => {
+            const img = (s.images && s.images[0]) || s.image || "";
+            return {
+              name: s.name,
+              description: s.description,
+              tags: s.tags || [],
+              cost: s.cost,
+              crossStreet: s.crossStreet || "",
+              placeholderColor: s.placeholderColor || "c9a66b",
+              img: img ? `../${img}` : "",
+            };
+          });
+        document.getElementById("grid").innerHTML = stops.map(renderCard).join("");
+      })
+      .catch((err) => {
+        document.getElementById("grid").innerHTML =
+          `<p class="label">Could not load stops.json — run via <code>npm run dev</code>.</p>`;
+        console.error(err);
+      });
+  </script>
+</body>
+</html>

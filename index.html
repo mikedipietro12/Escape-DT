@@ -3373,6 +3373,7 @@
       grid-template-columns: 1fr;
       gap: 0.65rem;
       margin-bottom: 1rem;
+      align-items: start;
     }
     @media (min-width: 600px) {
       #p3-grid {
@@ -3420,17 +3421,25 @@
       background: linear-gradient(to bottom, var(--fade-top), var(--fade-bottom));
     }
     .p3-card.is-expanded {
-      grid-column: 1 / -1;
       background: #fff;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
       cursor: pointer;
       overflow: hidden;
       align-self: start;
-      z-index: 1;
+      z-index: 2;
+    }
+    /* Desktop/tablet: 2×2 block (four-cell footprint); mobile stays in-flow */
+    @media (min-width: 600px) {
+      .p3-card.is-expanded {
+        grid-column: span 2;
+        grid-row: span 2;
+        align-self: stretch;
+      }
     }
     @media (max-width: 599px) {
       .p3-card.is-expanded {
         grid-column: auto;
+        grid-row: auto;
       }
     }
     .p3-card.is-in-route:not(.is-expanded) {
@@ -3539,6 +3548,29 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+    .p3-card__grid-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.22rem;
+      margin-top: 0.55rem;
+      padding-top: 0.45rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+    }
+    .p3-card__grid-tags .tag {
+      font-size: 0.48rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.2;
+      padding: 0.12rem 0.28rem;
+      border: 1px solid var(--ink);
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .p3-card.is-expanded .p3-card__grid-tags {
+      display: none;
+    }
     /* Desktop 5-across: vertical tiles, full descriptions, compact chrome */
     @media (min-width: 1100px) {
       .p3-card:not(.is-expanded) .p3-card__summary {
@@ -3591,7 +3623,8 @@
     .p3-card.is-expanded .p3-card__expand-panel {
       display: flex;
       flex-direction: column;
-      flex-shrink: 0;
+      flex: 1;
+      min-height: 0;
     }
     .p3-card__gallery {
       position: relative;
@@ -3603,6 +3636,41 @@
       overflow: hidden;
       isolation: isolate;
       border-bottom: 1px solid var(--ink);
+    }
+    /* Landscape hero: photo above copy (default stacked panel) */
+    .p3-card.is-expanded.is-photo-landscape .p3-card__gallery,
+    .p3-card.is-expanded:not(.is-photo-portrait) .p3-card__gallery {
+      aspect-ratio: 3 / 2;
+      max-height: min(32vh, 14rem);
+      width: 100%;
+    }
+    /* Portrait hero: photo left, copy beside */
+    @media (min-width: 600px) {
+      .p3-card.is-expanded.is-photo-portrait .p3-card__expand-panel {
+        display: grid;
+        grid-template-columns: minmax(9rem, 0.85fr) 1.15fr;
+        grid-template-rows: 1fr auto;
+      }
+      .p3-card.is-expanded.is-photo-portrait .p3-card__gallery {
+        grid-row: 1 / 3;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        max-height: none;
+        aspect-ratio: auto;
+        border-bottom: none;
+        border-right: 1px solid var(--ink);
+      }
+    }
+    @media (max-width: 599px) {
+      .p3-card.is-expanded.is-photo-portrait .p3-card__gallery {
+        width: auto;
+        height: min(42vh, 20rem);
+        max-width: 100%;
+        max-height: none;
+        aspect-ratio: 3 / 4;
+        margin-inline: 0 auto;
+      }
     }
     .p3-card__gallery > img,
     .p3-card__gallery .photo-gallery {
@@ -10354,7 +10422,13 @@
       const desc = spot.description
         ? `<p class="p3-card__grid-desc">${escapeHtml(spot.description)}</p>`
         : "";
-      return cross + desc;
+      const tags = (spot.tags || []).slice(0, 3);
+      const tagsHtml = tags.length
+        ? `<div class="p3-card__grid-tags">${tags
+            .map((t) => `<span class="tag">${escapeHtml(t)}</span>`)
+            .join("")}</div>`
+        : "";
+      return cross + desc + tagsHtml;
     }
 
     function renderP3DetailMeta(spot) {
@@ -10878,6 +10952,101 @@
       });
     }
 
+    function getP3GridColumns() {
+      const w = window.innerWidth;
+      if (w >= 1100) return 5;
+      if (w >= 900) return 3;
+      if (w >= 600) return 2;
+      return 1;
+    }
+
+    function p3BlockFits(anchorCol, anchorRow, cols, total, colSpan, rowSpan) {
+      if (anchorCol < 0 || anchorCol + colSpan > cols) return false;
+      if (anchorRow < 0) return false;
+      for (let r = 0; r < rowSpan; r++) {
+        for (let c = 0; c < colSpan; c++) {
+          if ((anchorRow + r) * cols + (anchorCol + c) >= total) return false;
+        }
+      }
+      return true;
+    }
+
+    function p3ExpandAnchor(clickIdx, cols, total, colSpan, rowSpan) {
+      let col = clickIdx % cols;
+      let row = Math.floor(clickIdx / cols);
+      col = Math.min(col, Math.max(0, cols - colSpan));
+      if (!p3BlockFits(col, row, cols, total, colSpan, rowSpan) && row > 0) row -= 1;
+      if (!p3BlockFits(col, row, cols, total, colSpan, rowSpan) && col > 0) {
+        col = Math.max(0, cols - colSpan);
+      }
+      return { anchorCol: col, anchorRow: row, anchorIdx: row * cols + col };
+    }
+
+    /** Reorder filtered stops so a 2×2 expanded card displaces its block neighbors. */
+    function orderStopsForP3Expand(stops, expandedId) {
+      const cols = getP3GridColumns();
+      if (!expandedId || cols < 2) return stops;
+
+      const clickIdx = stops.findIndex((s) => s.id === expandedId);
+      if (clickIdx < 0) return stops;
+
+      const colSpan = Math.min(2, cols);
+      const rowSpan = 2;
+      const total = stops.length;
+      const { anchorCol, anchorRow, anchorIdx } = p3ExpandAnchor(
+        clickIdx, cols, total, colSpan, rowSpan
+      );
+      if (!p3BlockFits(anchorCol, anchorRow, cols, total, colSpan, rowSpan)) {
+        return stops;
+      }
+
+      const block = [];
+      for (let r = 0; r < rowSpan; r++) {
+        for (let c = 0; c < colSpan; c++) {
+          block.push((anchorRow + r) * cols + (anchorCol + c));
+        }
+      }
+      const blockSet = new Set(block);
+      const afterStart = Math.max(...block) + 1;
+      const outsideInRange = stops.filter(
+        (_, i) => i >= anchorIdx && i < afterStart && !blockSet.has(i)
+      );
+      const displaced = block
+        .filter((i) => i !== clickIdx)
+        .map((i) => stops[i]);
+      const expanded = stops[clickIdx];
+
+      return [
+        ...stops.slice(0, anchorIdx),
+        expanded,
+        ...outsideInRange,
+        ...displaced,
+        ...stops.slice(afterStart),
+      ];
+    }
+
+    function applyP3PhotoOrientation(card) {
+      if (!card) return;
+      card.classList.remove("is-photo-landscape", "is-photo-portrait");
+      const img = card.querySelector(".p3-card__gallery img");
+      if (!img) {
+        card.classList.add("is-photo-landscape");
+        return;
+      }
+      const apply = () => {
+        const w = img.naturalWidth || 0;
+        const h = img.naturalHeight || 0;
+        if (!w || !h) {
+          card.classList.add("is-photo-landscape");
+          return;
+        }
+        card.classList.toggle("is-photo-landscape", w >= h);
+        card.classList.toggle("is-photo-portrait", w < h);
+      };
+      if (img.complete && img.naturalWidth) apply();
+      else img.addEventListener("load", apply, { once: true });
+    }
+
     function renderP3() {
       renderP3Filters();
       const filtered = getP3FilteredStops();
@@ -10910,7 +11079,9 @@
         return;
       }
 
-      grid.innerHTML = filtered
+      const displayStops = orderStopsForP3Expand(filtered, state.expandedSpotId);
+
+      grid.innerHTML = displayStops
         .map((spot) => {
           const expanded = state.expandedSpotId === spot.id;
           const inRoute = state.p3RouteIds.includes(spot.id);
@@ -10935,6 +11106,7 @@
 
       initPhotoGalleries(grid);
       initP3GalleryLightbox(grid);
+      applyP3PhotoOrientation(grid.querySelector(".p3-card.is-expanded"));
       renderP3RouteBar();
     }
 
@@ -10960,6 +11132,13 @@
     initP3PhotoLightbox();
     initFeedbackSheet();
     initP3RouteSheet();
+
+    let p3ExpandResizeTimer = null;
+    window.addEventListener("resize", () => {
+      if (!state.expandedSpotId || state.currentStep !== "P3") return;
+      clearTimeout(p3ExpandResizeTimer);
+      p3ExpandResizeTimer = setTimeout(() => renderP3(), 150);
+    });
 
     const HERO_LOCATIONS = ["downtown", "the suburbs", "north van", "burnaby", "kits"];
     const HERO_LOCATION_MS = 1800;
