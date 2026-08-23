@@ -73,10 +73,18 @@ function resolveSpotSlugs(stops) {
   return stops.map((s) => s.slug).filter(Boolean);
 }
 
+function isArchivedPlan(plan) {
+  return !!plan?.archived;
+}
+
 function resolvePlanKeys(plans, config) {
-  if (plans?.planOrder?.length) return plans.planOrder;
-  if (config.seoPlanSlugs?.length) return config.seoPlanSlugs;
-  return Object.keys(plans?.plans || {});
+  const all =
+    plans?.planOrder?.length
+      ? plans.planOrder
+      : config.seoPlanSlugs?.length
+        ? config.seoPlanSlugs
+        : Object.keys(plans?.plans || {});
+  return all.filter((key) => !isArchivedPlan(plans?.plans?.[key]));
 }
 
 function escapeHtml(s) {
@@ -932,6 +940,15 @@ for (const planKey of planKeys) {
     buildPlanPage(planKey, plan, stops, config, spotSlugSet, neighborhoodsData)
   );
   console.log("wrote plans/" + planKey + "/index.html");
+}
+
+// Drop static pages for archived plans so they leave the live site after build.
+for (const [planKey, plan] of Object.entries(plans.plans || {})) {
+  if (!isArchivedPlan(plan)) continue;
+  const dir = path.join(root, "plans", planKey);
+  if (!fs.existsSync(dir)) continue;
+  fs.rmSync(dir, { recursive: true, force: true });
+  console.log("removed archived plans/" + planKey + "/");
 }
 
 console.log("wrote robots.txt, sitemap.xml");

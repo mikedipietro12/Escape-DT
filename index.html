@@ -9962,7 +9962,10 @@
       if (!container) return;
       const nbh = activeAreaNeighborhood();
       const ids = PLAN_ORDER.filter(
-        (id) => PLANS[id] && (PLANS[id].neighborhood || "commercial") === nbh
+        (id) =>
+          PLANS[id] &&
+          !PLANS[id].archived &&
+          (PLANS[id].neighborhood || "commercial") === nbh
       );
       if (!ids.length) {
         container.innerHTML = `<p class="label">Plans are loading…</p>`;

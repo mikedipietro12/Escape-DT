@@ -809,6 +809,7 @@ async function handleSavePlan(req, res, key) {
     return sendJson(res, 400, { error: errors.join("; "), errors });
   }
 
+  const prev = data.plans[key];
   const plan = {
     title: String(body.title || "").trim(),
     duration: String(body.duration || "").trim(),
@@ -826,6 +827,8 @@ async function handleSavePlan(req, res, key) {
     stops: derivedStops,
   };
   if (neighborhood !== "commercial") plan.neighborhood = neighborhood;
+  // Content saves keep archive status; use POST /api/plan/:key/archive to toggle.
+  if (prev?.archived) plan.archived = true;
 
   data.plans[key] = plan;
 
@@ -837,6 +840,33 @@ async function handleSavePlan(req, res, key) {
 
   console.log(`saved plan ${key} "${plan.title}"`);
   sendJson(res, 200, { ok: true, key, plan, warnings });
+}
+
+async function handleArchivePlan(req, res, key) {
+  let body = {};
+  try {
+    const raw = await readBody(req);
+    if (raw.trim()) body = JSON.parse(raw);
+  } catch {
+    return sendJson(res, 400, { error: "Invalid JSON body" });
+  }
+
+  const data = loadPlansFile();
+  const plan = data.plans?.[key];
+  if (!plan) return sendJson(res, 404, { error: "Plan not found" });
+
+  const archived = body.archived !== false && body.archived !== "false";
+  if (archived) plan.archived = true;
+  else delete plan.archived;
+
+  try {
+    writePlansFile(data);
+  } catch (err) {
+    return sendJson(res, 500, { error: `Write failed: ${err.message}` });
+  }
+
+  console.log(`${archived ? "archived" : "restored"} plan ${key} "${plan.title}"`);
+  sendJson(res, 200, { ok: true, key, plan, archived });
 }
 
 async function handleEnrichStop(req, res) {
@@ -905,6 +935,16 @@ const server = http.createServer(async (req, res) => {
   if (urlPath === "/api/plans" && req.method === "POST") {
     try {
       return await handleCreatePlan(req, res);
+    } catch (err) {
+      return sendJson(res, 500, { error: err.message });
+    }
+  }
+
+  const planArchiveMatch = /^\/api\/plan\/([^/]+)\/archive$/.exec(urlPath);
+  if (planArchiveMatch && req.method === "POST") {
+    const planKey = decodeURIComponent(planArchiveMatch[1]);
+    try {
+      return await handleArchivePlan(req, res, planKey);
     } catch (err) {
       return sendJson(res, 500, { error: err.message });
     }

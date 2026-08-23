@@ -75,6 +75,10 @@
     button.primary:hover { background: #1d4fd0; }
     button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
     button.ghost { background: transparent; }
+    button.danger { color: var(--danger); border-color: #f3c0c0; background: #fff5f5; }
+    button.danger:hover { background: #fdecec; border-color: #e8a0a0; }
+    button.warn { color: var(--warn); border-color: #e1bd79; background: #fff8eb; }
+    button.warn:hover { background: #ffedd0; border-color: #d4a84a; }
     button.sm { padding: 0.25rem 0.5rem; font-size: 0.78rem; }
 
     .layout {
@@ -146,6 +150,7 @@
     }
     .pill.cat { background: #f0f4ff; color: #3b4f8a; border-color: #d4dff7; }
     .pill.hood { background: #f5f5f5; }
+    .pill.archived { background: #f3f3f3; color: #6b6b6b; border-color: #d8d8d8; }
 
     .scroll-list { flex: 1; overflow-y: auto; min-height: 0; }
     .list-empty { padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
@@ -156,6 +161,8 @@
     }
     .plan-row:hover { background: #fafafa; }
     .plan-row.active { background: var(--accent-soft); }
+    .plan-row.is-archived { opacity: 0.72; }
+    .plan-row.is-archived .row-name { color: var(--muted); }
     .plan-row .row-top { display: flex; align-items: baseline; gap: 0.4rem; }
     .plan-row .row-name { font-weight: 600; font-size: 0.88rem; flex: 1; min-width: 0; }
     .plan-row .row-key { font-size: 0.68rem; color: var(--muted); font-family: ui-monospace, monospace; }
@@ -325,6 +332,7 @@
     .save-bar .dirty.is-saving { color: var(--muted); }
     .save-bar .saved { color: var(--ok); font-size: 0.8rem; }
     .save-bar .warn-msg { color: var(--warn); font-size: 0.78rem; flex: 1; }
+    .save-bar .spacer { flex: 1; }
 
     .modal-overlay {
       position: fixed;
@@ -443,6 +451,8 @@
         <span class="dirty" id="dirty-label" hidden aria-live="polite">Unsaved changes</span>
         <span class="saved" id="saved-label" hidden>Saved</span>
         <span class="warn-msg" id="warn-label" hidden></span>
+        <span class="spacer"></span>
+        <button type="button" class="warn" id="archive-btn" title="Hide from the live site; keep in the editor">Archive…</button>
       </div>
     </section>
 
@@ -698,19 +708,29 @@
       const q = $("#plan-search").value.trim().toLowerCase();
       const hoodFilter = ($("#plan-filter-neighborhood").value || "").toLowerCase();
       const order = state.planOrder.length ? state.planOrder : Object.keys(state.plans);
-      return order.filter((key) => {
+      const keys = order.filter((key) => {
         const plan = state.plans[key];
         if (!plan) return false;
         if (hoodFilter && planNeighborhood(plan) !== hoodFilter) return false;
         if (!q) return true;
         return key.includes(q) || (plan.title || "").toLowerCase().includes(q);
       });
+      // Live plans first; archived stay visible at the bottom.
+      return keys.sort((a, b) => {
+        const aa = state.plans[a]?.archived ? 1 : 0;
+        const bb = state.plans[b]?.archived ? 1 : 0;
+        return aa - bb;
+      });
     }
 
     function renderPlanList() {
       const list = $("#plan-list");
       const filtered = getFilteredPlans();
-      $("#list-count").textContent = `${filtered.length} plan${filtered.length === 1 ? "" : "s"}`;
+      const liveCount = filtered.filter((k) => !state.plans[k]?.archived).length;
+      const archivedCount = filtered.length - liveCount;
+      $("#list-count").textContent = archivedCount
+        ? `${liveCount} live · ${archivedCount} archived`
+        : `${filtered.length} plan${filtered.length === 1 ? "" : "s"}`;
 
       if (!filtered.length) {
         list.innerHTML = '<div class="list-empty">No plans match.</div>';
@@ -721,13 +741,15 @@
         const plan = state.plans[key];
         const hood = planNeighborhood(plan);
         const stops = (plan.stops || []).length;
+        const archived = !!plan.archived;
         return `
-          <div class="plan-row ${key === state.selectedKey ? "active" : ""}" data-key="${escapeHtml(key)}">
+          <div class="plan-row ${key === state.selectedKey ? "active" : ""} ${archived ? "is-archived" : ""}" data-key="${escapeHtml(key)}">
             <div class="row-top">
               <span class="row-name">${escapeHtml(plan.title || key)}</span>
             </div>
             <div class="row-key">${escapeHtml(key)}</div>
             <div class="row-meta">
+              ${archived ? '<span class="pill archived">archived</span>' : ""}
               ${plan.duration ? `<span class="pill">${escapeHtml(plan.duration)}</span>` : ""}
               <span class="pill hood">${escapeHtml(neighborhoodTitle(hood))}</span>
               <span class="pill">${stops} stop${stops === 1 ? "" : "s"}</span>
@@ -738,6 +760,17 @@
       list.querySelectorAll(".plan-row").forEach((row) => {
         row.addEventListener("click", () => selectPlan(row.dataset.key));
       });
+    }
+
+    function updateArchiveButton() {
+      const btn = $("#archive-btn");
+      if (!btn) return;
+      const archived = !!state.draft?.archived;
+      btn.textContent = archived ? "Restore" : "Archive…";
+      btn.classList.toggle("warn", !archived);
+      btn.title = archived
+        ? "Show this plan on the live site again"
+        : "Hide from the live site; keep editable here";
     }
 
     function populateNeighborhoodSelects() {
@@ -1167,7 +1200,59 @@
       $("#plan-form").hidden = false;
       $("#save-bar").hidden = false;
       syncFormFromDraft();
+      updateArchiveButton();
       renderPlanList();
+    }
+
+    async function toggleArchivePlan() {
+      if (!state.selectedKey) return;
+      const key = state.selectedKey;
+      const plan = state.draft || state.plans[key];
+      const currentlyArchived = !!plan?.archived;
+      const nextArchived = !currentlyArchived;
+
+      if (nextArchived) {
+        const ok = confirm(
+          `Archive "${plan.title || key}"?\n\n` +
+          "It will disappear from the live plan picker (and from SEO pages after the next build). " +
+          "You can restore it anytime from this editor."
+        );
+        if (!ok) return;
+      }
+
+      if (state.dirty && canAutoSave()) {
+        const saved = await runAutoSave({ quiet: true });
+        if (!saved) {
+          toast("Save or fix the current plan before archiving", true);
+          return;
+        }
+      } else if (state.dirty) {
+        toast("Save or fix the current plan before archiving", true);
+        return;
+      }
+
+      const btn = $("#archive-btn");
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/plan/${encodeURIComponent(key)}/archive`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ archived: nextArchived }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Archive failed");
+        state.plans[key] = data.plan;
+        state.draft = clonePlan(data.plan);
+        if (!Array.isArray(state.draft.narrative)) state.draft.narrative = [];
+        setDirty(false);
+        updateArchiveButton();
+        renderPlanList();
+        toast(nextArchived ? `Archived ${key}` : `Restored ${key}`);
+      } catch (err) {
+        toast(err.message, true);
+      } finally {
+        btn.disabled = false;
+      }
     }
 
     async function savePlan(e) {
@@ -1366,6 +1451,7 @@
     $("#new-plan").addEventListener("click", openNewModal);
     $("#new-cancel").addEventListener("click", closeNewModal);
     $("#new-submit").addEventListener("click", submitNewPlan);
+    $("#archive-btn").addEventListener("click", toggleArchivePlan);
 
     $("#plan-form").addEventListener("submit", savePlan);
     $("#plan-search").addEventListener("input", renderPlanList);

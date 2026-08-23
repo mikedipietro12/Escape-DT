@@ -71,7 +71,8 @@
                 "s21",
                 "s22",
                 "s41"
-            ]
+            ],
+            "archived": true
         },
         "quick-sip-shop": {
             "title": "Quick Sip & Shop (Stay Close to Train)",

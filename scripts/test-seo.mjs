@@ -10,11 +10,13 @@ const config = JSON.parse(fs.readFileSync(path.join(root, "seo.config.json"), "u
 const { stops } = JSON.parse(fs.readFileSync(path.join(root, "data", "stops.json"), "utf8"));
 const plans = JSON.parse(fs.readFileSync(path.join(root, "data", "plans.json"), "utf8"));
 const spotSlugs = stops.map((s) => s.slug).filter(Boolean);
-const planKeys = plans.planOrder?.length
-  ? plans.planOrder
-  : config.seoPlanSlugs?.length
-    ? config.seoPlanSlugs
-    : Object.keys(plans.plans || {});
+const planKeys = (
+  plans.planOrder?.length
+    ? plans.planOrder
+    : config.seoPlanSlugs?.length
+      ? config.seoPlanSlugs
+      : Object.keys(plans.plans || {})
+).filter((key) => !plans.plans?.[key]?.archived);
 
 const checks = [];
 function ok(msg) {
