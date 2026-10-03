@@ -510,6 +510,7 @@ function buildStaticPageShell({
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="../../assets/favicon.png" type="image/png" sizes="64x64">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png" sizes="180x180">
   <title>${escapeHtml(title)}</title>
 ${analytics}
   <meta name="description" content="${escapeHtml(metaDesc)}">

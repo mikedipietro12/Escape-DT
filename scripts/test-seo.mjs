@@ -140,6 +140,11 @@ const faviconTarget = path.join(root, "assets", "favicon.png");
 if (fs.existsSync(faviconTarget)) ok("favicon file exists");
 else fail("favicon file missing at assets/favicon.png");
 
+const appleTouchTarget = path.join(root, "assets", "apple-touch-icon.png");
+if (fs.existsSync(appleTouchTarget)) ok("apple-touch-icon file exists");
+else fail("apple-touch-icon file missing at assets/apple-touch-icon.png");
+assertIncludes(index, 'rel="apple-touch-icon"', "index has apple-touch-icon link");
+
 const ogImageRel = (config.ogImage || "assets/logo.png").replace(/^\//, "");
 const ogImageFile = path.join(root, ogImageRel.split("/").join(path.sep));
 if (fs.existsSync(ogImageFile)) ok(`og image file exists (${ogImageRel})`);
